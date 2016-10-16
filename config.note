@@ -1,0 +1,139 @@
+#+TITLE: Spacemacs Configuration
+#+SETUPFILE: ~/Notes/common.org
+#+STARTUP: indent
+
+* 配置备忘
+** [2016-10-16 Sun] 可参考 Purcell的配置: [[https://github.com/purcell/emacs.d][URL]]
+** [2016-10-16 Sun] 中文字体的设置问题
+*** 单独设 org-table [[https://emacs-china.org/t/org-mode/440/10][URL]]
+#+BEGIN_SRC elisp
+     (custom-set-faces
+      ;; custom-set-faces was added by Custom.
+      ;; If you edit it by hand, you could mess it up, so be careful.
+      ;; Your init file should contain only one such instance.
+      ;; If there is more than one, they won't work right.
+      '(org-table ((t (:foreground "#6c71c4" :family "Ubuntu Mono")))))
+#+END_SRC
+*** 使用 chinese-fonts-setup
+#+BEGIN_SRC elisp
+  (use-package chinese-fonts-setup)
+  (chinese-fonts-setup-enable)
+  (cfs-set-spacemacs-fallback-fonts)
+#+END_SRC
+
+*** 中英文分别设置
+** [2016-10-15 Sat] 可参考 sachac 的配置: [[https://github.com/sachac/.emacs.d][URL]]
+** [2016-10-15 Sat] spacemacs 设置修改方案
+参考这里: [[https://github.com/ale-batt/dotspacemacs][URL]]
+
+1. 修改.spacemacs 中的 user-config 函数, 从 gwp.org 文件中读取设置
+   : (with-eval-after-load 'org (org-babel-load-file "~/etc/spacemacs/config.org")) 
+   或者: 
+   : (with-eval-after-load 'org (load-file "~/etc/spacemacs/config.el")) 
+** [2016-10-15 Sat] 参考子龙山人的配置 [[https://github.com/zilongshanren/spacemacs-private][URL]]
+** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
+官方首页提供了三种安装方式. 迁移的时候考虑使用第二种或第三种.
+
+1. spacemacs 目录放置到~/etc/spacemacs/.emacs.d
+   : git clone https://github.com/syl20bnr/spacemacs.git ~/etc/spacemacs/.emacs.d
+
+2. 修改配置文件中的路径
+   
+   #+header: :tangle init.el
+   #+begin_src emacs-lisp :tangle yes
+     (setq spacemacs-start-directory "~/etc/spacemacs/.emacs.d/") 
+     (load-file (concat spacemacs-start-directory "init.el"))
+   #+end_src
+
+3. 命令行启动 emacs
+   #+header: :tangle start.sh
+   #+header: :shebang #! /bin/sh
+   #+begin_src sh
+     emacs -l ~/etc/spacemacs/init.el
+   #+end_src
+* Tips 
+** user-init 和 user-config
+from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
+
+1.12 Should I place my settings in user-init or user-config?
+
+Any variable that layer configuration code will read and act on must be set in
+user-init, and any variable that Spacemacs explicitly sets but you wish to
+override must be set in user-config.
+
+Anything that isn't just setting a variable should 99% be in user-config.
+** 打开.spacemacs 配置文件
+: SPC f e d
+** 调整字体大小 (zoom)
+: SPC z x +/-
+
+* scripts
+* org-download
+#+BEGIN_SRC elisp
+  (defun wally/init-org-download()
+    (use-package org-download
+      :bind    (:map org-mode-map
+                     ("\C-c\M-y" . org-download-image)
+                     )
+      :config
+      (setq org-download-method 'directory)
+      (setq-default org-download-image-dir
+                    (expand-file-name  "~/Wally/Journal/Figure/.org-download"))
+      (setq org-download-timestamp "_%Y-%m-%d_%H:%M:%S")
+      )
+    )
+
+  (use-package org-download
+    :init
+    (defun m/org-download-annotate-default (link) ; Insert image with fixed width
+      "Annotate LINK with the time of download."
+      (format "#+attr_html: :width 300px"))
+    (setq org-download-method 'attach
+          org-download-screenshot-method "escrotum -s %s"
+          org-download-annotate-function 'm/org-download-annotate-default)
+    :bind
+    (:map
+     org-mode-map
+     ("M-<print>" . org-download-screenshot)
+     )
+    )
+
+  (with-eval-after-load 'org
+    (require 'org-crypt)
+    ;; (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+    ;; GPG key to use for encryption
+    ;; Either the Key ID or set to nil to use symmetric encryption.
+    (setq org-crypt-key nil)
+    (setq org-crypt-disable-auto-save nil)
+    )
+
+
+#+END_SRC
+* dot-spacemacs
+这里设置 spacemacs 相关的细节.
+** user-init
+配置 elpa 国内源
+#+BEGIN_SRC elisp
+  (defun dotspacemacs/user-init ()
+    "Initialization function for user code.
+  It is called immediately after `dotspacemacs/init', before layer configuration
+  executes.
+   This function is mostly useful for variables that need to be set
+  before packages are loaded. If you are unsure, you should try in setting them in
+  `dotspacemacs/user-config' first."
+    (setq configuration-layer--elpa-archives
+          '(("melpa-cn" . "https://elpa.zilongshanren.com/melpa/")
+            ("org-cn"   . "https://elpa.zilongshanren.com/org/")
+            ("gnu-cn"   . "https://elpa.zilongshanren.com/gnu/")))
+    )
+#+END_SRC
+** user-config
+: (with-eval-after-load 'org (org-babel-load-file "~/etc/spacemacs/config.org")) 
+* gwp.org [[file:gwp.org][config]]
+* Local-variables
+
+# Emacs:
+# Local Variables:                                                                                                                          
+# mode: org
+# End:

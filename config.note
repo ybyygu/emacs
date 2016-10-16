@@ -38,10 +38,13 @@
    : git clone https://github.com/syl20bnr/spacemacs.git ~/etc/spacemacs/.emacs.d
 
 2. 修改配置文件中的路径
+   elpa默认仍是存在~/.emacs.d/elpa下, 可以用 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Package-Files.html][package-user-dir]] 修改.
    
    #+header: :tangle init.el
    #+begin_src emacs-lisp :tangle yes
-     (setq spacemacs-start-directory "~/etc/spacemacs/.emacs.d/") 
+     (setq spacemacs-start-directory "~/etc/spacemacs/.emacs.d/")
+     (setq package-user-dir (file-name-as-directory
+                             (concat spacemacs-start-directory "elpa/")))
      (load-file (concat spacemacs-start-directory "init.el"))
    #+end_src
 
@@ -49,7 +52,9 @@
    #+header: :tangle start.sh
    #+header: :shebang #! /bin/sh
    #+begin_src sh
-     emacs -l ~/etc/spacemacs/init.el
+     # HOME=`pwd` emacs
+     # emacs -q -l ...
+     emacs --no-init-file --load ~/etc/spacemacs/init.el
    #+end_src
 * Tips 
 ** user-init 和 user-config
@@ -130,7 +135,170 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+END_SRC
 ** user-config
 : (with-eval-after-load 'org (org-babel-load-file "~/etc/spacemacs/config.org")) 
-* gwp.org [[file:gwp.org][config]]
+* 界面显示相关
+1. 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+** 语言字体等
+#+name: init-ui
+#+begin_src emacs-lisp
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8) 
+  (global-font-lock-mode t)
+
+  ;; force a syntax-highlighting refresh
+  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
+  (auto-image-file-mode t)              ; View images inside Emacs
+  ;; set line space wider than default
+  (setq-default line-spacing 4)
+#+end_src
+
+* org-mode 
+用于配置 org-mode 相关的一些设置.
+
+#+name: init-org
+#+BEGIN_SRC elisp
+  (add-to-list 'auto-mode-alist '("\\.note$" . org-mode))
+  (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
+  (setq org-blank-before-new-entry nil)
+
+  ;; open link in new frame
+  (setq org-link-frame-setup
+        (quote
+          ((vm . vm-visit-folder-other-frame)
+          (vm-imap . vm-visit-imap-folder-other-frame)
+          (gnus . org-gnus-no-new-news)
+          (file . find-file-other-frame)
+          (wl . wl-other-frame))))
+
+  (setq org-directory  "~/Notes")
+  (setq org-default-notes-file (concat org-directory "/life.note"))
+
+  ;; 2013-01-20: less is more
+  ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
+  (setq org-agenda-files "~/Notes/.agenda_files")
+
+  (setq org-agenda-include-diary t)
+  (setq org-agenda-span (quote month))
+
+  ;; the default is todo-start
+  (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
+  (setq org-icalendar-alarm-time 5)
+
+  (setq org-agenda-custom-commands
+        '(("a" agenda "" nil ("~/Notes/org-cal.ics"))
+          ("g" . "GTD contexts") ; description for "g" prefix
+          )
+        )
+
+  (add-to-list 'org-agenda-custom-commands
+                '("gr" "Reading"
+                  ((tags-todo "Reading|Read"
+                              (
+                              (org-agenda-overriding-header "待读列表\n------------------")
+                              (org-agenda-sorting-strategy '(category-keep priority-down))
+                              (org-agenda-remove-tags t)
+                              (org-agenda-compact-blocks t)
+                              )
+                              )
+                  (tags "REFILE"
+                        (
+                          (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                          (org-tags-match-list-sublevels nil)
+                          )
+                        )
+                  )
+                  ((org-agenda-compact-blocks t))
+                  )
+                )
+
+  (add-to-list 'org-agenda-custom-commands
+                '("gt" "Tasks"
+                  ((tags "ASAP+TODO=\"TODO\""
+                        (
+                          (org-agenda-overriding-header "ASAP\n------------------")
+                          (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                          (org-agenda-max-entries 3)
+                          )
+                        )
+
+                  (tags "Project+Action+TODO=\"TODO\""
+                        (
+                          (org-agenda-overriding-header "Project\n------------------")
+                          (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                          )
+                        )
+                  (tags "Action+Study+TODO=\"TODO\""
+                        (
+                          (org-agenda-overriding-header "Topics\n------------------")
+                          (org-agenda-files '("~/Notes/research.note"))
+                          (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                          (org-agenda-max-entries 5)
+                          )
+                        )
+
+                  (tags "Action+TODO=\"TODO\""
+                        (
+                          (org-agenda-overriding-header "生活琐事\n------------------")
+                          (org-agenda-files '("~/Notes/life.note"))
+                          (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                          (org-agenda-max-entries 5)
+                          )
+                        )
+
+                  (tags "Computer+TODO=\"TODO\""
+                        (
+                          (org-agenda-overriding-header "电脑调优\n------------------")
+                          (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                          (org-agenda-max-entries 5)
+                          )
+                        )
+                  )
+                  ;; options set here apply to the entire block
+                  (
+                  (org-tags-match-list-sublevels nil)
+                  (org-agenda-prefix-format "%-20c ")
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  (org-agenda-compact-blocks t)
+                  )
+                  )
+                )
+
+  ;; Show all future entries for repeating tasks
+  (setq org-agenda-repeating-timestamp-show-all t)
+  ;; do not show agenda dates if they are empty
+  (setq org-agenda-show-all-dates nil)
+
+  ;; Sorting order for tasks on the agenda
+  (setq org-agenda-sorting-strategy
+        (quote ((agenda time-up priority-down category-up)
+                (todo priority-down)
+                (tags priority-down))))
+
+  ;; Start the weekly agenda today
+  (setq org-agenda-start-on-weekday nil)
+  ;; do not include todo items
+  (setq org-agenda-include-all-todo nil)
+
+
+  ;; auto export agenda
+  (defun gwp-run-agenda-store ()
+    ""
+    (message "Exporting agenda... ")
+    (org-batch-store-agenda-views)
+    (message "Agenda exported."))
+
+  ;; export agenda if I am away for 2 minutes
+  (run-with-idle-timer 600 t 'gwp-run-agenda-store)
+#+END_SRC
+
+* gwp.el
+#+header: :noweb yes
+#+header: :tangle gwp.el
+#+BEGIN_SRC elisp
+  <<init-ui>>
+
+  <<init-org>>
+#+END_SRC
 * Local-variables
 
 # Emacs:

@@ -3,7 +3,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-10-17 17:28
+# Updated: 2016-10-17 18:04
 
 * 配置备忘
 ** [2016-10-17 Mon] 大致成了 以后多花点时间学习下spacemacs的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
@@ -953,7 +953,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
   (defun gwp/init-zotxt ()
     (use-package org-zotxt
                  :after org
-                 :config (add-hook 'org-mode-hook org-zotxt-mode)
+                 :config (add-hook 'org-mode-hook (org-zotxt-mode t))
                )
     )
 

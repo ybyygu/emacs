@@ -3,7 +3,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-10-17 17:15
+# Updated: 2016-10-17 17:28
 
 * 配置备忘
 ** [2016-10-17 Mon] 大致成了 以后多花点时间学习下spacemacs的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
@@ -23,6 +23,7 @@
 14. 默认支持自动保存
 15. 搜索 SPC s s Helm-swoop 太威武了
 16. 最近访问的文件: SPC f r, 当前目录下(project) SPC p r
+17. 查词: z=, ispell-word
    
 ** [2016-10-17 Mon] 使用use-package来加载包 [[https://github.com/jwiegley/use-package][URL]]
 ** [2016-10-16 Sun] 可参考 Purcell的配置: [[https://github.com/purcell/emacs.d][URL]]
@@ -490,7 +491,8 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+END_SRC
 
 * org-mode
-用于配置 org-mode 一些必要设置. 其它尽量使用org-mode in-buffer设置.
+用于配置 org-mode 一些必要设置. 其它尽量使用org-mode in-buffer设置. 可
+参考tumashu的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.el][URL]]
 ** settings
 #+name: init-org
 #+begin_src elisp

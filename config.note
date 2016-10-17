@@ -3,9 +3,10 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-09-03 09:12
+# Updated: 2016-10-17 15:12
 
 * 配置备忘
+** [2016-10-17 Mon] 使用use-package来加载包 [[https://github.com/jwiegley/use-package][URL]]
 ** [2016-10-16 Sun] 可参考 Purcell的配置: [[https://github.com/purcell/emacs.d][URL]]
 ** [2016-10-16 Sun] 中文字体的设置问题
 *** 单独设 org-table [[https://emacs-china.org/t/org-mode/440/10][URL]]
@@ -35,6 +36,633 @@
    : (with-eval-after-load 'org (load-file "~/etc/spacemacs/config.el")) 
 ** [2016-10-15 Sat] 参考子龙山人的配置 [[https://github.com/zilongshanren/spacemacs-private][URL]]
 ** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
+* scripts
+* text
+* calendar
+cal-china-x: https://github.com/xwl/cal-china-x
+
+#+name: init-calendar
+#+BEGIN_SRC emacs-lisp
+  (use-package cal-china-x)
+
+  (setq mark-holidays-in-calendar t)
+
+  (setq calendar-week-start-day 1)
+
+  (setq general-holidays '(
+               (holiday-fixed 1 1  "元旦")
+               (holiday-fixed 2 14     "情人节")
+               (holiday-fixed 3 14     "白色情人节")
+               (holiday-fixed 4 1  "愚人节")
+               (holiday-float 5 0 2    "母亲节")
+               (holiday-float 6 0 3    "父亲节")
+               (holiday-fixed 9 10     "教师节")
+               (holiday-fixed 10 1     "国庆节")
+               (holiday-fixed 12 25    "圣诞节")))
+
+  (setq local-holidays '(
+                 (holiday-lunar 12 30  "春节" 0)
+                 (holiday-lunar 1 15     "元宵" 0)
+                 (holiday-lunar 5 5  "端午" 0)
+                 (holiday-lunar 7 7  "七夕" 0)
+                 (holiday-lunar 8 15     "中秋" 0)
+                 (holiday-lunar 8 25     "焱焱生日" 0)
+                 (holiday-lunar 12 23     "金玉生日" 0)
+                 (holiday-lunar 12 14     "文华生日" 0)
+                 (holiday-lunar 2 3     "二毛生日" 0)
+                 (holiday-lunar 9 9  "重阳" 0)
+                 (holiday-lunar 12 8     "腊八" 0)
+                 (holiday-lunar 12 24    "小年" 0)))
+
+  (setq calendar-holidays local-holidays)
+
+  (setq christian-holidays nil)
+  (setq hebrew-holidays nil)
+  (setq islamic-holidays nil)
+  (setq solar-holidays nil)
+  (setq bahai-holidays nil)
+  (setq oriental-holidays nil)
+
+  (setq calendar-mark-holidays-flag t)
+  (setq mark-diary-entries t)
+#+END_SRC
+
+* ui
+1. 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+** 语言字体
+#+name: init-ui
+#+begin_src emacs-lisp
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8) 
+  (global-font-lock-mode t)
+
+  ;; force a syntax-highlighting refresh
+  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
+  (auto-image-file-mode t)              ; View images inside Emacs
+  ;; set line space wider than default
+  (setq-default line-spacing 4)
+
+  ;; chinese-fonts-setup is amazing
+  (use-package chinese-fonts-setup
+    :ensure t
+    :config
+    (progn
+      (setq cfs-profiles
+            '("program" "org-mode" "read-book"))
+      (setq cfs-profiles-directory (expand-file-name
+                                    "chinese-fonts-setup"
+                                    dotspacemacs-directory))
+      (setq cfs--current-profile-name "program")
+      ;; (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
+      )
+    (chinese-fonts-setup-enable)
+    (cfs-set-spacemacs-fallback-fonts)
+    )
+#+end_src
+
+* org-mode
+用于配置 org-mode 一些必要设置. 其它尽量使用org-mode in-buffer设置.
+** settings
+#+name: init-org
+#+begin_src elisp
+  (use-package org
+    :mode (("\\.org$" . org-mode))
+    :ensure org-plus-contrib
+    :config
+    (progn
+      (setq org-directory  "~/Notes")
+      (setq org-default-notes-file (concat org-directory "/life.note"))
+      (add-to-list 'auto-mode-alist '("\\.note$" . org-mode))
+      (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
+      (setq org-blank-before-new-entry nil)
+
+      ;; open link in new frame
+      (setq org-link-frame-setup
+            (quote
+             ((vm . vm-visit-folder-other-frame)
+              (vm-imap . vm-visit-imap-folder-other-frame)
+              (gnus . org-gnus-no-new-news)
+              (file . find-file-other-frame)
+              (wl . wl-other-frame))))
+      )
+    )
+#+end_src
+** agenda
+*** init-org-agenda
+用use-package来自动化处理
+
+#+name: init-org-agenda
+#+BEGIN_SRC elisp
+  (use-package org-agenda
+    :ensure org-plus-contrib
+    :config
+    (progn
+      <<config-org-agenda>>
+      )
+    )
+
+  ;; auto export agenda
+  (defun gwp/run-agenda-store ()
+    ""
+    (message "Exporting agenda... ")
+    (org-batch-store-agenda-views)
+    (message "Agenda exported."))
+
+  ;; export agenda if I am away for 2 minutes
+  (run-with-idle-timer 600 t 'gwp/run-agenda-store)
+
+#+END_SRC
+*** config-org-agenda
+#+name: config-org-agenda
+#+BEGIN_SRC elisp
+  ;; 2013-01-20: less is more
+  ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
+  (setq org-agenda-files "~/Notes/.agenda_files")
+
+  (setq org-agenda-include-diary t)
+  (setq org-agenda-span (quote month))
+
+  ;; the default is todo-start
+  (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
+  (setq org-icalendar-alarm-time 5)
+
+  (setq org-agenda-custom-commands
+        '(("a" agenda "" nil ("~/Notes/org-cal.ics"))
+          ("g" . "GTD contexts") ; description for "g" prefix
+          )
+        )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gr" "Reading"
+                 ((tags-todo "Reading|Read"
+                             (
+                              (org-agenda-overriding-header "待读列表\n------------------")
+                              (org-agenda-sorting-strategy '(category-keep priority-down))
+                              (org-agenda-remove-tags t)
+                              (org-agenda-compact-blocks t)
+                              )
+                             )
+                  (tags "REFILE"
+                        (
+                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                         (org-tags-match-list-sublevels nil)
+                         )
+                        )
+                  )
+                 ((org-agenda-compact-blocks t))
+                 )
+               )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gt" "Tasks"
+                 ((tags "ASAP+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "ASAP\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         (org-agenda-max-entries 3)
+                         )
+                        )
+
+                  (tags "Project+Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Project\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         )
+                        )
+                  (tags "Action+Study+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Topics\n------------------")
+                         (org-agenda-files '("~/Notes/research.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+
+                  (tags "Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "生活琐事\n------------------")
+                         (org-agenda-files '("~/Notes/life.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+
+                  (tags "Computer+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "电脑调优\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  (org-agenda-prefix-format "%-20c ")
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  (org-agenda-compact-blocks t)
+                  )
+                 )
+               )
+
+  ;; Show all future entries for repeating tasks
+  (setq org-agenda-repeating-timestamp-show-all t)
+  ;; do not show agenda dates if they are empty
+  (setq org-agenda-show-all-dates nil)
+
+  ;; Sorting order for tasks on the agenda
+  (setq org-agenda-sorting-strategy
+        (quote ((agenda time-up priority-down category-up)
+                (todo priority-down)
+                (tags priority-down))))
+
+  ;; Start the weekly agenda today
+  (setq org-agenda-start-on-weekday nil)
+  ;; do not include todo items
+  (setq org-agenda-include-all-todo nil)
+
+#+END_SRC
+** gpg crypt
+#+name: init-org-crypt
+#+begin_src elisp
+  (require 'epa-file)
+  (epa-file-enable)
+  (require 'org-crypt)
+
+  ;; Encrypt all entries before saving
+  (org-crypt-use-before-save-magic)
+  (setq org-crypt-tag-matcher "crypt")
+  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+  ; GPG key to use for encryption
+  (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+  (setq org-crypt-disable-auto-save nil)
+#+end_src
+
+下面的用不到了. 因为是内置包.
+#+begin_src emacs-lisp
+  (use-package epa-file
+               :config
+               (epa-file-enable)
+               )
+
+  (use-package org-crypt
+               :after org
+               :demand t
+               :config
+               (progn
+                 <<config-org-crypt>>
+                 )
+               )
+#+end_src
+
+** exports
+:PROPERTIES:
+:noweb-ref: init-org-export
+:END:
+
+主要添加cn-article classes, 修改使用xelatex来处理tex文档.
+
+也可以用这个包: https://github.com/tumashu/ox-latex-chinese
+
+*** 修改文件关联
+#+BEGIN_SRC emacs-lisp
+  ;; allow bind variables
+  (setq org-export-allow-bind-keywords t)
+
+  ;; disable evaluation when export source codes
+  (setq org-export-babel-evaluate nil)
+
+  ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)
+  ;; http://stackoverflow.com/a/8836108/789593
+  (delete '("\\.pdf\\'" . default) org-file-apps)
+  (delete '("\\.djvu\\'" . default) org-file-apps)
+  (delete '("\\.png\\'" . default) org-file-apps)
+  (delete '("\\.ods\\'" . default) org-file-apps)
+  (delete '("\\.doc\\'" . default) org-file-apps)
+  (delete '("\\.html\\'" . default) org-file-apps)
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
+  (add-to-list 'org-file-apps '("\\.djvu\\'" . "evince %s"))
+  (add-to-list 'org-file-apps '("\\.ods\\'" . "libreoffice --calc %s"))
+  (add-to-list 'org-file-apps '("\\.doc\\'" . "libreoffice --writer %s"))
+  (add-to-list 'org-file-apps '("\\.png\\'" . "eog %s"))
+  (add-to-list 'org-file-apps '("\\.html\\'" . "firefox %s"))
+
+#+END_SRC
+*** latex
+以后可以考虑使用ox-latex-chinese包
+
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-beamer)
+  (require 'ox-latex)
+
+  (defun my-auto-tex-parameters ()
+        "setup xelatex environment"
+
+        (setq org-latex-classes
+              (cons '("article"
+                      "\\documentclass[11pt,article,oneside]{memoir}"
+                      ("\\section{%s}" . "\\section*{%s}")
+                      ("\\subsection{%s}" . "\\subsection*{%s}")
+                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                      ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+                    org-latex-classes))
+
+        (setq org-latex-classes
+              (cons '("cn-article"
+                      "\\documentclass[nocap]{ctexart}
+                      [NO-DEFAULT-PACKAGES]
+                      [NO-PACKAGES]"
+                      ("\\section{%s}" . "\\section*{%s}")
+                      ("\\subsection{%s}" . "\\subsection*{%s}")
+                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                      ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+                    org-latex-classes))
+        )
+
+  (my-auto-tex-parameters)
+
+  ;; Use XeLaTeX to export PDF in Org-mode
+  (setq org-latex-pdf-process
+        '("xelatex -interaction nonstopmode -output-directory %o %f"
+          "xelatex -interaction nonstopmode -output-directory %o %f"
+          "xelatex -interaction nonstopmode -output-directory %o %f")
+        )
+#+END_SRC
+
+** refile
+#+name: init-org-refile
+#+BEGIN_SRC emacs-lisp
+  ;; any headline with level <= 2 is a target
+  (setq org-refile-targets '(
+                             (org-agenda-files :tag . "Incoming")
+                             )
+        )
+
+  (setq org-reverse-note-order t)
+  (defun gwp/get-org-file-link-path ()
+    (save-excursion
+      (beginning-of-line)
+      (search-forward "[[file:" (line-end-position))
+      (if (org-in-regexp org-bracket-link-regexp 1)
+          (org-link-unescape (match-string-no-properties 1))
+        )
+      )
+    )
+
+  (defun gwp/enter-to-read-state()
+    "evoke external shell script when entering READ state"
+    (when (equal org-state "READ")
+      (setq file (gwp/get-org-file-link-path))
+      (if file
+          (progn
+           (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+           (message cmd)
+           (shell-command cmd)
+          )
+          )
+      )
+      (when (equal org-last-state "READ")
+        (message "try to remove READ state")
+        (setq file (gwp/get-org-file-link-path))
+        (if file
+            (progn
+              (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+              (message cmd)
+              (shell-command cmd)
+              )
+          )
+        )
+    )
+  (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
+
+  ;; show a sparse-tree in READ keyword
+  (defun gwp/org-show-read-tree ()
+    "show a sparse-tree in READ keyword"
+    (interactive)
+
+    (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
+      ;; create new macro of the form
+      ;; C-u M-x org-show-todo-tree RET READ RET
+      (execute-kbd-macro (vconcat base-vector
+                                  (vector 'return)))))
+
+#+END_SRC
+
+** screenshot
+*** org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
+感觉这个包比org-download质量更高一些. 优点:
+1. 截屏的时候自动隐藏当前编辑窗口.
+2. 使用org-attach来处理文件的删除.
+
+使用shutter:
+: shutter -s -n -e --disable_systray -o
+
+#+name: init-org-screenshot
+#+BEGIN_SRC emacs-lisp :results none
+  (defun gwp/init-org-attach-screenshot ()
+    (use-package org-attach-screenshot
+                 :after org
+                 :bind
+                 (("C-c <insert>" . org-attach-screenshot))
+                 :config
+                 (setq org-attach-screenshot-command-line "shutter -s -n -e --disable_systray -o %f")
+                 )
+    )
+#+END_SRC
+
+*** org-download
+使用org-download包来实现截屏的功能. 这是spacemacs org layer中使用的包.
+
+#+BEGIN_SRC elisp
+  (use-package org-download
+               :after org
+               :disabled t
+               :config
+               (progn
+                 ;; (setq org-download-method 'directory)
+                 ;; or
+                 (setq org-download-method 'attach)
+                 (setq-default org-download-image-dir "./images/")
+                 (setq org-download-screenshot-method "emacs-take-snapshot.sh %s")
+                 ;; disable annotation
+                 (setq org-download-annotate-function (lambda (_) ""))
+                 )
+               )
+#+END_SRC
+*** gwp/insert-screen
+#+BEGIN_SRC emacs-lisp
+  (defun delete-linked-file (start end)
+    "Delete the file named at point."
+
+    (interactive "r")
+
+    (let ((file (buffer-substring start end)))
+      (setq file (replace-regexp-in-string "^\s*\\[\\[" "" file))
+      (setq file (replace-regexp-in-string "\\]\\]\s*$" "" file))
+      (setq file (replace-regexp-in-string "^\s*file:" "" file))
+      (message "filename %s" file)
+      (if (and (file-exists-p file) (y-or-n-p (format "Delete %s? " file)))
+          (progn
+            (delete-region start end)
+            (delete-file file)
+            (message "Deleted %s" file)
+            )
+        (progn
+          (message "Did not delete %s" file)
+          )
+        )
+      )
+    )
+
+  (defun insert-screen (path)
+    "Save screenshot into sub directory named as images.
+    To use this function, you need install shutter"
+    (interactive "P")
+
+    (setq insert t)
+    (if (org-in-regexp org-bracket-link-regexp 1)
+        (progn
+          (setq path (match-string-no-properties 1))
+          (setq insert nil)
+        )
+      (progn
+        (setq path (make-temp-name (format-time-string "images/%Y-%m-%d-%H%M")))
+        (setq path (concat path ".png"))
+        (setq insert t)
+        )
+      )
+
+    (setq path (read-string "File name: " path))
+    (if insert
+        (insert (format "[[file:%s]]" path))
+        )
+
+    (shell-command (format "emacs-take-snapshot.sh %s" path))
+    (message (concat "You have save screen as " path " at: " (file-name-directory buffer-file-name)))
+    )
+
+  (defun insert-link-from-clipboard-old (name)
+    "Save file path in clipboard as link"
+    (interactive "sLink description: ")
+
+    ;; UTF8_STRING is necessary to work for copying in nautilus
+    (setq content (x-get-selection 'CLIPBOARD 'UTF8_STRING))
+    (if (file-readable-p content)
+        (progn
+          (setq link-path (file-relative-name content))
+          (insert (format "[[file:%s][%s]]" link-path name))
+          )
+      (message "No file path found in clipboard.")
+      )
+    (setq current-prefix-arg '(4)) ; C-u
+    (let ((default-directory choose-directory-default-directory))
+      (call-interactively 'org-insert-link)
+      )
+    )
+
+  (defun insert-link-from-clipboard (something)
+    "Save file path in clipboard as relative link"
+    (interactive "sEnter desc: ")
+    (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?i ?n ?s ?e ?r ?t ?- ?l ?i ?n ?k return ?\C-v return]))
+      ;; create new macro of the form
+      ;; C-u M-x org-insert-link RET C-v RET
+      (execute-kbd-macro (vconcat base-vector
+                                  (string-to-vector something)
+                                  (vector 'return)))))
+
+#+END_SRC
+** zotero
+主要是用来支持 "zotero:" 链接的.
+
+#+name: init-org-zotxt
+#+begin_src emacs-lisp
+  (defun gwp/init-zotxt ()
+    (use-package org-zotxt
+               :after org
+               :init (add-hook 'org-mode-hook org-zotxt-mode)
+               )
+    )
+
+#+end_src
+
+** babel
+所有支持的语言: [[http://orgmode.org/worg/org-contrib/babel/languages.html][URL]]
+1. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-awk.html][awk]]
+2. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-R.html][R]]
+3. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][Python]]
+
+  #+begin_src emacs-lisp
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t)
+       (R . t)
+       (sh . t)
+       (C . t)
+       (perl . t)
+       (plantuml . t)
+       )
+     )
+
+    ;; http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-makefile.html
+    ;; For tabs aren't lost in the Org mode buffer
+    (setq org-src-preserve-indentation nil)
+
+    (setq org-plantuml-jar-path
+          (expand-file-name "~/.emacs.d/plantuml/plantuml.jar"))
+    (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
+
+    (setq org-babel-python-command "python3")
+
+    (defun gwp/display-inline-images ()
+      (condition-case nil
+          (org-display-inline-images)
+        (error nil)))
+    (setq org-confirm-babel-evaluate nil)
+  #+end_src
+
+  #+RESULTS:
+* server mode
+#+BEGIN_SRC emacs-lisp
+  ;; using existing Emacs process as the server
+  (server-start)
+
+  (defun gwp/quit-frame-and-kill-buffer ()
+    "kill the current buffer and the current frame"
+    (interactive)
+
+    (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
+    (kill-buffer)
+    (delete-frame)
+    )
+
+  ;; (global-set-key (kbd "<C-f4>") 'gwp/quit-frame-and-kill-buffer)
+
+  ;; quit emacs server
+  (global-set-key (kbd "<C-f4>") 'save-buffers-kill-emacs)
+
+  ;; https://www.masteringemacs.org/article/disabling-prompts-emacs
+  ;; 2015-11-25: does not work
+  ;; (setq kill-buffer-query-functions
+  ;;   (remq 'process-kill-buffer-query-function
+  ;;         kill-buffer-query-functions))
+
+  ;; 2015-11-25: does not work
+  ;; (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
+
+  ;; http://stackoverflow.com/questions/268088/how-to-remove-the-prompt-for-killing-emacsclient-buffers
+  ;; this seems work
+  (defalias 'server-kill-buffer-query-function '(lambda () t))
+
+#+END_SRC
+
+#+RESULTS:
+: save-buffers-kill-emacs
+
+* spacemacs
+** install
 官方首页提供了三种安装方式. 迁移的时候考虑使用第二种或第三种.
 
 1. spacemacs 目录放置到~/etc/spacemacs/.emacs.d
@@ -59,8 +687,9 @@
      # emacs -q -l ...
      emacs --no-init-file --load ~/etc/spacemacs/init.el
    #+end_src
-* Tips 
-** user-init 和 user-config
+
+** tips 
+*** user-init 和 user-config
 from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
 
 1.12 Should I place my settings in user-init or user-config?
@@ -70,16 +699,15 @@ user-init, and any variable that Spacemacs explicitly sets but you wish to
 override must be set in user-config.
 
 Anything that isn't just setting a variable should 99% be in user-config.
-** 打开.spacemacs 配置文件
+*** 打开.spacemacs 配置文件
 : SPC f e d
-** 调整字体大小 (zoom)
+*** 调整字体大小 (zoom)
 : SPC z x +/-
 
-* scripts
-* dot-spacemacs
+** dot-spacemacs
 这里设置 .spacemacs 相关的细节. .spacemacs文件可放到.spacemacs.d文件中,
 并更名为init.el
-** user-init
+*** user-init
 配置 elpa 国内源
 #+BEGIN_SRC elisp
   (defun dotspacemacs/user-init ()
@@ -95,20 +723,116 @@ Anything that isn't just setting a variable should 99% be in user-config.
             ("gnu-cn"   . "https://elpa.zilongshanren.com/gnu/")))
     )
 #+END_SRC
-** user-config
+*** user-config
 #+begin_src emacs-lisp
   (load-file (expand-file-name "gwp.org" dotspacemacs-directory))
 #+end_src
-** custom-file
+*** custom-file
 #+begin_src emacs-lisp
   (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
   (load custom-file 'no-error 'no-message)
 #+end_src
 
 在.spacemacs文件最后添加
+** gwp layer
+*** layers.el
+这里添加我想要的layers. 这要.spacemacs文件的修改需要就很少了.
+[2016-10-16 Sun] 行不通?
+#+begin_src elisp
+  ;;; layers.el --- Spacemacs Layer layers File
+  ;;
+  ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
+  ;;
+  ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
+  ;; URL: https://github.com/syl20bnr/spacemacs
+  ;;
+  ;; This file is not part of GNU Emacs.
+  ;;
+  ;;; License: GPLv3
 
-* 文本编辑
-** 自动保存
+  dotspacemacs-configuration-layers '(
+                                      auto-completion
+                                      better-defaults
+                                      git
+                                      org
+                                      python
+                                      )
+#+end_src
+*** packages.el
+通过packages.el接口, 可以将自己的一些设置与spacemacs融为一体.
+
+#+header: :noweb yes
+#+header: :tangle ~/.spacemacs.d/layers/gwp/packages.el
+#+BEGIN_SRC elisp
+  ;;; packages.el --- gwp layer packages file for Spacemacs.
+
+  ;;; Commentary:
+
+  ;; Briefly, each package to be installed or configured by this layer should be
+  ;; added to `gwp-packages'. Then, for each package PACKAGE:
+  ;;
+  ;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
+  ;;   function `gwp/init-PACKAGE' to load and initialize the package.
+
+  ;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
+  ;;   define the functions `gwp/pre-init-PACKAGE' and/or
+  ;;   `gwp/post-init-PACKAGE' to customize the package as it is loaded.
+
+  ;;; Code:
+
+  (defconst gwp-packages
+    '(
+      (org :location built-in)
+      (org-bullets :excluded t)  ;; shipped with spacemacs in org layer
+      (org-download :excluded t) ;; shipped with spacemacs in org layer
+      zotxt
+      chinese-fonts-setup
+      cal-china-x
+      ox-latex-chinese
+      zotxt
+      org-attach-screenshot
+      )
+
+    "The list of Lisp packages required by the gwp layer.")
+
+  (defun gwp/init-chinese-fonts-setup ()
+    <<init-ui>>
+    )
+
+  (defun gwp/init-cal-china-x ()
+    <<init-calendar>>
+    )
+
+  (defun gwp/post-init-org ()
+    (with-eval-after-load 'org
+      (progn
+        <<init-org>>
+        <<init-org-agenda>>
+        <<init-org-crypt>>
+        <<init-org-export>>
+        <<init-org-refile>>
+        )
+      )
+    )
+
+  (defun gwp/init-ox-latex-chinese ()
+    ;; 
+    )
+
+  <<init-org-screenshot>>
+
+  <<init-org-zotxt>>
+
+
+  ;;; packages.el ends here
+
+#+END_SRC
+*** config.el
+这里添加gwp layer本身需要的配置. 暂时没有必要.
+
+* 旧的配置
+** 文本编辑
+*** 自动保存
   #+BEGIN_SRC emacs-lisp
     (defvar gwp/auto-save-timer nil
       "auto-save timer")
@@ -161,13 +885,13 @@ Anything that isn't just setting a variable should 99% be in user-config.
   #+RESULTS:
   : gwp/disable-auto-save
 
-** 可视化选择
+*** 可视化选择
 #+BEGIN_SRC emacs-lisp
 (global-unset-key (kbd "C-SPC")) ; set-mark-command
 (global-set-key (kbd "M-SPC") 'set-mark-command) ; "ESC SPC" easy to hit
 #+END_SRC
 
-** 粘贴&复制
+*** 粘贴&复制
 
 #+BEGIN_SRC emacs-lisp
 (cua-mode t)
@@ -210,7 +934,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+RESULTS:
 : gwp-copy-dwim
 
-** undo
+*** undo
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "M-u") 'undo)  ; like in vim, cheers!
 (global-set-key (kbd "C-z") 'undo)
@@ -219,7 +943,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+RESULTS:
 : undo
 
-** 操作文本行
+*** 操作文本行
 #+BEGIN_SRC emacs-lisp
 (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
 ;; more convenient than C-M-BACKSPC
@@ -408,15 +1132,15 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+RESULTS:
 : newline-and-indent
 
-** goto-last-change
-*** 如果需要先安装下.
+*** goto-last-change
+**** 如果需要先安装下.
 
 #+BEGIN_SRC emacs-lisp
 (starter-kit-install-if-needed 'goto-last-change)
 #+END_SRC
 
 #+RESULTS:
-*** 设置快捷键
+**** 设置快捷键
 #+BEGIN_SRC emacs-lisp
 (require 'goto-last-change)
 (global-set-key (kbd "<f5> b") 'goto-last-change)
@@ -424,7 +1148,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 
 #+RESULTS:
 : goto-last-change
-** 处理空格
+*** 处理空格
 #+BEGIN_SRC emacs-lisp
   (setq show-trailing-whitespace t)
   (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
@@ -436,7 +1160,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+RESULTS:
 : delete-blank-lines
 
-** TODO iedit: 同时编辑多处文本 (有更好用的代替?)
+*** TODO iedit: 同时编辑多处文本 (有更好用的代替?)
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'iedit)
   (require 'iedit)
@@ -447,7 +1171,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 
 #+RESULTS:
 : iedit-mode
-** 符号对操作
+*** 符号对操作
 #+BEGIN_SRC emacs-lisp
 
   (defvar my-skeleton-pair-alist
@@ -487,7 +1211,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 
 #+RESULTS:
 : t
-** 选择
+*** 选择
 #+BEGIN_SRC emacs-lisp
 ;; http://xahlee.org/emacs/modernization_mark-word.html
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
@@ -589,7 +1313,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 #+RESULTS:
 : er/expand-region
-** 快捷插入";"命令
+*** 快捷插入";"命令
 #+BEGIN_SRC emacs-lisp
 ;; referred: http://docs.huihoo.com/homepage/shredderyin/wiki/KeyBinding.html
 (define-prefix-command 'semicolon-map)
@@ -653,14 +1377,14 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 #+RESULTS:
 : insert-fixme
-** gjf-mode: 编译gaussian GJF文件
+*** gjf-mode: 编译gaussian GJF文件
 #+BEGIN_SRC emacs-lisp
 (require 'gjf-mode)
 #+END_SRC
 
 #+RESULTS:
 : gjf-mode
-** yaml-mode
+*** yaml-mode
    只要是为了在org-babel中用.
    #+begin_src emacs-lisp
      (starter-kit-install-if-needed 'yaml-mode)
@@ -668,7 +1392,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
    #+RESULTS:
 
-** TODO Misc (清理下)
+*** TODO Misc (清理下)
 #+BEGIN_SRC emacs-lisp
   (global-unset-key (kbd "C-x C-c"))
 
@@ -735,19 +1459,17 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : gwp-open-with
 
-* 开发相关(通用) [0/2]
-** 高亮当前行
-   所有已定义的颜色:
-   : list-colors-display
-   
-   #+BEGIN_SRC emacs-lisp
-     (global-hl-line-mode 1)
-     (set-face-attribute hl-line-face nil :underline nil :background "gray0")
-   #+END_SRC
+** 开发相关(通用)
+*** 高亮当前行
+所有已定义的颜色:
+: list-colors-display
 
-   #+RESULTS:
+#+BEGIN_SRC emacs-lisp
+  (global-hl-line-mode 1)
+  (set-face-attribute hl-line-face nil :underline nil :background "gray0")
+#+END_SRC
 
-** 书签&导航等
+*** 书签&导航等
 主要用bm, 书签持久化是从bm.el里抄来的.
 
 #+BEGIN_SRC emacs-lisp
@@ -794,7 +1516,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : gwp-mouse-toggle-bm
 
-** TAB
+*** TAB
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "ybyygu@gmail.com")
 (setq default-tab-width 4)
@@ -805,7 +1527,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : 4
 
-** TODO 注释 (怎么用comment-region)?
+*** TODO 注释 (怎么用comment-region)?
 #+BEGIN_SRC emacs-lisp
   ; (starter-kit-install-if-needed 'line-comment-banner)
   ; (require 'line-comment-banner)
@@ -830,7 +1552,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : comment-dwim-line
 
-** which-func
+*** which-func
 
 #+BEGIN_SRC emacs-lisp
 ;; show function name of the current line in mode-line
@@ -841,7 +1563,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : t
 
-** 版本管理
+*** 版本管理
 #+BEGIN_SRC emacs-lisp
 (setq vc-follow-symlinks t)
 ;; (remove-hook 'vc-checkout-hook 'time-stamp)
@@ -851,7 +1573,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 #+RESULTS:
 | time-stamp |
-** TODO 代码补全与自动完成 (还不是特别好用)
+*** TODO 代码补全与自动完成 (还不是特别好用)
 系统自带的abbrev功能比较简单. 可以用M-/来激活补全.
 
 #+BEGIN_SRC emacs-lisp
@@ -884,7 +1606,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : silently
 
-* dired
+** dired
   #+begin_src elisp
     (defun dired-open-file ()
       "In dired, open the file named on this line."
@@ -899,8 +1621,8 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
   #+RESULTS:
   : ublt/dired-open-native
-* python
-** 使用emacs中自带的python.el
+** python
+*** 使用emacs中自带的python.el
    试了下, 一切都正常. 先这么着吧.
 
   #+begin_src emacs-lisp
@@ -944,7 +1666,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   #+RESULTS:
   | (lambda nil (set (make-local-variable (quote yas-indent-line)) (quote fixed))) | er/add-python-mode-expansions | my-python-hook |
 
-** jedi
+*** jedi
    jedi依赖auto-complete. jedi-server安装时要将virtualenv2软链为
    virtualenv
 
@@ -960,100 +1682,8 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : t
 
-* R
-#+name: install-ess
-#+begin_src emacs-lisp
-  (starter-kit-install-if-needed 'ess)
-#+end_src
-
-#+RESULTS: install-ess
-
-* 日历
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'cal-china-x)
-  (require 'cal-china-x)
-  (setq mark-holidays-in-calendar t)
-
-  (setq calendar-week-start-day 1)
-  ;; obsolete since 23.1
-  ;; (setq chinese-calendar-celestial-stem
-  ;;   ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-  ;; (setq chinese-calendar-terrestrial-branch
-  ;;   ["子" "丑" "寅" "卯" "辰" "巳" "戊" "未" "申" "酉" "戌" "亥"])
-
-  (setq general-holidays '(
-               (holiday-fixed 1 1  "元旦")
-               (holiday-fixed 2 14     "情人节")
-               (holiday-fixed 3 14     "白色情人节")
-               (holiday-fixed 4 1  "愚人节")
-               (holiday-float 5 0 2    "母亲节")
-               (holiday-float 6 0 3    "父亲节")
-               (holiday-fixed 9 10     "教师节")
-               (holiday-fixed 10 1     "国庆节")
-               (holiday-fixed 12 25    "圣诞节")))
-
-  (setq local-holidays '(
-                 (holiday-lunar 12 30  "春节" 0)
-                 (holiday-lunar 1 15     "元宵" 0)
-                 (holiday-lunar 5 5  "端午" 0)
-                 (holiday-lunar 7 7  "七夕" 0)
-                 (holiday-lunar 8 15     "中秋" 0)
-                 (holiday-lunar 8 25     "焱焱生日" 0)
-                 (holiday-lunar 12 23     "金玉生日" 0)
-                 (holiday-lunar 12 14     "文华生日" 0)
-                 (holiday-lunar 2 3     "二毛生日" 0)
-                 (holiday-lunar 9 9  "重阳" 0)
-                 (holiday-lunar 12 8     "腊八" 0)
-                 (holiday-lunar 12 24    "小年" 0)))
-
-  (setq calendar-holidays local-holidays)
-
-  (setq christian-holidays nil)
-  (setq hebrew-holidays nil)
-  (setq islamic-holidays nil)
-  (setq solar-holidays nil)
-  (setq bahai-holidays nil)
-  (setq oriental-holidays nil)
-
-  (setq calendar-mark-holidays-flag t)
-  (setq mark-diary-entries t)
-
-#+END_SRC
-
-* 界面显示相关
-1. 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
-** 语言字体等
-#+name: init-ui
-#+begin_src emacs-lisp
-  (set-language-environment "UTF-8")
-  (prefer-coding-system 'utf-8) 
-  (global-font-lock-mode t)
-
-  ;; force a syntax-highlighting refresh
-  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
-  (auto-image-file-mode t)              ; View images inside Emacs
-  ;; set line space wider than default
-  (setq-default line-spacing 4)
-
-  ;; chinese-fonts-setup is amazing
-  (use-package chinese-fonts-setup
-    :ensure t
-    :config
-    (progn
-      (setq cfs-profiles
-            '("program" "org-mode" "read-book"))
-      (setq cfs-profiles-directory (expand-file-name
-                                    "chinese-fonts-setup"
-                                    dotspacemacs-directory))
-      (setq cfs--current-profile-name "program")
-      ;; (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
-      )
-    (chinese-fonts-setup-enable)
-    (cfs-set-spacemacs-fallback-fonts)
-    )
-#+end_src
-
-** 配色主题
+** 界面显示相关
+*** 配色主题
 [[http://emacsthemes.caisah.info/][这里]] 有很多主题的图示, 看花眼了. [[https://github.com/owainlewis/emacs-color-themes][这个]] 也不错, 以很多程序员的名字命名.
 
 #+BEGIN_SRC emacs-lisp
@@ -1071,8 +1701,8 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : t
 
-** 文本滚动
-   默认的闪花了眼
+*** 文本滚动
+默认的闪花了眼
 #+BEGIN_SRC emacs-lisp results: none
   ;; http://stackoverflow.com/questions/3631220/fix-to-get-smooth-scrolling-in-emacs
   ;; (setq redisplay-dont-pause t
@@ -1092,714 +1722,22 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ;; (require 'smooth-scrolling)
 
 #+END_SRC
-** 修改frame标题 方便gnome-shell桌面切换
-#+BEGIN_SRC emacs-lisp results: none
-;; http://www.emacswiki.org/emacs/FrameTitle
-(setq frame-title-format '("" "%b: " buffer-file-name))
-#+END_SRC
-
-** 光标显示模式
+*** 光标显示模式
 #+BEGIN_SRC emacs-lisp
 
 ;; use vertical bar between characters
 ;; http://www.gnu.org/software/emacs/manual/html_node/elisp/Cursor-Parameters.html
 (setq-default cursor-type 'bar)
 
-#+END_SRC
-
-#+RESULTS:
-: bar
-
-* org-download
-#+BEGIN_SRC elisp
-  (defun wally/init-org-download()
-    (use-package org-download
-      :bind    (:map org-mode-map
-                     ("\C-c\M-y" . org-download-image)
-                     )
-      :config
-      (setq org-download-method 'directory)
-      (setq-default org-download-image-dir
-                    (expand-file-name  "~/Wally/Journal/Figure/.org-download"))
-      (setq org-download-timestamp "_%Y-%m-%d_%H:%M:%S")
-      )
-    )
-
-  (use-package org-download
-    :init
-    (defun m/org-download-annotate-default (link) ; Insert image with fixed width
-      "Annotate LINK with the time of download."
-      (format "#+attr_html: :width 300px"))
-    (setq org-download-method 'attach
-          org-download-screenshot-method "escrotum -s %s"
-          org-download-annotate-function 'm/org-download-annotate-default)
-    :bind
-    (:map
-     org-mode-map
-     ("M-<print>" . org-download-screenshot)
-     )
-    )
-
-  (with-eval-after-load 'org
-    (require 'org-crypt)
-    ;; (org-crypt-use-before-save-magic)
-    (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-    ;; GPG key to use for encryption
-    ;; Either the Key ID or set to nil to use symmetric encryption.
-    (setq org-crypt-key nil)
-    (setq org-crypt-disable-auto-save nil)
-    )
-
-
-#+END_SRC
-* org-mode 
-用于配置 org-mode 相关的一些设置.
-
-org-mode的很多设置可以放到buffer里, 即文件头以"#+"开始的定义, 见:
-[[http://orgmode.org/manual/In_002dbuffer-settings.html#In_002dbuffer-settings][in-buffer-settings]]
-
-** org-mode
-#+name: init-org
-#+begin_src elisp
-  (use-package org
-    :mode (("\\.org$" . org-mode))
-    :ensure org-plus-contrib
-    :config
-    (progn
-      (setq org-directory  "~/Notes")
-      (setq org-default-notes-file (concat org-directory "/life.note"))
-      (add-to-list 'auto-mode-alist '("\\.note$" . org-mode))
-      (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
-      (setq org-blank-before-new-entry nil)
-
-      ;; open link in new frame
-      (setq org-link-frame-setup
-            (quote
-             ((vm . vm-visit-folder-other-frame)
-              (vm-imap . vm-visit-imap-folder-other-frame)
-              (gnus . org-gnus-no-new-news)
-              (file . find-file-other-frame)
-              (wl . wl-other-frame))))
-      )
-    )
-#+end_src
-** org-agenda
-*** init-org-agenda
-用use-package来自动化处理
-
-#+name: init-org-agenda
-#+BEGIN_SRC elisp
-  (use-package org-agenda
-    :ensure org-plus-contrib
-    :config
-    (progn
-      <<config-org-agenda>>
-      )
-    )
-
-  ;; auto export agenda
-  (defun gwp/run-agenda-store ()
-    ""
-    (message "Exporting agenda... ")
-    (org-batch-store-agenda-views)
-    (message "Agenda exported."))
-
-  ;; export agenda if I am away for 2 minutes
-  (run-with-idle-timer 600 t 'gwp/run-agenda-store)
-
-#+END_SRC
-*** config-org-agenda
-#+name: config-org-agenda
-#+BEGIN_SRC elisp
-  ;; 2013-01-20: less is more
-  ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
-  (setq org-agenda-files "~/Notes/.agenda_files")
-
-  (setq org-agenda-include-diary t)
-  (setq org-agenda-span (quote month))
-
-  ;; the default is todo-start
-  (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
-  (setq org-icalendar-alarm-time 5)
-
-  (setq org-agenda-custom-commands
-        '(("a" agenda "" nil ("~/Notes/org-cal.ics"))
-          ("g" . "GTD contexts") ; description for "g" prefix
-          )
-        )
-
-  (add-to-list 'org-agenda-custom-commands
-               '("gr" "Reading"
-                 ((tags-todo "Reading|Read"
-                             (
-                              (org-agenda-overriding-header "待读列表\n------------------")
-                              (org-agenda-sorting-strategy '(category-keep priority-down))
-                              (org-agenda-remove-tags t)
-                              (org-agenda-compact-blocks t)
-                              )
-                             )
-                  (tags "REFILE"
-                        (
-                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
-                         (org-tags-match-list-sublevels nil)
-                         )
-                        )
-                  )
-                 ((org-agenda-compact-blocks t))
-                 )
-               )
-
-  (add-to-list 'org-agenda-custom-commands
-               '("gt" "Tasks"
-                 ((tags "ASAP+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "ASAP\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         (org-agenda-max-entries 3)
-                         )
-                        )
-
-                  (tags "Project+Action+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "Project\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         )
-                        )
-                  (tags "Action+Study+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "Topics\n------------------")
-                         (org-agenda-files '("~/Notes/research.note"))
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-
-                  (tags "Action+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "生活琐事\n------------------")
-                         (org-agenda-files '("~/Notes/life.note"))
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-
-                  (tags "Computer+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "电脑调优\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-                  )
-                 ;; options set here apply to the entire block
-                 (
-                  (org-tags-match-list-sublevels nil)
-                  (org-agenda-prefix-format "%-20c ")
-                  (org-agenda-todo-keyword-format "")
-                  (org-agenda-remove-tags t)
-                  (org-agenda-compact-blocks t)
-                  )
-                 )
-               )
-
-  ;; Show all future entries for repeating tasks
-  (setq org-agenda-repeating-timestamp-show-all t)
-  ;; do not show agenda dates if they are empty
-  (setq org-agenda-show-all-dates nil)
-
-  ;; Sorting order for tasks on the agenda
-  (setq org-agenda-sorting-strategy
-        (quote ((agenda time-up priority-down category-up)
-                (todo priority-down)
-                (tags priority-down))))
-
-  ;; Start the weekly agenda today
-  (setq org-agenda-start-on-weekday nil)
-  ;; do not include todo items
-  (setq org-agenda-include-all-todo nil)
-
-#+END_SRC
-** GPG 加密
-#+name: init-org-crypt
-#+begin_src elisp
-  (require 'epa-file)
-  (epa-file-enable)
-  (require 'org-crypt)
-
-  ;; Encrypt all entries before saving
-  (org-crypt-use-before-save-magic)
-  (setq org-crypt-tag-matcher "crypt")
-  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-  ; GPG key to use for encryption
-  (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
-  (setq org-crypt-disable-auto-save nil)
 #+end_src
 
-下面的用不到了. 因为是内置包.
-#+begin_src emacs-lisp
-  (use-package epa-file
-               :config
-               (epa-file-enable)
-               )
-
-  (use-package org-crypt
-               :after org
-               :demand t
-               :config
-               (progn
-                 <<config-org-crypt>>
-                 )
-               )
-#+end_src
-
-** TODO [[http://orgmode.org/worg/org-contrib/org-favtable.html][org-favtable]]
-** TODO 屏幕截图 新出了个[[https://github.com/dfeich/org-screenshot][org-snapshot]], 想办法用进来.
-#+BEGIN_SRC emacs-lisp
-  (defun delete-linked-file (start end)
-    "Delete the file named at point."
-
-    (interactive "r")
-
-    (let ((file (buffer-substring start end)))
-      (setq file (replace-regexp-in-string "^\s*\\[\\[" "" file))
-      (setq file (replace-regexp-in-string "\\]\\]\s*$" "" file))
-      (setq file (replace-regexp-in-string "^\s*file:" "" file))
-      (message "filename %s" file)
-      (if (and (file-exists-p file) (y-or-n-p (format "Delete %s? " file)))
-          (progn
-            (delete-region start end)
-            (delete-file file)
-            (message "Deleted %s" file)
-            )
-        (progn
-          (message "Did not delete %s" file)
-          )
-        )
-      )
-    )
-
-  (defun insert-screen (path)
-    "Save screenshot into sub directory named as images.
-    To use this function, you need install shutter"
-    (interactive "P")
-
-    (setq insert t)
-    (if (org-in-regexp org-bracket-link-regexp 1)
-        (progn
-          (setq path (match-string-no-properties 1))
-          (setq insert nil)
-        )
-      (progn
-        (setq path (make-temp-name (format-time-string "images/%Y-%m-%d-%H%M")))
-        (setq path (concat path ".png"))
-        (setq insert t)
-        )
-      )
-
-    (setq path (read-string "File name: " path))
-    (if insert
-        (insert (format "[[file:%s]]" path))
-        )
-
-    (shell-command (format "emacs-take-snapshot.sh %s" path))
-    (message (concat "You have save screen as " path " at: " (file-name-directory buffer-file-name)))
-    )
-
-  (defun insert-link-from-clipboard-old (name)
-    "Save file path in clipboard as link"
-    (interactive "sLink description: ")
-
-    ;; UTF8_STRING is necessary to work for copying in nautilus
-    (setq content (x-get-selection 'CLIPBOARD 'UTF8_STRING))
-    (if (file-readable-p content)
-        (progn
-          (setq link-path (file-relative-name content))
-          (insert (format "[[file:%s][%s]]" link-path name))
-          )
-      (message "No file path found in clipboard.")
-      )
-    (setq current-prefix-arg '(4)) ; C-u
-    (let ((default-directory choose-directory-default-directory))
-      (call-interactively 'org-insert-link)
-      )
-    )
-
-  (defun insert-link-from-clipboard (something)
-    "Save file path in clipboard as relative link"
-    (interactive "sEnter desc: ")
-    (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?i ?n ?s ?e ?r ?t ?- ?l ?i ?n ?k return ?\C-v return]))
-      ;; create new macro of the form
-      ;; C-u M-x org-insert-link RET C-v RET
-      (execute-kbd-macro (vconcat base-vector
-                                  (string-to-vector something)
-                                  (vector 'return)))))
-
-#+END_SRC
-** org-bullets
-#+BEGIN_SRC emacs-lisp
-;; (starter-kit-install-if-needed 'org-bullets)
-;; (require 'org-bullets)
-;; 禁掉吧, 不是很好看
-;; (org-bullets-mode 1)
+*** 修改frame标题 方便gnome-shell桌面切换
+#+BEGIN_SRC emacs-lisp results: none
+;; http://www.emacswiki.org/emacs/FrameTitle
+(setq frame-title-format '("" "%b: " buffer-file-name))
 #+END_SRC
 
-#+RESULTS:
-: t
 
- #+BEGIN_SRC emacs-lisp
- (require 'org-mouse)
- #+END_SRC
-
- #+RESULTS:
- : org-mouse
-
-** GPG加密
-#+BEGIN_SRC emacs-lisp
-(require 'epa-file)
-(epa-file-enable)
-
-(require 'org-crypt)
-; Encrypt all entries before saving
-(org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
-; GPG key to use for encryption
-(setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
-(setq org-crypt-disable-auto-save nil)
-
-#+END_SRC
-
-#+RESULTS:
-
-** org-mode hook
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'org-mode-hook (lambda ()
-                              (local-set-key (kbd "C-c <insert>") 'insert-screen)
-                              (local-set-key (kbd "C-c p") 'insert-link-from-clipboard)
-                              (local-set-key (kbd "C-c <delete>") 'delete-linked-file)
-                              (setq-default indent-tabs-mode nil)
-                              (setq tab-width 4)
-                              ;; be quick
-                              (setq org-export-allow-BIND t)
-                              ;; do not write clipboard
-                              (setq org-export-copy-to-kill-ring nil)
-                              ;(setq org-startup-indented t)
-                              (local-set-key (kbd "<f5> i") 'org-toggle-inline-images)
-                              (local-set-key (kbd "<f5> m") 'org-mark-ring-push)
-                              (local-set-key (kbd "<f5> <left>") 'org-mark-ring-goto)
-
-                             ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)
-                             ;; http://stackoverflow.com/a/8836108/789593
-                              (delete '("\\.pdf\\'" . default) org-file-apps)
-                              (delete '("\\.djvu\\'" . default) org-file-apps)
-                              (delete '("\\.png\\'" . default) org-file-apps)
-                              (delete '("\\.ods\\'" . default) org-file-apps)
-                              (delete '("\\.doc\\'" . default) org-file-apps)
-                              (delete '("\\.html\\'" . default) org-file-apps)
-                              (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
-                              (add-to-list 'org-file-apps '("\\.djvu\\'" . "evince %s"))
-                              (add-to-list 'org-file-apps '("\\.ods\\'" . "libreoffice --calc %s"))
-                              (add-to-list 'org-file-apps '("\\.doc\\'" . "libreoffice --writer %s"))
-                              (add-to-list 'org-file-apps '("\\.png\\'" . "eog %s"))
-                              (add-to-list 'org-file-apps '("\\.html\\'" . "firefox %s"))
-                              ;; (org-cua-dwim-activate)
-
-                              ;; re-enabled at 2013-04-24
-                              ;; (org-bullets-mode 1)
-
-                              ;; automatically save current file
-                              ;; (setq auto-save-visited-file-name t)
-                              ;; (setq auto-save-timeout 5)
-                              ;; (setq auto-save-interval 30)
-                              (gwp/enable-auto-save)
-                              ;; enable zotxt mode for zotero extension
-                              (org-zotxt-mode t)
-                              (flyspell-mode 0)
-                             )
-            )
-   #+END_SRC
-
-** babel
-   所有支持的语言: [[http://orgmode.org/worg/org-contrib/babel/languages.html][URL]]
-   1. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-awk.html][awk]]
-   2. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-R.html][R]]
-   3. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][Python]]
-
-  #+begin_src emacs-lisp
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((python . t)
-       (R . t)
-       (sh . t)
-       (C . t)
-       (perl . t)
-       (plantuml . t)
-       )
-     )
-
-    ;; http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-makefile.html
-    ;; For tabs aren't lost in the Org mode buffer
-    (setq org-src-preserve-indentation nil)
-
-    (setq org-plantuml-jar-path
-          (expand-file-name "~/.emacs.d/plantuml/plantuml.jar"))
-    (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
-
-    (setq org-babel-python-command "python3")
-
-    (defun gwp/display-inline-images ()
-      (condition-case nil
-          (org-display-inline-images)
-        (error nil)))
-    (setq org-confirm-babel-evaluate nil)
-  #+end_src
-
-  #+RESULTS:
-
-** export
-   主要添加cn-article classes, 修改使用xelatex来处理tex文档.
-
-#+BEGIN_SRC emacs-lisp
-  (require 'ox-beamer)
-
-  (require 'ox-latex)
-
-  (defun my-auto-tex-parameters ()
-        "setup xelatex environment"
-
-        ;; default packages for ordinary xelatex export
-        ;; (setq org-latex-default-packages-alist
-        ;;       '(("" "xunicode" t)
-        ;;         ("" "fontspec" t)
-        ;;         ("" "url" t)
-        ;;         ("" "fixltx2e" nil)
-        ;;         ("" "graphicx" t)
-        ;;         ("" "longtable" nil)
-        ;;         ("" "float" nil)
-        ;;         ("" "wrapfig" nil)
-        ;;         ("" "rotating" nil)
-        ;;         ("normalem" "ulem" t)
-        ;;         ("" "amsmath" t)
-        ;;         ("" "textcomp" t)
-        ;;         ("" "marvosym" t)
-        ;;         ("" "wasysym" t)
-        ;;         ("" "amssymb" t)
-        ;;         ("" "hyperref" nil))
-        ;;       )
-
-        (setq org-latex-classes
-              (cons '("article"
-                      "\\documentclass[11pt,article,oneside]{memoir}"
-                      ("\\section{%s}" . "\\section*{%s}")
-                      ("\\subsection{%s}" . "\\subsection*{%s}")
-                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                    org-latex-classes))
-
-        (setq org-latex-classes
-              (cons '("cn-article"
-                      "\\documentclass[nocap]{ctexart}
-                      [NO-DEFAULT-PACKAGES]
-                      [NO-PACKAGES]"
-                      ("\\section{%s}" . "\\section*{%s}")
-                      ("\\subsection{%s}" . "\\subsection*{%s}")
-                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                    org-latex-classes))
-        )
-
-  (my-auto-tex-parameters)
-
-  ;; Use XeLaTeX to export PDF in Org-mode
-  (setq org-latex-pdf-process
-        '("xelatex -interaction nonstopmode -output-directory %o %f"
-          "xelatex -interaction nonstopmode -output-directory %o %f"
-          "xelatex -interaction nonstopmode -output-directory %o %f")
-        )
-
-  ;; allow bind variables
-  (setq org-export-allow-bind-keywords t)
-
-  ;; disable evaluation when export source codes
-  (setq org-export-babel-evaluate nil)
-#+END_SRC
-
-#+RESULTS:
-
-** refile
-   #+BEGIN_SRC emacs-lisp
-     ;; any headline with level <= 2 is a target
-     (setq org-refile-targets '(
-                                (org-agenda-files :tag . "Incoming")
-                                )
-           )
-
-     (setq org-reverse-note-order t)
-     (defun gwp/get-org-file-link-path ()
-       (save-excursion
-         (beginning-of-line)
-         (search-forward "[[file:" (line-end-position))
-         (if (org-in-regexp org-bracket-link-regexp 1)
-             (org-link-unescape (match-string-no-properties 1))
-           )
-         )
-       )
-
-     (defun gwp/enter-to-read-state()
-       "evoke external shell script when entering READ state"
-       (when (equal org-state "READ")
-         (setq file (gwp/get-org-file-link-path))
-         (if file
-             (progn
-              (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
-              (message cmd)
-              (shell-command cmd)
-             )
-             )
-         )
-         (when (equal org-last-state "READ")
-           (message "try to remove READ state")
-           (setq file (gwp/get-org-file-link-path))
-           (if file
-               (progn
-                 (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
-                 (message cmd)
-                 (shell-command cmd)
-                 )
-             )
-           )
-       )
-     (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
-
-     ;; show a sparse-tree in READ keyword
-     (defun gwp/org-show-read-tree ()
-       "show a sparse-tree in READ keyword"
-       (interactive)
-
-       (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
-         ;; create new macro of the form
-         ;; C-u M-x org-show-todo-tree RET READ RET
-         (execute-kbd-macro (vconcat base-vector
-                                     (vector 'return)))))
-
-   #+END_SRC
-
-   #+RESULTS:
-   : gwp/org-show-read-tree
-
-* server mode
-#+BEGIN_SRC emacs-lisp
-  ;; using existing Emacs process as the server
-  (server-start)
-
-  (defun gwp/quit-frame-and-kill-buffer ()
-    "kill the current buffer and the current frame"
-    (interactive)
-
-    (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
-    (kill-buffer)
-    (delete-frame)
-    )
-
-  ;; (global-set-key (kbd "<C-f4>") 'gwp/quit-frame-and-kill-buffer)
-
-  ;; quit emacs server
-  (global-set-key (kbd "<C-f4>") 'save-buffers-kill-emacs)
-
-  ;; https://www.masteringemacs.org/article/disabling-prompts-emacs
-  ;; 2015-11-25: does not work
-  ;; (setq kill-buffer-query-functions
-  ;;   (remq 'process-kill-buffer-query-function
-  ;;         kill-buffer-query-functions))
-
-  ;; 2015-11-25: does not work
-  ;; (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
-
-  ;; http://stackoverflow.com/questions/268088/how-to-remove-the-prompt-for-killing-emacsclient-buffers
-  ;; this seems work
-  (defalias 'server-kill-buffer-query-function '(lambda () t))
-
-#+END_SRC
-
-#+RESULTS:
-: save-buffers-kill-emacs
-
-* spacemacs
-gwp layer
-** layers.el
-这里添加我想要的layers. 这要.spacemacs文件的修改需要就很少了.
-[2016-10-16 Sun] 行不通?
-#+begin_src elisp
-  ;;; layers.el --- Spacemacs Layer layers File
-  ;;
-  ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
-  ;;
-  ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
-  ;; URL: https://github.com/syl20bnr/spacemacs
-  ;;
-  ;; This file is not part of GNU Emacs.
-  ;;
-  ;;; License: GPLv3
-
-  dotspacemacs-configuration-layers '(
-                                      auto-completion
-                                      better-defaults
-                                      git
-                                      org
-                                      python
-                                      )
-#+end_src
-** packages.el
-通过packages.el接口, 可以将自己的一些设置与spacemacs融为一体.
-
-#+header: :noweb yes
-#+header: :tangle ~/.spacemacs.d/layers/gwp/packages.el
-#+BEGIN_SRC elisp
-  ;;; packages.el --- gwp layer packages file for Spacemacs.
-
-  ;;; Commentary:
-
-  ;; Briefly, each package to be installed or configured by this layer should be
-  ;; added to `gwp-packages'. Then, for each package PACKAGE:
-  ;;
-  ;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
-  ;;   function `gwp/init-PACKAGE' to load and initialize the package.
-
-  ;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
-  ;;   define the functions `gwp/pre-init-PACKAGE' and/or
-  ;;   `gwp/post-init-PACKAGE' to customize the package as it is loaded.
-
-  ;;; Code:
-
-  (defconst gwp-packages
-    '(
-      (org :location built-in)
-      (org-bullets :excluded t) ;; disable org-bullets-mode shipped with spacemacs
-      chinese-fonts-setup
-      )
-
-    "The list of Lisp packages required by the gwp layer.")
-
-  (defun gwp/init-chinese-fonts-setup ()
-    <<init-ui>>
-    )
-
-  (defun gwp/post-init-org ()
-    (with-eval-after-load 'org
-      (progn
-        <<init-org>>
-        <<init-org-agenda>>
-        <<init-org-crypt>>
-        )
-      )
-    )
-
-  ;;; packages.el ends here
-
-#+END_SRC
-** config.el
-这里添加gwp layer本身需要的配置. 暂时没有必要.
 * Local variables
 # Local Variables:
 # time-stamp-format: "%:y-%02m-%02d %02H:%02M"

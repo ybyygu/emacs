@@ -3,9 +3,27 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-10-17 15:12
+# Updated: 2016-10-17 17:15
 
 * 配置备忘
+** [2016-10-17 Mon] 大致成了 以后多花点时间学习下spacemacs的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
+1. 删除空格: SPC x d w
+2. 字数统计: SPC x c
+3. 对齐符号: SPC x a =, ... 按 "="对齐行
+4. 段落居口: SPC x j c justification
+5. 大小写 : SPC x u, SPC x U
+6. 扩选   : SPC v SPC V (也可用来替换以前的iedit编译功能)
+7. narrow: SPC n r, SPC n w
+8. 注释:  SPC c l, SPC c y (注释并复制一行, 有用)
+9. 打开buffer对应的文件: SPC f j
+10. 删除buffer对应的文件: SPC f D
+11. locate: SPC f L (真方便)
+12. 保存文件: SPC fs
+13. 书签功能: SPC f b 书签界面可以添加删除书签
+14. 默认支持自动保存
+15. 搜索 SPC s s Helm-swoop 太威武了
+16. 最近访问的文件: SPC f r, 当前目录下(project) SPC p r
+   
 ** [2016-10-17 Mon] 使用use-package来加载包 [[https://github.com/jwiegley/use-package][URL]]
 ** [2016-10-16 Sun] 可参考 Purcell的配置: [[https://github.com/purcell/emacs.d][URL]]
 ** [2016-10-16 Sun] 中文字体的设置问题
@@ -38,6 +56,346 @@
 ** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
 * scripts
 * text
+** 常规操作
+#+name: init-text
+#+BEGIN_SRC emacs-lisp
+  (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
+
+  ;; more convenient than C-M-BACKSPC
+  ;; (global-set-key (kbd "<f5> k") 'kill-whole-line)
+  (global-set-key (kbd  "M-k") 'kill-whole-line)
+  (global-set-key (kbd  "M-K") 'kill-sentence)
+
+  ;; move lines like in openoffice
+  ;; http://www.schuerig.de/michael/blog/index.php/2009/01/16/line-movement-for-emacs/
+
+#+END_SRC
+
+** 快速插入日期
+#+BEGIN_SRC emacs-lisp
+  (defun gwp/insert-date (arg)
+    "Insert date at point. With prefix argument, insert date and time."
+    (interactive "P")
+    (insert (format-time-string "%Y-%m-%d"))
+    (when arg
+      (insert (format-time-string " %H:%M"))
+      )
+    )
+
+  ;; C-c i calls insert-date-string
+  (global-set-key (kbd "C-c i") 'gwp/insert-date)
+#+END_SRC
+
+** 按行或段移动
+#+BEGIN_SRC emacs-lisp
+  (defun move-text-internal (arg)
+     (cond
+      ((and mark-active transient-mark-mode)
+       (if (> (point) (mark))
+          (exchange-point-and-mark))
+       (let ((column (current-column))
+            (text (delete-and-extract-region (point) (mark))))
+         (forward-line arg)
+         (move-to-column column t)
+         (set-mark (point))
+         (insert text)
+         (exchange-point-and-mark)
+         (setq deactivate-mark nil)))
+      (t
+       (beginning-of-line)
+       (when (or (> arg 0) (not (bobp)))
+         (forward-line)
+         (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg))
+         (forward-line -1)))))
+
+  (defun move-text-down (arg)
+     "Move region (transient-mark-mode active) or current line
+    arg lines down."
+     (interactive "*p")
+     (move-text-internal arg))
+
+  (defun move-text-up (arg)
+     "Move region (transient-mark-mode active) or current line
+    arg lines up."
+     (interactive "*p")
+     (move-text-internal (- arg))
+     )
+
+  (defun move-paragraph-down (arg)
+     "Move current paragraph down."
+     (interactive "*p")
+     (transpose-paragraphs arg)
+     (backward-paragraph arg)
+     (forward-char))
+
+  (defun move-paragraph-up (arg)
+     "Move current paragraph down."
+     (interactive "*p")
+     (transpose-paragraphs (- arg))
+     (backward-paragraph arg)
+     (forward-char))
+
+  ;; (global-set-key [\M-up] 'move-text-up)
+  ;; (global-set-key [\M-down] 'move-text-down)
+  ;; (global-set-key (kbd "<f5> <up>") 'move-paragraph-up)
+  ;; (global-set-key (kbd "<f5> <down>") 'move-paragraph-down)
+
+#+END_SRC
+** 快捷插入
+#+BEGIN_SRC emacs-lisp
+  ;; referred: http://docs.huihoo.com/homepage/shredderyin/wiki/KeyBinding.html
+  (define-prefix-command 'semicolon-map)
+  (global-set-key (kbd ";") 'semicolon-map)
+  (define-key semicolon-map (kbd "t") 'insert-true)
+  (define-key semicolon-map (kbd "T") 'insert-todo)
+  (define-key semicolon-map (kbd ";") 'insert-self)
+  (define-key semicolon-map (kbd "<SPC>") 'insert-self-space)
+  (define-key semicolon-map (kbd "f") 'insert-false)
+  (define-key semicolon-map (kbd "F") 'insert-fixme)
+  (define-key semicolon-map (kbd "n") 'insert-none)
+  (define-key semicolon-map (kbd "{") 'insert-folding-start)
+  (define-key semicolon-map (kbd "}") 'insert-folding-end)
+
+  (defun insert-folding-start ()
+    (interactive)
+    (insert "# {{{")
+  )
+
+  (defun insert-folding-end ()
+    (interactive)
+    (insert "# }}}")
+  )
+
+  (defun insert-self ()
+    (interactive)
+    (insert ";")
+  )
+
+  (defun insert-self-space ()
+    (interactive)
+    (insert "; ")
+  )
+
+  (defun insert-none ()
+    (interactive)
+    (insert "None")
+  )
+
+  (defun insert-true ()
+    (interactive)
+    (insert "True")
+  )
+
+  (defun insert-todo ()
+    (interactive)
+    (insert "TODO: ")
+  )
+
+  (defun insert-false ()
+    (interactive)
+    (insert "False")
+  )
+
+  (defun insert-fixme ()
+    (interactive)
+    (insert "FIXME: ")
+  )
+
+#+END_SRC
+
+#+RESULTS:
+: insert-fixme
+
+** 处理空格
+#+BEGIN_SRC emacs-lisp
+  (setq show-trailing-whitespace t)
+  (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+  ;; make sure this always work
+  (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+
+#+END_SRC
+
+#+RESULTS:
+: delete-blank-lines
+
+** 符号对操作
+#+BEGIN_SRC emacs-lisp
+
+  (defvar my-skeleton-pair-alist
+    '((?\) . ?\()
+      (?\] . ?\[)
+      (?} . ?{)
+      ;; (?> . ?<)
+      (?" . ?")))
+
+  (defun my-skeleton-pair-end (arg)
+    "Skip the char if it is an ending, otherwise insert it."
+    (interactive "*p")
+    (let ((char last-command-char))
+      (if (and (assq char my-skeleton-pair-alist)
+               (eq char (following-char)))
+          (forward-char)
+        (self-insert-command (prefix-numeric-value arg)))))
+
+
+  (global-set-key (kbd "<f5> (") 'insert-pair)
+  (global-set-key (kbd "<f5> <") 'insert-pair)
+  (global-set-key (kbd "<f5> [") 'insert-pair)
+  (global-set-key (kbd "<f5> {") 'insert-pair)
+  (global-set-key (kbd "<f5> \"") 'insert-pair)
+  (global-set-key (kbd "<f5> '") 'insert-pair)
+  (global-set-key (kbd "<f5> C-d") 'delete-pair)
+  ;; do not insert spaces
+  (setq parens-require-spaces nil)
+
+  ;; http://www.emacswiki.org/emacs/ParenthesesAppearance
+  (show-paren-mode t)
+
+  ;; enable electric pair by default
+  ;; (setq electric-pair-mode t)
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** 同时编辑多处文本 (iedit)
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'iedit)
+  (require 'iedit)
+  (define-key global-map (kbd "C-;") 'iedit-mode)
+  ;; disable flyspell mode for the annoying conflicting key bindings
+  (flyspell-mode 0)
+#+END_SRC
+
+** goto-last-change
+*** 如果需要先安装下.
+
+#+BEGIN_SRC emacs-lisp
+(starter-kit-install-if-needed 'goto-last-change)
+#+END_SRC
+
+#+RESULTS:
+*** 设置快捷键
+#+BEGIN_SRC emacs-lisp
+(require 'goto-last-change)
+(global-set-key (kbd "<f5> b") 'goto-last-change)
+#+END_SRC
+
+#+RESULTS:
+: goto-last-change
+
+** 自动扩选
+#+BEGIN_SRC emacs-lisp
+;; http://xahlee.org/emacs/modernization_mark-word.html
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun semnav-up (arg)
+  (interactive "p")
+  (when (nth 3 (syntax-ppss))
+    (if (> arg 0)
+        (progn
+          (skip-syntax-forward "^\"")
+          (goto-char (1+ (point)))
+          (decf arg))
+      (skip-syntax-backward "^\"")
+      (goto-char (1- (point)))
+      (incf arg)))
+  (up-list arg))
+
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun extend-selection (arg &optional incremental)
+  "Select the current word.
+Subsequent calls expands the selection to larger semantic unit."
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+                     (or (and transient-mark-mode mark-active)
+                         (eq last-command this-command))))
+  (if incremental
+      (progn
+        (semnav-up (- arg))
+        (forward-sexp)
+        (mark-sexp -1))
+    (if (> arg 1)
+        (extend-selection (1- arg) t)
+      (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
+          (goto-char (match-end 0))
+        (unless (memq (char-before) '(?\) ?\"))
+          (forward-sexp)))
+      (mark-sexp -1))))
+
+(global-set-key (kbd "M-8") 'extend-selection)
+
+(defun select-text-in-quote ()
+"Select text between the nearest left and right delimiters.
+Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
+ (interactive)
+ (let (b1 b2)
+   (skip-chars-backward "^<>(“{[「«\"‘")
+   (setq b1 (point))
+   (skip-chars-forward "^<>)”}]」»\"’")
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+(defun select-none-blank-text ()
+"Select none blank chars near the point in current line"
+ (interactive)
+ (let (b1 b2)
+   (skip-chars-backward "^ \n")
+   (setq b1 (point))
+   (skip-chars-forward "^ \n")
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+(defun select-word ()
+"Select none blank chars near the point in current line"
+ (interactive)
+ (let (b1 b2)
+   (backward-word)
+   (setq b1 (point))
+   (forward-word)
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+(defun select-line ()
+"Select current line"
+ (interactive)
+ (let (b1 b2)
+   (move-beginning-of-line nil)
+   (setq b1 (point))
+   (move-end-of-line nil)
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+;; (global-set-key (kbd "M-*") 'select-text-in-quote)
+;; (global-set-key (kbd "M-4") 'select-word)
+(global-set-key (kbd "M-5") 'select-none-blank-text)
+;; (global-set-key (kbd "M-6") 'select-line)
+
+;; https://github.com/magnars/expand-region.el
+(starter-kit-install-if-needed 'expand-region)
+(require 'expand-region)
+(global-set-key (kbd "M-4") 'er/expand-region)
+
+#+END_SRC
+
+#+RESULTS:
+: er/expand-region
+** gjf-mode: 编译gaussian GJF文件
+#+BEGIN_SRC emacs-lisp
+(require 'gjf-mode)
+#+END_SRC
+
+#+RESULTS:
+: gjf-mode
+
 * calendar
 cal-china-x: https://github.com/xwl/cal-china-x
 
@@ -88,9 +446,13 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+END_SRC
 
 * ui
-1. 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+:PROPERTIES:
+:noweb-ref: init-ui
+:END:
+
+中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+
 ** 语言字体
-#+name: init-ui
 #+begin_src emacs-lisp
   (set-language-environment "UTF-8")
   (prefer-coding-system 'utf-8) 
@@ -119,6 +481,13 @@ cal-china-x: https://github.com/xwl/cal-china-x
     (cfs-set-spacemacs-fallback-fonts)
     )
 #+end_src
+
+** 修改frame标题 方便gnome-shell桌面切换
+
+#+BEGIN_SRC emacs-lisp results: none
+;; http://www.emacswiki.org/emacs/FrameTitle
+(setq frame-title-format '("" "%b: " buffer-file-name))
+#+END_SRC
 
 * org-mode
 用于配置 org-mode 一些必要设置. 其它尽量使用org-mode in-buffer设置.
@@ -581,8 +950,8 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+begin_src emacs-lisp
   (defun gwp/init-zotxt ()
     (use-package org-zotxt
-               :after org
-               :init (add-hook 'org-mode-hook org-zotxt-mode)
+                 :after org
+                 :config (add-hook 'org-mode-hook org-zotxt-mode)
                )
     )
 
@@ -625,6 +994,13 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
   #+RESULTS:
 * server mode
+修改.spacemacs文件:
+: (setq-default dotspacemacs-persistent-server t)
+
+退出server的方法:
+: SPC q q
+: SPC q s
+
 #+BEGIN_SRC emacs-lisp
   ;; using existing Emacs process as the server
   (server-start)
@@ -638,19 +1014,8 @@ cal-china-x: https://github.com/xwl/cal-china-x
     (delete-frame)
     )
 
-  ;; (global-set-key (kbd "<C-f4>") 'gwp/quit-frame-and-kill-buffer)
-
   ;; quit emacs server
   (global-set-key (kbd "<C-f4>") 'save-buffers-kill-emacs)
-
-  ;; https://www.masteringemacs.org/article/disabling-prompts-emacs
-  ;; 2015-11-25: does not work
-  ;; (setq kill-buffer-query-functions
-  ;;   (remq 'process-kill-buffer-query-function
-  ;;         kill-buffer-query-functions))
-
-  ;; 2015-11-25: does not work
-  ;; (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
 
   ;; http://stackoverflow.com/questions/268088/how-to-remove-the-prompt-for-killing-emacsclient-buffers
   ;; this seems work
@@ -688,7 +1053,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
      emacs --no-init-file --load ~/etc/spacemacs/init.el
    #+end_src
 
-** tips 
+** tips
 *** user-init 和 user-config
 from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
 
@@ -725,7 +1090,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+END_SRC
 *** user-config
 #+begin_src emacs-lisp
-  (load-file (expand-file-name "gwp.org" dotspacemacs-directory))
+  (setq-default dotspacemacs-persistent-server t)
 #+end_src
 *** custom-file
 #+begin_src emacs-lisp
@@ -789,7 +1154,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
       chinese-fonts-setup
       cal-china-x
       ox-latex-chinese
-      zotxt
       org-attach-screenshot
       )
 
@@ -831,635 +1195,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 这里添加gwp layer本身需要的配置. 暂时没有必要.
 
 * 旧的配置
-** 文本编辑
-*** 自动保存
-  #+BEGIN_SRC emacs-lisp
-    (defvar gwp/auto-save-timer nil
-      "auto-save timer")
-
-    (defvar gwp/auto-save-interval 5
-      "idle time in seconds before auto-saving.")
-
-    (defun gwp/auto-save ()
-      "auto save buffers as what I mean.
-       org-mode and gjf-mode are marked as auto-save
-      "
-      ;; (message "gwp/auto-saving")
-
-      (save-excursion
-        ;; Save opened buffers that have been modified.
-        (dolist (buf (buffer-list))
-          (with-current-buffer buf
-            (if (and (buffer-modified-p buf) (buffer-file-name))
-                (when (memq major-mode '(org-mode gjf-mode))
-                  (basic-save-buffer)
-                  )
-              )
-            )
-          )
-        )
-      )
-
-    (defun gwp/enable-auto-save ()
-      "auto save related buffers, such as org-mode and gjf-mode"
-
-      (interactive)
-
-      (unless gwp/auto-save-timer
-        (setq gwp/auto-save-timer (run-with-idle-timer gwp/auto-save-interval t 'gwp/auto-save))
-        )
-      )
-
-    (defun gwp/disable-auto-save ()
-      "disable auto-saving by removing background auto-save timer"
-
-      (interactive)
-
-      (when gwp/auto-save-timer
-        (cancel-timer gwp/auto-save-timer)
-        )
-      )
-
-  #+END_SRC
-
-  #+RESULTS:
-  : gwp/disable-auto-save
-
-*** 可视化选择
-#+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "C-SPC")) ; set-mark-command
-(global-set-key (kbd "M-SPC") 'set-mark-command) ; "ESC SPC" easy to hit
-#+END_SRC
-
-*** 粘贴&复制
-
-#+BEGIN_SRC emacs-lisp
-(cua-mode t)
-(setq cua-enable-cua-keys nil)
-(global-set-key (kbd "C-v") 'cua-paste)
-(setq mouse-yank-at-point t)                   ; Paste at cursor position
-(global-set-key [(ctrl shift v)] 'x-clipboard-yank)
-(global-set-key [(shift insert)] 'clipboard-yank)
-
-;; follow the advance:
-;; http://steve.yegge.googlepages.com/effective-emacs
-(global-set-key "\C-w" 'backward-kill-word)
-(global-set-key "\C-x\C-k" 'kill-region)
-(global-set-key "\C-c\C-k" 'kill-region)
-
-;; smartly copy line as what I mean
-
-(global-set-key (kbd "M-w") 'gwp-copy-dwim)
-
-(defun gwp-copy-current-line ()
-  "copy current line"
-  (interactive)
-  (let ((end (min (point-max) (line-end-position))))
-    (copy-region-as-kill (line-beginning-position) end)))
-
-(defun gwp-copy-dwim ()
-  "smart copy `copy-region' if `mark-active', else `copy-line'"
-  (interactive)
-  (if mark-active
-      (call-interactively 'copy-region-as-kill)
-    (progn
-      (call-interactively 'gwp-copy-current-line)
-      (message "copied current line")
-      )
-    )
-  )
-
-#+END_SRC
-
-#+RESULTS:
-: gwp-copy-dwim
-
-*** undo
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-u") 'undo)  ; like in vim, cheers!
-(global-set-key (kbd "C-z") 'undo)
-#+END_SRC
-
-#+RESULTS:
-: undo
-
-*** 操作文本行
-#+BEGIN_SRC emacs-lisp
-(global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
-;; more convenient than C-M-BACKSPC
-;; (global-set-key (kbd "<f5> k") 'kill-whole-line)
-(global-set-key (kbd  "M-k") 'kill-whole-line)
-(global-set-key (kbd  "M-K") 'kill-sentence)
-(global-set-key (kbd "<delete>") 'delete-char)
-
-;; kill chars to the begin of the line; like in `C-u' in readline
-(global-set-key (kbd "s-u") 'gwp-kill-to-begin)
-(global-set-key (kbd "M-U") 'gwp-kill-to-begin)
-(defun gwp-kill-to-begin (&optional arg)
-  (interactive "P")
-  (if (not arg)
-      (kill-line 0)
-    (copy-region-as-kill-nomark (1+ (line-beginning-position)) (point))
-    )
-  )
-
-;; Join next line like in vim, default binding: C-1 M-^
-(defun join-next-line ()
-  (interactive)
-  (delete-indentation 1)
-)
-
-(defun join-lines-dwim ()
-  "join lines if in region else join next line"
-  (interactive)
-  (let (pos1 pos2)
-    (if (and transient-mark-mode mark-active)
-    (progn
-      (setq pos1 (region-beginning) pos2 (region-end))
-      (join-lines-in-region pos1 pos2)
-      )
-      (join-next-line)
-      )
-    )
-  )
-
-(defun join-lines-in-region (start end)
-  "join lines in region"
-  (interactive "r")
-  (let ()
-    (save-excursion
-      (goto-char start)
-      ;; (previous-line)
-      (while (< (point) end)
-    ;; (message "point: %d" (point))
-    (join-next-line)
-    (end-of-line)
-    ;; (previous-line)
-    )
-      ;; (message "ok: %d" start)
-      )
-    )
-  )
-
-(global-set-key (kbd "M-J") 'join-lines-dwim)
-
-;; move lines like in openoffice
-;; http://www.schuerig.de/michael/blog/index.php/2009/01/16/line-movement-for-emacs/
-
-(defun move-text-internal (arg)
-   (cond
-    ((and mark-active transient-mark-mode)
-     (if (> (point) (mark))
-        (exchange-point-and-mark))
-     (let ((column (current-column))
-          (text (delete-and-extract-region (point) (mark))))
-       (forward-line arg)
-       (move-to-column column t)
-       (set-mark (point))
-       (insert text)
-       (exchange-point-and-mark)
-       (setq deactivate-mark nil)))
-    (t
-     (beginning-of-line)
-     (when (or (> arg 0) (not (bobp)))
-       (forward-line)
-       (when (or (< arg 0) (not (eobp)))
-        (transpose-lines arg))
-       (forward-line -1)))))
-
-(defun move-text-down (arg)
-   "Move region (transient-mark-mode active) or current line
-  arg lines down."
-   (interactive "*p")
-   (move-text-internal arg))
-
-(defun move-text-up (arg)
-   "Move region (transient-mark-mode active) or current line
-  arg lines up."
-   (interactive "*p")
-   (move-text-internal (- arg))
-   )
-
-(defun move-paragraph-down (arg)
-   "Move current paragraph down."
-   (interactive "*p")
-   (transpose-paragraphs arg)
-   (backward-paragraph arg)
-   (forward-char))
-
-(defun move-paragraph-up (arg)
-   "Move current paragraph down."
-   (interactive "*p")
-   (transpose-paragraphs (- arg))
-   (backward-paragraph arg)
-   (forward-char))
-
-(global-set-key [\M-up] 'move-text-up)
-(global-set-key [\M-down] 'move-text-down)
-(global-set-key (kbd "<f5> <up>") 'move-paragraph-up)
-(global-set-key (kbd "<f5> <down>") 'move-paragraph-down)
-
-;; duplicate current line
-;; http://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs/998472#998472
-(defun duplicate-line (arg)
-  "Duplicate current line, leaving point in lower line."
-  (interactive "*p")
-
-  ;; save the point for undo
-  (setq buffer-undo-list (cons (point) buffer-undo-list))
-
-  ;; local variables for start and end of line
-  (let ((bol (save-excursion (beginning-of-line) (point)))
-        eol)
-    (save-excursion
-
-      ;; don't use forward-line for this, because you would have
-      ;; to check whether you are at the end of the buffer
-      (end-of-line)
-      (setq eol (point))
-
-      ;; store the line and disable the recording of undo information
-      (let ((line (buffer-substring bol eol))
-            (buffer-undo-list t)
-            (count arg))
-        ;; insert the line arg times
-        (while (> count 0)
-          (newline)         ;; because there is no newline in 'line'
-          (insert line)
-          (setq count (1- count)))
-        )
-
-      ;; create the undo information
-      (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))
-    ) ; end-of-let
-
-  ;; put the point in the lowest line and return
-  (next-line arg))
-(global-set-key (kbd "C-=") 'duplicate-line)
-
-;; http://www.emacswiki.org/emacs/OpenNextLine
-;; behave like vi's o command
-(defun open-next-line (arg)
-   "Move to the next line and then opens a line.
-
- See also `newline-and-indent'."
-   (interactive "p")
-   (end-of-line)
-   (open-line arg)
-   (next-line 1)
-   (when newline-and-indent
-     (indent-according-to-mode)))
-(global-set-key (kbd "C-o") 'open-next-line)
-
-;; behave like vi's O command
-(defun open-previous-line (arg)
-  "Open a new line before the current one.
-
-  See also `newline-and-indent'."
-  (interactive "p")
-  (beginning-of-line)
-  (open-line arg)
-  (when newline-and-indent
-    (indent-according-to-mode)))
-(global-set-key (kbd "M-o") 'open-previous-line)
-
-;; autoindent open-*-lines
-(defvar newline-and-indent t
-"Modify the behavior of the open-*-line functions to cause them to autoindent.")
-
-#+END_SRC
-
-#+RESULTS:
-: newline-and-indent
-
-*** goto-last-change
-**** 如果需要先安装下.
-
-#+BEGIN_SRC emacs-lisp
-(starter-kit-install-if-needed 'goto-last-change)
-#+END_SRC
-
-#+RESULTS:
-**** 设置快捷键
-#+BEGIN_SRC emacs-lisp
-(require 'goto-last-change)
-(global-set-key (kbd "<f5> b") 'goto-last-change)
-#+END_SRC
-
-#+RESULTS:
-: goto-last-change
-*** 处理空格
-#+BEGIN_SRC emacs-lisp
-  (setq show-trailing-whitespace t)
-  (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
-  ;; make sure this always work
-  (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
-
-#+END_SRC
-
-#+RESULTS:
-: delete-blank-lines
-
-*** TODO iedit: 同时编辑多处文本 (有更好用的代替?)
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'iedit)
-  (require 'iedit)
-  (define-key global-map (kbd "C-;") 'iedit-mode)
-  ;; disable flyspell mode for the annoying conflicting key bindings
-  (flyspell-mode 0)
-#+END_SRC
-
-#+RESULTS:
-: iedit-mode
-*** 符号对操作
-#+BEGIN_SRC emacs-lisp
-
-  (defvar my-skeleton-pair-alist
-    '((?\) . ?\()
-      (?\] . ?\[)
-      (?} . ?{)
-      ;; (?> . ?<)
-      (?" . ?")))
-
-  (defun my-skeleton-pair-end (arg)
-    "Skip the char if it is an ending, otherwise insert it."
-    (interactive "*p")
-    (let ((char last-command-char))
-      (if (and (assq char my-skeleton-pair-alist)
-               (eq char (following-char)))
-          (forward-char)
-        (self-insert-command (prefix-numeric-value arg)))))
-
-
-  (global-set-key (kbd "<f5> (") 'insert-pair)
-  (global-set-key (kbd "<f5> <") 'insert-pair)
-  (global-set-key (kbd "<f5> [") 'insert-pair)
-  (global-set-key (kbd "<f5> {") 'insert-pair)
-  (global-set-key (kbd "<f5> \"") 'insert-pair)
-  (global-set-key (kbd "<f5> '") 'insert-pair)
-  (global-set-key (kbd "<f5> C-d") 'delete-pair)
-  ;; do not insert spaces
-  (setq parens-require-spaces nil)
-
-  ;; http://www.emacswiki.org/emacs/ParenthesesAppearance
-  (show-paren-mode t)
-
-  ;; enable electric pair by default
-  ;; (setq electric-pair-mode t)
-
-#+END_SRC
-
-#+RESULTS:
-: t
-*** 选择
-#+BEGIN_SRC emacs-lisp
-;; http://xahlee.org/emacs/modernization_mark-word.html
-;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-(defun semnav-up (arg)
-  (interactive "p")
-  (when (nth 3 (syntax-ppss))
-    (if (> arg 0)
-        (progn
-          (skip-syntax-forward "^\"")
-          (goto-char (1+ (point)))
-          (decf arg))
-      (skip-syntax-backward "^\"")
-      (goto-char (1- (point)))
-      (incf arg)))
-  (up-list arg))
-
-;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-(defun extend-selection (arg &optional incremental)
-  "Select the current word.
-Subsequent calls expands the selection to larger semantic unit."
-  (interactive (list (prefix-numeric-value current-prefix-arg)
-                     (or (and transient-mark-mode mark-active)
-                         (eq last-command this-command))))
-  (if incremental
-      (progn
-        (semnav-up (- arg))
-        (forward-sexp)
-        (mark-sexp -1))
-    (if (> arg 1)
-        (extend-selection (1- arg) t)
-      (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
-          (goto-char (match-end 0))
-        (unless (memq (char-before) '(?\) ?\"))
-          (forward-sexp)))
-      (mark-sexp -1))))
-
-(global-set-key (kbd "M-8") 'extend-selection)
-
-(defun select-text-in-quote ()
-"Select text between the nearest left and right delimiters.
-Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
- (interactive)
- (let (b1 b2)
-   (skip-chars-backward "^<>(“{[「«\"‘")
-   (setq b1 (point))
-   (skip-chars-forward "^<>)”}]」»\"’")
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
-
-(defun select-none-blank-text ()
-"Select none blank chars near the point in current line"
- (interactive)
- (let (b1 b2)
-   (skip-chars-backward "^ \n")
-   (setq b1 (point))
-   (skip-chars-forward "^ \n")
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
-
-(defun select-word ()
-"Select none blank chars near the point in current line"
- (interactive)
- (let (b1 b2)
-   (backward-word)
-   (setq b1 (point))
-   (forward-word)
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
-
-(defun select-line ()
-"Select current line"
- (interactive)
- (let (b1 b2)
-   (move-beginning-of-line nil)
-   (setq b1 (point))
-   (move-end-of-line nil)
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
-
-;; (global-set-key (kbd "M-*") 'select-text-in-quote)
-;; (global-set-key (kbd "M-4") 'select-word)
-(global-set-key (kbd "M-5") 'select-none-blank-text)
-;; (global-set-key (kbd "M-6") 'select-line)
-
-;; https://github.com/magnars/expand-region.el
-(starter-kit-install-if-needed 'expand-region)
-(require 'expand-region)
-(global-set-key (kbd "M-4") 'er/expand-region)
-
-#+END_SRC
-
-#+RESULTS:
-: er/expand-region
-*** 快捷插入";"命令
-#+BEGIN_SRC emacs-lisp
-;; referred: http://docs.huihoo.com/homepage/shredderyin/wiki/KeyBinding.html
-(define-prefix-command 'semicolon-map)
-(global-set-key (kbd ";") 'semicolon-map)
-(define-key semicolon-map (kbd "t") 'insert-true)
-(define-key semicolon-map (kbd "T") 'insert-todo)
-(define-key semicolon-map (kbd ";") 'insert-self)
-(define-key semicolon-map (kbd "<SPC>") 'insert-self-space)
-(define-key semicolon-map (kbd "f") 'insert-false)
-(define-key semicolon-map (kbd "F") 'insert-fixme)
-(define-key semicolon-map (kbd "n") 'insert-none)
-(define-key semicolon-map (kbd "{") 'insert-folding-start)
-(define-key semicolon-map (kbd "}") 'insert-folding-end)
-
-(defun insert-folding-start ()
-  (interactive)
-  (insert "# {{{")
-)
-
-(defun insert-folding-end ()
-  (interactive)
-  (insert "# }}}")
-)
-
-(defun insert-self ()
-  (interactive)
-  (insert ";")
-)
-
-(defun insert-self-space ()
-  (interactive)
-  (insert "; ")
-)
-
-(defun insert-none ()
-  (interactive)
-  (insert "None")
-)
-
-(defun insert-true ()
-  (interactive)
-  (insert "True")
-)
-
-(defun insert-todo ()
-  (interactive)
-  (insert "TODO: ")
-)
-
-(defun insert-false ()
-  (interactive)
-  (insert "False")
-)
-
-(defun insert-fixme ()
-  (interactive)
-  (insert "FIXME: ")
-)
-
-#+END_SRC
-
-#+RESULTS:
-: insert-fixme
-*** gjf-mode: 编译gaussian GJF文件
-#+BEGIN_SRC emacs-lisp
-(require 'gjf-mode)
-#+END_SRC
-
-#+RESULTS:
-: gjf-mode
-*** yaml-mode
-   只要是为了在org-babel中用.
-   #+begin_src emacs-lisp
-     (starter-kit-install-if-needed 'yaml-mode)
-   #+end_src
-
-   #+RESULTS:
-
-*** TODO Misc (清理下)
-#+BEGIN_SRC emacs-lisp
-  (global-unset-key (kbd "C-x C-c"))
-
-  ;; save mini-buffer history: C-xC-f files history
-  (savehist-mode 1)
-
-  (defun insert-date (arg)
-    "Insert date at point.
-  With prefix argument, insert date and time."
-    (interactive "P")
-    (insert (format-time-string "%Y-%m-%d"))
-    (when arg
-      (insert (format-time-string " %H:%M"))))
-  ;; C-c i calls insert-date-string
-  (global-set-key (kbd "C-c i") 'insert-date)
-
-  (setq case-fold-search nil) ; make searches case sensitive
-
-  (put 'set-goal-column 'disabled nil)
-
-  (setq fill-column 70)
-
-  (put 'upcase-region 'disabled nil)
-
-  ;; http://jblevins.org/projects/markdown-mode/
-  (add-to-list 'load-path "~/.emacs.d/plugins/markdown-mode")
-  ;; (require 'markdown-mode)
-  (autoload 'markdown-mode "markdown-mode.el"
-     "Major mode for editing Markdown files" t)
-  (setq auto-mode-alist
-     (cons '("\\.md" . markdown-mode) auto-mode-alist))
-
-  (defun gwp-open-directory ()
-    "Simple function that allows us to open the underlying
-  directory of a buffer in an external program."
-    (interactive)
-    (when buffer-file-name
-      (shell-command (concat
-                      "xdg-open "
-                      (file-name-directory buffer-file-name)
-                      )
-                     )
-      )
-    )
-
-  (global-set-key "\C-cd" 'gwp-open-directory)
-
-  (defun gwp-open-with ()
-    "Simple function that allows us to open the underlying
-  file of a buffer in an external program."
-    (interactive)
-    (when buffer-file-name
-      (shell-command (concat
-                      (if (eq system-type 'darwin)
-                          "open"
-                        (read-shell-command "Open current file with: "))
-                      " "
-                      buffer-file-name))))
-  (global-set-key "\C-co" 'gwp-open-with)
-
-
-#+END_SRC
-
-#+RESULTS:
-: gwp-open-with
-
-** 开发相关(通用)
+** development
 *** 高亮当前行
 所有已定义的颜色:
 : list-colors-display
@@ -1516,7 +1252,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : gwp-mouse-toggle-bm
 
-*** TAB
+*** tab key
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "ybyygu@gmail.com")
 (setq default-tab-width 4)
@@ -1527,7 +1263,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : 4
 
-*** TODO 注释 (怎么用comment-region)?
+*** 注释
 #+BEGIN_SRC emacs-lisp
   ; (starter-kit-install-if-needed 'line-comment-banner)
   ; (require 'line-comment-banner)
@@ -1552,17 +1288,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : comment-dwim-line
 
-*** which-func
-
-#+BEGIN_SRC emacs-lisp
-;; show function name of the current line in mode-line
-(require 'which-func)
-(which-function-mode 1)
-#+END_SRC
-
-#+RESULTS:
-: t
-
 *** 版本管理
 #+BEGIN_SRC emacs-lisp
 (setq vc-follow-symlinks t)
@@ -1570,10 +1295,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (add-hook 'vc-before-checkin-hook 'time-stamp)
 
 #+END_SRC
-
-#+RESULTS:
-| time-stamp |
-*** TODO 代码补全与自动完成 (还不是特别好用)
+*** 自动完成
 系统自带的abbrev功能比较简单. 可以用M-/来激活补全.
 
 #+BEGIN_SRC emacs-lisp
@@ -1606,21 +1328,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : silently
 
-** dired
-  #+begin_src elisp
-    (defun dired-open-file ()
-      "In dired, open the file named on this line."
-      (interactive)
-      (let* ((file (dired-get-filename nil t)))
-        (message "Opening %s..." file)
-        (call-process "gnome-open" nil 0 nil file)
-        (message "Opening %s done" file)))
-
-
-  #+end_src
-
-  #+RESULTS:
-  : ublt/dired-open-native
 ** python
 *** 使用emacs中自带的python.el
    试了下, 一切都正常. 先这么着吧.
@@ -1730,12 +1437,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq-default cursor-type 'bar)
 
 #+end_src
-
-*** 修改frame标题 方便gnome-shell桌面切换
-#+BEGIN_SRC emacs-lisp results: none
-;; http://www.emacswiki.org/emacs/FrameTitle
-(setq frame-title-format '("" "%b: " buffer-file-name))
-#+END_SRC
 
 
 * Local variables

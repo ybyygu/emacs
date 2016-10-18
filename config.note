@@ -3,7 +3,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-10-17 18:04
+# Updated: 2016-10-18 08:36
 
 * 配置备忘
 ** [2016-10-17 Mon] 大致成了 以后多花点时间学习下spacemacs的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
@@ -24,6 +24,7 @@
 15. 搜索 SPC s s Helm-swoop 太威武了
 16. 最近访问的文件: SPC f r, 当前目录下(project) SPC p r
 17. 查词: z=, ispell-word
+18. auto pair: SPC t p
    
 ** [2016-10-17 Mon] 使用use-package来加载包 [[https://github.com/jwiegley/use-package][URL]]
 ** [2016-10-16 Sun] 可参考 Purcell的配置: [[https://github.com/purcell/emacs.d][URL]]
@@ -488,6 +489,38 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+BEGIN_SRC emacs-lisp results: none
 ;; http://www.emacswiki.org/emacs/FrameTitle
 (setq frame-title-format '("" "%b: " buffer-file-name))
+#+END_SRC
+* development
+:PROPERTIES:
+:noweb-ref: init-dev
+:END:
+** 版本管理
+#+BEGIN_SRC emacs-lisp
+(setq vc-follow-symlinks t)
+;; (remove-hook 'vc-checkout-hook 'time-stamp)
+(add-hook 'vc-before-checkin-hook 'time-stamp)
+
+#+END_SRC
+** tab key
+#+BEGIN_SRC emacs-lisp
+(setq user-mail-address "ybyygu@gmail.com")
+(setq default-tab-width 4)
+(setq tab-width 4)                             ; Length of tab is 4 SPC
+
+#+END_SRC
+
+#+RESULTS:
+: 4
+
+** 自动完成
+系统自带的abbrev功能比较简单. 可以用M-/来激活补全.
+
+#+BEGIN_SRC emacs-lisp
+  ;; abbreviations
+  (setq abbrev-file-name "~/.emacs.d/abbreviations")
+  (when (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
+  (setq save-abbrevs 'silently)
 #+END_SRC
 
 * org-mode
@@ -1125,7 +1158,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
                                       python
                                       )
 #+end_src
-*** packages.el
+*** COMMENT packages.el
 通过packages.el接口, 可以将自己的一些设置与spacemacs融为一体.
 
 #+header: :noweb yes
@@ -1163,6 +1196,8 @@ Anything that isn't just setting a variable should 99% be in user-config.
 
   (defun gwp/init-chinese-fonts-setup ()
     <<init-ui>>
+
+    <<init-dev>>
     )
 
   (defun gwp/init-cal-china-x ()
@@ -1254,17 +1289,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+RESULTS:
 : gwp-mouse-toggle-bm
 
-*** tab key
-#+BEGIN_SRC emacs-lisp
-(setq user-mail-address "ybyygu@gmail.com")
-(setq default-tab-width 4)
-(setq tab-width 4)                             ; Length of tab is 4 SPC
-
-#+END_SRC
-
-#+RESULTS:
-: 4
-
 *** 注释
 #+BEGIN_SRC emacs-lisp
   ; (starter-kit-install-if-needed 'line-comment-banner)
@@ -1290,13 +1314,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+RESULTS:
 : comment-dwim-line
 
-*** 版本管理
-#+BEGIN_SRC emacs-lisp
-(setq vc-follow-symlinks t)
-;; (remove-hook 'vc-checkout-hook 'time-stamp)
-(add-hook 'vc-before-checkin-hook 'time-stamp)
-
-#+END_SRC
 *** 自动完成
 系统自带的abbrev功能比较简单. 可以用M-/来激活补全.
 

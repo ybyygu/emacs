@@ -3,9 +3,10 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-10-18 08:36
+# Updated: 2016-10-23 15:29
 
 * 配置备忘
+** [2016-10-23 Sun] 以后可以研究下Kitchin的scimax, 将他的配置集成进来 [[https://github.com/jkitchin/scimax][URL]]
 ** [2016-10-17 Mon] 大致成了 以后多花点时间学习下spacemacs的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
 1. 删除空格: SPC x d w
 2. 字数统计: SPC x c
@@ -398,6 +399,49 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+RESULTS:
 : gjf-mode
 
+* ui
+:PROPERTIES:
+:noweb-ref: init-ui
+:END:
+
+中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+
+** 语言字体
+#+begin_src emacs-lisp
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8) 
+  (global-font-lock-mode t)
+
+  ;; force a syntax-highlighting refresh
+  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
+  (auto-image-file-mode t)              ; View images inside Emacs
+  ;; set line space wider than default
+  (setq-default line-spacing 4)
+
+  ;; chinese-fonts-setup is amazing
+  (use-package chinese-fonts-setup
+    :ensure t
+    :config
+    (progn
+      (setq cfs-profiles
+            '("program" "org-mode" "read-book"))
+      (setq cfs-profiles-directory (expand-file-name
+                                    "chinese-fonts-setup"
+                                    dotspacemacs-directory))
+      (setq cfs--current-profile-name "program")
+      ;; (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
+      )
+    (chinese-fonts-setup-enable)
+    (cfs-set-spacemacs-fallback-fonts)
+    )
+#+end_src
+
+** 修改frame标题 方便gnome-shell桌面切换
+
+#+BEGIN_SRC emacs-lisp results: none
+;; http://www.emacswiki.org/emacs/FrameTitle
+(setq frame-title-format '("" "%b: " buffer-file-name))
+#+END_SRC
 * calendar
 cal-china-x: https://github.com/xwl/cal-china-x
 
@@ -447,49 +491,6 @@ cal-china-x: https://github.com/xwl/cal-china-x
   (setq mark-diary-entries t)
 #+END_SRC
 
-* ui
-:PROPERTIES:
-:noweb-ref: init-ui
-:END:
-
-中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
-
-** 语言字体
-#+begin_src emacs-lisp
-  (set-language-environment "UTF-8")
-  (prefer-coding-system 'utf-8) 
-  (global-font-lock-mode t)
-
-  ;; force a syntax-highlighting refresh
-  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
-  (auto-image-file-mode t)              ; View images inside Emacs
-  ;; set line space wider than default
-  (setq-default line-spacing 4)
-
-  ;; chinese-fonts-setup is amazing
-  (use-package chinese-fonts-setup
-    :ensure t
-    :config
-    (progn
-      (setq cfs-profiles
-            '("program" "org-mode" "read-book"))
-      (setq cfs-profiles-directory (expand-file-name
-                                    "chinese-fonts-setup"
-                                    dotspacemacs-directory))
-      (setq cfs--current-profile-name "program")
-      ;; (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
-      )
-    (chinese-fonts-setup-enable)
-    (cfs-set-spacemacs-fallback-fonts)
-    )
-#+end_src
-
-** 修改frame标题 方便gnome-shell桌面切换
-
-#+BEGIN_SRC emacs-lisp results: none
-;; http://www.emacswiki.org/emacs/FrameTitle
-(setq frame-title-format '("" "%b: " buffer-file-name))
-#+END_SRC
 * development
 :PROPERTIES:
 :noweb-ref: init-dev
@@ -1158,7 +1159,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
                                       python
                                       )
 #+end_src
-*** COMMENT packages.el
+*** packages.el
 通过packages.el接口, 可以将自己的一些设置与spacemacs融为一体.
 
 #+header: :noweb yes

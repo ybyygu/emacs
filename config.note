@@ -236,6 +236,13 @@
 : delete-blank-lines
 
 ** 符号对操作
+*** smart-parens [[https://github.com/Fuco1/smartparens][URL]]
+比想像中的强大的多, 基本可以代替之前的设置.
+1. 可以一对对的插入或删除
+2. 可以在 region 里插入括号. 在 insert-mode 下选择区域, 按括号即可.
+
+使用方法可以参考这里: [[https://ebzzry.github.io/emacs-pairs.html][URL]]
+*** 旧的配置代码
 #+BEGIN_SRC emacs-lisp
 
   (defvar my-skeleton-pair-alist
@@ -732,7 +739,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
 ** exports
 :PROPERTIES:
-:noweb-ref: init-org-export
+:header-args: :noweb-ref init-org-export
 :END:
 
 主要添加 cn-article classes, 修改使用 xelatex 来处理 tex 文档.

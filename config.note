@@ -3,21 +3,25 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-10-23 15:29
+# Updated: 2016-12-06 16:21
 
 * 配置备忘
-** [2016-10-23 Sun] 以后可以研究下Kitchin的scimax, 将他的配置集成进来 [[https://github.com/jkitchin/scimax][URL]]
-** [2016-10-17 Mon] 大致成了 以后多花点时间学习下spacemacs的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
+** [2016-12-06 Tue] 使用 chinese layer 中的 fcitx 包, 方便中英文切换. 同时使用 pangu-spacing
+** [2016-12-04 Sun] 启用 colors layer 配色更醒目
+** [2016-12-04 Sun] python 环境下启用 ipython
+: SPC m ,
+** [2016-10-23 Sun] 以后可以研究下 Kitchin 的 scimax, 将他的配置集成进来 [[https://github.com/jkitchin/scimax][URL]]
+** [2016-10-17 Mon] 大致成了 以后多花点时间学习下 spacemacs 的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
 1. 删除空格: SPC x d w
 2. 字数统计: SPC x c
 3. 对齐符号: SPC x a =, ... 按 "="对齐行
 4. 段落居口: SPC x j c justification
 5. 大小写 : SPC x u, SPC x U
-6. 扩选   : SPC v SPC V (也可用来替换以前的iedit编译功能)
+6. 扩选   : SPC v SPC V (也可用来替换以前的 iedit 编译功能)
 7. narrow: SPC n r, SPC n w
 8. 注释:  SPC c l, SPC c y (注释并复制一行, 有用)
-9. 打开buffer对应的文件: SPC f j
-10. 删除buffer对应的文件: SPC f D
+9. 打开 buffer 对应的文件: SPC f j
+10. 删除 buffer 对应的文件: SPC f D
 11. locate: SPC f L (真方便)
 12. 保存文件: SPC fs
 13. 书签功能: SPC f b 书签界面可以添加删除书签
@@ -27,8 +31,8 @@
 17. 查词: z=, ispell-word
 18. auto pair: SPC t p
    
-** [2016-10-17 Mon] 使用use-package来加载包 [[https://github.com/jwiegley/use-package][URL]]
-** [2016-10-16 Sun] 可参考 Purcell的配置: [[https://github.com/purcell/emacs.d][URL]]
+** [2016-10-17 Mon] 使用 use-package 来加载包 [[https://github.com/jwiegley/use-package][URL]]
+** [2016-10-16 Sun] 可参考 Purcell 的配置: [[https://github.com/purcell/emacs.d][URL]]
 ** [2016-10-16 Sun] 中文字体的设置问题
 *** 单独设 org-table [[https://emacs-china.org/t/org-mode/440/10][URL]]
 #+BEGIN_SRC elisp
@@ -46,7 +50,11 @@
   (cfs-set-spacemacs-fallback-fonts)
 #+END_SRC
 
-*** 中英文分别设置
+*** 基于 chinese layer
+: (spacemacs//set-monospaced-font  "Monaco" "WenQuanYi Micro Hei Mono" 14 16)
+
+问题: 视图缩放时中英不同步.
+
 ** [2016-10-15 Sat] 可参考 sachac 的配置: [[https://github.com/sachac/.emacs.d][URL]]
 ** [2016-10-15 Sat] spacemacs 设置修改方案
 参考这里: [[https://github.com/ale-batt/dotspacemacs][URL]]
@@ -391,7 +399,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 #+RESULTS:
 : er/expand-region
-** gjf-mode: 编译gaussian GJF文件
+** gjf-mode: 编译 gaussian GJF 文件
 #+BEGIN_SRC emacs-lisp
 (require 'gjf-mode)
 #+END_SRC
@@ -429,14 +437,14 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
                                     "chinese-fonts-setup"
                                     dotspacemacs-directory))
       (setq cfs--current-profile-name "program")
-      ;; (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
+      (setq cfs-use-face-font-rescale t)
       )
     (chinese-fonts-setup-enable)
     (cfs-set-spacemacs-fallback-fonts)
     )
 #+end_src
 
-** 修改frame标题 方便gnome-shell桌面切换
+** 修改 frame 标题 方便 gnome-shell 桌面切换
 
 #+BEGIN_SRC emacs-lisp results: none
 ;; http://www.emacswiki.org/emacs/FrameTitle
@@ -514,7 +522,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 : 4
 
 ** 自动完成
-系统自带的abbrev功能比较简单. 可以用M-/来激活补全.
+系统自带的 abbrev 功能比较简单. 可以用 M-/来激活补全.
 
 #+BEGIN_SRC emacs-lisp
   ;; abbreviations
@@ -525,8 +533,8 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+END_SRC
 
 * org-mode
-用于配置 org-mode 一些必要设置. 其它尽量使用org-mode in-buffer设置. 可
-参考tumashu的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.el][URL]]
+用于配置 org-mode 一些必要设置. 其它尽量使用 org-mode in-buffer 设置. 可
+参考 tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.el][URL]]
 ** settings
 #+name: init-org
 #+begin_src elisp
@@ -554,7 +562,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+end_src
 ** agenda
 *** init-org-agenda
-用use-package来自动化处理
+用 use-package 来自动化处理
 
 #+name: init-org-agenda
 #+BEGIN_SRC elisp
@@ -624,7 +632,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
                         (
                          (org-agenda-overriding-header "ASAP\n------------------")
                          (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         (org-agenda-max-entries 3)
+                         (org-agenda-max-entries 5)
                          )
                         )
 
@@ -726,7 +734,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 :noweb-ref: init-org-export
 :END:
 
-主要添加cn-article classes, 修改使用xelatex来处理tex文档.
+主要添加 cn-article classes, 修改使用 xelatex 来处理 tex 文档.
 
 也可以用这个包: https://github.com/tumashu/ox-latex-chinese
 
@@ -755,7 +763,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
 #+END_SRC
 *** latex
-以后可以考虑使用ox-latex-chinese包
+以后可以考虑使用 ox-latex-chinese 包
 
 #+BEGIN_SRC emacs-lisp
   (require 'ox-beamer)
@@ -858,11 +866,11 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
 ** screenshot
 *** org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
-感觉这个包比org-download质量更高一些. 优点:
+感觉这个包比 org-download 质量更高一些. 优点:
 1. 截屏的时候自动隐藏当前编辑窗口.
-2. 使用org-attach来处理文件的删除.
+2. 使用 org-attach 来处理文件的删除.
 
-使用shutter:
+使用 shutter:
 : shutter -s -n -e --disable_systray -o
 
 #+name: init-org-screenshot
@@ -879,7 +887,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+END_SRC
 
 *** org-download
-使用org-download包来实现截屏的功能. 这是spacemacs org layer中使用的包.
+使用 org-download 包来实现截屏的功能. 这是 spacemacs org layer 中使用的包.
 
 #+BEGIN_SRC elisp
   (use-package org-download
@@ -1030,10 +1038,10 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
   #+RESULTS:
 * server mode
-修改.spacemacs文件:
+修改.spacemacs 文件:
 : (setq-default dotspacemacs-persistent-server t)
 
-退出server的方法:
+退出 server 的方法:
 : SPC q q
 : SPC q s
 
@@ -1070,7 +1078,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
    : git clone https://github.com/syl20bnr/spacemacs.git ~/etc/spacemacs/.emacs.d
 
 2. 修改配置文件中的路径
-   elpa默认仍是存在~/.emacs.d/elpa下, 可以用 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Package-Files.html][package-user-dir]] 修改.
+   elpa 默认仍是存在~/.emacs.d/elpa 下, 可以用 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Package-Files.html][package-user-dir]] 修改.
    
    #+header: :tangle init.el
    #+begin_src emacs-lisp
@@ -1106,8 +1114,8 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC z x +/-
 
 ** dot-spacemacs
-这里设置 .spacemacs 相关的细节. .spacemacs文件可放到.spacemacs.d文件中,
-并更名为init.el
+这里设置 .spacemacs 相关的细节. .spacemacs 文件可放到.spacemacs.d 文件中,
+并更名为 init.el
 *** user-init
 配置 elpa 国内源
 #+BEGIN_SRC elisp
@@ -1134,33 +1142,10 @@ Anything that isn't just setting a variable should 99% be in user-config.
   (load custom-file 'no-error 'no-message)
 #+end_src
 
-在.spacemacs文件最后添加
+在.spacemacs 文件最后添加
 ** gwp layer
-*** layers.el
-这里添加我想要的layers. 这要.spacemacs文件的修改需要就很少了.
-[2016-10-16 Sun] 行不通?
-#+begin_src elisp
-  ;;; layers.el --- Spacemacs Layer layers File
-  ;;
-  ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
-  ;;
-  ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
-  ;; URL: https://github.com/syl20bnr/spacemacs
-  ;;
-  ;; This file is not part of GNU Emacs.
-  ;;
-  ;;; License: GPLv3
-
-  dotspacemacs-configuration-layers '(
-                                      auto-completion
-                                      better-defaults
-                                      git
-                                      org
-                                      python
-                                      )
-#+end_src
 *** packages.el
-通过packages.el接口, 可以将自己的一些设置与spacemacs融为一体.
+通过 packages.el 接口, 可以将自己的一些设置与 spacemacs 融为一体.
 
 #+header: :noweb yes
 #+header: :tangle ~/.spacemacs.d/layers/gwp/packages.el
@@ -1191,6 +1176,8 @@ Anything that isn't just setting a variable should 99% be in user-config.
       cal-china-x
       ox-latex-chinese
       org-attach-screenshot
+      fcitx
+      pangu-spacing
       )
 
     "The list of Lisp packages required by the gwp layer.")
@@ -1221,16 +1208,39 @@ Anything that isn't just setting a variable should 99% be in user-config.
     ;; 
     )
 
+  (defun gwp/init-fcitx ()
+    (use-package fcitx
+      :init
+      (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
+      ;; M-m is common in Spacemacs
+      (fcitx-prefix-keys-add "M-m") 
+
+      ;; for Linux users, it is recommended
+      (fcitx-aggressive-setup)
+      (setq fcitx-use-dbus t)
+      )
+    )
+
   <<init-org-screenshot>>
 
-  <<init-org-zotxt>>
+  ;; codes taken from chinese-layer
+  (defun gwp/init-pangu-spacing ()
+    (use-package pangu-spacing
+      :defer t
+      :init (progn (global-pangu-spacing-mode 1)
+                   (spacemacs|hide-lighter pangu-spacing-mode)
+                   ;; Always insert `real' space in org-mode.
+                   (add-hook 'org-mode-hook
+                             '(lambda ()
+                                (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))))
 
+  <<init-org-zotxt>>
 
   ;;; packages.el ends here
 
 #+END_SRC
 *** config.el
-这里添加gwp layer本身需要的配置. 暂时没有必要.
+这里添加 gwp layer 本身需要的配置. 暂时没有必要.
 
 * 旧的配置
 ** development
@@ -1244,7 +1254,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+END_SRC
 
 *** 书签&导航等
-主要用bm, 书签持久化是从bm.el里抄来的.
+主要用 bm, 书签持久化是从 bm.el 里抄来的.
 
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'bm)
@@ -1316,7 +1326,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : comment-dwim-line
 
 *** 自动完成
-系统自带的abbrev功能比较简单. 可以用M-/来激活补全.
+系统自带的 abbrev 功能比较简单. 可以用 M-/来激活补全.
 
 #+BEGIN_SRC emacs-lisp
   ;;
@@ -1349,7 +1359,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : silently
 
 ** python
-*** 使用emacs中自带的python.el
+*** 使用 emacs 中自带的 python.el
    试了下, 一切都正常. 先这么着吧.
 
   #+begin_src emacs-lisp
@@ -1394,10 +1404,10 @@ Anything that isn't just setting a variable should 99% be in user-config.
   | (lambda nil (set (make-local-variable (quote yas-indent-line)) (quote fixed))) | er/add-python-mode-expansions | my-python-hook |
 
 *** jedi
-   jedi依赖auto-complete. jedi-server安装时要将virtualenv2软链为
+   jedi 依赖 auto-complete. jedi-server 安装时要将 virtualenv2 软链为
    virtualenv
 
-   jedi的快捷键:
+   jedi 的快捷键:
    : C-c .
    : C-c ,
 #+BEGIN_SRC emacs-lisp

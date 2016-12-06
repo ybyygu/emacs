@@ -6,6 +6,8 @@
 # Updated: 2016-12-06 16:25
 
 * 配置备忘
+** [2016-12-06 Tue] 修改 spacemacs-theme 中的变量 禁用 org-mode 标题行字体缩放
+: (setq spacemacs-theme-org-heigh nil)
 ** [2016-12-06 Tue] 为了能使中英文同时缩放修改 chinese-fonts-setup
 : (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
 

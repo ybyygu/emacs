@@ -3,7 +3,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-06 19:13
+# Updated: 2016-12-06 21:34
 
 * 配置备忘
 ** [2016-12-06 Tue] 修改 spacemacs-theme 中的变量 禁用 org-mode 标题行字体缩放
@@ -73,7 +73,9 @@
 * scripts
 * text
 ** 常规操作
-#+name: init-text
+1. mark: C-@, C-M-SPC
+2. goto-line
+
 #+BEGIN_SRC emacs-lisp
   (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
 
@@ -237,7 +239,7 @@
 
 ** 符号对操作
 *** smart-parens [[https://github.com/Fuco1/smartparens][URL]]
-比想像中的强大的多, 基本可以代替之前的设置.
+比想像中的强大的多, 完全可以代替之前的设置.
 1. 可以一对对的插入或删除
 2. 可以在 region 里插入括号. 在 insert-mode 下选择区域, 按括号即可.
 
@@ -283,7 +285,8 @@
 #+RESULTS:
 : t
 
-** 同时编辑多处文本 (iedit)
+** 同时编辑多处文本
+*** old config
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'iedit)
   (require 'iedit)
@@ -1468,15 +1471,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
   ;; (require 'smooth-scrolling)
 
 #+END_SRC
-*** 光标显示模式
-#+BEGIN_SRC emacs-lisp
-
-;; use vertical bar between characters
-;; http://www.gnu.org/software/emacs/manual/html_node/elisp/Cursor-Parameters.html
-(setq-default cursor-type 'bar)
-
-#+end_src
-
 
 * Local variables
 # Local Variables:

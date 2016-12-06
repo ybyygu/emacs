@@ -3,9 +3,12 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-06 16:21
+# Updated: 2016-12-06 16:25
 
 * 配置备忘
+** [2016-12-06 Tue] 为了能使中英文同时缩放修改 chinese-fonts-setup
+: (setq cfs-use-face-font-rescale (eq system-type 'gnu/linux))
+
 ** [2016-12-06 Tue] 使用 chinese layer 中的 fcitx 包, 方便中英文切换. 同时使用 pangu-spacing
 ** [2016-12-04 Sun] 启用 colors layer 配色更醒目
 ** [2016-12-04 Sun] python 环境下启用 ipython

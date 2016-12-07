@@ -3,9 +3,9 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-06 21:34
+# Updated: 2016-12-07 15:10
 
-* 配置备忘
+* Memo
 ** [2016-12-06 Tue] 修改 spacemacs-theme 中的变量 禁用 org-mode 标题行字体缩放
 : (setq spacemacs-theme-org-heigh nil)
 ** [2016-12-06 Tue] 为了能使中英文同时缩放修改 chinese-fonts-setup
@@ -35,7 +35,7 @@
 16. 最近访问的文件: SPC f r, 当前目录下(project) SPC p r
 17. 查词: z=, ispell-word
 18. auto pair: SPC t p
-   
+
 ** [2016-10-17 Mon] 使用 use-package 来加载包 [[https://github.com/jwiegley/use-package][URL]]
 ** [2016-10-16 Sun] 可参考 Purcell 的配置: [[https://github.com/purcell/emacs.d][URL]]
 ** [2016-10-16 Sun] 中文字体的设置问题
@@ -65,13 +65,16 @@
 参考这里: [[https://github.com/ale-batt/dotspacemacs][URL]]
 
 1. 修改.spacemacs 中的 user-config 函数, 从 gwp.org 文件中读取设置
-   : (with-eval-after-load 'org (org-babel-load-file "~/etc/spacemacs/config.org")) 
-   或者: 
-   : (with-eval-after-load 'org (load-file "~/etc/spacemacs/config.el")) 
+   : (with-eval-after-load 'org (org-babel-load-file "~/etc/spacemacs/config.org"))
+   或者:
+   : (with-eval-after-load 'org (load-file "~/etc/spacemacs/config.el"))
 ** [2016-10-15 Sat] 参考子龙山人的配置 [[https://github.com/zilongshanren/spacemacs-private][URL]]
 ** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
-* scripts
 * text
+:PROPERTIES:
+:header-args: :noweb-ref init-text
+:END:
+
 ** 常规操作
 1. mark: C-@, C-M-SPC
 2. goto-line
@@ -81,11 +84,8 @@
 
   ;; more convenient than C-M-BACKSPC
   ;; (global-set-key (kbd "<f5> k") 'kill-whole-line)
-  (global-set-key (kbd  "M-k") 'kill-whole-line)
-  (global-set-key (kbd  "M-K") 'kill-sentence)
-
-  ;; move lines like in openoffice
-  ;; http://www.schuerig.de/michael/blog/index.php/2009/01/16/line-movement-for-emacs/
+  ;; (global-set-key (kbd  "M-k") 'kill-whole-line)
+  ;; (global-set-key (kbd  "M-K") 'kill-sentence)
 
 #+END_SRC
 
@@ -104,62 +104,6 @@
   (global-set-key (kbd "C-c i") 'gwp/insert-date)
 #+END_SRC
 
-** 按行或段移动
-#+BEGIN_SRC emacs-lisp
-  (defun move-text-internal (arg)
-     (cond
-      ((and mark-active transient-mark-mode)
-       (if (> (point) (mark))
-          (exchange-point-and-mark))
-       (let ((column (current-column))
-            (text (delete-and-extract-region (point) (mark))))
-         (forward-line arg)
-         (move-to-column column t)
-         (set-mark (point))
-         (insert text)
-         (exchange-point-and-mark)
-         (setq deactivate-mark nil)))
-      (t
-       (beginning-of-line)
-       (when (or (> arg 0) (not (bobp)))
-         (forward-line)
-         (when (or (< arg 0) (not (eobp)))
-          (transpose-lines arg))
-         (forward-line -1)))))
-
-  (defun move-text-down (arg)
-     "Move region (transient-mark-mode active) or current line
-    arg lines down."
-     (interactive "*p")
-     (move-text-internal arg))
-
-  (defun move-text-up (arg)
-     "Move region (transient-mark-mode active) or current line
-    arg lines up."
-     (interactive "*p")
-     (move-text-internal (- arg))
-     )
-
-  (defun move-paragraph-down (arg)
-     "Move current paragraph down."
-     (interactive "*p")
-     (transpose-paragraphs arg)
-     (backward-paragraph arg)
-     (forward-char))
-
-  (defun move-paragraph-up (arg)
-     "Move current paragraph down."
-     (interactive "*p")
-     (transpose-paragraphs (- arg))
-     (backward-paragraph arg)
-     (forward-char))
-
-  ;; (global-set-key [\M-up] 'move-text-up)
-  ;; (global-set-key [\M-down] 'move-text-down)
-  ;; (global-set-key (kbd "<f5> <up>") 'move-paragraph-up)
-  ;; (global-set-key (kbd "<f5> <down>") 'move-paragraph-down)
-
-#+END_SRC
 ** 快捷插入
 #+BEGIN_SRC emacs-lisp
   ;; referred: http://docs.huihoo.com/homepage/shredderyin/wiki/KeyBinding.html
@@ -222,21 +166,67 @@
 
 #+END_SRC
 
-#+RESULTS:
-: insert-fixme
-
 ** 处理空格
+: SPC xdw 删除行尾空格.
+
 #+BEGIN_SRC emacs-lisp
   (setq show-trailing-whitespace t)
   (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
   ;; make sure this always work
   (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
-
 #+END_SRC
 
-#+RESULTS:
-: delete-blank-lines
+** 按行或段移动
+#+BEGIN_SRC emacs-lisp
+  (defun move-text-internal (arg)
+     (cond
+      ((and mark-active transient-mark-mode)
+       (if (> (point) (mark))
+          (exchange-point-and-mark))
+       (let ((column (current-column))
+            (text (delete-and-extract-region (point) (mark))))
+         (forward-line arg)
+         (move-to-column column t)
+         (set-mark (point))
+         (insert text)
+         (exchange-point-and-mark)
+         (setq deactivate-mark nil)))
+      (t
+       (beginning-of-line)
+       (when (or (> arg 0) (not (bobp)))
+         (forward-line)
+         (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg))
+         (forward-line -1)))))
 
+  (defun move-text-down (arg)
+     "Move region (transient-mark-mode active) or current line
+    arg lines down."
+     (interactive "*p")
+     (move-text-internal arg))
+
+  (defun move-text-up (arg)
+     "Move region (transient-mark-mode active) or current line
+    arg lines up."
+     (interactive "*p")
+     (move-text-internal (- arg))
+     )
+
+  (defun move-paragraph-down (arg)
+     "Move current paragraph down."
+     (interactive "*p")
+     (transpose-paragraphs arg)
+     (backward-paragraph arg)
+     (forward-char))
+
+  (defun move-paragraph-up (arg)
+     "Move current paragraph down."
+     (interactive "*p")
+     (transpose-paragraphs (- arg))
+     (backward-paragraph arg)
+     (forward-char))
+
+#+END_SRC
 ** 符号对操作
 *** smart-parens [[https://github.com/Fuco1/smartparens][URL]]
 比想像中的强大的多, 完全可以代替之前的设置.
@@ -284,33 +274,6 @@
 
 #+RESULTS:
 : t
-
-** 同时编辑多处文本
-*** old config
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'iedit)
-  (require 'iedit)
-  (define-key global-map (kbd "C-;") 'iedit-mode)
-  ;; disable flyspell mode for the annoying conflicting key bindings
-  (flyspell-mode 0)
-#+END_SRC
-
-** goto-last-change
-*** 如果需要先安装下.
-
-#+BEGIN_SRC emacs-lisp
-(starter-kit-install-if-needed 'goto-last-change)
-#+END_SRC
-
-#+RESULTS:
-*** 设置快捷键
-#+BEGIN_SRC emacs-lisp
-(require 'goto-last-change)
-(global-set-key (kbd "<f5> b") 'goto-last-change)
-#+END_SRC
-
-#+RESULTS:
-: goto-last-change
 
 ** 自动扩选
 #+BEGIN_SRC emacs-lisp
@@ -412,8 +375,33 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 #+END_SRC
 
+** 同时编辑多处文本
+*** old config
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'iedit)
+  (require 'iedit)
+  (define-key global-map (kbd "C-;") 'iedit-mode)
+  ;; disable flyspell mode for the annoying conflicting key bindings
+  (flyspell-mode 0)
+#+END_SRC
+
+** goto-last-change
+*** 如果需要先安装下.
+
+#+BEGIN_SRC emacs-lisp
+(starter-kit-install-if-needed 'goto-last-change)
+#+END_SRC
+
 #+RESULTS:
-: er/expand-region
+*** 设置快捷键
+#+BEGIN_SRC emacs-lisp
+(require 'goto-last-change)
+(global-set-key (kbd "<f5> b") 'goto-last-change)
+#+END_SRC
+
+#+RESULTS:
+: goto-last-change
+
 ** gjf-mode: 编译 gaussian GJF 文件
 #+BEGIN_SRC emacs-lisp
 (require 'gjf-mode)
@@ -423,13 +411,15 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 : gjf-mode
 
 * ui
+:PROPERTIES:
+:header-args: :noweb-ref init-ui
+:END:
+** 语言字体
 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
 
-** 语言字体
-#+name: init-ui
 #+begin_src emacs-lisp
   (set-language-environment "UTF-8")
-  (prefer-coding-system 'utf-8) 
+  (prefer-coding-system 'utf-8)
   (global-font-lock-mode t)
 
   ;; force a syntax-highlighting refresh
@@ -458,6 +448,18 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ;; 修改 frame 标题 方便 gnome-shell 桌面切换
   (setq frame-title-format '("" "%b: " buffer-file-name))
 #+end_src
+
+** 文本滚动
+默认的闪花了眼. spacemacs 默认启用平滑滚动, 但鼠标的 wheel 操作还是偏快.
+
+#+BEGIN_SRC emacs-lisp results: none
+  ;; emacs scrolls too fast
+  ;; http://stackoverflow.com/questions/445873/emacs-mouse-scrolling
+  (setq mouse-wheel-scroll-amount '(1 ((Shift) . 2) ((control) . nil)))
+  (setq mouse-wheel-progressive-speed nil)      ; constant speed
+  (setq scroll-preserve-screen-position nil)    ; do not reposition the screen when moving the cursor
+
+#+END_SRC
 
 * calendar
 cal-china-x: https://github.com/xwl/cal-china-x
@@ -526,9 +528,6 @@ cal-china-x: https://github.com/xwl/cal-china-x
 (setq tab-width 4)                             ; Length of tab is 4 SPC
 
 #+END_SRC
-
-#+RESULTS:
-: 4
 
 ** 自动完成
 系统自带的 abbrev 功能比较简单. 可以用 M-/来激活补全.
@@ -1091,7 +1090,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
 2. 修改配置文件中的路径
    elpa 默认仍是存在~/.emacs.d/elpa 下, 可以用 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Package-Files.html][package-user-dir]] 修改.
-   
+
    #+header: :tangle init.el
    #+begin_src emacs-lisp
      (setq spacemacs-start-directory "~/etc/spacemacs/.emacs.d/")
@@ -1217,7 +1216,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
     )
 
   (defun gwp/init-ox-latex-chinese ()
-    ;; 
+    ;;
     )
 
   (defun gwp/init-fcitx ()
@@ -1225,7 +1224,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
       :init
       (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
       ;; M-m is common in Spacemacs
-      (fcitx-prefix-keys-add "M-m") 
+      (fcitx-prefix-keys-add "M-m")
 
       ;; for Linux users, it is recommended
       (fcitx-aggressive-setup)
@@ -1254,7 +1253,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 *** config.el
 这里添加 gwp layer 本身需要的配置. 暂时没有必要.
 
-* 旧的配置
+* deprecated
 ** development
 *** 高亮当前行
 所有已定义的颜色:
@@ -1449,28 +1448,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
 
 #+RESULTS:
 : t
-
-*** 文本滚动
-默认的闪花了眼
-#+BEGIN_SRC emacs-lisp results: none
-  ;; http://stackoverflow.com/questions/3631220/fix-to-get-smooth-scrolling-in-emacs
-  ;; (setq redisplay-dont-pause t
-  ;;       scroll-margin 1
-  ;;       scroll-step 1
-  ;;       scroll-conservatively 10000
-  ;;       scroll-preserve-screen-position 1)
-
-  ;; ;; emacs scrolls too fast
-  ;; ;; http://stackoverflow.com/questions/445873/emacs-mouse-scrolling
-  ;; (setq-default scroll-up-aggressively 0.01 scroll-down-aggressively 0.01)
-  (setq mouse-wheel-scroll-amount '(1 ((Shift) . 2) ((control) . nil)))
-  (setq mouse-wheel-progressive-speed nil)      ; constant speed
-  (setq scroll-preserve-screen-position nil)    ; do not reposition the screen when moving the cursor
-  ;; not very nice
-  ;; (starter-kit-install-if-needed 'smooth-scrolling)
-  ;; (require 'smooth-scrolling)
-
-#+END_SRC
 
 * Local variables
 # Local Variables:

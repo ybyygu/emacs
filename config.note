@@ -36,6 +36,27 @@
 17. 查词: z=, ispell-word
 18. auto pair: SPC t p
 
+| ~SPC f C d~ | convert file from unix to dos encoding                                                                                          |
+| ~SPC f C u~ | convert file from dos to unix encoding                                                                                          |
+| ~SPC f D~   | delete a file and the associated buffer (ask for confirmation)                                                                  |
+| ~SPC f E~   | open a file with elevated privileges (sudo edit)                                                                                |
+| ~SPC f f~   | open file with =helm=                                                                                                           |
+| ~SPC f F~   | try to open the file under point =helm=                                                                                         |
+| ~SPC f j~   | jump to the current buffer file in dired                                                                                        |
+| ~SPC f L~   | Locate a file (using =locate=)                                                                                                  |
+| ~SPC f o~   | open a file using the default external program                                                                                  |
+| ~SPC f R~   | rename the current file                                                                                                         |
+| ~SPC f r~   | open a recent file with =helm=                                                                                                  |
+| ~SPC f t~   | toggle file tree side bar using [[https://github.com/jaypei/emacs-neotree][NeoTree]]                                                                                         |
+| ~SPC f v f~ | add a local variable to the current file                                                                                        |
+| ~SPC f y~   | show and copy current file absolute path in the minibuffer                                                                      |
+| ~SPC f e d~ | open the spacemacs dotfile (=~/.spacemacs=)                     |
+| ~SPC f e D~ | open =ediff= buffer of =~/.spacemacs= and =.spacemacs.template= |
+| ~SPC f e R~ | resync the dotfile with spacemacs                               |
+
+**** Browsing files with Helm
+| ~C-h~       | go up one level (parent directory |
+| ~C-l~       | enter current directory           |
 ** [2016-10-17 Mon] 使用 use-package 来加载包 [[https://github.com/jwiegley/use-package][URL]]
 ** [2016-10-16 Sun] 可参考 Purcell 的配置: [[https://github.com/purcell/emacs.d][URL]]
 ** [2016-10-16 Sun] 中文字体的设置问题
@@ -74,7 +95,6 @@
 :PROPERTIES:
 :header-args: :noweb-ref init-text
 :END:
-
 ** 常规操作
 1. mark: C-@, C-M-SPC
 2. goto-line
@@ -177,6 +197,9 @@
 #+END_SRC
 
 ** 按行或段移动
+: [ e move line up
+: ] e move line down
+
 #+BEGIN_SRC emacs-lisp
   (defun move-text-internal (arg)
      (cond

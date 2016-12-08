@@ -1,5 +1,6 @@
 #+TITLE: Emacs 配置 (based on spacemacs)
 #+SETUPFILE: ~/Notes/common.org
+#+SETUPFILE: ~/Notes/latex.org
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
@@ -1132,6 +1133,11 @@ cal-china-x: https://github.com/xwl/cal-china-x
    #+end_src
 
 ** tips
+*** 使用外部程序打开文件的方式
+emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:
+1. dired-jump (SPC fj): 使用 dired 打开当前文件所在目录
+2. 在 dired 界面上选择某个文件, 使用 external 程序打开 (SPC fo).
+3. 也可以在 dired 界面上用"!"命令, 指定任意程序打开.
 *** user-init 和 user-config
 from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
 

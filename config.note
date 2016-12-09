@@ -4,7 +4,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-07 15:10
+# Updated: 2016-12-08 13:25
 
 * Memo
 ** [2016-12-06 Tue] 修改 spacemacs-theme 中的变量 禁用 org-mode 标题行字体缩放
@@ -1133,6 +1133,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
    #+end_src
 
 ** tips
+*** gold-ratio 可以自动放大当前的 window 区域: SPC t g
 *** 使用外部程序打开文件的方式
 emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:
 1. dired-jump (SPC fj): 使用 dired 打开当前文件所在目录

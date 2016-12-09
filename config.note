@@ -1218,7 +1218,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
       ox-latex-chinese
       org-attach-screenshot
       fcitx
-      pangu-spacing
+      ;; pangu-spacing
       )
 
     "The list of Lisp packages required by the gwp layer.")
@@ -1265,15 +1265,15 @@ Anything that isn't just setting a variable should 99% be in user-config.
   <<init-org-screenshot>>
 
   ;; codes taken from chinese-layer
-  (defun gwp/init-pangu-spacing ()
-    (use-package pangu-spacing
-      :defer t
-      :init (progn (global-pangu-spacing-mode 1)
-                   (spacemacs|hide-lighter pangu-spacing-mode)
-                   ;; Always insert `real' space in org-mode.
-                   (add-hook 'org-mode-hook
-                             '(lambda ()
-                                (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))))
+  ;; (defun gwp/init-pangu-spacing ()
+  ;;   (use-package pangu-spacing
+  ;;     :defer t
+  ;;     :init (progn (global-pangu-spacing-mode 1)
+  ;;                  (spacemacs|hide-lighter pangu-spacing-mode)
+  ;;                  ;; Always insert `real' space in org-mode.
+  ;;                  (add-hook 'org-mode-hook
+  ;;                            '(lambda ()
+  ;;                               (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))))
 
   <<init-org-zotxt>>
 

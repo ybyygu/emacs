@@ -15,7 +15,7 @@
 ** [2016-12-06 Tue] 使用 chinese layer 中的 fcitx 包, 方便中英文切换. 同时使用 pangu-spacing
 ** [2016-12-04 Sun] 启用 colors layer 配色更醒目
 ** [2016-12-04 Sun] python 环境下启用 ipython
-: SPC m ,
+: SPC m s i,
 ** [2016-10-23 Sun] 以后可以研究下 Kitchin 的 scimax, 将他的配置集成进来 [[https://github.com/jkitchin/scimax][URL]]
 ** [2016-10-17 Mon] 大致成了 以后多花点时间学习下 spacemacs 的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]]
 1. 删除空格: SPC x d w

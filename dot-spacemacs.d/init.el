@@ -44,6 +44,7 @@ values."
      emacs-lisp
      git
      ;; markdown
+     deft
      org
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -322,6 +323,12 @@ you should place your code here."
 
   ;; Prevent the visual selection overriding my system clipboard
   (fset 'evil-visual-update-x-selection 'ignore)
+
+  ;; temporary settings for deft package
+  (setq deft-extensions '("note"))
+  (setq deft-directory "~/Notes")
+  (setq deft-recursive t)
+  (spacemacs/set-leader-keys-for-major-mode 'deft-mode "q" 'quit-window)
   )
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))

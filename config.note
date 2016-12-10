@@ -4,9 +4,11 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-08 13:25
+# Updated: 2016-12-10 15:41
 
 * Memo
+** [2016-12-10 Sat] 启用deft layer, 使用deft来搜索笔记
+: SPC a n
 ** [2016-12-10 Sat] 禁用选中的文字进入clipboard的功能 [[https://github.com/syl20bnr/spacemacs/blob/master/doc/FAQ.org#prevent-the-visual-selection-overriding-my-system-clipboard][URL]]
 : ;; Prevent the visual selection overriding my system clipboard
 : (fset 'evil-visual-update-x-selection 'ignore)
@@ -1138,6 +1140,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
    #+end_src
 
 ** tips
+*** 参看spacemacs帮助 SPC h SPC
 *** gold-ratio 可以自动放大当前的 window 区域: SPC t g
 *** 使用外部程序打开文件的方式
 emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:

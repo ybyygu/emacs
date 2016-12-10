@@ -310,15 +310,18 @@ you should place your code here."
 
   ;; (load-file (expand-file-name "gwp.el" dotspacemacs-directory))
   ;; (spacemacs/toggle-smartparens-globally-off)
-(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
 
-;; I hate the default undo behavior
-(setq evil-want-fine-undo t)
+  ;; I hate the default undo behavior
+  (setq evil-want-fine-undo t)
 
-;; do not scale the font size
-(setq spacemacs-theme-org-agenda-height nil)
-(setq spacemacs-theme-org-height nil)                                                                                                                            
+  ;; do not scale the font size
+  (setq spacemacs-theme-org-agenda-height nil)
+  (setq spacemacs-theme-org-height nil)
+
+  ;; Prevent the visual selection overriding my system clipboard
+  (fset 'evil-visual-update-x-selection 'ignore)
   )
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))

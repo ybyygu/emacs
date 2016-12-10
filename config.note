@@ -7,6 +7,11 @@
 # Updated: 2016-12-08 13:25
 
 * Memo
+** [2016-12-10 Sat] 禁用选中的文字进入clipboard的功能 [[https://github.com/syl20bnr/spacemacs/blob/master/doc/FAQ.org#prevent-the-visual-selection-overriding-my-system-clipboard][URL]]
+: ;; Prevent the visual selection overriding my system clipboard
+: (fset 'evil-visual-update-x-selection 'ignore)
+** [2016-12-10 Sat] 修改spacemacs中默认的undo行为 默认的undo太变态了
+: (setq evil-want-fine-undo t)
 ** [2016-12-06 Tue] 修改 spacemacs-theme 中的变量 禁用 org-mode 标题行字体缩放
 : (setq spacemacs-theme-org-heigh nil)
 ** [2016-12-06 Tue] 为了能使中英文同时缩放修改 chinese-fonts-setup

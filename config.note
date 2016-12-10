@@ -1285,6 +1285,39 @@ Anything that isn't just setting a variable should 99% be in user-config.
   ;;; packages.el ends here
 
 #+END_SRC
+*** keybindings.el
+#+header: :tangle ~/.spacemacs.d/layers/gwp/keybindings.el
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-l") 'goto-line)
+
+  ;; make it easier to paste things
+  ;; (define-key evil-insert-state-map (kbd "C-v") 'yank)
+  ;; becasue I use hybrid mode
+  (define-key evil-hybrid-state-map (kbd "C-v") 'yank)
+
+  ;; make it easier to undo
+  (define-key evil-hybrid-state-map (kbd "C-z") 'undo-tree-undo)
+  (define-key evil-hybrid-state-map (kbd "M-u") 'undo-tree-undo)
+
+  (defun gwp/insert-date (arg)
+    "Insert date at point. With prefix argument, insert date and time."
+    (interactive "P")
+    (insert (format-time-string "%Y-%m-%d"))
+    (when arg
+      (insert (format-time-string " %H:%M"))
+      )
+    )
+
+  ;; make it easier to update time-stamp
+  ;; (global-set-key (kbd "C-c i") 'gwp/insert-date)
+  (define-key evil-hybrid-state-map (kbd "C-c i") 'gwp/insert-date)
+
+  ;; whitespace
+  (setq show-trailing-whitespace t)
+  (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+  ;; make sure this always work
+  (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+#+END_SRC
 *** config.el
 这里添加 gwp layer 本身需要的配置. 暂时没有必要.
 

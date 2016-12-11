@@ -4,7 +4,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-11 20:08
+# Updated: 2016-12-11 21:01
 
 * Memo
 ** [2016-12-11 Sun] 添加快捷键 快速导出org-babel代码块.
@@ -550,11 +550,12 @@ cal-china-x: https://github.com/xwl/cal-china-x
 :END:
 ** 版本管理
 #+BEGIN_SRC emacs-lisp
-(setq vc-follow-symlinks t)
-;; (remove-hook 'vc-checkout-hook 'time-stamp)
-(add-hook 'vc-before-checkin-hook 'time-stamp)
-
+  (setq vc-follow-symlinks t)
+  ;; (remove-hook 'vc-checkout-hook 'time-stamp)
+  ;; (add-hook 'vc-before-checkin-hook 'timestamp)
+  (add-hook 'before-save-hook 'time-stamp)
 #+END_SRC
+
 ** tab key
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "ybyygu@gmail.com")

@@ -4,9 +4,11 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-10 15:41
+# Updated: 2016-12-11 20:08
 
 * Memo
+** [2016-12-11 Sun] 添加快捷键 快速导出org-babel代码块.
+: SPC ob
 ** [2016-12-10 Sat] 启用deft layer, 使用deft来搜索笔记
 : SPC a n
 

@@ -9,6 +9,7 @@
 * Memo
 ** [2016-12-10 Sat] 启用deft layer, 使用deft来搜索笔记
 : SPC a n
+
 ** [2016-12-10 Sat] 禁用选中的文字进入clipboard的功能 [[https://github.com/syl20bnr/spacemacs/blob/master/doc/FAQ.org#prevent-the-visual-selection-overriding-my-system-clipboard][URL]]
 : ;; Prevent the visual selection overriding my system clipboard
 : (fset 'evil-visual-update-x-selection 'ignore)
@@ -1320,11 +1321,37 @@ Anything that isn't just setting a variable should 99% be in user-config.
   (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
   ;; make sure this always work
   (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+
+  ;; tangle current block in org-babel
+  ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
+  (defun gwp/org-babel-tangle-block()
+    (interactive)
+    (let ((current-prefix-arg '(4)))
+      (call-interactively 'org-babel-tangle)
+      )
+    )
+
+  (eval-after-load "org"
+    '(progn
+       ;; (define-key org-mode-map (kbd "C-c b") 'gwp/org-babel-tangle-block)
+       ;; use o as org global bindings
+       (evil-leader/set-key
+         "oa" 'org-agenda
+         "oc" 'org-capture
+         "ol" 'org-store-link
+         "ob" 'gwp/org-babel-tangle-block
+         )
+       ))
+
+  ;; http://stackoverflow.com/questions/268088/how-to-remove-the-prompt-for-killing-emacsclient-buffers
+  ;; this seems work
+  (defalias 'server-kill-buffer-query-function '(lambda () t))
 #+END_SRC
 *** config.el
 这里添加 gwp layer 本身需要的配置. 暂时没有必要.
 
 * deprecated
+以下旧的配置在spacemacs中都不再需要了.
 ** development
 *** 高亮当前行
 所有已定义的颜色:
@@ -1482,24 +1509,19 @@ Anything that isn't just setting a variable should 99% be in user-config.
     (add-hook 'python-mode-hook 'my-python-hook)
   #+end_src
 
-  #+RESULTS:
-  | (lambda nil (set (make-local-variable (quote yas-indent-line)) (quote fixed))) | er/add-python-mode-expansions | my-python-hook |
-
 *** jedi
-   jedi 依赖 auto-complete. jedi-server 安装时要将 virtualenv2 软链为
-   virtualenv
+jedi 依赖 auto-complete. jedi-server 安装时要将 virtualenv2 软链为
+virtualenv
 
-   jedi 的快捷键:
-   : C-c .
-   : C-c ,
+jedi 的快捷键:
+: C-c .
+: C-c ,
+
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'jedi)
   ;; (add-hook 'python-mode-hook 'jedi:setup)
   ;; (setq jedi:complete-on-dot t)                 ; optional
 #+END_SRC
-
-#+RESULTS:
-: t
 
 ** 界面显示相关
 *** 配色主题

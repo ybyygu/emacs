@@ -4,9 +4,13 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-11 21:01
+# Updated: 2016-12-12 20:25
 
 * Memo
+** TODO [2016-12-12 Mon] 需要改进org-babel几个相关功能
+1. org-src-window-setup
+2. org-edit-src自动保存
+** TODO [2016-12-11 Sun] https://github.com/politza/pdf-tools 神器
 ** [2016-12-11 Sun] 添加快捷键 快速导出org-babel代码块.
 : SPC ob
 ** [2016-12-10 Sat] 启用deft layer, 使用deft来搜索笔记
@@ -1336,7 +1340,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 
   (eval-after-load "org"
     '(progn
-       ;; (define-key org-mode-map (kbd "C-c b") 'gwp/org-babel-tangle-block)
+       (define-key org-mode-map (kbd "C-c b") 'gwp/org-babel-tangle-block)
        ;; use o as org global bindings
        (evil-leader/set-key
          "oa" 'org-agenda

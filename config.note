@@ -4,7 +4,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-12 20:25
+# Updated: 2016-12-13 09:43
 
 * Memo
 ** TODO [2016-12-12 Mon] 需要改进org-babel几个相关功能
@@ -1052,41 +1052,43 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+end_src
 
 ** babel
-所有支持的语言: [[http://orgmode.org/worg/org-contrib/babel/languages.html][URL]]
-1. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-awk.html][awk]]
-2. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-R.html][R]]
-3. [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][Python]]
+#+name: init-org-babel
+#+begin_src emacs-lisp
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '((python . t)
+  ;;    (R . t)
+  ;;    (sh . t)
+  ;;    (C . t)
+  ;;    (perl . t)
+  ;;    (plantuml . t)
+  ;;    )
+  ;;  )
 
-  #+begin_src emacs-lisp
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((python . t)
-       (R . t)
-       (sh . t)
-       (C . t)
-       (perl . t)
-       (plantuml . t)
-       )
-     )
+  ;; (setq org-plantuml-jar-path
+  ;;       (expand-file-name "~/.emacs.d/plantuml/plantuml.jar"))
 
-    ;; http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-makefile.html
-    ;; For tabs aren't lost in the Org mode buffer
-    (setq org-src-preserve-indentation nil)
+  ;; (defun gwp/display-inline-images ()
+  ;;   (condition-case nil
+  ;;       (org-display-inline-images)
+  ;;     (error nil)))
+  ;; (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
 
-    (setq org-plantuml-jar-path
-          (expand-file-name "~/.emacs.d/plantuml/plantuml.jar"))
-    (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
+  (setq org-confirm-babel-evaluate nil)
 
-    (setq org-babel-python-command "python3")
+  ;; add <p for python expansion
+  (add-to-list 'org-structure-template-alist
+               '("p" "#+begin_src python :mkdirp yes :padline no\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
 
-    (defun gwp/display-inline-images ()
-      (condition-case nil
-          (org-display-inline-images)
-        (error nil)))
-    (setq org-confirm-babel-evaluate nil)
-  #+end_src
+  ;; add <el for emacs-lisp expansion
+  (add-to-list 'org-structure-template-alist
+               '("el" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>"))
 
-  #+RESULTS:
+  ;; add <b for shell scritp
+  (add-to-list 'org-structure-template-alist
+               '("b" "#+begin_src sh :results output :mkdirp yes :padline no\n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
+#+end_src
+
 * server mode
 修改.spacemacs 文件:
 : (setq-default dotspacemacs-persistent-server t)
@@ -1116,9 +1118,6 @@ cal-china-x: https://github.com/xwl/cal-china-x
   (defalias 'server-kill-buffer-query-function '(lambda () t))
 
 #+END_SRC
-
-#+RESULTS:
-: save-buffers-kill-emacs
 
 * spacemacs
 ** install
@@ -1257,6 +1256,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
         <<init-org-crypt>>
         <<init-org-export>>
         <<init-org-refile>>
+        <<init-org-babel>>
         )
       )
     )
@@ -1299,7 +1299,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 *** keybindings.el
 #+header: :tangle ~/.spacemacs.d/layers/gwp/keybindings.el
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-l") 'goto-line)
+  ;; (global-set-key (kbd "C-l") 'goto-line)
 
   ;; make it easier to paste things
   ;; (define-key evil-insert-state-map (kbd "C-v") 'yank)

@@ -43,6 +43,7 @@ values."
      better-defaults
      emacs-lisp
      git
+     github
      ;; markdown
      deft
      org

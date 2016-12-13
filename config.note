@@ -4,13 +4,14 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-13 09:43
+# Updated: 2016-12-13 13:18
 
 * Memo
+** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
 ** TODO [2016-12-12 Mon] 需要改进org-babel几个相关功能
 1. org-src-window-setup
 2. org-edit-src自动保存
-** TODO [2016-12-11 Sun] https://github.com/politza/pdf-tools 神器
+** [2016-12-11 Sun] pdf-tools神器 [[https://github.com/politza/pdf-toolsU][URL]] 神器
 ** [2016-12-11 Sun] 添加快捷键 快速导出org-babel代码块.
 : SPC ob
 ** [2016-12-10 Sat] 启用deft layer, 使用deft来搜索笔记

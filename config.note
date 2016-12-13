@@ -4,7 +4,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-13 13:18
+# Updated: 2016-12-13 20:30
 
 * Memo
 ** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
@@ -1079,7 +1079,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
   ;; add <p for python expansion
   (add-to-list 'org-structure-template-alist
-               '("p" "#+begin_src python :mkdirp yes :padline no\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
+               '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
 
   ;; add <el for emacs-lisp expansion
   (add-to-list 'org-structure-template-alist
@@ -1087,7 +1087,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
   ;; add <b for shell scritp
   (add-to-list 'org-structure-template-alist
-               '("b" "#+begin_src sh :results output :mkdirp yes :padline no\n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
+               '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
 #+end_src
 
 * server mode

@@ -40,10 +40,9 @@ values."
      ;; ----------------------------------------------------------------
      helm
      auto-completion
-     better-defaults
      emacs-lisp
      git
-     github
+     ;; github
      ;; markdown
      deft
      org

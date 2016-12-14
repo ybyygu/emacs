@@ -4,9 +4,10 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-13 20:30
+# Updated: 2016-12-14 21:50
 
 * Memo
+** [2016-12-14 Wed] 以后要多参考Michael Lockhart的配置 [[https://github.com/sinewalker/dotspacemacs][URL]]
 ** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
 ** TODO [2016-12-12 Mon] 需要改进org-babel几个相关功能
 1. org-src-window-setup
@@ -139,7 +140,6 @@
   ;; C-c i calls insert-date-string
   (global-set-key (kbd "C-c i") 'gwp/insert-date)
 #+END_SRC
-
 ** 快捷插入
 #+BEGIN_SRC emacs-lisp
   ;; referred: http://docs.huihoo.com/homepage/shredderyin/wiki/KeyBinding.html
@@ -301,10 +301,10 @@
   (global-set-key (kbd "<f5> '") 'insert-pair)
   (global-set-key (kbd "<f5> C-d") 'delete-pair)
   ;; do not insert spaces
-  (setq parens-require-spaces nil)
+  ;; (setq parens-require-spaces nil)
 
   ;; http://www.emacswiki.org/emacs/ParenthesesAppearance
-  (show-paren-mode t)
+  ;; (show-paren-mode t)
 
   ;; enable electric pair by default
   ;; (setq electric-pair-mode t)
@@ -1354,6 +1354,35 @@ Anything that isn't just setting a variable should 99% be in user-config.
   ;; http://stackoverflow.com/questions/268088/how-to-remove-the-prompt-for-killing-emacsclient-buffers
   ;; this seems work
   (defalias 'server-kill-buffer-query-function '(lambda () t))
+
+  ;; insert pairs
+  (defvar my-skeleton-pair-alist
+    '((?\) . ?\()
+      (?\] . ?\[)
+      (?} . ?{)
+      (?" . ?")
+      )
+    )
+
+  (defun my-skeleton-pair-end (arg)
+    "Skip the char if it is an ending, otherwise insert it."
+    (interactive "*p")
+    (let ((char last-command-char))
+      (if (and (assq char my-skeleton-pair-alist)
+               (eq char (following-char)))
+          (forward-char)
+        (self-insert-command (prefix-numeric-value arg))
+        )
+      )
+    )
+
+  (global-set-key (kbd "<f5> (") 'insert-pair)
+  (global-set-key (kbd "<f5> <") 'insert-pair)
+  (global-set-key (kbd "<f5> [") 'insert-pair)
+  (global-set-key (kbd "<f5> {") 'insert-pair)
+  (global-set-key (kbd "<f5> \"") 'insert-pair)
+  (global-set-key (kbd "<f5> '") 'insert-pair)
+  (global-set-key (kbd "<f5> C-d") 'delete-pair)
 #+END_SRC
 *** config.el
 这里添加 gwp layer 本身需要的配置. 暂时没有必要.

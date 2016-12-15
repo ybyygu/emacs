@@ -4,7 +4,7 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-14 21:50
+# Updated: 2016-12-15 12:45
 
 * Memo
 ** [2016-12-14 Wed] 以后要多参考Michael Lockhart的配置 [[https://github.com/sinewalker/dotspacemacs][URL]]
@@ -98,7 +98,6 @@
 
 问题: 视图缩放时中英不同步.
 
-** [2016-10-15 Sat] 可参考 sachac 的配置: [[https://github.com/sachac/.emacs.d][URL]]
 ** [2016-10-15 Sat] spacemacs 设置修改方案
 参考这里: [[https://github.com/ale-batt/dotspacemacs][URL]]
 
@@ -106,7 +105,6 @@
    : (with-eval-after-load 'org (org-babel-load-file "~/etc/spacemacs/config.org"))
    或者:
    : (with-eval-after-load 'org (load-file "~/etc/spacemacs/config.el"))
-** [2016-10-15 Sat] 参考子龙山人的配置 [[https://github.com/zilongshanren/spacemacs-private][URL]]
 ** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
 * text
 :PROPERTIES:
@@ -1343,7 +1341,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
     '(progn
        (define-key org-mode-map (kbd "C-c b") 'gwp/org-babel-tangle-block)
        ;; use o as org global bindings
-       (evil-leader/set-key
+       (spacemacs/set-leader-keys
          "oa" 'org-agenda
          "oc" 'org-capture
          "ol" 'org-store-link
@@ -1388,6 +1386,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 这里添加 gwp layer 本身需要的配置. 暂时没有必要.
 
 * deprecated
+
 以下旧的配置在spacemacs中都不再需要了.
 ** development
 *** 高亮当前行
@@ -1579,6 +1578,9 @@ jedi 的快捷键:
 #+RESULTS:
 : t
 
+* references
+1. 可参考 sachac 的配置: [[https://github.com/sachac/.emacs.d][URL]]
+2. 参考子龙山人的配置 [[https://github.com/zilongshanren/spacemacs-private][URL]]
 * Local variables
 # Local Variables:
 # time-stamp-format: "%:y-%02m-%02d %02H:%02M"

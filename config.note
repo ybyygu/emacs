@@ -4,9 +4,10 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-16 11:20
+# Updated: 2016-12-17 14:06
 
 * Memo [0/1]
+** [2016-12-17 Sat] 修改ctrl-a和ctrl-e按键, 使之更接近emacs模式
 ** [2016-12-16 Fri] 添加快捷键SPC oz, 方便打开zotero附件
 ** [2016-12-14 Wed] 以后要多参考Michael Lockhart的配置 [[https://github.com/sinewalker/dotspacemacs][URL]]
 ** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
@@ -1383,6 +1384,14 @@ Anything that isn't just setting a variable should 99% be in user-config.
   (global-set-key (kbd "<f5> \"") 'insert-pair)
   (global-set-key (kbd "<f5> '") 'insert-pair)
   (global-set-key (kbd "<f5> C-d") 'delete-pair)
+
+  ;; remap C-a
+  (global-set-key [remap org-beginning-of-line]
+                  'evil-first-non-blank-of-visual-line)
+  ;; remap C-e
+  (global-set-key [remap evil-scroll-line-down]
+                  'evil-end-of-visual-line)
+
 #+END_SRC
 *** config.el
 这里添加 gwp layer 本身需要的配置. 暂时没有必要.

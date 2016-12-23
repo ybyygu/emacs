@@ -45,6 +45,17 @@ values."
      git
      ;; github
      ;; markdown
+     (theming :variables
+              theming-modifications
+              '(
+                (material
+                 (hl-line :background "gray5")
+                 )
+                (zenburn
+                 (hl-line :background "gray5")
+                 )
+                )
+              theming-headings-same-size 'all)
      deft
      org
      ;; (shell :variables
@@ -52,7 +63,10 @@ values."
      ;;        shell-default-position 'bottom)
      ;; spell-checking
      ;; syntax-checking
-     (colors :variables colors-colorize-identifiers 'all)
+     (colors :variables
+             colors-colorize-identifiers 'all
+             colors-enable-nyan-cat-progress-bar t
+             )
      ;; (chinese :variables chinese-enable-fcitx t)
      version-control
      python
@@ -136,8 +150,11 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(
+                         material
+                         zenburn
+                         spacemacs-dark
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -291,7 +308,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup changed
+   dotspacemacs-whitespace-cleanup 'changed
    ))
 
 (defun dotspacemacs/user-init ()

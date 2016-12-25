@@ -4,9 +4,9 @@
 #+STARTUP: indent
 
 # Created: 2016-10-14 14:20
-# Updated: 2016-12-23 15:13
+# Updated: 2016-12-23 15:49
 
-* Memo [0/1]
+* Memo [1/1]
 ** [2016-12-23 Fri] 几个看着顺眼的theme
 1. https://github.com/nashamri/spacemacs-theme
 2. https://github.com/bbatsov/zenburn-emacs
@@ -20,7 +20,8 @@ Tips:
 ** [2016-12-16 Fri] 添加快捷键SPC oz, 方便打开zotero附件
 ** [2016-12-14 Wed] 以后要多参考Michael Lockhart的配置 [[https://github.com/sinewalker/dotspacemacs][URL]]
 ** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
-** TODO [2016-12-12 Mon] 需要改进org-babel几个相关功能
+** DONE [2016-12-12 Mon] 需要改进org-babel几个相关功能
+CLOSED: [2016-12-23 Fri 15:38]
 1. org-src-window-setup
 2. org-edit-src自动保存
 ** [2016-12-11 Sun] pdf-tools神器 [[https://github.com/politza/pdf-toolsU][URL]] 神器
@@ -1235,7 +1236,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
   (defconst gwp-packages
     '(
       (org :location built-in)
-      (org-bullets :excluded t)  ;; shipped with spacemacs in org layer
+      ;; (org-bullets :excluded t)  ;; shipped with spacemacs in org layer
       (org-download :excluded t) ;; shipped with spacemacs in org layer
       zotxt
       chinese-fonts-setup

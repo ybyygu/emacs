@@ -40,8 +40,6 @@ values."
      auto-completion
      emacs-lisp
      git
-     ;; github
-     ;; markdown
      (theming :variables
               theming-modifications '((material
                                        (hl-line :background "gray6" )
@@ -56,16 +54,10 @@ values."
               theming-headings-bold 'all)
      deft
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
-     ;; syntax-checking
      (colors :variables
              colors-colorize-identifiers 'all
              colors-enable-nyan-cat-progress-bar t
              )
-     ;; (chinese :variables chinese-enable-fcitx t)
      version-control
      python
      gwp
@@ -299,11 +291,11 @@ values."
    ;; (default nil)
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
-   ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
-   ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
-  ;; The default package repository used if no explicit repository has been
-   ;; specified with an installed package.
+   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
+   ;; (default '("ag" "pt" "ack" "grep"))
+   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   ;; The default package repository used if no explicit repository has been
+  ;; specified with an installed package.
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil
    ;; Delete whitespace while saving buffer. Possible values are `all'
@@ -331,13 +323,16 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; (load-file (expand-file-name "gwp.el" dotspacemacs-directory))
   ;; (spacemacs/toggle-smartparens-globally-off)
   (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
   (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
 
   ;; I hate the default undo behavior
   (setq evil-want-fine-undo t)
+
+  ;; Make linums relative by default
+  (with-eval-after-load 'linum
+    (linum-relative-toggle))
 
   ;; do not scale the font size
   (setq spacemacs-theme-org-agenda-height nil)
@@ -355,10 +350,3 @@ you should place your code here."
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)
-
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-)

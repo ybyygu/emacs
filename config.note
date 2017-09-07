@@ -6,6 +6,16 @@
 # Created: 2016-10-14 14:20
 
 * Memo [1/1]
+** [2017-09-07 Thu] 解决org-babel无法执行source block的问题
+报错: Evaluation of this python code block is disabled.
+
+解决:
+1. 执行spacemacs/recomplie-elpa
+2. 然后重启spacemacs
+
+参考： [[https://github.com/syl20bnr/spacemacs/issues/7641][syl20bnr/spacemacs#7641]]
+
+https://github.com/syl20bnr/spacemacs/issues/7641
 ** [2017-08-10 Thu] 升级chinese-fonts-setup至cnfonts
 ** [2016-12-23 Fri] 几个看着顺眼的theme
 1. https://github.com/nashamri/spacemacs-theme
@@ -1158,6 +1168,8 @@ cal-china-x: https://github.com/xwl/cal-china-x
    #+end_src
 
 ** tips
+*** 粘贴替换选中文字
+vi模式下使用P命令.
 *** 参看spacemacs帮助 SPC h SPC
 *** gold-ratio 可以自动放大当前的 window 区域: SPC t g
 *** 使用外部程序打开文件的方式

@@ -6,6 +6,7 @@
 # Created: 2016-10-14 14:20
 
 * Memo [1/1]
+** [2017-09-20 Wed] 添加zotero链接, 方便在org-mode或导出的pdf,html文件中打开zotero条目.
 ** [2017-09-07 Thu] 解决org-babel无法执行source block的问题
 报错: Evaluation of this python code block is disabled.
 
@@ -28,6 +29,7 @@ Tips:
 
 ** [2016-12-17 Sat] 修改ctrl-a和ctrl-e按键, 使之更接近emacs模式
 ** [2016-12-16 Fri] 添加快捷键SPC oz, 方便打开zotero附件
+[2017-09-20 Wed] 使用zotero 5 standalone版本以后, zotero链接不能正常打开了. 改用更简单的设置.
 ** [2016-12-14 Wed] 以后要多参考Michael Lockhart的配置 [[https://github.com/sinewalker/dotspacemacs][URL]]
 ** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
 ** DONE [2016-12-12 Mon] 需要改进org-babel几个相关功能
@@ -1061,13 +1063,35 @@ cal-china-x: https://github.com/xwl/cal-china-x
 ** zotero
 主要是用来支持 "zotero:" 链接的.
 
-#+name: init-org-zotxt
+#+name: init-org-zotero
 #+begin_src emacs-lisp
-  (defun gwp/init-zotxt ()
-    (use-package org-zotxt
-                 :after org
-                 :config (add-hook 'org-mode-hook (org-zotxt-mode t))
-               )
+  ;; org-add-link-type is obsolete as of org-mode 9.
+  ;; Instead we will use the org-link-set-parameters method
+
+  ;; org 8
+  ;; (org-add-link-type "zotero"
+  ;;                    'gwp/org-zotero-open
+  ;;                    'gwp/org-zotero-export)
+
+  ;; org 9
+  (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
+
+  (defun gwp/org-zotero-open (path)
+    (setq url (format "zotero:%s" path))
+    ;; (message-box url)
+    (browse-url url)
+    )
+
+  (defun gwp/org-zotero-export (path desc format)
+    "Create the export version of zotero link specified by PATH and
+  DESC. FORMATs understood are 'odt','latex and 'html."
+    (cond
+     ((eq format 'html)
+      (format "<a href=\"zotero:%s\">%s</a>" path desc))
+     ((eq format 'latex)
+      (format "\\href{zotero:%s}{%s}" path desc))
+     (t desc)
+     )
     )
 
 #+end_src
@@ -1250,7 +1274,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
       (org :location built-in)
       ;; (org-bullets :excluded t)  ;; shipped with spacemacs in org layer
       (org-download :excluded t) ;; shipped with spacemacs in org layer
-      zotxt
       chinese-fonts-setup
       cal-china-x
       ox-latex-chinese
@@ -1314,7 +1337,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
   ;;                            '(lambda ()
   ;;                               (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))))
 
-  <<init-org-zotxt>>
+  <<init-org-zotero>>
 
   ;;; packages.el ends here
 
@@ -1369,7 +1392,6 @@ Anything that isn't just setting a variable should 99% be in user-config.
          "oa" 'org-agenda
          "oc" 'org-capture
          "ol" 'org-store-link
-         "oz" 'org-zotxt-open-attachment
          "ob" 'gwp/org-babel-tangle-block
          )
        ))

@@ -36,7 +36,7 @@ Tips:
 CLOSED: [2016-12-23 Fri 15:38]
 1. org-src-window-setup
 2. org-edit-src自动保存
-** [2016-12-11 Sun] pdf-tools神器 [[https://github.com/politza/pdf-toolsU][URL]] 神器
+** [2016-12-11 Sun] pdf-tools神器 [[https://github.com/politza/pdf-toolsU][URL]]
 ** [2016-12-11 Sun] 添加快捷键 快速导出org-babel代码块.
 : SPC ob
 ** [2016-12-10 Sat] 启用deft layer, 使用deft来搜索笔记

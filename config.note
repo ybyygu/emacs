@@ -6,6 +6,13 @@
 # Created: 2016-10-14 14:20
 
 * Memo [1/1]
+** [2017-09-24 Sun] 使用deepin-screenshot替代shutter
+1. shutter依赖的perl包太多
+2. archlinux最近的更新导致很多perl包得手动build
+3. deepin-screenshot的软件功能比shutter更强大, 依赖更少.
+
+其它可用的截图工具: https://wiki.archlinux.org/index.php/taking_a_screenshot
+
 ** [2017-09-20 Wed] 添加zotero链接, 方便在org-mode或导出的pdf,html文件中打开zotero条目.
 ** [2017-09-07 Thu] 解决org-babel无法执行source block的问题
 报错: Evaluation of this python code block is disabled.
@@ -943,8 +950,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 1. 截屏的时候自动隐藏当前编辑窗口.
 2. 使用 org-attach 来处理文件的删除.
 
-使用 shutter:
-: shutter -s -n -e --disable_systray -o
+使用deepin-screenshot
 
 #+name: init-org-screenshot
 #+BEGIN_SRC emacs-lisp :results none
@@ -954,10 +960,13 @@ cal-china-x: https://github.com/xwl/cal-china-x
                  :bind
                  (("C-c <insert>" . org-attach-screenshot))
                  :config
-                 (setq org-attach-screenshot-command-line "shutter -s -n -e --disable_systray -o %f")
+                 (setq org-attach-screenshot-command-line "deepin-screenshot -s %f")
                  )
     )
 #+END_SRC
+
+如果使用 shutter:
+: shutter -s -n -e --disable_systray -o
 
 *** org-download
 使用 org-download 包来实现截屏的功能. 这是 spacemacs org layer 中使用的包.

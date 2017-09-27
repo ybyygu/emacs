@@ -2,10 +2,11 @@
 #+SETUPFILE: ~/Notes/common.org
 #+SETUPFILE: ~/Notes/latex.org
 #+STARTUP: indent
-
 # Created: 2016-10-14 14:20
 
 * Memo [1/1]
+** [2017-09-27 Wed] 参考github上grettke的literate programming相关设置 [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][URL]]
+优化设置, 方便在导出的代码中利用org-babel-tangle-jump-to-org函数跳转到原文件.
 ** [2017-09-24 Sun] 使用deepin-screenshot替代shutter
 1. shutter依赖的perl包太多
 2. archlinux最近的更新导致很多perl包得手动build
@@ -109,6 +110,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 ** [2016-10-16 Sun] 可参考 Purcell 的配置: [[https://github.com/purcell/emacs.d][URL]]
 ** [2016-10-16 Sun] 中文字体的设置问题
 *** 单独设 org-table [[https://emacs-china.org/t/org-mode/440/10][URL]]
+#+name: 23a85e97-0652-4b09-937b-d994c5928afe
 #+BEGIN_SRC elisp
      (custom-set-faces
       ;; custom-set-faces was added by Custom.
@@ -118,6 +120,7 @@ CLOSED: [2016-12-23 Fri 15:38]
       '(org-table ((t (:foreground "#6c71c4" :family "Ubuntu Mono")))))
 #+END_SRC
 *** 使用 chinese-fonts-setup
+#+name: c1c6cdc3-17a5-4e44-88a2-05bf525250fb
 #+BEGIN_SRC elisp
   (use-package chinese-fonts-setup)
   (chinese-fonts-setup-enable)
@@ -145,6 +148,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 1. mark: C-@, C-M-SPC
 2. goto-line
 
+#+name: 85ccc98a-549e-42b1-a13c-a181c211a3c7
 #+BEGIN_SRC emacs-lisp
   (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
 
@@ -156,6 +160,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 #+END_SRC
 
 ** 快速插入日期
+#+name: cbbe7586-555e-4bab-b3db-390bcba518d8
 #+BEGIN_SRC emacs-lisp
   (defun gwp/insert-date (arg)
     "Insert date at point. With prefix argument, insert date and time."
@@ -170,6 +175,7 @@ CLOSED: [2016-12-23 Fri 15:38]
   (global-set-key (kbd "C-c i") 'gwp/insert-date)
 #+END_SRC
 ** 快捷插入
+#+name: 2684192d-ba8b-4196-8adc-157664e6c0f5
 #+BEGIN_SRC emacs-lisp
   ;; referred: http://docs.huihoo.com/homepage/shredderyin/wiki/KeyBinding.html
   (define-prefix-command 'semicolon-map)
@@ -234,6 +240,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 ** 处理空格
 : SPC xdw 删除行尾空格.
 
+#+name: 147c3a14-9b83-458c-a016-1d8ad07a3477
 #+BEGIN_SRC emacs-lisp
   (setq show-trailing-whitespace t)
   (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
@@ -245,6 +252,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 : [ e move line up
 : ] e move line down
 
+#+name: e6587a14-89c7-410e-9fd2-de4cdb455092
 #+BEGIN_SRC emacs-lisp
   (defun move-text-internal (arg)
      (cond
@@ -303,6 +311,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 
 使用方法可以参考这里: [[https://ebzzry.github.io/emacs-pairs.html][URL]]
 *** 旧的配置代码
+#+name: 79f82ed2-7a3f-4077-8578-8034f2e3f015
 #+BEGIN_SRC emacs-lisp
 
   (defvar my-skeleton-pair-alist
@@ -344,6 +353,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 : t
 
 ** 自动扩选
+#+name: cb6f8678-3bf5-44b4-a0c2-c3a1b86a6245
 #+BEGIN_SRC emacs-lisp
   ;; http://xahlee.org/emacs/modernization_mark-word.html
   ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
@@ -445,6 +455,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 
 ** 同时编辑多处文本
 *** old config
+#+name: 8ac9b8bd-0ccb-4bb6-89a6-914381c0f406
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'iedit)
   (require 'iedit)
@@ -456,12 +467,14 @@ CLOSED: [2016-12-23 Fri 15:38]
 ** goto-last-change
 *** 如果需要先安装下.
 
+#+name: 1dbc4a26-174b-4ebd-ba80-1f6066815d1b
 #+BEGIN_SRC emacs-lisp
 (starter-kit-install-if-needed 'goto-last-change)
 #+END_SRC
 
 #+RESULTS:
 *** 设置快捷键
+#+name: bf562780-7ae5-49b1-ae33-3c8b18a73221
 #+BEGIN_SRC emacs-lisp
 (require 'goto-last-change)
 (global-set-key (kbd "<f5> b") 'goto-last-change)
@@ -471,6 +484,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 : goto-last-change
 
 ** gjf-mode: 编译 gaussian GJF 文件
+#+name: da044c86-580b-4341-aa69-6331911d2969
 #+BEGIN_SRC emacs-lisp
 (require 'gjf-mode)
 #+END_SRC
@@ -485,6 +499,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 ** 语言字体
 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
 
+#+name: 371dccb7-b33d-4674-8e09-64fa1d9806ab
 #+begin_src emacs-lisp
   (set-language-environment "UTF-8")
   (prefer-coding-system 'utf-8)
@@ -520,6 +535,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 ** 文本滚动
 默认的闪花了眼. spacemacs 默认启用平滑滚动, 但鼠标的 wheel 操作还是偏快.
 
+#+name: e7ef737b-dd78-4ba0-94e6-d63dc64ebb24
 #+BEGIN_SRC emacs-lisp results: none
   ;; emacs scrolls too fast
   ;; http://stackoverflow.com/questions/445873/emacs-mouse-scrolling
@@ -583,6 +599,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 :header-args: :noweb-ref init-dev
 :END:
 ** 版本管理
+#+name: 5a51cea8-f5ee-4b21-8c74-c704055fac6b
 #+BEGIN_SRC emacs-lisp
   (setq vc-follow-symlinks t)
   ;; (remove-hook 'vc-checkout-hook 'time-stamp)
@@ -591,6 +608,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+END_SRC
 
 ** tab key
+#+name: fc2c78fb-3f6d-47c9-9b92-60cee197beb4
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "ybyygu@gmail.com")
 (setq default-tab-width 4)
@@ -601,6 +619,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 ** 自动完成
 系统自带的 abbrev 功能比较简单. 可以用 M-/来激活补全.
 
+#+name: e4c5c4a4-3c01-4361-b375-73b81af1ed18
 #+BEGIN_SRC emacs-lisp
   ;; abbreviations
   (setq abbrev-file-name "~/.emacs.d/abbreviations")
@@ -792,6 +811,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+end_src
 
 下面的用不到了. 因为是内置包.
+#+name: 7c756a95-fbc4-4159-b6e7-bc4f3ebf972e
 #+begin_src emacs-lisp
   (use-package epa-file
                :config
@@ -818,6 +838,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 也可以用这个包: https://github.com/tumashu/ox-latex-chinese
 
 *** 修改文件关联
+#+name: 70ff43af-9dfc-457c-b4b7-e423715cc689
 #+BEGIN_SRC emacs-lisp
   ;; allow bind variables
   (setq org-export-allow-bind-keywords t)
@@ -845,6 +866,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 *** latex
 以后可以考虑使用 ox-latex-chinese 包
 
+#+name: f0388b8f-03f1-4caf-9630-3760aba9bb2d
 #+BEGIN_SRC emacs-lisp
   (require 'ox-beamer)
   (require 'ox-latex)
@@ -971,6 +993,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 *** org-download
 使用 org-download 包来实现截屏的功能. 这是 spacemacs org layer 中使用的包.
 
+#+name: 181ec62b-f55b-4e03-943d-1c43cf692774
 #+BEGIN_SRC elisp
   (use-package org-download
                :after org
@@ -988,6 +1011,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
                )
 #+END_SRC
 *** gwp/insert-screen
+#+name: 7381b29d-aefa-4d01-a3ee-1bcd6d52f28c
 #+BEGIN_SRC emacs-lisp
   (defun delete-linked-file (start end)
     "Delete the file named at point."
@@ -1106,7 +1130,11 @@ cal-china-x: https://github.com/xwl/cal-china-x
 #+end_src
 
 ** babel
-#+name: init-org-babel
+:PROPERTIES:
+:header-args: :noweb-ref init-org-babel
+:END:
+*** common
+#+name: 08773fc4-f834-41ef-96bd-695b7eb0668e
 #+begin_src emacs-lisp
   ;; (org-babel-do-load-languages
   ;;  'org-babel-load-languages
@@ -1141,8 +1169,143 @@ cal-china-x: https://github.com/xwl/cal-china-x
   ;; add <b for shell scritp
   (add-to-list 'org-structure-template-alist
                '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
-#+end_src
 
+#+end_src
+*** literate programming
+#+name: c5a08df6-7fd7-408b-9fb3-b4eb7347e84e
+#+BEGIN_SRC elisp
+  ;; unique, memorable identity for tangling
+  ;; (setq org-id-prefix (format-time-string "%Y%m%d"))
+  ;; the default is ok for me
+  ;; (setq org-id-method 'uuid)
+#+END_SRC
+
+#+name: b5128b51-bf3b-48f7-a96e-51417a752882
+#+BEGIN_SRC elisp
+  ;; helper functions for literate programming
+  ;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
+  (defun help/set-org-babel-default-header-args (property value)
+    "Easily set system header arguments in org mode.
+
+  PROPERTY is the system-wide value that you would like to modify.
+
+  VALUE is the new value you wish to store.
+
+  Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.html#System_002dwide-header-arguments'"
+    (setq org-babel-default-header-args
+          (cons (cons property value)
+                (assq-delete-all property org-babel-default-header-args))))
+
+  (defun help/set-org-babel-default-inline-header-args (property value)
+    "See `help/set-org-babel-default-header-args'; same but for inline header args."
+    (setq org-babel-default-inline-header-args
+          (cons (cons property value)
+                (assq-delete-all property org-babel-default-inline-header-args))))
+
+  (defun help/set-org-babel-default-header-args:R (property value)
+    "See `help/set-org-babel-default-header-args'; same but for R.
+
+  This is a copy and paste. Additional languages would warrant a refactor."
+    (setq org-babel-default-header-args:R
+          (cons (cons property value)
+                (assq-delete-all property org-babel-default-header-args:R))))
+
+  (defun help/set-org-babel-default-header-args:ditaa (property value)
+    "See `help/set-org-babel-default-header-args'; same but for ditaa.
+
+  This is a copy and paste. Additional languages would warrant a refactor."
+    (setq org-babel-default-header-args:ditaa
+          (cons (cons property value)
+                (assq-delete-all property org-babel-default-header-args:ditaa))))
+
+  (defun help/set-org-babel-default-header-args:dot (property value)
+    "See `help/set-org-babel-default-header-args'; same but for dot.
+
+  This is a copy and paste. Additional languages would warrant a refactor."
+    (setq org-babel-default-header-args:dot
+          (cons (cons property value)
+                (assq-delete-all property org-babel-default-header-args:dot))))
+
+  (defun help/set-org-babel-default-header-args:plantuml (property value)
+    "See `help/set-org-babel-default-header-args'; same but for plantuml.
+
+  This is a copy and paste. Additional languages would warrant a refactor."
+    (setq org-babel-default-header-args:plantuml
+          (cons (cons property value)
+                (assq-delete-all property org-babel-default-header-args:plantuml))))
+
+  (defun help/org-toggle-macro-markers ()
+    (interactive)
+    (setq org-hide-macro-markers (not org-hide-macro-markers)))
+
+  (defun help/org-prp-hdln ()
+    "Visit every Headline. If it doesn't have an ID property then add one and
+    assign it a UUID. Attribution: URL
+    `http://article.gmane.org/gmane.emacs.orgmode/99738'. It is OK to leave the
+    colon separator in here because these are never used as Source-Blocks and
+    the rest of the code expects the colon separator."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (dolist (p (nreverse
+                  (org-element-map (org-element-parse-buffer 'headline) 'headline
+                    (lambda (headline) (org-element-property :begin headline)))))
+        (goto-char p)
+        (org-id-get-create))
+      (save-buffer)))
+
+  (defun help/org-id-new ()
+    "Re-purposing `org-id' hit a snag when colons were forbidden in Source-Block
+    names. Adding support for a user-defined Org-Id separator would have fixed
+    this but with no benefit to Org-Id. So this function removes the colon
+    instead.
+   "
+    (interactive)
+    (let* ((gend (org-id-new))
+           (newid (replace-regexp-in-string ":" "_" gend)))
+      newid))
+
+  (defun help/org-prp-src-blk ()
+    "If it doesn't have a NAME property then add one and
+     assign it a UUID. Attribution: URL `http://article.gmane.org/gmane.emacs.orgmode/99740'"
+    (interactive)
+    (help/org-2every-src-block
+     #'(lambda (element)
+         (if (not (org-element-property :name element))
+             (let ((i (org-get-indentation)))
+               (beginning-of-line)
+               (save-excursion (insert "#+name: " (help/org-id-new) "\n"))
+               (indent-to i)
+               (forward-line 2))))))
+
+  (defconst help/org-special-pre "^\s*#[+]")
+
+  (defun help/org-2every-src-block (fn)
+    "Visit every Source-Block and evaluate `FN'."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((case-fold-search t))
+        (while (re-search-forward (concat help/org-special-pre "BEGIN_SRC") nil t)
+          (let ((element (org-element-at-point)))
+            (when (eq (org-element-type element) 'src-block)
+              (funcall fn element)))))
+      (save-buffer)))
+
+  (defun help/org-babel-demarcate-block ()
+    "Add a NAME property then assign it a UUID."
+    (interactive)
+    (org-babel-demarcate-block)
+    (insert "#+name: " (help/org-id-new))
+    (beginning-of-line)
+    (insert "\n"))
+#+END_SRC
+
+#+name: d3151aaf-84cf-484a-9513-40a671de7081
+#+BEGIN_SRC elisp
+  ;; (add-hook 'org-babel-pre-tangle-hook #'help/org-prp-hdln)
+  (add-hook 'org-babel-pre-tangle-hook #'help/org-prp-src-blk)
+#+END_SRC
 * server mode
 修改.spacemacs 文件:
 : (setq-default dotspacemacs-persistent-server t)
@@ -1151,6 +1314,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 : SPC q q
 : SPC q s
 
+#+name: 139c7654-b2cd-4c3c-9b37-a5ee6a64aef4
 #+BEGIN_SRC emacs-lisp
   ;; using existing Emacs process as the server
   (server-start)
@@ -1184,6 +1348,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
    elpa 默认仍是存在~/.emacs.d/elpa 下, 可以用 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Package-Files.html][package-user-dir]] 修改.
 
    #+header: :tangle init.el
+   #+name: ebd036c8-02a2-404c-a5c7-b5cff07806b8
    #+begin_src emacs-lisp
      (setq spacemacs-start-directory "~/Install/configs/spacemacs/.emacs.d/")
      (setq package-user-dir (file-name-as-directory
@@ -1194,6 +1359,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 3. 命令行启动 emacs
    #+header: :tangle start.sh
    #+header: :shebang #! /bin/sh
+   #+name: 95e88efd-b916-4a5e-b929-9d1584b237b1
    #+begin_src sh
      # HOME=`pwd` emacs
      # emacs -q -l ...
@@ -1224,12 +1390,14 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC f e d
 *** 调整字体大小 (zoom)
 : SPC z x +/-
-
+*** universal arguments
+SPC u
 ** dot-spacemacs
 这里设置 .spacemacs 相关的细节. .spacemacs 文件可放到.spacemacs.d 文件中,
 并更名为 init.el
 *** user-init
 配置 elpa 国内源
+#+name: 967df1e6-6633-4688-a36f-e8a5b8c1dfc5
 #+BEGIN_SRC elisp
   (defun dotspacemacs/user-init ()
     "Initialization function for user code.
@@ -1245,10 +1413,12 @@ Anything that isn't just setting a variable should 99% be in user-config.
     )
 #+END_SRC
 *** user-config
+#+name: fce76046-c66a-4702-a1d3-bc15226fdb78
 #+begin_src emacs-lisp
   (setq-default dotspacemacs-persistent-server t)
 #+end_src
 *** custom-file
+#+name: 12d528df-8fd6-4711-84fb-7e09508283d1
 #+begin_src emacs-lisp
   (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
   (load custom-file 'no-error 'no-message)
@@ -1259,8 +1429,9 @@ Anything that isn't just setting a variable should 99% be in user-config.
 *** packages.el
 通过 packages.el 接口, 可以将自己的一些设置与 spacemacs 融为一体.
 
-#+header: :noweb yes
 #+header: :tangle ~/.spacemacs.d/layers/gwp/packages.el
+#+header: :noweb yes :comments link :padline yes
+#+name: 8d9d4320-8a15-4b4b-8b4d-40c58b895804
 #+BEGIN_SRC elisp
   ;;; packages.el --- gwp layer packages file for Spacemacs.
 
@@ -1353,6 +1524,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 #+END_SRC
 *** keybindings.el
 #+header: :tangle ~/.spacemacs.d/layers/gwp/keybindings.el
+#+name: 4ea1e496-e909-40a7-bbf7-f4ced06210fd
 #+BEGIN_SRC emacs-lisp
   ;; (global-set-key (kbd "C-l") 'goto-line)
 
@@ -1557,6 +1729,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 所有已定义的颜色:
 : list-colors-display
 
+#+name: 52fcb671-cd31-4c84-bb30-c22b87b85558
 #+BEGIN_SRC emacs-lisp
   (global-hl-line-mode 1)
   (set-face-attribute hl-line-face nil :underline nil :background "gray0")
@@ -1565,6 +1738,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 *** 书签&导航等
 主要用 bm, 书签持久化是从 bm.el 里抄来的.
 
+#+name: 31e72f88-fb21-4cd4-b5eb-fcc6d393291a
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'bm)
   (setq bm-restore-repository-on-load t)
@@ -1610,6 +1784,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : gwp-mouse-toggle-bm
 
 *** 注释
+#+name: eae47e9e-63d5-47cd-a2a0-542299176edf
 #+BEGIN_SRC emacs-lisp
   ; (starter-kit-install-if-needed 'line-comment-banner)
   ; (require 'line-comment-banner)
@@ -1637,6 +1812,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 *** 自动完成
 系统自带的 abbrev 功能比较简单. 可以用 M-/来激活补全.
 
+#+name: bd2fab61-6c36-40a0-ac52-301e0713ba3a
 #+BEGIN_SRC emacs-lisp
   ;;
   ;; auto-complete
@@ -1671,6 +1847,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 *** 使用 emacs 中自带的 python.el
    试了下, 一切都正常. 先这么着吧.
 
+  #+name: 90a43e0b-e10c-4ce9-8d1f-d5ee95fd77f6
   #+begin_src emacs-lisp
     ;; (starter-kit-load "python")
     ;; Why python.el is better than python-mode.el:
@@ -1717,6 +1894,7 @@ jedi 的快捷键:
 : C-c .
 : C-c ,
 
+#+name: 56091f33-28ce-43d6-bd64-c41bdc4f8959
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'jedi)
   ;; (add-hook 'python-mode-hook 'jedi:setup)
@@ -1727,6 +1905,7 @@ jedi 的快捷键:
 *** 配色主题
 [[http://emacsthemes.caisah.info/][这里]] 有很多主题的图示, 看花眼了. [[https://github.com/owainlewis/emacs-color-themes][这个]] 也不错, 以很多程序员的名字命名.
 
+#+name: 5dcc9a75-85d3-4672-ab27-8b12686a61f0
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'zenburn-theme)
   (starter-kit-install-if-needed 'smyx-theme)

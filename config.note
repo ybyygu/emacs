@@ -87,7 +87,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 
 | ~SPC f C d~ | convert file from unix to dos encoding                                                                                          |
 | ~SPC f C u~ | convert file from dos to unix encoding                                                                                          |
-| ~SPC f D~   | delete a file and the associated buffer (ask for confirmation)                                                                  |
+| ~SPC f D~   | delete a file and the associated buffer (ask for confirmation)                           https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files                                       |
 | ~SPC f E~   | open a file with elevated privileges (sudo edit)                                                                                |
 | ~SPC f f~   | open file with =helm=                                                                                                           |
 | ~SPC f F~   | try to open the file under point =helm=                                                                                         |
@@ -837,7 +837,7 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
 也可以用这个包: https://github.com/tumashu/ox-latex-chinese
 
-*** 修改文件关联
+*** file association
 #+name: 70ff43af-9dfc-457c-b4b7-e423715cc689
 #+BEGIN_SRC emacs-lisp
   ;; allow bind variables
@@ -864,7 +864,8 @@ cal-china-x: https://github.com/xwl/cal-china-x
 
 #+END_SRC
 *** latex
-以后可以考虑使用 ox-latex-chinese 包
+- 中文设置
+- 以后可以考虑使用 ox-latex-chinese包
 
 #+name: f0388b8f-03f1-4caf-9630-3760aba9bb2d
 #+BEGIN_SRC emacs-lisp
@@ -905,6 +906,13 @@ cal-china-x: https://github.com/xwl/cal-china-x
           "xelatex -interaction nonstopmode -output-directory %o %f"
           "xelatex -interaction nonstopmode -output-directory %o %f")
         )
+#+END_SRC
+
+默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]):
+#+name: 32a6da28-5f14-4433-ac15-6d2749b036f5
+#+BEGIN_SRC elisp
+  ;; bigger latex fragment
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 #+END_SRC
 
 ** refile

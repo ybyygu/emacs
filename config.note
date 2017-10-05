@@ -1462,7 +1462,7 @@ SPC u
       (org :location built-in)
       ;; (org-bullets :excluded t)  ;; shipped with spacemacs in org layer
       (org-download :excluded t) ;; shipped with spacemacs in org layer
-      chinese-fonts-setup
+      cnfonts
       cal-china-x
       ox-latex-chinese
       org-attach-screenshot
@@ -1472,7 +1472,7 @@ SPC u
 
     "The list of Lisp packages required by the gwp layer.")
 
-  (defun gwp/init-chinese-fonts-setup ()
+  (defun gwp/init-cnfonts ()
     <<init-ui>>
 
     <<init-dev>>

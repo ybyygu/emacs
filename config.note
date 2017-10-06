@@ -5,6 +5,11 @@
 # Created: 2016-10-14 14:20
 
 * Memo [1/1]
+** [2017-10-06 Fri] 解决字体高清屏HiDPI字体显示太小的问题
+在字体设置处, 注释掉:size行即可. [[https://github.com/syl20bnr/spacemacs/issues/6005][issue]]
+** [2017-10-06 Fri] 解决org-mode加载大文件太慢的问题
+- [2017-10-07 Sat] 发现是hl-todo这个包导致的问题. 禁用该包即可.
+- [2017-10-06 Fri] 使用配置, 使用spacemacs-base distrubtion即可.
 ** [2017-09-27 Wed] 参考github上grettke的literate programming相关设置 [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][URL]]
 优化设置, 方便在导出的代码中利用org-babel-tangle-jump-to-org函数跳转到原文件.
 ** [2017-09-24 Sun] 使用deepin-screenshot替代shutter
@@ -25,7 +30,7 @@
 参考： [[https://github.com/syl20bnr/spacemacs/issues/7641][syl20bnr/spacemacs#7641]]
 
 https://github.com/syl20bnr/spacemacs/issues/7641
-** [2017-08-10 Thu] 升级chinese-fonts-setup至cnfonts
+** [2017-08-10 Thu] 升级s	Take screechinese-fonts-setup至cnfonts
 ** [2016-12-23 Fri] 几个看着顺眼的theme
 1. https://github.com/nashamri/spacemacs-theme
 2. https://github.com/bbatsov/zenburn-emacs
@@ -1462,6 +1467,7 @@ SPC u
       (org :location built-in)
       ;; (org-bullets :excluded t)  ;; shipped with spacemacs in org layer
       (org-download :excluded t) ;; shipped with spacemacs in org layer
+      (hl-todo :excluded t)      ;; shipped with spacemacs in spacemacs-ui-visual layer
       cnfonts
       cal-china-x
       ox-latex-chinese
@@ -1932,3 +1938,4 @@ jedi 的快捷键:
 * references
 1. 可参考 sachac 的配置: [[https://github.com/sachac/.emacs.d][URL]]
 2. 参考子龙山人的配置 [[https://github.com/zilongshanren/spacemacs-private][URL]]
+3. Archlinux wiki [[https://wiki.archlinux.org/index.php/Spacemacs][URL]]

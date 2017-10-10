@@ -184,9 +184,20 @@ CLOSED: [2016-12-23 Fri 15:38]
    #+end_src
 
 * tips
+阅读文档 ~SPC h r~
+** Editting styles
+=dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
+** 删除空格
+- just-one-space 默认绑定为 ~Ｍ-SPC~
+** Movement
+| Key Binding | Description                            |
+|-------------+----------------------------------------|
+| ~g h~       | Move up one level in headings          |
+| ~g j~       | Move to next heading on same level     |
+| ~g k~       | Move to previous heading on same level |
+| ~g l~       | Move down one level in headings        |
 ** 粘贴替换选中文字
 vi模式下使用P命令.
-** 参看spacemacs帮助 SPC h SPC
 ** gold-ratio 可以自动放大当前的 window 区域: SPC t g
 ** 使用外部程序打开文件的方式
 emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:
@@ -214,13 +225,11 @@ SPC u
 :header-args: :tangle ~/.spacemacs.d/init.el :comments link :padline yes
 :END:
 
-这里设置 .spacemacs 相关的细节.
+.spacemacs是spacemacs的主配置文件.
 
 - dotfile默认为~/.spacemacs
 - .spacemacs 文件可放到.spacemacs.d 文件中, 并更名为 init.el
 - ~/spacemacs.d也可以通过修改SPACEMACSDIR变量来手动指定. [[https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#dotfile-configuration][doc]]
-
-
 - exclude packages [[http://spacemacs.org/doc/DOCUMENTATION.html#excluding-packages][doc]]
 - 忽略某个layer中的package [[http://spacemacs.org/doc/DOCUMENTATION.html#selectingignoring-packages-of-a-layer][doc]]
 
@@ -278,7 +287,8 @@ SPC u
        ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
        ;; <M-m f e R> (Emacs style) to install them.
        ;; ----------------------------------------------------------------
-       ivy
+       ;; ivy
+       helm
        auto-completion
        emacs-lisp
        git

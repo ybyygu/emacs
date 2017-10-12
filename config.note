@@ -1752,6 +1752,13 @@ tangle blocks时更新time-stamp 出处: [[http://nullman.net/emacs/files/init-e
   ;; bigger latex fragment
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 #+END_SRC
+
+将公式预览图片公式改成隐藏目录
+#+name: edc2c0a1-b324-4cf5-8f84-816894cb6c7b
+#+begin_src emacs-lisp
+  (setq org-preview-latex-image-directory ".ltximg/")
+#+end_src
+
 *** TODO refile
 #+name: c38fb49c-9ebf-4103-a404-f52514abc11f
 #+BEGIN_SRC emacs-lisp

@@ -5,6 +5,11 @@
 # Created: 2016-10-14 14:20
 
 * Memo [1/2]
+** [2017-10-12 Thu] 修改最近访问文件及书签的默认位置
+- 默认是在~/.emacs.d/.cache目录下.
+- 可修改bookmark-default-file和recentf-save-file这两个变量.
+- 或设置spacemacs-cache-directory目录.
+
 ** [2017-10-09 Mon] 将spacemacs dotfile纳入org文档进行管理
 - 禁用org-projectile包, 这个包会导致启动报错.
 - 重新组织gwp layer
@@ -183,6 +188,9 @@ CLOSED: [2016-12-23 Fri 15:38]
      emacs --no-init-file --load ~/Install/configs/spacemacs/init.el
    #+end_src
 
+   更新:
+   - [2017-10-12 Thu] 这种方式启动不能保存emacs中的custom设置.
+
 * tips
 阅读文档 ~SPC h r~
 ** Editting styles
@@ -229,7 +237,7 @@ SPC u
 
 - dotfile默认为~/.spacemacs
 - .spacemacs 文件可放到.spacemacs.d 文件中, 并更名为 init.el
-- ~/spacemacs.d也可以通过修改SPACEMACSDIR变量来手动指定. [[https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#dotfile-configuration][doc]]
+- ~/spacemacs.d也可以通过修改SPACEMACSDIR环境变量或设置dotspacemacs-directory. [[https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#dotfile-configuration][doc]]
 - exclude packages [[http://spacemacs.org/doc/DOCUMENTATION.html#excluding-packages][doc]]
 - 忽略某个layer中的package [[http://spacemacs.org/doc/DOCUMENTATION.html#selectingignoring-packages-of-a-layer][doc]]
 
@@ -304,7 +312,7 @@ SPC u
                                         )
                 theming-headings-same-size 'all
                 theming-headings-bold 'all)
-       ;; deft
+       deft
        (colors :variables
                colors-colorize-identifiers 'all
                colors-enable-nyan-cat-progress-bar t
@@ -580,16 +588,17 @@ SPC u
   `dotspacemacs/user-config' first."
 
     ;; ;; mirror 1
-    ;; (setq configuration-layer--elpa-archives
-    ;;       '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-    ;;         ("org-cn"   . "http://elpa.emacs-china.org/org/")
-    ;;         ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+    (setq configuration-layer--elpa-archives
+          '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+            ("org-cn"   . "http://elpa.emacs-china.org/org/")
+            ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
 
     ;; mirror 2
-    (setq configuration-layer--elpa-archives
-          '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-            ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-            ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+    ;; (setq configuration-layer--elpa-archives
+    ;;       '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+    ;;         ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+    ;;         ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+
     )
 #+END_SRC
 ** user-config
@@ -602,6 +611,12 @@ SPC u
   This is the place where most of your configurations should be done. Unless it is
   explicitly specified that a variable should be set before a package is loaded,
   you should place your code here."
+
+    ;; relocate import files to keep ~/.emacs.d clean
+    ;; (setq spacemacs-cache-directory (expand-file-name ".cache/" dotspacemacs-directory))
+    ;; ~/.spacemacs.d/bookmarks, ~/.spacemacs.d/recentf
+    (setq bookmark-default-file (expand-file-name "bookmarks" dotspacemacs-directory))
+    (setq recentf-save-file (expand-file-name "recentf" dotspacemacs-directory))
 
     ;; (spacemacs/toggle-smartparens-globally-off)
     (spacemacs/toggle-golden-ratio-on)

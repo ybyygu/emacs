@@ -1645,10 +1645,13 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+END_SRC
 
 tangle blocks时更新time-stamp 出处: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
+
+格式设置为类org-mode, 方便插入和修改.
 #+name: ec580eca-a4b0-4677-9992-6c62803ce1d7
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load "ob-tangle"
     ;; update timestamps on tangled files
+    (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
     (defun org-babel-post-tangle-hook--time-stamp ()
       "Update timestamps on tangled files."
       (time-stamp)

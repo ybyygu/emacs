@@ -1649,6 +1649,7 @@ tangle blocks时更新time-stamp 出处: [[http://nullman.net/emacs/files/init-e
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load "ob-tangle"
     ;; update timestamps on tangled files
+    (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %02H:%02M %u\\\\?[\">]")
     (defun org-babel-post-tangle-hook--time-stamp ()
       "Update timestamps on tangled files."
       (time-stamp)

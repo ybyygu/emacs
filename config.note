@@ -1260,6 +1260,8 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   ;; remap C-e
   (global-set-key [remap evil-scroll-line-down]
                   'evil-end-of-visual-line)
+  ;; default binding: C-x 4 0
+  (global-set-key (kbd "C-x k") 'kill-buffer-and-window)
 
 #+END_SRC
 

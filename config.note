@@ -635,6 +635,9 @@ SPC u
     (setq deft-directory "~/Notes")
     (setq deft-recursive t)
     (spacemacs/set-leader-keys-for-major-mode 'deft-mode "q" 'quit-window)
+
+    ;; fix https://github.com/syl20bnr/spacemacs/pull/9547
+    (require 'helm-bookmark)
     )
 #+end_src
 在.spacemacs 文件最后添加

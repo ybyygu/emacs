@@ -1065,11 +1065,12 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 *** org
 #+name: 3631de70-8cb6-494d-bb97-c8d6100f7993
 #+begin_src emacs-lisp
-  ;; tangle current block in org-babel
+  ;; tangle blocks for current file at point
   ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
+  ;; call org-babel-tangle with C-u C-u
   (defun gwp/org-babel-tangle-block()
     (interactive)
-    (let ((current-prefix-arg '(4)))
+    (let ((current-prefix-arg '(16)))
       (call-interactively 'org-babel-tangle)
       )
     )
@@ -1508,8 +1509,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+end_src
 
 *** literate programming
-主要参考这里: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
-
+**** from grettke's help [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][URL]]
 #+name: c5a08df6-7fd7-408b-9fb3-b4eb7347e84e
 #+BEGIN_SRC emacs-lisp
   ;; unique, memorable identity for tangling
@@ -1648,9 +1648,9 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 
 #+END_SRC
 
-tangle blocks时更新time-stamp 出处: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
+**** tangle blocks时更新time-stamp
+格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
 
-格式设置为类org-mode, 方便插入和修改.
 #+name: ec580eca-a4b0-4677-9992-6c62803ce1d7
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load "ob-tangle"
@@ -1662,6 +1662,20 @@ tangle blocks时更新time-stamp 出处: [[http://nullman.net/emacs/files/init-e
       (save-buffer))
     (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+END_SRC
+**** tangle subtree
+[2017-10-18 Wed] 有更方便的: C-u C-u C-c C-v C-t
+
+#+header: :tangle no
+#+name: 54fdcde3-f2a6-47bf-a347-7a87a35c06b3
+#+begin_src emacs-lisp
+  (defun gwp/org-tangle-subtree ()
+    "tange blocks in current subtree"
+    (interactive)
+    (org-narrow-to-subtree)
+    (org-babel-tangle)
+    (widen)
+    )
+#+end_src
 
 *** encryption
 #+name: 7c756a95-fbc4-4159-b6e7-bc4f3ebf972e

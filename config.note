@@ -7,6 +7,7 @@
 * Memo [1/2]
 ** [2017-10-20 Fri] 禁用spaceline 据说会拖慢速度
 ** [2017-10-12 Thu] 修改最近访问文件及书签的默认位置
+[2017-10-20 Fri] 似乎加载和写入存在不一致. 禁用拉倒.
 - 默认是在~/.emacs.d/.cache目录下.
 - 可修改bookmark-default-file和recentf-save-file这两个变量.
 - 或设置spacemacs-cache-directory目录.
@@ -615,8 +616,8 @@ SPC u
     ;; relocate import files to keep ~/.emacs.d clean
     ;; (setq spacemacs-cache-directory (expand-file-name ".cache/" dotspacemacs-directory))
     ;; ~/.spacemacs.d/bookmarks, ~/.spacemacs.d/recentf
-    (setq bookmark-default-file (expand-file-name "bookmarks" dotspacemacs-directory))
-    (setq recentf-save-file (expand-file-name "recentf" dotspacemacs-directory))
+    ;; (setq bookmark-default-file (expand-file-name "bookmarks" dotspacemacs-directory))
+    ;; (setq recentf-save-file (expand-file-name "recentf" dotspacemacs-directory))
 
     ;; (spacemacs/toggle-smartparens-globally-off)
     (spacemacs/toggle-golden-ratio-on)

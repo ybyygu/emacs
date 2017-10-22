@@ -4,7 +4,8 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [1/2]
+* Memo [1/3]
+** TODO [2017-10-21 Sat] dired: 不显示隐藏文件
 ** [2017-10-21 Sat] How Fast Can You Tangle In Org-Mode [[https://www.wisdomandwonder.com/article/10630/how-fast-can-you-tangle-in-org-mode][URL]]
 这个存疑. 暂时对tangle速度比较满意, 不折腾了. 备忘吧.
 ** [2017-10-20 Fri] 禁用spaceline 据说会拖慢速度

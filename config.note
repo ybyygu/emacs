@@ -324,7 +324,7 @@ SPC u
        ;; version-control  ;; will slow down writing buffer
        python
        lua
-       pdf-tools
+       ;; pdf-tools
        (org :packages
             (not org-projectile org-download))
        gwp

@@ -204,6 +204,10 @@ CLOSED: [2016-12-23 Fri 15:38]
 =dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
 ** 删除空格
 - just-one-space 默认绑定为 ~Ｍ-SPC~
+** magit
+| SPC g s | status     |
+| SPC g S | stage file |
+
 ** Movement
 | Key Binding | Description                            |
 |-------------+----------------------------------------|

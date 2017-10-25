@@ -951,6 +951,9 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 
   (defun gwp/init-ob-ipython ()
     ;;
+    (use-package ob-ipython
+      :defer t
+      )
     )
 
 #+END_SRC

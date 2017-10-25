@@ -1796,6 +1796,25 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+begin_src emacs-lisp
   (setq org-preview-latex-image-directory ".ltximg/")
 #+end_src
+*** capture
+#+name: 01f64909-de0f-4349-bc46-df2082b590cd
+#+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates
+        '(
+          ("n" "Note" entry (file "~/Notes/refile.org")
+           "* %u %?\n  %i\n" :prepend t)
+          ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+           "* TODO %^T\n  %i\n" :prepend t)
+          ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+           "* %u %?\n  %i\n" :prepend t)
+          ("p" "Paper" entry (file+headline "~/Notes/research.note" "Paper")
+           "* %u %? [[%x][URL]]\n  %i\n" :prepend t)
+          ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+           "* %u %?\n  %i\n" :prepend t)
+          )
+        )
+
+#+END_SRC
 
 *** TODO refile
 #+name: c38fb49c-9ebf-4103-a404-f52514abc11f

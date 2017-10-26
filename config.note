@@ -241,18 +241,22 @@ Anything that isn't just setting a variable should 99% be in user-config.
 SPC u
 * scripts
 ** org-capture
-#+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle org-capture.sh
+#+header: :tangle ~/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
+#+header: :mkdirp yes :comments yes :padline yes
+#+name: 3fad2a66-0391-420f-8a2d-049460433d5c
+#+begin_src shell
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
 #+end_src
 
 ** org-agenda
+#+header: :mkdirp yes :comments yes :padline yes
 #+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle org-agemnda.sh
+#+name: 97e265a3-58ad-40b4-9d45-432f8cd691e1
+#+begin_src sh :tangle ~/.local/bin/org-agemnda.sh
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
 #+end_src
 ** org-read-todo
-#+header: :tangle org-read-todo.sh
+#+name: 35d32554-49c1-49f0-a3b4-133c55d4bb40
 #+BEGIN_SRC sh
   dir_read_root=~/ToDo/READ/Research
   dir_topic=$(basename "`pwd`")
@@ -265,6 +269,7 @@ SPC u
 
 #+END_SRC
 ** org-read-done
+#+name: 9f195a19-a2f1-4e9a-b957-eecd963d0bbf
 #+BEGIN_SRC sh
   dir_read_root=~/ToDo/READ/Research
   dir_topic=$(basename "`pwd`")
@@ -277,7 +282,11 @@ SPC u
 
 #+END_SRC
 ** emacsclient-open
+:PROPERTIES:
+:header-args: :tangle ~/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
+:END:
 *** header
+#+name: 0c47c380-c352-46e3-adf7-4dcc4ff91461
 #+begin_src python
   # -*- coding: utf-8 -*-
   #==============================================================================#
@@ -286,11 +295,11 @@ SPC u
   #
   #       OPTIONS:  ---
   #  REQUIREMENTS:  ---
-  #         NOTES:  http://www.pygtk.org/docs/pygtk/class-gtkrecentmanager.html
+  #         NOTES:
   #        AUTHOR:  Wenping Guo (ybyygu)
   #         EMAIL:  winpng@gmail.com
   #       LICENCE:  GPL version 2 or upper
-  #       CREATED:  2010-09-01 16:04:12
+  #       CREATED:  <2010-09-01 Wed 16:04>
   #       UPDATED:  <>
   #==============================================================================#
   #
@@ -304,19 +313,18 @@ SPC u
 #+end_src
 
 *** main
+#+name: 3f61daf6-b502-45be-b24b-cbf63b31fed4
 #+begin_src python
   import os
   import sys
   import subprocess
 
   def check_emacs_client(path):
-      """ check if the file has been opened by emacsclient """
-
+      """check if the file has been opened by emacsclient"""
       cmdlines = ["/usr/bin/pgrep", "-fa", "emacsclient -c"]
       output = subprocess.Popen(cmdlines, stdout=subprocess.PIPE).stdout.read()
       print(output)
-      # TODO: FIXME: python3 support
-      if path in output:
+      if path in output.decode():
           return True
       return False
 
@@ -336,6 +344,7 @@ SPC u
 #+end_src
 ** org-archive.py
 *** header
+#+name: 41b21fcc-9294-4fac-b9c5-0039ebc9921d
 #+begin_src python
   # -*- coding: utf-8 -*-
   #====================================================================#
@@ -348,10 +357,13 @@ SPC u
   #        AUTHOR:  Wenping Guo (ybyygu)
   #         EMAIL:  winpng@gmail.com
   #       LICENCE:  GPL version 2 or upper
-  #       CREATED:  2011-11-18 13:29
+  #       CREATED:  <2011-11-18 Fri 13:29>
+  #       UPDATED:  <>
   #====================================================================#
 #+end_src
+
 *** globals
+#+name: 53bf16e1-b093-45ae-8f22-22c27f7447f2
 #+begin_src python
   __VERSION__ = '0.1'
   __UPDATED__ = '2013-01-16 14:13:56 ybyygu'
@@ -366,6 +378,7 @@ SPC u
 
 #+end_src
 *** main
+#+name: 6f7a73df-dc80-42a4-bdd8-adebd1546683
 #+begin_src python
   def find_linked_files(filename):
       """
@@ -439,29 +452,30 @@ SPC u
 #+end_src
 
 * desktop integration
-#+begin_src text :tangle gwp-emacsclient.desktop :noweb yes
+** emacsclient-open
+#+name: 69946fa5-45c4-4c87-9de5-eb4a525ff5c8
+#+begin_src text :tangle ~/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes
   [Desktop Entry]
   Version=1.0
   Name=Emacs Client - GWP
   GenericName=Text Editor
   Comment=View and edit files
   MimeType=application/x-note;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-  Exec=<<GWP_BIN_PATH()>>/emacsclient-open.py %F
+  Exec=emacsclient-open.py %F
   TryExec=emacs
   Icon=emacs
   Type=Application
   Terminal=false
   Categories=Utility;Development;TextEditor;
 #+end_src
-
-#+name: gwp-org-capture.desktop
-#+begin_src text :tangle gwp-org-capture.desktop :noweb yes
+** org-capture
+#+name: 701ec573-5aea-47e5-9bed-995fc3a900d2
+#+begin_src text :tangle ~/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
   [Desktop Entry]
   Version=1.0
   Name=Org Capture
   Comment=Capture using emacs org-mode
-  MimeType=application/x-note;
-  Exec=<<GWP_BIN_PATH()>>/org-capture.sh
+  Exec=org-capture.sh
   TryExec=emacs
   Icon=emacs
   Type=Application
@@ -469,22 +483,18 @@ SPC u
   Categories=Utility;Development;TextEditor;
 #+end_src
 ** install
-  1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
-  2. 安装桌面文件.
-  3. 将python脚本软链接到$HOME/.local/bin目录下. 注意这里的路径要与
-     desktop文件所指定的一定.
+1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
+2. 安装桌面文件.
+3. 将python脚本软链接到$HOME/.local/bin目录下. 注意这里的路径要与
+   desktop文件所指定的一定.
 
-  #+name: install
-  #+begin_src sh :noweb yes
-    desktop-file-validate gwp-emacsclient.desktop
-    desktop-file-validate gwp-org-capture.desktop
-    xdg-desktop-menu install gwp-emacsclient.desktop
-    xdg-desktop-menu install gwp-org-capture.desktop
-    ln -sf `pwd`/emacsclient-open.py <<GWP_BIN_PATH()>>
-    ln -sf `pwd`/org-capture.sh <<GWP_BIN_PATH()>>
-  #+end_src
-
-  #+RESULTS: install
+#+name: 4b022845-2350-486c-a709-bda609c878fb
+#+begin_src shell
+  desktop-file-validate gwp-emacsclient.desktop
+  desktop-file-validate gwp-org-capture.desktop
+  xdg-desktop-menu install gwp-emacsclient.desktop
+  xdg-desktop-menu install gwp-org-capture.desktop
+#+end_src
 
 * dotspacemacs
 :PROPERTIES:

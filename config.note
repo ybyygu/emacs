@@ -239,6 +239,253 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC z x +/-
 ** universal arguments
 SPC u
+* scripts
+** org-capture
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle org-capture.sh
+  emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
+#+end_src
+
+** org-agenda
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle org-agemnda.sh
+  emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
+#+end_src
+** org-read-todo
+#+header: :tangle org-read-todo.sh
+#+BEGIN_SRC sh
+  dir_read_root=~/ToDo/READ/Research
+  dir_topic=$(basename "`pwd`")
+
+  dir_read="$dir_read_root"/"$dir_topic"
+
+  mkdir -p "$dir_read"
+
+  cp "$(pwd)/${1#file:}" "$dir_read"/
+
+#+END_SRC
+** org-read-done
+#+BEGIN_SRC sh
+  dir_read_root=~/ToDo/READ/Research
+  dir_topic=$(basename "`pwd`")
+
+  dir_read="$dir_read_root"/"$dir_topic"
+
+  path="$dir_read"/$(basename "${1#file:}")
+
+  [[ -f "$path" ]] && rm -f "$path"
+
+#+END_SRC
+** emacsclient-open
+*** header
+#+begin_src python
+  # -*- coding: utf-8 -*-
+  #==============================================================================#
+  #   DESCRIPTION:  open text file with emacsclient and register the it into the
+  #                 recently-used-files list (~/.recently-used.xbel)
+  #
+  #       OPTIONS:  ---
+  #  REQUIREMENTS:  ---
+  #         NOTES:  http://www.pygtk.org/docs/pygtk/class-gtkrecentmanager.html
+  #        AUTHOR:  Wenping Guo (ybyygu)
+  #         EMAIL:  winpng@gmail.com
+  #       LICENCE:  GPL version 2 or upper
+  #       CREATED:  2010-09-01 16:04:12
+  #       UPDATED:  <>
+  #==============================================================================#
+  #
+  # basically, to make emacsclient perfect, there are three things need be done:
+  # 1. use parameter "-a ''", that is, use a void alternate-editor to automatically start
+  #    emacs daemon
+  # 2. open the file without "-n" option to make sure the file buffer will be killed when frame
+  #    is closed
+  # 3. if the file has been opened, use "-n" option.
+
+#+end_src
+
+*** main
+#+begin_src python
+  import os
+  import sys
+  import subprocess
+
+  def check_emacs_client(path):
+      """ check if the file has been opened by emacsclient """
+
+      cmdlines = ["/usr/bin/pgrep", "-fa", "emacsclient -c"]
+      output = subprocess.Popen(cmdlines, stdout=subprocess.PIPE).stdout.read()
+      print(output)
+      # TODO: FIXME: python3 support
+      if path in output:
+          return True
+      return False
+
+  if len(sys.argv) == 1:
+      print("%s: open file using emacsclient." % (__file__))
+      sys.exit(0)
+
+  path = os.path.abspath(sys.argv[1])
+  if check_emacs_client(path):
+      print("{:} is opened.".format(path))
+      args = ["emacsclient", "-n", path]
+      subprocess.call(args)
+  else:
+      args = ["emacsclient", "-c", "-a", "", path]
+      subprocess.Popen(args)
+
+#+end_src
+** org-archive.py
+*** header
+#+begin_src python
+  # -*- coding: utf-8 -*-
+  #====================================================================#
+  #   DESCRIPTION:  create tar.xz archive of org-mode file including
+  #                 all files under current directory
+  #
+  #       OPTIONS:  ---
+  #  REQUIREMENTS:  ---
+  #         NOTES:  ---
+  #        AUTHOR:  Wenping Guo (ybyygu)
+  #         EMAIL:  winpng@gmail.com
+  #       LICENCE:  GPL version 2 or upper
+  #       CREATED:  2011-11-18 13:29
+  #====================================================================#
+#+end_src
+*** globals
+#+begin_src python
+  __VERSION__ = '0.1'
+  __UPDATED__ = '2013-01-16 14:13:56 ybyygu'
+
+  import sys
+  import os
+  import re
+  import urllib
+
+  rex_file = re.compile(r'.*\[\[file:([^\]]+)\]')
+  rex_css = re.compile(r'.*href="([^"]+)".*')
+
+#+end_src
+*** main
+#+begin_src python
+  def find_linked_files(filename):
+      """
+      find linked files (image or css style etc) from filename in
+      org-mode syntax
+      """
+      files = []
+
+      with open(filename) as fp:
+          for line in fp:
+              if rex_file.match(line):
+                  afile = rex_file.match(line).groups()[0]
+                  if afile:
+                      files.append(afile)
+              elif rex_css.match(line):
+                  afile = rex_css.match(line).groups()[0]
+                  if afile and not afile.startswith("http"):
+                      files.append(afile)
+
+      return files
+
+  def make_tar_archive(files, archive_name):
+      import tarfile
+
+      tar = tarfile.open(archive_name, mode="w", dereference=True)
+      lists = set([])
+      for afile in files:
+          afile = urllib.unquote(afile)
+          if os.path.exists(afile):
+              print("included {}".format(afile))
+              lists.add(afile)
+          else:
+              print("{} is not in current directory!".format(afile))
+      for afile in lists:
+          tar.add(afile)
+      tar.close()
+
+
+  def main(argv=None):
+      import optparse
+
+      if argv == None: argv = sys.argv
+
+      # parsing cmdline
+      cmdl_usage = 'usage: %prog [options]...[queue_id]'
+      cmdl_version = "%prog " + __VERSION__
+      cmdl_parser = optparse.OptionParser(usage=cmdl_usage, \
+                                          version=cmdl_version, \
+                                          conflict_handler='resolve')
+      cmdl_parser.add_option('-h', '--help',
+                             action='help',
+                             help='print this help text and exit')
+      cmdl_parser.add_option('-v', '--version',
+                             action='version',
+                             help='print program version and exit')
+      # cmdl_parser.add_option('-f', '--file', dest='file',
+      #                         help='start from this gjf file')
+      # cmdl_parser.add_option('-p', '--pause', dest='pause',
+      #                         action="store_true", default=False,
+      #                         help='pause running job.')
+      (cmdl_opts, cmdl_args) = cmdl_parser.parse_args()
+
+      filename = cmdl_args[0]
+
+      files = find_linked_files(filename)
+      files.append(filename)
+      make_tar_archive(files, archive_name="{}.tar".format(filename))
+
+  if __name__ == '__main__':
+      main()
+#+end_src
+
+* desktop integration
+#+begin_src text :tangle gwp-emacsclient.desktop :noweb yes
+  [Desktop Entry]
+  Version=1.0
+  Name=Emacs Client - GWP
+  GenericName=Text Editor
+  Comment=View and edit files
+  MimeType=application/x-note;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+  Exec=<<GWP_BIN_PATH()>>/emacsclient-open.py %F
+  TryExec=emacs
+  Icon=emacs
+  Type=Application
+  Terminal=false
+  Categories=Utility;Development;TextEditor;
+#+end_src
+
+#+name: gwp-org-capture.desktop
+#+begin_src text :tangle gwp-org-capture.desktop :noweb yes
+  [Desktop Entry]
+  Version=1.0
+  Name=Org Capture
+  Comment=Capture using emacs org-mode
+  MimeType=application/x-note;
+  Exec=<<GWP_BIN_PATH()>>/org-capture.sh
+  TryExec=emacs
+  Icon=emacs
+  Type=Application
+  Terminal=false
+  Categories=Utility;Development;TextEditor;
+#+end_src
+** install
+  1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
+  2. 安装桌面文件.
+  3. 将python脚本软链接到$HOME/.local/bin目录下. 注意这里的路径要与
+     desktop文件所指定的一定.
+
+  #+name: install
+  #+begin_src sh :noweb yes
+    desktop-file-validate gwp-emacsclient.desktop
+    desktop-file-validate gwp-org-capture.desktop
+    xdg-desktop-menu install gwp-emacsclient.desktop
+    xdg-desktop-menu install gwp-org-capture.desktop
+    ln -sf `pwd`/emacsclient-open.py <<GWP_BIN_PATH()>>
+    ln -sf `pwd`/org-capture.sh <<GWP_BIN_PATH()>>
+  #+end_src
+
+  #+RESULTS: install
+
 * dotspacemacs
 :PROPERTIES:
 :header-args: :tangle ~/.spacemacs.d/init.el :comments link :padline yes

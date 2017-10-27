@@ -4,7 +4,9 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [1/6]
+* Memo [1/7]
+** TODO [2017-10-27 Fri] bootstrap spacemacs
+** [2017-10-27 Fri] 使用gnu stow来管理tangle出的各类文件
 ** TODO [2017-10-27 Fri] 完善org-protocal和org-capture
 - https://blog.aaronbieber.com/2016/11/24/org-capture-from-anywhere-on-your-mac.html
 - https://github.com/alphapapa/org-protocol-capture-html
@@ -179,7 +181,7 @@ CLOSED: [2016-12-23 Fri 15:38]
 
 #+header: :tangle makefile
 #+name: e15fb2e8-3a89-4ebe-b788-3135e14bc564
-#+BEGIN_SRC makefile
+#+BEGIN_SRC makefile -i
 install: stow
 	stow --verbose --adopt --no-folding --target ~/ pkg
 uninstall:

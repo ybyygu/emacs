@@ -174,6 +174,21 @@ CLOSED: [2016-12-23 Fri 15:38]
    : (with-eval-after-load 'org (load-file "~/Install/configs/spacemacs/config.el"))
 ** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
 * install
+** makefile
+使用gnu stow来将pkg目录下的文件安装symlink到$HOME
+
+#+header: :tangle makefile
+#+name: e15fb2e8-3a89-4ebe-b788-3135e14bc564
+#+BEGIN_SRC makefile
+install: stow
+	stow --verbose --adopt --no-folding --target ~/ pkg
+uninstall:
+	stow --verbose --target ~/ --delete pkg
+stow:
+	which stow
+#+END_SRC
+
+** spacemacs
 官方首页提供了三种安装方式. 迁移的时候考虑使用第二种或第三种.
 
 1. spacemacs 目录放置到~/Install/configs/spacemacs/.emacs.d
@@ -247,7 +262,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 SPC u
 * scripts
 ** org-capture
-#+header: :tangle ~/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
+#+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
 #+header: :mkdirp yes :comments yes :padline yes
 #+name: 3fad2a66-0391-420f-8a2d-049460433d5c
 #+begin_src shell
@@ -258,7 +273,7 @@ SPC u
 #+header: :mkdirp yes :comments yes :padline yes
 #+header: :shebang #! /usr/bin/env bash
 #+name: 97e265a3-58ad-40b4-9d45-432f8cd691e1
-#+begin_src sh :tangle ~/.local/bin/org-agemnda.sh
+#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
 #+end_src
 ** org-read-todo
@@ -289,7 +304,7 @@ SPC u
 #+END_SRC
 ** emacsclient-open
 :PROPERTIES:
-:header-args: :tangle ~/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
+:header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
 :END:
 *** header
 #+name: 0c47c380-c352-46e3-adf7-4dcc4ff91461
@@ -460,7 +475,7 @@ SPC u
 * desktop integration
 ** emacsclient-open
 #+name: 69946fa5-45c4-4c87-9de5-eb4a525ff5c8
-#+begin_src text :tangle ~/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes
+#+begin_src text :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes
   [Desktop Entry]
   Version=1.0
   Name=Emacs Client - GWP
@@ -476,7 +491,7 @@ SPC u
 #+end_src
 ** org-capture
 #+name: 701ec573-5aea-47e5-9bed-995fc3a900d2
-#+begin_src text :tangle ~/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
+#+begin_src text :tangle pkg/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
   [Desktop Entry]
   Version=1.0
   Name=Org Capture

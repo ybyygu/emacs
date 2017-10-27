@@ -1,0 +1,10 @@
+  [Desktop Entry]
+  Version=1.0
+  Name=Org Capture
+  Comment=Capture using emacs org-mode
+  Exec=org-capture.sh
+  TryExec=emacs
+  Icon=emacs
+  Type=Application
+  Terminal=false
+  Categories=Utility;Development;TextEditor;

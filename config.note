@@ -519,7 +519,7 @@ SPC u
 
 * dotspacemacs
 :PROPERTIES:
-:header-args: :tangle ~/.spacemacs.d/init.el :comments link :padline yes
+:header-args: :tangle pkg/.spacemacs.d/init.el :comments link :padline yes :mkdirp yes
 :END:
 
 .spacemacs是spacemacs的主配置文件.
@@ -941,7 +941,7 @@ SPC u
 以spacemacs layer的方式来组织个人配置.
 ** gwp/packages.el
 :PROPERTIES:
-:header-args: :tangle ~/.spacemacs.d/layers/gwp/packages.el :comments link :padline yes
+:header-args: :tangle pkg/.spacemacs.d/layers/gwp/packages.el :comments link :padline yes :mkdirp yes
 :END:
 通过 packages.el 接口, 可以将自己的一些设置与 spacemacs 融为一体.
 *** header
@@ -1241,7 +1241,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+END_SRC
 ** gwp/config.el
 :PROPERTIES:
-:header-args: :tangle ~/.spacemacs.d/layers/gwp/config.el :comments link :padline yes
+:header-args: :tangle pkg/.spacemacs.d/layers/gwp/config.el :comments link :padline yes :mkdirp yes
 :END:
 各种设置
 *** header
@@ -1344,7 +1344,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+END_SRC
 ** gwp/keybindings.el
 :PROPERTIES:
-:header-args: :tangle ~/.spacemacs.d/layers/gwp/keybindings.el :comments link :padline yes
+:header-args: :tangle pkg/.spacemacs.d/layers/gwp/keybindings.el :comments link :padline yes :mkdirp yes
 :END:
 *** header
 #+name: aeb269bf-d17f-4d46-9f32-d31d522b72e0
@@ -1596,7 +1596,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 
 ** init-org.el
 :PROPERTIES:
-:header-args: :tangle ~/.spacemacs.d/init-org.el :comments link :padline yes
+:header-args: :tangle pkg/.spacemacs.d/init-org.el :comments link :padline yes :mkdirp yes
 :END:
 *** agenda
 #+name: 8494456e-4208-499d-944d-cd14efb43ae7

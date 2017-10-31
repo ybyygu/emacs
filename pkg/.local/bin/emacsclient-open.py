@@ -12,7 +12,7 @@
 #         EMAIL:  winpng@gmail.com
 #       LICENCE:  GPL version 2 or upper
 #       CREATED:  <2010-09-01 Wed 16:04>
-#       UPDATED:  <2017-10-27 Fri 19:35>
+#       UPDATED:  <2017-10-27 Fri 20:00>
 #==============================================================================#
 #
 # basically, to make emacsclient perfect, there are three things need be done:
@@ -31,9 +31,11 @@ import subprocess
 def check_emacs_client(path):
     """check if the file has been opened by emacsclient"""
     cmdlines = ["/usr/bin/pgrep", "-fa", "emacsclient -c"]
-    output = subprocess.Popen(cmdlines, stdout=subprocess.PIPE).stdout.read()
+    output = subprocess.Popen(cmdlines,
+                              universal_newlines=True,  # output is a str not bytes
+                              stdout=subprocess.PIPE).stdout.read()
     print(output)
-    if path in output.decode():
+    if path in output:
         return True
     return False
 

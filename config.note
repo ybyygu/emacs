@@ -11,7 +11,9 @@
 - https://blog.aaronbieber.com/2016/11/24/org-capture-from-anywhere-on-your-mac.html
 - https://github.com/alphapapa/org-protocol-capture-html
 - org capture extensions
-** TODO [2017-10-27 Fri] 添加gnome recent files功能, 方法添加attachment
+** TODO [2017-10-27 Fri] 添加gnome recent files功能, 方便添加attachment
+- 要有清理旧的(不存在)文件的功能
+
 ** [2017-10-26 Thu] 纳入几个与emacs相关的scripts统一管理
 ** [2017-10-24 Tue] 启用ob-ipython
 ** TODO [2017-10-24 Tue] org-mode不同subtree之间如何跳转

@@ -423,7 +423,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 (setq org-preview-latex-image-directory ".ltximg/")
 ;; edc2c0a1-b324-4cf5-8f84-816894cb6c7b ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::01f64909-de0f-4349-bc46-df2082b590cd][01f64909-de0f-4349-bc46-df2082b590cd]]
+;; [[file:~/Install/configs/spacemacs/config.note::7150b085-c305-4285-9fc6-2c5496e0876f][7150b085-c305-4285-9fc6-2c5496e0876f]]
 (setq org-capture-templates
       '(
         ("n" "Note" entry (file "~/Notes/refile.org")
@@ -438,7 +438,14 @@ This is a copy and paste. Additional languages would warrant a refactor."
          "* %u %?\n  %i\n" :prepend t)
         )
       )
-;; 01f64909-de0f-4349-bc46-df2082b590cd ends here
+;; 7150b085-c305-4285-9fc6-2c5496e0876f ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::86d9dfb7-8aed-4cb4-b058-76b456bfe8f6][86d9dfb7-8aed-4cb4-b058-76b456bfe8f6]]
+(use-package org-protocol
+  :ensure org-plus-contrib
+  :demand t
+  )
+;; 86d9dfb7-8aed-4cb4-b058-76b456bfe8f6 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::c38fb49c-9ebf-4103-a404-f52514abc11f][c38fb49c-9ebf-4103-a404-f52514abc11f]]
 ;; any headline with level <= 2 is a target

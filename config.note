@@ -4,13 +4,21 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [1/7]
+* Memo [2/7]
 ** TODO [2017-10-27 Fri] bootstrap spacemacs
 ** [2017-10-27 Fri] 使用gnu stow来管理tangle出的各类文件
-** TODO [2017-10-27 Fri] 完善org-protocal和org-capture
-- https://blog.aaronbieber.com/2016/11/24/org-capture-from-anywhere-on-your-mac.html
+** DONE [2017-10-27 Fri] 完善org-protocol和org-capture
+CLOSED: [2017-11-01 Wed 10:34]
+- State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
+
+在chromium中建立如下的bookmarklet (new style)
+: javascript:location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "[untitled page]")
+
+References
 - https://github.com/alphapapa/org-protocol-capture-html
-- org capture extensions
+- org capture extensions: https://github.com/sprig/org-capture-extension
+- [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol.el – Intercept calls from emacsclient to trigger custom actions]] (outdated)
+
 ** TODO [2017-10-27 Fri] 添加gnome recent files功能, 方便添加attachment
 - 要有清理旧的(不存在)文件的功能
 
@@ -509,11 +517,29 @@ SPC u
   Terminal=false
   Categories=Utility;Development;TextEditor;
 #+end_src
+** org-protocol
+#+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :mkdirp yes
+#+name: bf3d535a-e442-47d0-a51c-4f927597df5b
+#+BEGIN_SRC text
+  [Desktop Entry]
+  Name=org-protocol
+  Exec=emacsclient %U
+  Icon=zotero
+  Type=Application
+  Terminal=false
+  MimeType=x-scheme-handler/org-protocol;
+#+END_SRC
 ** install
 1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
 2. 安装桌面文件.
 3. 将python脚本软链接到$HOME/.local/bin目录下. 注意这里的路径要与
    desktop文件所指定的一定.
+
+更新desktop数据库
+#+name: e841dc00-8b8d-41f2-9bbd-544002bd491a
+#+BEGIN_SRC shell
+  update-desktop-database ~/.local/share/applications/
+#+END_SRC
 
 #+name: 4b022845-2350-486c-a709-bda609c878fb
 #+begin_src shell
@@ -2080,9 +2106,9 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+begin_src emacs-lisp
   (setq org-preview-latex-image-directory ".ltximg/")
 #+end_src
-*** capture
-#+name: 01f64909-de0f-4349-bc46-df2082b590cd
-#+BEGIN_SRC emacs-lisp
+*** capture & protocol
+#+name: 7150b085-c305-4285-9fc6-2c5496e0876f
+#+begin_src emacs-lisp
   (setq org-capture-templates
         '(
           ("n" "Note" entry (file "~/Notes/refile.org")
@@ -2097,7 +2123,15 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
            "* %u %?\n  %i\n" :prepend t)
           )
         )
+#+end_src
 
+启用org-protocol
+#+name: 86d9dfb7-8aed-4cb4-b058-76b456bfe8f6
+#+BEGIN_SRC emacs-lisp
+  (use-package org-protocol
+    :ensure org-plus-contrib
+    :demand t
+    )
 #+END_SRC
 
 *** TODO refile

@@ -338,6 +338,10 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; ec580eca-a4b0-4677-9992-6c62803ce1d7 ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::8934f349-26c4-48a4-945d-5944f3baf2f3][8934f349-26c4-48a4-945d-5944f3baf2f3]]
+(setq org-src-fontify-natively nil)
+;; 8934f349-26c4-48a4-945d-5944f3baf2f3 ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::7c756a95-fbc4-4159-b6e7-bc4f3ebf972e][7c756a95-fbc4-4159-b6e7-bc4f3ebf972e]]
 (with-eval-after-load 'org-crypt
   (epa-file-enable)

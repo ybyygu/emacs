@@ -5,6 +5,8 @@
 # Created: 2016-10-14 14:20
 
 * Memo [2/7]
+** [2017-11-01 Wed] 为了提高org代码的加载速度, 禁用org-src blocks的自动着色
+: org-src-fontify-natively
 ** TODO [2017-10-27 Fri] bootstrap spacemacs
 ** [2017-10-27 Fri] 使用gnu stow来管理tangle出的各类文件
 ** DONE [2017-10-27 Fri] 完善org-protocol和org-capture
@@ -2003,7 +2005,13 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     (widen)
     )
 #+end_src
+**** 禁用org-src-fontify
+src blocks多了以后是个灾难, fontify会严重影响响应速度.
 
+#+name: 8934f349-26c4-48a4-945d-5944f3baf2f3
+#+begin_src emacs-lisp
+  (setq org-src-fontify-natively nil)
+#+end_src
 *** encryption
 #+name: 7c756a95-fbc4-4159-b6e7-bc4f3ebf972e
 #+begin_src emacs-lisp

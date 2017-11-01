@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %U
+Icon=zotero
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/org-protocol;

@@ -274,6 +274,9 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC z x +/-
 ** universal arguments
 SPC u
+* Literate programming notes
+- 在代码窗口编辑时, 使用C-x C-s来保存buffer. 不要使用:w, 这样会多出一份代码的临时文件
+- 代码修改完成后, 使用gwp/org-babel-tangle-block函数来仅tangle当前block对应的代码文件.
 * scripts
 ** org-capture
 #+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash

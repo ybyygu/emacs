@@ -509,4 +509,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 
 ;; [[file:~/Install/configs/spacemacs/config.note::4136bddd-2d62-4d66-8f84-aa28e09006ca][4136bddd-2d62-4d66-8f84-aa28e09006ca]]
 (require 'org-man)
+
+;; do not commit attachments with git
+(setq org-attach-commit nil)
 ;; 4136bddd-2d62-4d66-8f84-aa28e09006ca ends here

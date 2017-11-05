@@ -5,6 +5,8 @@
 # Created: 2016-10-14 14:20
 
 * Memo [2/7]
+** [2017-11-01 Wed] 禁用commit attachments with git
+: org-attach-commit ==> nil
 ** [2017-11-01 Wed] 为了提高org代码的加载速度, 禁用org-src blocks的自动着色
 : org-src-fontify-natively
 ** TODO [2017-10-27 Fri] bootstrap spacemacs
@@ -240,8 +242,9 @@ stow:
 ** 删除空格
 - just-one-space 默认绑定为 ~Ｍ-SPC~
 ** magit
-| SPC g s | status     |
-| SPC g S | stage file |
+| SPC g s  | status                |                             |
+| SPC g S  | stage file            |                             |
+| SPC g fh | magit-log-buffer-file | Show log for current buffer |
 
 ** Movement
 | Key Binding | Description                            |
@@ -2208,6 +2211,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+name: 4136bddd-2d62-4d66-8f84-aa28e09006ca
 #+begin_src emacs-lisp
   (require 'org-man)
+
+  ;; do not commit attachments with git
+  (setq org-attach-commit nil)
 #+end_src
 ** docs
 : dotspacemacs-directory ~/.spacemacs.d

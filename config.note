@@ -5,6 +5,11 @@
 # Created: 2016-10-14 14:20
 
 * Memo [2/7]
+** [2017-11-07 Tue] 修改org-confirm-babel-evaluation
+为安全, 除python外, 其它语言都确认后再evaluation
+** [2017-11-05 Sun] org-mode中开org-indent缩进乱跳的问题
+禁用version-control layer是个无比英明的决定.
+- [[https://emacs-china.org/t/topic/3663][org mode 缩进乱跳的解决办法]]
 ** [2017-11-01 Wed] 禁用commit attachments with git
 : org-attach-commit ==> nil
 ** [2017-11-01 Wed] 为了提高org代码的加载速度, 禁用org-src blocks的自动着色
@@ -1826,8 +1831,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     ;;     (error nil)))
     ;; (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
 
-    (setq org-confirm-babel-evaluate nil)
-
     ;; add <p for python expansion
     (add-to-list 'org-structure-template-alist
                  '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
@@ -1841,6 +1844,13 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
                  '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
    )
 
+#+end_src
+
+#+name: 03a57f74-e2b2-467e-b771-42843b8e1c95
+#+begin_src emacs-lisp
+  (defun gwp/org-confirm-babel-evaluate (lang body)
+    (not (string= lang "python")))  ; don't ask for python
+  (setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
 #+end_src
 
 *** literate programming

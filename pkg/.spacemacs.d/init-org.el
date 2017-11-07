@@ -177,8 +177,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   ;;     (error nil)))
   ;; (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
 
-  (setq org-confirm-babel-evaluate nil)
-
   ;; add <p for python expansion
   (add-to-list 'org-structure-template-alist
                '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
@@ -192,6 +190,12 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
  )
 ;; 08773fc4-f834-41ef-96bd-695b7eb0668e ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::03a57f74-e2b2-467e-b771-42843b8e1c95][03a57f74-e2b2-467e-b771-42843b8e1c95]]
+(defun gwp/org-confirm-babel-evaluate (lang body)
+  (not (string= lang "python")))  ; don't ask for python
+(setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
+;; 03a57f74-e2b2-467e-b771-42843b8e1c95 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::c5a08df6-7fd7-408b-9fb3-b4eb7347e84e][c5a08df6-7fd7-408b-9fb3-b4eb7347e84e]]
 ;; unique, memorable identity for tangling

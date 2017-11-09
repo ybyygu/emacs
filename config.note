@@ -1846,6 +1846,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+end_src
 
 自动保存编辑的代码
+#+name: 39884b8e-6175-4435-88ab-92de1770efde
 #+begin_src emacs-lisp
   ;; saving a source code buffer back into its base buffer
   (setq org-edit-src-auto-save-idle-delay 1)
@@ -1993,6 +1994,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+END_SRC
 
 几个重要的header args:
+#+name: a454727c-034e-4967-9193-3beaeb4b984f
 #+begin_src emacs-lisp
   (help/set-org-babel-default-header-args :padline "yes")
   (help/set-org-babel-default-header-args :mkdirp "yes")
@@ -2137,14 +2139,19 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
   (setq org-preview-latex-image-directory ".ltximg/")
 #+end_src
 *** capture & protocol
+占位符:
+| %:link         | URL of the web-page       |
+| %:description  | The title of the web-page |
+| %:initial / %i | Selected text.            |
+
 #+name: 7150b085-c305-4285-9fc6-2c5496e0876f
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(
           ("n" "Note" entry (file "~/Notes/refile.org")
-           "* %u %?\n  %i\n" :prepend t)
+           "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
           ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-           "* TODO %^T\n  %i\n" :prepend t)
+           "* TODO %^T\n  %i" :prepend t)
           ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
            "* %u %?\n  %i\n" :prepend t)
           ("p" "Paper" entry (file+headline "~/Notes/research.note" "Paper")

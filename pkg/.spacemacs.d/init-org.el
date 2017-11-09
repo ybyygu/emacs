@@ -168,15 +168,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
      )
    )
 
-  ;; (setq org-plantuml-jar-path
-  ;; (expand-file-name "~/.emacs.d/plantuml/plantuml.jar"))
-
-  ;; (defun gwp/display-inline-images ()
-  ;;   (condition-case nil
-  ;;       (org-display-inline-images)
-  ;;     (error nil)))
-  ;; (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
-
   ;; add <p for python expansion
   (add-to-list 'org-structure-template-alist
                '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
@@ -188,6 +179,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   ;; add <b for shell scritp
   (add-to-list 'org-structure-template-alist
                '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
+
  )
 ;; 08773fc4-f834-41ef-96bd-695b7eb0668e ends here
 
@@ -196,6 +188,11 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (not (string= lang "python")))  ; don't ask for python
 (setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
 ;; 03a57f74-e2b2-467e-b771-42843b8e1c95 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::39884b8e-6175-4435-88ab-92de1770efde][39884b8e-6175-4435-88ab-92de1770efde]]
+;; saving a source code buffer back into its base buffer
+(setq org-edit-src-auto-save-idle-delay 1)
+;; 39884b8e-6175-4435-88ab-92de1770efde ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::c5a08df6-7fd7-408b-9fb3-b4eb7347e84e][c5a08df6-7fd7-408b-9fb3-b4eb7347e84e]]
 ;; unique, memorable identity for tangling
@@ -331,6 +328,12 @@ This is a copy and paste. Additional languages would warrant a refactor."
 )
 ;; d3151aaf-84cf-484a-9513-40a671de7081 ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::a454727c-034e-4967-9193-3beaeb4b984f][a454727c-034e-4967-9193-3beaeb4b984f]]
+(help/set-org-babel-default-header-args :padline "yes")
+(help/set-org-babel-default-header-args :mkdirp "yes")
+(help/set-org-babel-default-header-args :comments "noweb")
+;; a454727c-034e-4967-9193-3beaeb4b984f ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::ec580eca-a4b0-4677-9992-6c62803ce1d7][ec580eca-a4b0-4677-9992-6c62803ce1d7]]
 (with-eval-after-load "ob-tangle"
   ;; update timestamps on tangled files
@@ -435,9 +438,9 @@ This is a copy and paste. Additional languages would warrant a refactor."
 (setq org-capture-templates
       '(
         ("n" "Note" entry (file "~/Notes/refile.org")
-         "* %u %?\n  %i\n" :prepend t)
+         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-         "* TODO %^T\n  %i\n" :prepend t)
+         "* TODO %^T\n  %i" :prepend t)
         ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
          "* %u %?\n  %i\n" :prepend t)
         ("p" "Paper" entry (file+headline "~/Notes/research.note" "Paper")

@@ -1822,15 +1822,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
        )
      )
 
-    ;; (setq org-plantuml-jar-path
-    ;; (expand-file-name "~/.emacs.d/plantuml/plantuml.jar"))
-
-    ;; (defun gwp/display-inline-images ()
-    ;;   (condition-case nil
-    ;;       (org-display-inline-images)
-    ;;     (error nil)))
-    ;; (add-hook 'org-babel-after-execute-hook 'gwp/display-inline-images 'append)
-
     ;; add <p for python expansion
     (add-to-list 'org-structure-template-alist
                  '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
@@ -1842,6 +1833,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     ;; add <b for shell scritp
     (add-to-list 'org-structure-template-alist
                  '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
+
    )
 
 #+end_src
@@ -1851,6 +1843,12 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   (defun gwp/org-confirm-babel-evaluate (lang body)
     (not (string= lang "python")))  ; don't ask for python
   (setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
+#+end_src
+
+自动保存编辑的代码
+#+begin_src emacs-lisp
+  ;; saving a source code buffer back into its base buffer
+  (setq org-edit-src-auto-save-idle-delay 1)
 #+end_src
 
 *** literate programming
@@ -1984,6 +1982,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     (insert "\n"))
 #+END_SRC
 
+为每个block自动生成独立的name:
 #+name: d3151aaf-84cf-484a-9513-40a671de7081
 #+BEGIN_SRC emacs-lisp
   ;; add name header automatically
@@ -1992,6 +1991,13 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   )
 
 #+END_SRC
+
+几个重要的header args:
+#+begin_src emacs-lisp
+  (help/set-org-babel-default-header-args :padline "yes")
+  (help/set-org-babel-default-header-args :mkdirp "yes")
+  (help/set-org-babel-default-header-args :comments "noweb")
+#+end_src
 
 **** tangle blocks时更新time-stamp
 格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]

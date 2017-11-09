@@ -437,7 +437,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; [[file:~/Install/configs/spacemacs/config.note::7150b085-c305-4285-9fc6-2c5496e0876f][7150b085-c305-4285-9fc6-2c5496e0876f]]
 (setq org-capture-templates
       '(
-        ("n" "Note" entry (file "~/Notes/refile.org")
+        ("n" "Note" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
          "* TODO %^T\n  %i" :prepend t)

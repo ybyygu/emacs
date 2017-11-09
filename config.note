@@ -2148,7 +2148,7 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(
-          ("n" "Note" entry (file "~/Notes/refile.org")
+          ("n" "Note" entry (file "~/Notes/refile.note")
            "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
           ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
            "* TODO %^T\n  %i" :prepend t)

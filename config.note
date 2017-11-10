@@ -38,7 +38,6 @@ References
 - 要有清理旧的(不存在)文件的功能
 
 ** [2017-10-26 Thu] 纳入几个与emacs相关的scripts统一管理
-** [2017-10-24 Tue] 启用ob-ipython
 ** TODO [2017-10-24 Tue] org-mode不同subtree之间如何跳转
 ** TODO [2017-10-21 Sat] dired: 不显示隐藏文件
 ** [2017-10-21 Sat] How Fast Can You Tangle In Org-Mode [[https://www.wisdomandwonder.com/article/10630/how-fast-can-you-tangle-in-org-mode][URL]]
@@ -58,8 +57,6 @@ References
 在keybindings.el处加一行即可:
 : (org-defkey org-mode-map [(meta return)] 'org-meta-return)
 - https://github.com/syl20bnr/spacemacs/issues/9603
-** [2017-10-06 Fri] 解决字体高清屏HiDPI字体显示太小的问题
-在字体设置处, 注释掉:size行即可. [[https://github.com/syl20bnr/spacemacs/issues/6005][issue]]
 ** [2017-10-06 Fri] 解决org-mode加载大文件太慢的问题
 - [2017-10-07 Sat] 发现是hl-todo这个包导致的问题. 禁用该包即可.
 - [2017-10-06 Fri] 使用配置, 使用spacemacs-base distrubtion即可.

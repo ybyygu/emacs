@@ -4,7 +4,13 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [2/7]
+* Memo [1/6]
+** [2017-11-10 Fri] 修改tangle函数, 能更方便的tangle代码
+将gwp/org-babel-tangle-dwim绑定到 ~SPC o b~
+- 使用 ~Ctrl-c '~ 进入代码窗口
+- 修改代码后, 按 ~SPC o b~
+- 该函数自动保存代码, 并tangle对应文件
+
 ** [2017-11-07 Tue] 修改org-confirm-babel-evaluation
 为安全, 除python外, 其它语言都确认后再evaluation
 ** [2017-11-05 Sun] org-mode中开org-indent缩进乱跳的问题
@@ -92,10 +98,6 @@ Tips:
 [2017-09-20 Wed] 使用zotero 5 standalone版本以后, zotero链接不能正常打开了. 改用更简单的设置.
 ** [2016-12-14 Wed] 以后要多参考Michael Lockhart的配置 [[https://github.com/sinewalker/dotspacemacs][URL]]
 ** [2016-12-13 Tue] 在doc-view buffer中一样可以使用SPC fj和SPC fo的功能来调用外部程序
-** DONE [2016-12-12 Mon] 需要改进org-babel几个相关功能
-CLOSED: [2016-12-23 Fri 15:38]
-1. org-src-window-setup
-2. org-edit-src自动保存
 ** [2016-12-11 Sun] pdf-tools神器 [[https://github.com/politza/pdf-toolsU][URL]]
 ** [2016-12-11 Sun] 添加快捷键 快速导出org-babel代码块.
 : SPC ob
@@ -242,7 +244,7 @@ stow:
 
 * tips
 阅读文档 ~SPC h r~
-** Editting styles
+** Editing styles
 =dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
 ** 删除空格
 - just-one-space 默认绑定为 ~Ｍ-SPC~
@@ -1403,16 +1405,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 *** org
 #+name: 3631de70-8cb6-494d-bb97-c8d6100f7993
 #+begin_src emacs-lisp
-  ;; tangle blocks for current file at point
-  ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
-  ;; call org-babel-tangle with C-u C-u
-  (defun gwp/org-babel-tangle-block()
-    (interactive)
-    (let ((current-prefix-arg '(16)))
-      (call-interactively 'org-babel-tangle)
-      )
-    )
-
   (eval-after-load "org"
     '(progn
        (org-defkey org-mode-map [(meta return)] 'org-meta-return)
@@ -1422,7 +1414,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
          "oo" 'org-attach
          "oc" 'org-capture
          "ol" 'org-store-link
-         "ob" 'gwp/org-babel-tangle-block
+         "ob" 'gwp/org-babel-tangle-dwim
          "oj" 'org-babel-tangle-jump-to-org
          )
        )
@@ -1853,7 +1845,9 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+end_src
 
 *** literate programming
-**** from grettke's help [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][URL]]
+**** grettke's help system [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][URL]]
+主要是为了配合使用 org-babel-tangle-jump-org
+
 #+name: c5a08df6-7fd7-408b-9fb3-b4eb7347e84e
 #+BEGIN_SRC emacs-lisp
   ;; unique, memorable identity for tangling
@@ -2001,11 +1995,11 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   (help/set-org-babel-default-header-args :comments "noweb")
 #+end_src
 
-**** tangle blocks时更新time-stamp
+**** auto time-stamp
 格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
 
 #+name: ec580eca-a4b0-4677-9992-6c62803ce1d7
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (with-eval-after-load "ob-tangle"
     ;; update timestamps on tangled files
     (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
@@ -2014,7 +2008,8 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
       (time-stamp)
       (save-buffer))
     (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
-#+END_SRC
+#+end_src
+
 **** tangle subtree
 [2017-10-18 Wed] 有更方便的: C-u C-u C-c C-v C-t
 
@@ -2029,7 +2024,38 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     (widen)
     )
 #+end_src
-**** 禁用org-src-fontify
+**** tangle blocks
+#+name: 24c35c8a-7587-4c52-bbfb-f7f8a198e292
+#+begin_src emacs-lisp
+  ;; tangle blocks for current file at point
+  ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
+  ;; call org-babel-tangle with C-u C-u
+  (defun gwp/org-babel-tangle-blocks()
+    (interactive)
+    (let ((current-prefix-arg '(16)))
+      (call-interactively 'org-babel-tangle)
+      )
+    )
+
+  (defun gwp/org-edit-save-and-tangle ()
+    "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+    (interactive)
+    (when (buffer-modified-p) (org-edit-src-save))
+    (org-edit-src-exit)
+    (call-interactively 'gwp/org-babel-tangle-blocks)
+    (org-edit-src-code)
+    )
+
+  (defun gwp/org-babel-tangle-dwim()
+    "tangle current file blocks whenever in a sub-editing buffer or not"
+    (interactive)
+    (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
+      (call-interactively 'gwp/org-babel-tangle-blocks)
+      )
+    )
+#+end_src
+
+**** disable org-src-fontify
 src blocks多了以后是个灾难, fontify会严重影响响应速度.
 
 #+name: 8934f349-26c4-48a4-945d-5944f3baf2f3
@@ -2238,6 +2264,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   ;; do not commit attachments with git
   (setq org-attach-commit nil)
 #+end_src
+
 ** docs
 : dotspacemacs-directory ~/.spacemacs.d
 : spacemacs-start-directory

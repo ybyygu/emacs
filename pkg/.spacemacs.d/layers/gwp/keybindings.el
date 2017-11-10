@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-10-27 Fri 19:35>
+;;  UPDATED:    <2017-11-10 Fri 11:59>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -11,16 +11,6 @@
 ;; aeb269bf-d17f-4d46-9f32-d31d522b72e0 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::3631de70-8cb6-494d-bb97-c8d6100f7993][3631de70-8cb6-494d-bb97-c8d6100f7993]]
-;; tangle blocks for current file at point
-;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
-;; call org-babel-tangle with C-u C-u
-(defun gwp/org-babel-tangle-block()
-  (interactive)
-  (let ((current-prefix-arg '(16)))
-    (call-interactively 'org-babel-tangle)
-    )
-  )
-
 (eval-after-load "org"
   '(progn
      (org-defkey org-mode-map [(meta return)] 'org-meta-return)
@@ -30,7 +20,7 @@
        "oo" 'org-attach
        "oc" 'org-capture
        "ol" 'org-store-link
-       "ob" 'gwp/org-babel-tangle-block
+       "ob" 'gwp/org-babel-tangle-dwim
        "oj" 'org-babel-tangle-jump-to-org
        )
      )

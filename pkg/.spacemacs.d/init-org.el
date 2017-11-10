@@ -345,6 +345,35 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; ec580eca-a4b0-4677-9992-6c62803ce1d7 ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::24c35c8a-7587-4c52-bbfb-f7f8a198e292][24c35c8a-7587-4c52-bbfb-f7f8a198e292]]
+;; tangle blocks for current file at point
+;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
+;; call org-babel-tangle with C-u C-u
+(defun gwp/org-babel-tangle-blocks()
+  (interactive)
+  (let ((current-prefix-arg '(16)))
+    (call-interactively 'org-babel-tangle)
+    )
+  )
+
+(defun gwp/org-edit-save-and-tangle ()
+  "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+  (interactive)
+  (when (buffer-modified-p) (org-edit-src-save))
+  (org-edit-src-exit)
+  (call-interactively 'gwp/org-babel-tangle-blocks)
+  (org-edit-src-code)
+  )
+
+(defun gwp/org-babel-tangle-dwim()
+  "tangle current file blocks whenever in a sub-editing buffer or not"
+  (interactive)
+  (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
+    (call-interactively 'gwp/org-babel-tangle-blocks)
+    )
+  )
+;; 24c35c8a-7587-4c52-bbfb-f7f8a198e292 ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::8934f349-26c4-48a4-945d-5944f3baf2f3][8934f349-26c4-48a4-945d-5944f3baf2f3]]
 (setq org-src-fontify-natively nil)
 ;; 8934f349-26c4-48a4-945d-5944f3baf2f3 ends here

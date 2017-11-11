@@ -4,7 +4,22 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [1/6]
+* Memo [2/8]
+** DONE [2017-11-10 Fri] 进一步改进org-attach功能 方便移动不同的outline及其attachments
+CLOSED: [2017-11-10 Fri 20:37]
+- State "DONE"       from "TODO"       [2017-11-10 Fri 20:37]
+
+操作流程
+- 存储当前entry的附件内容: gwp/org-attach-store
+- 将当前enetry文本移动到新的文件中
+- 将之前存储的附件内容移回到新的attachment目录中来: gwp/org-attach-move
+
+此外:
+修改了变量 org-attach-store-link-p, 这样可以方便的生成指向data目录的文件链接.
+
+** TODO [2017-11-10 Fri] 进一步改进refile功能
+- 为了保留屏幕截图, refile的dest files应该只在~/Notes目录下, 不包括其下子目录中
+  的note文件.
 ** [2017-11-10 Fri] 修改tangle函数, 能更方便的tangle代码
 将gwp/org-babel-tangle-dwim绑定到 ~SPC o b~
 - 使用 ~Ctrl-c '~ 进入代码窗口
@@ -59,7 +74,7 @@ References
 - https://github.com/syl20bnr/spacemacs/issues/9603
 ** [2017-10-06 Fri] 解决org-mode加载大文件太慢的问题
 - [2017-10-07 Sat] 发现是hl-todo这个包导致的问题. 禁用该包即可.
-- [2017-10-06 Fri] 使用配置, 使用spacemacs-base distrubtion即可.
+- [2017-10-06 Fri] 使用spacemacs-base distrubtion即可.
 ** [2017-09-27 Wed] 参考github上grettke的literate programming相关设置 [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][URL]]
 优化设置, 方便在导出的代码中利用org-babel-tangle-jump-to-org函数跳转到原文件.
 ** [2017-09-24 Sun] 使用deepin-screenshot替代shutter
@@ -1413,6 +1428,8 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
          "ol" 'org-store-link
          "ob" 'gwp/org-babel-tangle-dwim
          "oj" 'org-babel-tangle-jump-to-org
+         "oAs" 'gwp/org-attach-store
+         "oAm" 'gwp/org-attach-move
          )
        )
     )
@@ -2194,7 +2211,7 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
     )
 #+END_SRC
 
-*** TODO refile
+*** refile
 #+name: c38fb49c-9ebf-4103-a404-f52514abc11f
 #+BEGIN_SRC emacs-lisp
   ;; any headline with level <= 2 is a target
@@ -2252,6 +2269,63 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
                                   (vector 'return)))))
 
 #+END_SRC
+*** org-attach
+添加附件时生成指向附件的路径, 方便org-insert-link添加.
+#+begin_src emacs-lisp
+  (setq org-attach-store-link-p 'attached)
+#+end_src
+
+使用软链接保存当前entry的附件目录.
+#+begin_src emacs-lisp
+  ;; 1. store the directory
+  (defun gwp/org-attach-store (&optional force)
+    "store org attachment directory of current enetry"
+    (interactive "P")
+    ;; make a temporary symlink to store the attachment path
+    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+    (let ((attach-dir (org-attach-dir)))
+      (when attach-dir
+        (progn
+          (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+          (make-symbolic-link attach-dir file-attach-tmp)
+          (message (format "stored to: %s" file-attach-tmp))
+          )
+        )
+      )
+    )
+#+end_src
+
+从存储的软链接中读取之前的entry的附件, 并移动到当前entry的附件目录里.
+#+begin_src emacs-lisp
+  ;; 2. move the stored directory to new location
+  (defun gwp/org-attach-move (&optional force)
+    "move stored attachments to current entry"
+    (interactive "P")
+    ;; ~/.emacs.d/.cache/.gwp-attach-tmp
+    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+
+    (if (file-exists-p file-attach-tmp)
+        ;; create attachment directory if not exists using org-attach-dir function
+        (let ((attach-dir (org-attach-dir t)))
+          (progn
+            ;; read old attach directory from previous stored symlink
+            (setq attach-dir-old (file-chase-links file-attach-tmp))
+            ;; sanity check
+            (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
+                (progn
+                  (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
+                  ;; remove stale tmp-link
+                  (delete-file file-attach-tmp)
+                  )
+              (message "cancelled")
+              )
+            )
+          )
+      (message (format "no stored symbolic link found: %s" file-attach-tmp))
+      )
+    )
+#+end_src
+
 *** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+name: 4136bddd-2d62-4d66-8f84-aa28e09006ca

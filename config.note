@@ -4,7 +4,7 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [2/8]
+* Memo [3/8]
 ** DONE [2017-11-10 Fri] 进一步改进org-attach功能 方便移动不同的outline及其attachments
 CLOSED: [2017-11-10 Fri 20:37]
 - State "DONE"       from "TODO"       [2017-11-10 Fri 20:37]
@@ -53,7 +53,15 @@ References
 - 要有清理旧的(不存在)文件的功能
 
 ** [2017-10-26 Thu] 纳入几个与emacs相关的scripts统一管理
-** TODO [2017-10-24 Tue] org-mode不同subtree之间如何跳转
+** DONE [2017-10-24 Tue] org-mode不同headings之间如何跳转
+CLOSED: [2017-11-12 Sun 15:39]
+- State "DONE"       from "TODO"       [2017-11-12 Sun 15:39]
+- helm-org-in-buffer-headings (最好用): 绑定到 ~SPC o j~
+- org-goto (org-mode内置): ~Ctrl-c Ctrl-j~
+- helm-org-rifle 也许可以用来替代swoop [[https://github.com/alphapapa/helm-org-rifle][Rifle through your Org buffers and acquire your target]]
+
+References:
+- [[https://emacs.stackexchange.com/questions/32617/how-to-jump-directly-to-an-org-headline][org mode - how to jump directly to an org-headline? - Emacs Stack Exchange]]
 ** TODO [2017-10-21 Sat] dired: 不显示隐藏文件
 ** [2017-10-21 Sat] How Fast Can You Tangle In Org-Mode [[https://www.wisdomandwonder.com/article/10630/how-fast-can-you-tangle-in-org-mode][URL]]
 这个存疑. 暂时对tangle速度比较满意, 不折腾了. 备忘吧.
@@ -298,7 +306,11 @@ Anything that isn't just setting a variable should 99% be in user-config.
 SPC u
 * Literate programming notes
 - 在代码窗口编辑时, 使用C-x C-s来保存buffer. 不要使用:w, 这样会多出一份代码的临时文件
-- 代码修改完成后, 使用gwp/org-babel-tangle-block函数来仅tangle当前block对应的代码文件.
+- 代码修改后, 使用gwp/org-babel-tangle-block函数来仅tangle当前block对应的代码文
+  件. 可以在代码编辑窗口直接使用, 该函数会自动保存代码.
+- 使用swoop来实现常规跳转, 使用helm-org-in-buffer-headings实验代码块跳转.
+- 重要的tangle参数已在配置文件中做全局设置, 比如: ~padline~ ~mkdirp~ ~comments~
+
 * scripts
 ** org-capture
 #+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
@@ -1427,7 +1439,8 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
          "oc" 'org-capture
          "ol" 'org-store-link
          "ob" 'gwp/org-babel-tangle-dwim
-         "oj" 'org-babel-tangle-jump-to-org
+         "oj" 'helm-org-in-buffer-headings
+         "oJ" 'org-babel-tangle-jump-to-org
          "oAs" 'gwp/org-attach-store
          "oAm" 'gwp/org-attach-move
          )
@@ -2271,11 +2284,13 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+END_SRC
 *** org-attach
 添加附件时生成指向附件的路径, 方便org-insert-link添加.
+#+name: 73c2cba6-d7ba-4692-b09a-d8863a31a338
 #+begin_src emacs-lisp
   (setq org-attach-store-link-p 'attached)
 #+end_src
 
 使用软链接保存当前entry的附件目录.
+#+name: bde4a52b-13fe-4932-a274-28ad7cc14ac6
 #+begin_src emacs-lisp
   ;; 1. store the directory
   (defun gwp/org-attach-store (&optional force)
@@ -2296,6 +2311,7 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+end_src
 
 从存储的软链接中读取之前的entry的附件, 并移动到当前entry的附件目录里.
+#+name: 140c8695-f25d-4512-b0f1-1fe4c8edd5c2
 #+begin_src emacs-lisp
   ;; 2. move the stored directory to new location
   (defun gwp/org-attach-move (&optional force)

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-01 Wed 10:10>
+;;  UPDATED:    <2017-11-13 Mon 09:46>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -71,7 +71,7 @@ values."
      ;; version-control  ;; will slow down writing buffer
      python
      lua
-     ;; pdf-tools
+     pdf-tools
      (org :packages
           (not org-projectile org-download))
      gwp

@@ -4,7 +4,20 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [3/8]
+* Memo [3/9]
+** TODO [2017-11-13 Mon] 完善org-to-read 实现类似zotfile的功能
+- 自动将当前headline下的附件放至某个READ目录
+- 手机上阅读并注释, 并同步回修改.
+- 切回DONE状态时从READ目录里取回修改后的版本, 并导出pdf注释.
+
+References
+- [[https://github.com/machc/pdf-tools-org][machc/pdf-tools-org: pdf-tools and org-mode integration]]
+- [[http://tech.memoryimprintstudio.com/pdf-annotation-related-tools/][PDF Annotation Related Tools – Emacs, Arduino, Raspberry Pi, Linux and Programming etc]]
+- [[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][View and annotate PDFs in Emacs with PDF-tools | Pragmatic Emacs]]
+- [[https://matt.hackinghistory.ca/2015/11/11/note-taking-with-pdf-tools/][Note Taking with PDF Tools | Thoughts on Code & History]]
+- [[https://github.com/politza/pdf-tools/issues/134][extract annotations? · Issue #134 · politza/pdf-tools]]
+- [[https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/][Help me with my org-mode workflow for note-taking? : emacs]]
+
 ** DONE [2017-11-10 Fri] 进一步改进org-attach功能 方便移动不同的outline及其attachments
 CLOSED: [2017-11-10 Fri 20:37]
 - State "DONE"       from "TODO"       [2017-11-10 Fri 20:37]
@@ -304,7 +317,17 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC z x +/-
 ** universal arguments
 SPC u
-* Literate programming notes
+* TODO Research Literature Management Workflow
+[2017-11-13 Mon] zotxt更新了 可以和zotero standalone一起用. [[https://gitlab.com/egh/zotxt/commits/master][URL]]
+
+References
+- [[https://codearsonist.com/reading-for-programmers][Piotr Limanowski: Reading for Programmers]]
+- [[https://www.researchgate.net/post/What_reference_manager_is_used_for_Emacs_users][What reference manager is used for Emacs users?]]
+- [[http://www.mkbehr.com/posts/a-research-workflow-with-zotero-and-org-mode/][A research workflow with Zotero and Org mode | mkbehr.com]]
+- [[https://emacs.stackexchange.com/questions/24725/zotero-workflow-into-emacs][org mode - zotero workflow into emacs? - Emacs Stack Exchange]]
+
+
+* Literate Programming Workflow
 - 在代码窗口编辑时, 使用C-x C-s来保存buffer. 不要使用:w, 这样会多出一份代码的临时文件
 - 代码修改后, 使用gwp/org-babel-tangle-block函数来仅tangle当前block对应的代码文
   件. 可以在代码编辑窗口直接使用, 该函数会自动保存代码.
@@ -679,7 +702,7 @@ SPC u
        ;; version-control  ;; will slow down writing buffer
        python
        lua
-       ;; pdf-tools
+       pdf-tools
        (org :packages
             (not org-projectile org-download))
        gwp

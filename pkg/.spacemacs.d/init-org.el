@@ -466,6 +466,8 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; [[file:~/Install/configs/spacemacs/config.note::7150b085-c305-4285-9fc6-2c5496e0876f][7150b085-c305-4285-9fc6-2c5496e0876f]]
 (setq org-capture-templates
       '(
+        ("i" "interleave" plain (file "~/annotation.note")
+         "#+setupfile: ~/Notes/common.org\n#+INTERLEAVE_PDF: %x\n%?" :prepend t)
         ("n" "Note" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
@@ -542,6 +544,59 @@ This is a copy and paste. Additional languages would warrant a refactor."
     (execute-kbd-macro (vconcat base-vector
                                 (vector 'return)))))
 ;; c38fb49c-9ebf-4103-a404-f52514abc11f ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::73c2cba6-d7ba-4692-b09a-d8863a31a338][73c2cba6-d7ba-4692-b09a-d8863a31a338]]
+(setq org-attach-store-link-p 'attached)
+;; 73c2cba6-d7ba-4692-b09a-d8863a31a338 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::bde4a52b-13fe-4932-a274-28ad7cc14ac6][bde4a52b-13fe-4932-a274-28ad7cc14ac6]]
+;; 1. store the directory
+(defun gwp/org-attach-store (&optional force)
+  "store org attachment directory of current enetry"
+  (interactive "P")
+  ;; make a temporary symlink to store the attachment path
+  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+  (let ((attach-dir (org-attach-dir)))
+    (when attach-dir
+      (progn
+        (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+        (make-symbolic-link attach-dir file-attach-tmp)
+        (message (format "stored to: %s" file-attach-tmp))
+        )
+      )
+    )
+  )
+;; bde4a52b-13fe-4932-a274-28ad7cc14ac6 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::140c8695-f25d-4512-b0f1-1fe4c8edd5c2][140c8695-f25d-4512-b0f1-1fe4c8edd5c2]]
+;; 2. move the stored directory to new location
+(defun gwp/org-attach-move (&optional force)
+  "move stored attachments to current entry"
+  (interactive "P")
+  ;; ~/.emacs.d/.cache/.gwp-attach-tmp
+  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+
+  (if (file-exists-p file-attach-tmp)
+      ;; create attachment directory if not exists using org-attach-dir function
+      (let ((attach-dir (org-attach-dir t)))
+        (progn
+          ;; read old attach directory from previous stored symlink
+          (setq attach-dir-old (file-chase-links file-attach-tmp))
+          ;; sanity check
+          (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
+              (progn
+                (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
+                ;; remove stale tmp-link
+                (delete-file file-attach-tmp)
+                )
+            (message "cancelled")
+            )
+          )
+        )
+    (message (format "no stored symbolic link found: %s" file-attach-tmp))
+    )
+  )
+;; 140c8695-f25d-4512-b0f1-1fe4c8edd5c2 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::4136bddd-2d62-4d66-8f84-aa28e09006ca][4136bddd-2d62-4d66-8f84-aa28e09006ca]]
 (require 'org-man)

@@ -55,9 +55,10 @@ CLOSED: [2017-11-01 Wed 10:34]
 - State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
 
 在chromium中建立如下的bookmarklet (new style)
-: javascript:location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "[untitled page]")
+: javascript:location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "untitled page")
 
 References
+- org-capture.el
 - https://github.com/alphapapa/org-protocol-capture-html
 - org capture extensions: https://github.com/sprig/org-capture-extension
 - [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol.el – Intercept calls from emacsclient to trigger custom actions]] (outdated)
@@ -318,9 +319,20 @@ Anything that isn't just setting a variable should 99% be in user-config.
 ** universal arguments
 SPC u
 * TODO Research Literature Management Workflow
-[2017-11-13 Mon] zotxt更新了 可以和zotero standalone一起用. [[https://gitlab.com/egh/zotxt/commits/master][URL]]
+将annotation.note放到zotero内置库里的优点和问题:
+- 优点: 以zotero为中心进行数据管理. 从文献到笔记很方便.
+- 优点: note和pdf路径相对稳定, 不用担心更换系统后文件路径变化导致的问题.
+- 问题: 不能方便地在zotero界面里进行搜索 (需要fulltext index) (但可以用自编工具
+  notesearch来处理, 不过需要定期更新cache)
 
-References
+** 使用interleave批注流程
+- 在zotero界面, 选中待批注的PDF, "copy attachment path"
+- 打开org-capture, 使用interleave模板, 生成~/annotation.note
+- 在zotero界面, 使用zotfile的 "Attach New File"功能, 自动将annotation.note加入附
+  件. (注意需要修改设置, 将note列入zotfile可管理的文件类型)
+- 在zotero界面, 双击打开附入的note文件, 进入interleave编辑模式.
+
+** References
 - [[https://codearsonist.com/reading-for-programmers][Piotr Limanowski: Reading for Programmers]]
 - [[https://www.researchgate.net/post/What_reference_manager_is_used_for_Emacs_users][What reference manager is used for Emacs users?]]
 - [[http://www.mkbehr.com/posts/a-research-workflow-with-zotero-and-org-mode/][A research workflow with Zotero and Org mode | mkbehr.com]]
@@ -1085,6 +1097,7 @@ References
       ob-ipython
       org-attach-screenshot
       fcitx
+      interleave                 ;; for PDF annotations
       )
 
     "The list of Lisp packages required by the gwp layer.")
@@ -1163,6 +1176,7 @@ commit之前更新时间戳
       )
     )
 #+END_SRC
+
 *** init screenshot
 org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
 
@@ -1329,6 +1343,15 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     )
 
 #+END_SRC
+*** init interleave
+#+name: 3d005e63-c6da-4d15-ad1f-2d8de210e78d
+#+begin_src emacs-lisp
+  (defun gwp/init-interleave ()
+    (use-package interleave
+      :ensure t
+      )
+    )
+#+end_src
 ** gwp/config.el
 :PROPERTIES:
 :header-args: :tangle pkg/.spacemacs.d/layers/gwp/config.el :comments link :padline yes :mkdirp yes
@@ -2224,6 +2247,8 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(
+          ("i" "interleave" plain (file "~/annotation.note")
+           "#+setupfile: ~/Notes/common.org\n#+INTERLEAVE_PDF: %x\n%?" :prepend t)
           ("n" "Note" entry (file "~/Notes/refile.note")
            "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
           ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")

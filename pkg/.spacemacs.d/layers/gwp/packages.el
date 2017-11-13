@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-10-27 Fri 19:35>
+;;  UPDATED:    <2017-11-13 Mon 20:57>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -40,6 +40,7 @@
     ob-ipython
     org-attach-screenshot
     fcitx
+    interleave                 ;; for PDF annotations
     )
 
   "The list of Lisp packages required by the gwp layer.")
@@ -170,3 +171,11 @@
     )
   )
 ;; 8d9d4320-8a15-4b4b-8b4d-40c58b895804 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::3d005e63-c6da-4d15-ad1f-2d8de210e78d][3d005e63-c6da-4d15-ad1f-2d8de210e78d]]
+(defun gwp/init-interleave ()
+  (use-package interleave
+    :ensure t
+    )
+  )
+;; 3d005e63-c6da-4d15-ad1f-2d8de210e78d ends here

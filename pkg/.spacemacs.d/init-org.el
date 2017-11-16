@@ -559,7 +559,12 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (let ((attach-dir (org-attach-dir)))
     (when attach-dir
       (progn
+        ;; remove existing directory
+        (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
+        ;; remove existing file and symlink
         (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+        ;; remove broken symlink
+        (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
         (make-symbolic-link attach-dir file-attach-tmp)
         (message (format "stored to: %s" file-attach-tmp))
         )

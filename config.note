@@ -2337,7 +2337,14 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
   (setq org-attach-store-link-p 'attached)
 #+end_src
 
-使用软链接保存当前entry的附件目录.
+使用软链接保存当前entry的附件目录. 注意make-symbolic-link的特殊性:
+- 如果dest是个目录, 会在目录下建立目录
+- 如果dest是个文件或symlink, 会报错
+
+file-exists-p函数对symlink的特殊性:
+- 如果测试目标是个boken symlink, 该函数返回nil
+- 此外后续再symlink, 仍然会报错.
+
 #+name: bde4a52b-13fe-4932-a274-28ad7cc14ac6
 #+begin_src emacs-lisp
   ;; 1. store the directory
@@ -2349,7 +2356,12 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
     (let ((attach-dir (org-attach-dir)))
       (when attach-dir
         (progn
+          ;; remove existing directory
+          (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
+          ;; remove existing file and symlink
           (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+          ;; remove broken symlink
+          (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
           (make-symbolic-link attach-dir file-attach-tmp)
           (message (format "stored to: %s" file-attach-tmp))
           )

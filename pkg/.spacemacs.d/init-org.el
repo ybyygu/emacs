@@ -625,7 +625,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (progn
     (setq org-download-method 'attach)
     (setq org-download-image-latex-width 600)
-    (setq org-download-screenshot-method "deepin-screenshot -s %s 2>/dev/null" )
+    (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
     )
   )
 ;; fb26a313-8d58-4e2a-b515-3314d860d44c ends here

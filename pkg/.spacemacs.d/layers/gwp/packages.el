@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-13 Mon 20:57>
+;;  UPDATED:    <2017-11-17 Fri 10:40>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -32,13 +32,12 @@
   '(
     (vc :location built-in)
     (org)                      ;; org-plus-contrib
-    (org-download :excluded t) ;; shipped with spacemacs in org layer
     (hl-todo :excluded t)      ;; shipped with spacemacs in spacemacs-ui-visual layer
     cnfonts                    ;; chinese fonts setup
     cal-china-x
     ox-latex-chinese
     ob-ipython
-    org-attach-screenshot
+    ;; org-attach-screenshot   ;; disabled since 2017-11-17
     fcitx
     interleave                 ;; for PDF annotations
     )
@@ -109,18 +108,6 @@
     )
   )
 ;; d1097c8f-3faa-4853-8786-d9d0d9c04575 ends here
-
-;; [[file:~/Install/configs/spacemacs/config.note::8b9c6195-c08c-44d8-b5c6-2698402f3cb6][8b9c6195-c08c-44d8-b5c6-2698402f3cb6]]
-(defun gwp/init-org-attach-screenshot ()
-  (use-package org-attach-screenshot
-               :after org
-               :bind
-               (("C-c <insert>" . org-attach-screenshot))
-               :config
-               (setq org-attach-screenshot-command-line "deepin-screenshot -s %f")
-               )
-  )
-;; 8b9c6195-c08c-44d8-b5c6-2698402f3cb6 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::3ef398cc-9c73-4978-b31c-35f2aa476c44][3ef398cc-9c73-4978-b31c-35f2aa476c44]]
 (defun gwp/init-cnfonts ()

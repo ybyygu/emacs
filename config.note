@@ -4,8 +4,19 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [3/9]
+* Memo [4/10]
+** DONE [2017-11-17 Fri] 改进屏幕截图功能
+CLOSED: [2017-11-17 Fri 10:51]
+- State "DONE"       from "TODO"       [2017-11-17 Fri 10:51]
+
+org-download是ivy作者写的, 再尝试下.
+
+注意John Kitchin给的代码:
+- [[https://emacs.stackexchange.com/questions/19560/interactively-crop-screenshot-region-and-insert-link-to-local-image-in-org-buffe][org mode - interactively crop screenshot region and insert link to local image in org buffer - Emacs Stack Exchange]]
+
 ** TODO [2017-11-13 Mon] 完善org-to-read 实现类似zotfile的功能
+[2017-11-17 Fri] 类似没太大必要. 有更流畅的方式?
+
 - 自动将当前headline下的附件放至某个READ目录
 - 手机上阅读并注释, 并同步回修改.
 - 切回DONE状态时从READ目录里取回修改后的版本, 并导出pdf注释.
@@ -716,7 +727,7 @@ SPC u
        lua
        pdf-tools
        (org :packages
-            (not org-projectile org-download))
+            (not org-projectile))
        gwp
        )
      ;; List of additional packages that will be installed without being
@@ -1089,19 +1100,19 @@ SPC u
     '(
       (vc :location built-in)
       (org)                      ;; org-plus-contrib
-      (org-download :excluded t) ;; shipped with spacemacs in org layer
       (hl-todo :excluded t)      ;; shipped with spacemacs in spacemacs-ui-visual layer
       cnfonts                    ;; chinese fonts setup
       cal-china-x
       ox-latex-chinese
       ob-ipython
-      org-attach-screenshot
+      ;; org-attach-screenshot   ;; disabled since 2017-11-17
       fcitx
       interleave                 ;; for PDF annotations
       )
 
     "The list of Lisp packages required by the gwp layer.")
 #+END_SRC
+
 *** init calendar
 cal-china-x: https://github.com/xwl/cal-china-x
 
@@ -1178,6 +1189,8 @@ commit之前更新时间戳
 #+END_SRC
 
 *** init screenshot
+[2017-11-17 Fri] org-download更强大. 使用org-download来实现相同的功能.
+
 org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
 
 感觉这个包比 org-download 质量更高一些. 优点:
@@ -1186,7 +1199,7 @@ org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
 
 设置使用deepin-screenshot
 #+name: 8b9c6195-c08c-44d8-b5c6-2698402f3cb6
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun gwp/init-org-attach-screenshot ()
     (use-package org-attach-screenshot
                  :after org
@@ -2398,6 +2411,40 @@ file-exists-p函数对symlink的特殊性:
             )
           )
       (message (format "no stored symbolic link found: %s" file-attach-tmp))
+      )
+    )
+#+end_src
+*** screenshot
+使用org-download来实现屏幕截图的功能
+- 自动隐藏emacs窗口, 方便截取其它程序
+- 图片自动保存到org attachment目录
+- 自动添加图片显示参数, 设定在org中显示的大小
+- 可以使用org-download-delete来删除当前image
+
+#+name: fb26a313-8d58-4e2a-b515-3314d860d44c
+#+begin_src emacs-lisp
+  ;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
+  (defun gwp/take-screenshot ()
+    "Minimize emacs, and take a screenshot using org-download"
+    (interactive)
+
+    (suspend-frame)
+    (org-download-screenshot)
+    (raise-frame)
+    )
+
+  (use-package org-download
+    :after org
+    :ensure t
+    :bind
+    (("C-c <insert>" . gwp/take-screenshot)
+     ("C-c <delete>" . org-download-delete)
+     )
+    :config
+    (progn
+      (setq org-download-method 'attach)
+      (setq org-download-image-latex-width 600)
+      (setq org-download-screenshot-method "deepin-screenshot -s %s 2>/dev/null" )
       )
     )
 #+end_src

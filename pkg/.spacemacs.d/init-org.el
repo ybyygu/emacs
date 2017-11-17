@@ -603,6 +603,33 @@ This is a copy and paste. Additional languages would warrant a refactor."
   )
 ;; 140c8695-f25d-4512-b0f1-1fe4c8edd5c2 ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::fb26a313-8d58-4e2a-b515-3314d860d44c][fb26a313-8d58-4e2a-b515-3314d860d44c]]
+;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
+(defun gwp/take-screenshot ()
+  "Minimize emacs, and take a screenshot using org-download"
+  (interactive)
+
+  (suspend-frame)
+  (org-download-screenshot)
+  (raise-frame)
+  )
+
+(use-package org-download
+  :after org
+  :ensure t
+  :bind
+  (("C-c <insert>" . gwp/take-screenshot)
+   ("C-c <delete>" . org-download-delete)
+   )
+  :config
+  (progn
+    (setq org-download-method 'attach)
+    (setq org-download-image-latex-width 600)
+    (setq org-download-screenshot-method "deepin-screenshot -s %s 2>/dev/null" )
+    )
+  )
+;; fb26a313-8d58-4e2a-b515-3314d860d44c ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::4136bddd-2d62-4d66-8f84-aa28e09006ca][4136bddd-2d62-4d66-8f84-aa28e09006ca]]
 (require 'org-man)
 

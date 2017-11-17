@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-16 Thu 17:09>
+;;  UPDATED:    <2017-11-17 Fri 10:47>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -73,7 +73,7 @@ values."
      lua
      pdf-tools
      (org :packages
-          (not org-projectile org-download))
+          (not org-projectile))
      gwp
      )
    ;; List of additional packages that will be installed without being

@@ -624,7 +624,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
   :config
   (progn
     (setq org-download-method 'attach)
-    (setq org-download-image-latex-width 600)
+    (setq org-download-image-latex-width 900)
     (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
     )
   )

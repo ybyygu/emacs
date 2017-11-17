@@ -161,8 +161,7 @@ Tips:
 
 ** [2016-12-06 Tue] 使用 chinese layer 中的 fcitx 包, 方便中英文切换. 同时使用 pangu-spacing
 ** [2016-12-04 Sun] 启用 colors layer 配色更醒目
-** [2016-12-04 Sun] python 环境下启用 ipython
-: SPC m s i,
+** [2016-12-04 Sun] python 环境下启用 ipython ~SPC m s i~
 ** TODO [2016-10-23 Sun] 以后可以研究下 Kitchin 的 scimax, 将他的配置集成进来 [[https://github.com/jkitchin/scimax][URL]]
 ** [2016-10-17 Mon] 大致成了 以后多花点时间学习下 spacemacs 的命令[[http://spacemacs.org/doc/DOCUMENTATION.html#commands][ URL]] :Summary:
 1. 删除空格: SPC x d w
@@ -1454,7 +1453,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   ;; this seems work
   (defalias 'server-kill-buffer-query-function '(lambda () t))
 #+end_src
-
 *** abbreviations
 系统自带的 abbrev 功能比较简单. 可以用 M-/来激活补全.
 
@@ -1468,6 +1466,16 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     (quietly-read-abbrev-file))
   (setq save-abbrevs 'silently)
 #+END_SRC
+*** recent files
+#+name: 33866aac-efb3-45f7-bfc2-f450db84c76f
+#+begin_src emacs-lisp
+  (require 'recentf)
+  ;; the default is only 20
+  (setq recentf-max-saved-items 1000)
+  (add-to-list 'recentf-exclude "\.png$")
+  (add-to-list 'recentf-exclude "\.pdf$")
+#+end_src
+
 ** gwp/keybindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.spacemacs.d/layers/gwp/keybindings.el :comments link :padline yes :mkdirp yes
@@ -2443,7 +2451,7 @@ file-exists-p函数对symlink的特殊性:
     :config
     (progn
       (setq org-download-method 'attach)
-      (setq org-download-image-latex-width 600)
+      (setq org-download-image-latex-width 900)
       (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
       )
     )

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-10-27 Fri 19:35>
+;;  UPDATED:    <2017-11-17 Fri 12:54>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -68,3 +68,11 @@
   (quietly-read-abbrev-file))
 (setq save-abbrevs 'silently)
 ;; e4c5c4a4-3c01-4361-b375-73b81af1ed18 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::33866aac-efb3-45f7-bfc2-f450db84c76f][33866aac-efb3-45f7-bfc2-f450db84c76f]]
+(require 'recentf)
+;; the default is only 20
+(setq recentf-max-saved-items 1000)
+(add-to-list 'recentf-exclude "\.png$")
+(add-to-list 'recentf-exclude "\.pdf$")
+;; 33866aac-efb3-45f7-bfc2-f450db84c76f ends here

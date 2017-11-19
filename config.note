@@ -4,7 +4,11 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [4/10]
+* Memo [4/11]
+** [2017-11-19 Sun] 添加新功能, 在buffer或dired当前目录中打开gnome-terminal
+按键: ~SPC o T~
+
+** TODO [2017-11-17 Fri] 使用DND的方式来添加附件 [[https://matt.hackinghistory.ca/2015/07/15/mailing-subtrees-with-attachments/][Mailing subtrees with Attachments | Thoughts on Code & History]]
 ** DONE [2017-11-17 Fri] 改进屏幕截图功能
 CLOSED: [2017-11-17 Fri 10:51]
 - State "DONE"       from "TODO"       [2017-11-17 Fri 10:51]
@@ -328,6 +332,7 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC z x +/-
 ** universal arguments
 SPC u
+
 * TODO Research Literature Management Workflow
 将annotation.note放到zotero内置库里的优点和问题:
 - 优点: 以zotero为中心进行数据管理. 从文献到笔记很方便.
@@ -347,7 +352,6 @@ SPC u
 - [[https://www.researchgate.net/post/What_reference_manager_is_used_for_Emacs_users][What reference manager is used for Emacs users?]]
 - [[http://www.mkbehr.com/posts/a-research-workflow-with-zotero-and-org-mode/][A research workflow with Zotero and Org mode | mkbehr.com]]
 - [[https://emacs.stackexchange.com/questions/24725/zotero-workflow-into-emacs][org mode - zotero workflow into emacs? - Emacs Stack Exchange]]
-
 
 * Literate Programming Workflow
 - 在代码窗口编辑时, 使用C-x C-s来保存buffer. 不要使用:w, 这样会多出一份代码的临时文件
@@ -1476,6 +1480,29 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   (add-to-list 'recentf-exclude "\.pdf$")
 #+end_src
 
+*** open in terminal
+emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
+
+#+name: 9dfdbbc5-231c-433c-a756-02c7ac96aeb9
+#+begin_src emacs-lisp
+  (defun gwp/open-in-gnome-terminal (the-directory)
+    "Open `the-directory' in external gnome-terminal."
+    (let ((process-connection-type nil))
+      (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+      )
+    )
+
+  (defun gwp/open-terminal-here ()
+    "Open the current dir in a new terminal window"
+    (interactive)
+    (let ((default-directory (or (and (eq major-mode 'dired-mode)
+                                      (dired-current-directory))
+                                 default-directory)))
+      (gwp/open-in-gnome-terminal (expand-file-name default-directory))
+      )
+    )
+#+end_src
+
 ** gwp/keybindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.spacemacs.d/layers/gwp/keybindings.el :comments link :padline yes :mkdirp yes
@@ -1506,6 +1533,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
          "oc" 'org-capture
          "ol" 'org-store-link
          "ob" 'gwp/org-babel-tangle-dwim
+         "oT" 'gwp/open-terminal-here
          "oj" 'helm-org-in-buffer-headings
          "oJ" 'org-babel-tangle-jump-to-org
          "oAs" 'gwp/org-attach-store

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-17 Fri 12:54>
+;;  UPDATED:    <2017-11-19 Sun 15:24>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -76,3 +76,22 @@
 (add-to-list 'recentf-exclude "\.png$")
 (add-to-list 'recentf-exclude "\.pdf$")
 ;; 33866aac-efb3-45f7-bfc2-f450db84c76f ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::9dfdbbc5-231c-433c-a756-02c7ac96aeb9][9dfdbbc5-231c-433c-a756-02c7ac96aeb9]]
+(defun gwp/open-in-gnome-terminal (the-directory)
+  "Open `the-directory' in external gnome-terminal."
+  (let ((process-connection-type nil))
+    (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    )
+  )
+
+(defun gwp/open-terminal-here ()
+  "Open the current dir in a new terminal window"
+  (interactive)
+  (let ((default-directory (or (and (eq major-mode 'dired-mode)
+                                    (dired-current-directory))
+                               default-directory)))
+    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
+    )
+  )
+;; 9dfdbbc5-231c-433c-a756-02c7ac96aeb9 ends here

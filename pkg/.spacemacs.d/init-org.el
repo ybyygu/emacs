@@ -467,7 +467,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 (setq org-capture-templates
       '(
         ("i" "interleave" plain (file "~/annotation.note")
-         "#+setupfile: ~/Notes/common.org\n#+INTERLEAVE_PDF: %x\n%?" :prepend t)
+         "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
         ("n" "Note" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")

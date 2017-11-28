@@ -161,7 +161,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
    '((emacs-lisp . t)                   ;; this is the default
      (R . t)
      (python . t)
-     (ipython . t)
      (perl . t)
      (sed . t)
      (shell . t)

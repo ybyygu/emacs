@@ -577,7 +577,7 @@ SPC u
 * desktop integration
 ** emacsclient-open
 #+name: 69946fa5-45c4-4c87-9de5-eb4a525ff5c8
-#+begin_src text :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes
+#+begin_src config :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
   [Desktop Entry]
   Version=1.0
   Name=Emacs Client - GWP
@@ -749,7 +749,7 @@ SPC u
      ;; `used-but-keep-unused' installs only the used packages but won't uninstall
      ;; them if they become unused. `all' installs *all* packages supported by
      ;; Spacemacs and never uninstall them. (default is `used-only')
-     dotspacemacs-install-packages 'used-but-keep-unused)
+     dotspacemacs-install-packages 'used-only)
     )
 #+END_SRC
 ** init
@@ -1107,7 +1107,6 @@ SPC u
       cnfonts                    ;; chinese fonts setup
       cal-china-x
       ox-latex-chinese
-      ob-ipython
       ;; org-attach-screenshot   ;; disabled since 2017-11-17
       fcitx
       interleave                 ;; for PDF annotations
@@ -1349,13 +1348,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 
   (defun gwp/init-ox-latex-chinese ()
     ;;
-    )
-
-  (defun gwp/init-ob-ipython ()
-    ;;
-    (use-package ob-ipython
-      :defer t
-      )
     )
 
 #+END_SRC
@@ -1929,7 +1921,6 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
      '((emacs-lisp . t)                   ;; this is the default
        (R . t)
        (python . t)
-       (ipython . t)
        (perl . t)
        (sed . t)
        (shell . t)

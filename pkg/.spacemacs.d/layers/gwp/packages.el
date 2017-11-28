@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-17 Fri 10:40>
+;;  UPDATED:    <2017-11-28 Tue 10:03>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -36,7 +36,6 @@
     cnfonts                    ;; chinese fonts setup
     cal-china-x
     ox-latex-chinese
-    ob-ipython
     ;; org-attach-screenshot   ;; disabled since 2017-11-17
     fcitx
     interleave                 ;; for PDF annotations
@@ -149,13 +148,6 @@
 
 (defun gwp/init-ox-latex-chinese ()
   ;;
-  )
-
-(defun gwp/init-ob-ipython ()
-  ;;
-  (use-package ob-ipython
-    :defer t
-    )
   )
 ;; 8d9d4320-8a15-4b4b-8b4d-40c58b895804 ends here
 

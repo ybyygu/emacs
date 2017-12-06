@@ -292,6 +292,9 @@ stow:
 
 * tips
 阅读文档 ~SPC h r~
+** iedit mode
+使用vim的方式搜索时, 可以进入iedit-mode, 同时编辑多处匹配项. 退出时, 按两下ESC.
+
 ** Editing styles
 =dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
 ** 删除空格
@@ -1517,6 +1520,8 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 #+begin_src emacs-lisp
   (eval-after-load "org"
     '(progn
+       ;; disable org-toggle-comment since I never use this.
+       (put 'org-toggle-comment 'disabled t)
        (org-defkey org-mode-map [(meta return)] 'org-meta-return)
        ;; use o as org global bindings
        (spacemacs/set-leader-keys

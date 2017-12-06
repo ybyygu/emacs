@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-19 Sun 15:24>
+;;  UPDATED:    <2017-12-06 Wed 09:37>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -13,6 +13,8 @@
 ;; [[file:~/Install/configs/spacemacs/config.note::3631de70-8cb6-494d-bb97-c8d6100f7993][3631de70-8cb6-494d-bb97-c8d6100f7993]]
 (eval-after-load "org"
   '(progn
+     ;; disable org-toggle-comment since I never use this.
+     (put 'org-toggle-comment 'disabled t)
      (org-defkey org-mode-map [(meta return)] 'org-meta-return)
      ;; use o as org global bindings
      (spacemacs/set-leader-keys

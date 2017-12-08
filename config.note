@@ -731,6 +731,7 @@ SPC u
        ;; version-control  ;; will slow down writing buffer
        python
        lua
+       rust
        pdf-tools
        (org :packages
             (not org-projectile))

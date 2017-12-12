@@ -5,6 +5,15 @@
 # Created: 2016-10-14 14:20
 
 * Memo [4/11]
+** [2017-12-12 Tue] 修改org-download设置, 调整odt导出参数
+自定义org-download-annotate-function
+- 自动添加图片的 ~name~ ~caption~, 方便odt导出时图片自动编号及交叉引用.
+- 自动添加 ~#+attr_org~ 属性, 设置org预览图片的大小
+- 自动添加 ~#+attr_odt~ 属性, 设置odt导出时的图片大小
+
+References
+- [[http://kitchingroup.cheme.cmu.edu/blog/2015/07/10/Drag-images-and-files-onto-org-mode-and-insert-a-link-to-them/][Drag images and files onto org-mode and insert a link to them]]
+
 ** [2017-11-19 Sun] 添加新功能, 在buffer或dired当前目录中打开gnome-terminal
 按键: ~SPC o T~
 
@@ -1304,6 +1313,7 @@ org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
                                   (vector 'return)))))
 
 #+END_SRC
+
 *** init cnfonts
 使用chfonts包来处理中文显示设置
 
@@ -2466,6 +2476,23 @@ file-exists-p函数对symlink的特殊性:
     (raise-frame)
     )
 
+  (defun gwp/org-download-annotate (link)
+    "Annotate LINK with the time of download."
+
+    (format (concat
+             ;; for easy to delete
+             (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
+             (concat  "#+caption: " (read-input "Caption: ") "\n")
+             ;; set unique figure name
+             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+             ;; unit in px; for displaying in org-mode
+             "#+attr_org: :width 600\n"
+             ;; unit in cm; for exporting as odt
+             "#+attr_odt: :width 8"
+             )
+            )
+    )
+
   (use-package org-download
     :after org
     :ensure t
@@ -2476,8 +2503,9 @@ file-exists-p函数对symlink的特殊性:
     :config
     (progn
       (setq org-download-method 'attach)
-      (setq org-download-image-html-width 900) ; in px
-      (setq org-download-image-latex-width 16)  ; in cm
+      (setq org-download-annotate-function 'gwp/org-download-annotate)
+      ;; (setq org-download-image-html-width 900) ; in px
+      ;; (setq org-download-image-latex-width 16)  ; in cm
       (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
       )
     )

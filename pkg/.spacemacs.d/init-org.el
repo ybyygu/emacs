@@ -613,6 +613,23 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (raise-frame)
   )
 
+(defun gwp/org-download-annotate (link)
+  "Annotate LINK with the time of download."
+
+  (format (concat
+           ;; for easy to delete
+           (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
+           (concat  "#+caption: " (read-input "Caption: ") "\n")
+           ;; set unique figure name
+           (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+           ;; unit in px; for displaying in org-mode
+           "#+attr_org: :width 600\n"
+           ;; unit in cm; for exporting as odt
+           "#+attr_odt: :width 8"
+           )
+          )
+  )
+
 (use-package org-download
   :after org
   :ensure t
@@ -623,8 +640,9 @@ This is a copy and paste. Additional languages would warrant a refactor."
   :config
   (progn
     (setq org-download-method 'attach)
-    (setq org-download-image-html-width 900) ; in px
-    (setq org-download-image-latex-width 16)  ; in cm
+    (setq org-download-annotate-function 'gwp/org-download-annotate)
+    ;; (setq org-download-image-html-width 900) ; in px
+    ;; (setq org-download-image-latex-width 16)  ; in cm
     (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
     )
   )

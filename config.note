@@ -4,7 +4,11 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [4/11]
+* Memo [4/12]
+** TODO [2017-12-14 Thu] 改进odt导出时遇到的两个问题
+1. [X] 中文段落中的空格.
+2. [ ] zotero链接
+
 ** [2017-12-12 Tue] 修改org-download设置, 调整odt导出参数
 自定义org-download-annotate-function
 - 自动添加图片的 ~name~ ~caption~, 方便odt导出时图片自动编号及交叉引用.
@@ -2293,6 +2297,45 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+begin_src emacs-lisp
   (setq org-preview-latex-image-directory ".ltximg/")
 #+end_src
+**** clean unwanted space
+#+name: b949e4df-456e-4a69-85eb-77d9302ea0f3
+#+begin_src emacs-lisp
+  ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
+  (defun gwp/clear-unwanted-space (text)
+    "clear unwanted space when exporting org-mode to other formats"
+    (let ((regexp "[[:multibyte:]]")
+          (string text))
+      ;; org-mode 默认将一个换行符转换为空格，但中文不需要这个空格，删除。
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
+             "\\1\\2" string))
+      ;; 删除粗体之后的空格
+      (dolist (str '("</b>" "</code>" "</del>" "</i>"))
+        (setq string
+              (replace-regexp-in-string
+               (format "\\(%s\\)\\(%s\\)[ ]+\\(%s\\)" regexp str regexp)
+               "\\1\\2\\3" string)))
+      ;; 删除粗体之前的空格
+      (dolist (str '("<b>" "<code>" "<del>" "<i>" "<span class=\"underline\">"))
+        (setq string
+              (replace-regexp-in-string
+               (format "\\(%s\\)[ ]+\\(%s\\)\\(%s\\)" regexp str regexp)
+               "\\1\\2\\3" string)))
+      string)
+    )
+
+  (defun gwp/ox-odt-wash-text (text backend info)
+    "导出 org file 时，删除中文之间不必要的空格。"
+    (when (org-export-derived-backend-p backend 'odt 'html 'latex)
+      (gwp/clear-unwanted-space text)
+      )
+    )
+
+  (add-hook 'org-export-filter-headline-functions #'gwp/ox-odt-wash-text)
+  (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
+#+end_src
+
 *** capture & protocol
 占位符:
 | %:link         | URL of the web-page       |

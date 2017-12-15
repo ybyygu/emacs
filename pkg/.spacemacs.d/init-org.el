@@ -462,6 +462,43 @@ This is a copy and paste. Additional languages would warrant a refactor."
 (setq org-preview-latex-image-directory ".ltximg/")
 ;; edc2c0a1-b324-4cf5-8f84-816894cb6c7b ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::b949e4df-456e-4a69-85eb-77d9302ea0f3][b949e4df-456e-4a69-85eb-77d9302ea0f3]]
+;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
+(defun gwp/clear-unwanted-space (text)
+  "clear unwanted space when exporting org-mode to other formats"
+  (let ((regexp "[[:multibyte:]]")
+        (string text))
+    ;; org-mode 默认将一个换行符转换为空格，但中文不需要这个空格，删除。
+    (setq string
+          (replace-regexp-in-string
+           (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
+           "\\1\\2" string))
+    ;; 删除粗体之后的空格
+    (dolist (str '("</b>" "</code>" "</del>" "</i>"))
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\)\\(%s\\)[ ]+\\(%s\\)" regexp str regexp)
+             "\\1\\2\\3" string)))
+    ;; 删除粗体之前的空格
+    (dolist (str '("<b>" "<code>" "<del>" "<i>" "<span class=\"underline\">"))
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\)[ ]+\\(%s\\)\\(%s\\)" regexp str regexp)
+             "\\1\\2\\3" string)))
+    string)
+  )
+
+(defun gwp/ox-odt-wash-text (text backend info)
+  "导出 org file 时，删除中文之间不必要的空格。"
+  (when (org-export-derived-backend-p backend 'odt 'html 'latex)
+    (gwp/clear-unwanted-space text)
+    )
+  )
+
+(add-hook 'org-export-filter-headline-functions #'gwp/ox-odt-wash-text)
+(add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
+;; b949e4df-456e-4a69-85eb-77d9302ea0f3 ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::7150b085-c305-4285-9fc6-2c5496e0876f][7150b085-c305-4285-9fc6-2c5496e0876f]]
 (setq org-capture-templates
       '(

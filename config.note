@@ -4,10 +4,15 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [4/12]
-** TODO [2017-12-14 Thu] 改进odt导出时遇到的两个问题
-1. [X] 中文段落中的空格.
-2. [ ] zotero链接
+* Memo [5/12]
+** DONE [2017-12-14 Thu] 改进odt导出时遇到的两个问题
+CLOSED: [2017-12-15 Fri 17:17]
+- State "DONE"       from "TODO"       [2017-12-15 Fri 17:17]
+1. [X] zotero链接
+2. [X] 中文段落中的空格.
+
+References
+- [[https://github.com/hick/emacs-chinese][hick/emacs-chinese: Emacs相关中文问题以及解决方案]]
 
 ** [2017-12-12 Tue] 修改org-download设置, 调整odt导出参数
 自定义org-download-annotate-function
@@ -1924,11 +1929,14 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
         (format "<a href=\"zotero:%s\">%s</a>" path desc))
        ((eq format 'latex)
         (format "\\href{zotero:%s}{%s}" path desc))
+       ((eq format 'odt)
+        (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc))
        (t desc)
        )
       )
   )
 #+end_src
+
 *** babel
 - http://orgmode.org/manual/Languages.html
 

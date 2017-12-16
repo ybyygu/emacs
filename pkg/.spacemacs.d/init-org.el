@@ -147,6 +147,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (format "<a href=\"zotero:%s\">%s</a>" path desc))
      ((eq format 'latex)
       (format "\\href{zotero:%s}{%s}" path desc))
+     ((eq format 'odt)
+      (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc))
      (t desc)
      )
     )

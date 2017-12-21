@@ -173,6 +173,10 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (add-to-list 'org-structure-template-alist
                '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
 
+  ;; add <r for rust codes
+  (add-to-list 'org-structure-template-alist
+               '("r" "#+begin_src rust\n?\n#+end_src" "<src lang=\"rust\">\n?\n</src>"))
+
   ;; add <el for emacs-lisp expansion
   (add-to-list 'org-structure-template-alist
                '("el" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>"))

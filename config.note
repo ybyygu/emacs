@@ -2210,17 +2210,18 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 *** encryption
 #+name: 7c756a95-fbc4-4159-b6e7-bc4f3ebf972e
 #+begin_src emacs-lisp
-  (with-eval-after-load 'org-crypt
-    (epa-file-enable)
+  (require 'org-crypt)
+  (require 'epa-file)
 
-    ;; Encrypt all entries before saving
-    (org-crypt-use-before-save-magic)
-    (setq org-crypt-tag-matcher "crypt")
-    (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+  (epa-file-enable)
+
+  ;; Encrypt all entries before saving
+  (org-crypt-use-before-save-magic)
+  (setq org-crypt-tag-matcher "crypt")
+  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
                                           ; GPG key to use for encryption
-    (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
-    (setq org-crypt-disable-auto-save nil)
-    )
+  (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+  (setq org-crypt-disable-auto-save nil)
 #+end_src
 
 *** exports

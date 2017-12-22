@@ -384,17 +384,18 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; 8934f349-26c4-48a4-945d-5944f3baf2f3 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::7c756a95-fbc4-4159-b6e7-bc4f3ebf972e][7c756a95-fbc4-4159-b6e7-bc4f3ebf972e]]
-(with-eval-after-load 'org-crypt
-  (epa-file-enable)
+(require 'org-crypt)
+(require 'epa-file)
 
-  ;; Encrypt all entries before saving
-  (org-crypt-use-before-save-magic)
-  (setq org-crypt-tag-matcher "crypt")
-  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+(epa-file-enable)
+
+;; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-crypt-tag-matcher "crypt")
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
                                         ; GPG key to use for encryption
-  (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
-  (setq org-crypt-disable-auto-save nil)
-  )
+(setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+(setq org-crypt-disable-auto-save nil)
 ;; 7c756a95-fbc4-4159-b6e7-bc4f3ebf972e ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::70ff43af-9dfc-457c-b4b7-e423715cc689][70ff43af-9dfc-457c-b4b7-e423715cc689]]

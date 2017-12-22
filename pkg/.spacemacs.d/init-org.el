@@ -697,3 +697,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; do not commit attachments with git
 (setq org-attach-commit nil)
 ;; 4136bddd-2d62-4d66-8f84-aa28e09006ca ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::d1f9495d-a3d0-487c-98f1-725a3e8fff39][d1f9495d-a3d0-487c-98f1-725a3e8fff39]]
+(setq org-fontify-emphasized-text nil)
+;; d1f9495d-a3d0-487c-98f1-725a3e8fff39 ends here

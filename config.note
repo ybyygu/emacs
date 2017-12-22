@@ -2576,6 +2576,12 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (setq org-attach-commit nil)
 #+end_src
 
+禁用*bold*等标注的字体效果. 写代码时容易弄花显示. 比如__init__.
+#+name: d1f9495d-a3d0-487c-98f1-725a3e8fff39
+#+begin_src emacs-lisp
+  (setq org-fontify-emphasized-text nil)
+#+end_src
+
 ** docs
 : dotspacemacs-directory ~/.spacemacs.d
 : spacemacs-start-directory

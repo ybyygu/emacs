@@ -1493,6 +1493,8 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   (setq recentf-max-saved-items 1000)
   (add-to-list 'recentf-exclude "\.png$")
   (add-to-list 'recentf-exclude "\.pdf$")
+  (add-to-list 'recentf-exclude "\.svg")
+  (add-to-list 'recentf-exclude "\.odt$")
 #+end_src
 
 *** open in terminal

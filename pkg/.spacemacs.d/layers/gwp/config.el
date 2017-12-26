@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-19 Sun 15:24>
+;;  UPDATED:    <2017-12-26 Tue 17:03>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -75,6 +75,8 @@
 (setq recentf-max-saved-items 1000)
 (add-to-list 'recentf-exclude "\.png$")
 (add-to-list 'recentf-exclude "\.pdf$")
+(add-to-list 'recentf-exclude "\.svg")
+(add-to-list 'recentf-exclude "\.odt$")
 ;; 33866aac-efb3-45f7-bfc2-f450db84c76f ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::9dfdbbc5-231c-433c-a756-02c7ac96aeb9][9dfdbbc5-231c-433c-a756-02c7ac96aeb9]]

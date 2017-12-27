@@ -4,7 +4,13 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [5/12]
+* Memo [6/13]
+** DONE [2017-12-27 Wed] org-mode跳转到上一级 helm-org-parent-headings
+CLOSED: [2017-12-27 Wed 15:47]
+- State "DONE"       from "TODO"       [2017-12-27 Wed 15:47]
+: gP
+也可以用 ~gh~
+
 ** DONE [2017-12-14 Thu] 改进odt导出时遇到的两个问题
 CLOSED: [2017-12-15 Fri 17:17]
 - State "DONE"       from "TODO"       [2017-12-15 Fri 17:17]
@@ -1558,9 +1564,13 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
          "oAs" 'gwp/org-attach-store
          "oAm" 'gwp/org-attach-move
          )
+       (evil-define-key 'normal evil-org-mode-map
+         "gP" 'helm-org-parent-headings
+         )
        )
     )
 #+end_src
+
 *** insert date
 #+name: 6d5783e3-e1d2-4818-b2dd-ba60a4891505
 #+begin_src emacs-lisp

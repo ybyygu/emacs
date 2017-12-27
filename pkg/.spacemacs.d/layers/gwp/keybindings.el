@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-12-06 Wed 09:37>
+;;  UPDATED:    <2017-12-27 Wed 15:46>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -28,6 +28,9 @@
        "oJ" 'org-babel-tangle-jump-to-org
        "oAs" 'gwp/org-attach-store
        "oAm" 'gwp/org-attach-move
+       )
+     (evil-define-key 'normal evil-org-mode-map
+       "gP" 'helm-org-parent-headings
        )
      )
   )

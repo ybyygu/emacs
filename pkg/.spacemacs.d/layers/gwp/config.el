@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-12-26 Tue 17:03>
+;;  UPDATED:    <2017-12-29 Fri 11:26>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -75,7 +75,7 @@
 (setq recentf-max-saved-items 1000)
 (add-to-list 'recentf-exclude "\.png$")
 (add-to-list 'recentf-exclude "\.pdf$")
-(add-to-list 'recentf-exclude "\.svg")
+(add-to-list 'recentf-exclude "\.svg$")
 (add-to-list 'recentf-exclude "\.odt$")
 ;; 33866aac-efb3-45f7-bfc2-f450db84c76f ends here
 
@@ -97,3 +97,9 @@
     )
   )
 ;; 9dfdbbc5-231c-433c-a756-02c7ac96aeb9 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::7f135717-84cd-444e-8946-c96a9c2429f1][7f135717-84cd-444e-8946-c96a9c2429f1]]
+(require 'dired-x)
+(setq-default dired-omit-files-p t) ; Buffer-local variable
+(setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+;; 7f135717-84cd-444e-8946-c96a9c2429f1 ends here

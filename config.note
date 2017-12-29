@@ -4,7 +4,7 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [6/13]
+* Memo [7/12]
 ** DONE [2017-12-27 Wed] org-mode跳转到上一级 helm-org-parent-headings
 CLOSED: [2017-12-27 Wed 15:47]
 - State "DONE"       from "TODO"       [2017-12-27 Wed 15:47]
@@ -32,7 +32,6 @@ References
 ** [2017-11-19 Sun] 添加新功能, 在buffer或dired当前目录中打开gnome-terminal
 按键: ~SPC o T~
 
-** TODO [2017-11-17 Fri] 使用DND的方式来添加附件 [[https://matt.hackinghistory.ca/2015/07/15/mailing-subtrees-with-attachments/][Mailing subtrees with Attachments | Thoughts on Code & History]]
 ** DONE [2017-11-17 Fri] 改进屏幕截图功能
 CLOSED: [2017-11-17 Fri 10:51]
 - State "DONE"       from "TODO"       [2017-11-17 Fri 10:51]
@@ -115,7 +114,18 @@ CLOSED: [2017-11-12 Sun 15:39]
 
 References:
 - [[https://emacs.stackexchange.com/questions/32617/how-to-jump-directly-to-an-org-headline][org mode - how to jump directly to an org-headline? - Emacs Stack Exchange]]
-** TODO [2017-10-21 Sat] dired: 不显示隐藏文件
+** DONE [2017-10-21 Sat] dired: 不显示隐藏文件
+CLOSED: [2017-12-29 Fri 11:24]
+- State "DONE"       from "TODO"       [2017-12-29 Fri 11:24]
+- [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
+
+#+name: 730f0521-c198-43aa-879a-4fa5a3e60d4f
+#+begin_src emacs-lisp
+  (require 'dired-x)
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+#+end_src
+
 ** [2017-10-21 Sat] How Fast Can You Tangle In Org-Mode [[https://www.wisdomandwonder.com/article/10630/how-fast-can-you-tangle-in-org-mode][URL]]
 这个存疑. 暂时对tangle速度比较满意, 不折腾了. 备忘吧.
 ** [2017-10-20 Fri] 禁用spaceline 据说会拖慢速度
@@ -1499,7 +1509,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
   (setq recentf-max-saved-items 1000)
   (add-to-list 'recentf-exclude "\.png$")
   (add-to-list 'recentf-exclude "\.pdf$")
-  (add-to-list 'recentf-exclude "\.svg")
+  (add-to-list 'recentf-exclude "\.svg$")
   (add-to-list 'recentf-exclude "\.odt$")
 #+end_src
 
@@ -1524,6 +1534,14 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
       (gwp/open-in-gnome-terminal (expand-file-name default-directory))
       )
     )
+#+end_src
+
+*** hide dotfiles
+#+name: 7f135717-84cd-444e-8946-c96a9c2429f1
+#+begin_src emacs-lisp
+  (require 'dired-x)
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
 #+end_src
 
 ** gwp/keybindings.el

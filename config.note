@@ -326,13 +326,25 @@ stow:
 
 * tips
 阅读文档 ~SPC h r~
+** Editing styles
+=dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
+
 ** iedit mode
 使用vim的方式搜索时, 可以进入iedit-mode, 同时编辑多处匹配项. 退出时, 按两下ESC.
 
-** Editing styles
-=dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
+** 窗口管理 (window/frame)
+
+| ~SPC w F~ | new frame      |
+| ~SPC w v~ | vertical split |
+| ~SPC w d~ | remove window  |
+| ~SPC w r~ | swap windows   |
+| ~SPC w f~ | follow mode    |
+
+看所有与~SPC w~有关的绑定 ~SPC w C-h C-h~
+
 ** 删除空格
 - just-one-space 默认绑定为 ~Ｍ-SPC~
+
 ** magit
 | SPC g s  | status                |                             |
 | SPC g S  | stage file            |                             |
@@ -352,7 +364,8 @@ vi模式下使用P命令.
 emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:
 1. dired-jump (SPC fj): 使用 dired 打开当前文件所在目录
 2. 在 dired 界面上选择某个文件, 使用 external 程序打开 (SPC fo).
-3. 也可以在 dired 界面上用"!"命令, 指定任意程序打开.
+3. 也可以在 dired 界面上用"!"或"&"命令, 指定任意程序打开.
+
 ** user-init 和 user-config
 from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
 

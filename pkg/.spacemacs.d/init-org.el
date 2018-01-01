@@ -181,9 +181,9 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (add-to-list 'org-structure-template-alist
                '("el" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>"))
 
-  ;; add <b for shell scritp
+  ;; add <sh for shell scritp
   (add-to-list 'org-structure-template-alist
-               '("b" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
+               '("sh" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
 
  )
 ;; 08773fc4-f834-41ef-96bd-695b7eb0668e ends here

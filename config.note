@@ -4,7 +4,8 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [7/12]
+* Memo [7/13]
+** TODO [2018-01-02 Tue] 使用org-noter替换interleave-mode [[https://github.com/weirdNox/org-noter][weirdNox/org-noter: Emacs document annotator, using Org-mode]]
 ** DONE [2017-12-27 Wed] org-mode跳转到上一级 helm-org-parent-headings
 CLOSED: [2017-12-27 Wed 15:47]
 - State "DONE"       from "TODO"       [2017-12-27 Wed 15:47]

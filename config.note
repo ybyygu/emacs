@@ -6,6 +6,7 @@
 
 * Memo [7/13]
 ** TODO [2018-01-02 Tue] 使用org-noter替换interleave-mode [[https://github.com/weirdNox/org-noter][weirdNox/org-noter: Emacs document annotator, using Org-mode]]
+
 ** DONE [2017-12-27 Wed] org-mode跳转到上一级 helm-org-parent-headings
 CLOSED: [2017-12-27 Wed 15:47]
 - State "DONE"       from "TODO"       [2017-12-27 Wed 15:47]
@@ -383,6 +384,26 @@ Anything that isn't just setting a variable should 99% be in user-config.
 : SPC z x +/-
 ** universal arguments
 SPC u
+
+* Research Writing Workflow
+** 基本流程
+- 使用org-mode来完成文字, 图片, 表格, 公式等内容.
+- 导出成odt格式.
+- 使用[[http://zotero-odf-scan.github.io/zotero-odf-scan/][RTF/ODF-Scan for Zotero]] 来格式化zotero引用
+- 在Libreoffice中进行必要的修改.
+- 输出PDF和或doc.
+
+** RTF/ODF-scan插件
+这个插件可以将纯文本的引文标记, 格式化为zotero word processor可处理的zotero引文.
+此外, 这个扩展还可以反向的将zotero word processor处理后的引文转换成纯文件标记.
+
+从官网下载扩展后, 在zotero standalone的addone窗口安装.
+
+1. 在zotero中设置好quick copy的输出格式为 "scannable cite".
+2. 在zotero中选择目标条目, 将其拖入org-mode当即可.
+3. 通过修改config选项(ODFScan.useZoteroSelect), odfscan marker字段中的最后一项也
+   可以为zotero链接. 但在格式化时不能正常生成odt文件, 这可能是一个bug.
+
 
 * TODO Research Literature Management Workflow
 将annotation.note放到zotero内置库里的优点和问题:

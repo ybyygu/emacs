@@ -4,7 +4,27 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [7/13]
+* Memo [7/14]
+** TODO [2018-01-04 Thu] 改进odt格式导出: 将zotero select链接转换为zotero引文标记 :ATTACH:
+:PROPERTIES:
+:ID:       7bf760c0-56db-4cf8-8640-b2ab653f65d3
+:Attachments: screenshot_2018-01-04_18-21-17.png
+:END:
+
+- [ ] 切换链接导出和引文导出
+- [X] 自定义zotero导出, 将zotero链接转换为odt reference marker
+
+
+#+DOWNLOADED: @ 2018-01-04 18:21:17
+#+name: fig:31529f10
+#+attr_org: :width 800
+#+attr_odt: :width 8
+[[file:data/7b/f760c0-56db-4cf8-8640-b2ab653f65d3/screenshot_2018-01-04_18-21-17.png]]
+
+References
+- [[https://www.mail-archive.com/emacs-orgmode@gnu.org/msg48905.html][Re: zotero plain, org-odt, and citations in general]]
+- [[https://github.com/Juris-M/zotero-odf-scan-plugin][Juris-M/zotero-odf-scan-plugin: RTF/ODF-Scan for Zotero add-on]]
+
 ** TODO [2018-01-02 Tue] 使用org-noter替换interleave-mode [[https://github.com/weirdNox/org-noter][weirdNox/org-noter: Emacs document annotator, using Org-mode]]
 
 ** DONE [2017-12-27 Wed] org-mode跳转到上一级 helm-org-parent-headings
@@ -804,6 +824,7 @@ SPC u
        pdf-tools
        (org :packages
             (not org-projectile))
+       javascript
        gwp
        )
      ;; List of additional packages that will be installed without being
@@ -1995,11 +2016,47 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
        ((eq format 'latex)
         (format "\\href{zotero:%s}{%s}" path desc))
        ((eq format 'odt)
-        (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc))
+        ;; (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc)
+        (gwp/org-zotero-export-odt path desc)
+        )
        (t desc)
        )
       )
-  )
+    )
+
+  ;;;; The magic string of zitem:
+  ;; ZOTERO_ITEM CSL_CITATION {
+  ;; "citationID":"%s-citation-id"
+  ;; "properties": {"formattedCitation":"%s-desc"},
+  ;; "citationItems":[
+  ;;                  {"prefix":"",
+  ;;                   "locator":"",
+  ;;                   "suffix":"",
+  ;;                   "key":"%s-item-key",
+  ;;                   "uri":["http://zotero.org/users/undefined/items/%s-item-key"],
+  ;;                   "uris":["http://zotero.org/users/undefined/items/%s-item-key"]}]}
+  ;; %s-rnd"
+
+  ;; adopted from https://www.mail-archive.com/emacs-orgmode@gnu.org/msg48905.html
+  (defun gwp/org-zotero-export-odt (path desc)
+    (let
+        ((refmark "<text:reference-mark-start text:name=\"%s\"/>%s<text:reference-mark-end text:name=\"%s\"/>")
+         (zitem "ZOTERO_ITEM CSL_CITATION {&quot;properties&quot;: {&quot;formattedCitation&quot;:&quot;%s&quot;}, &quot;citationItems&quot;:[{&quot;prefix&quot;:&quot;&quot;,&quot;locator&quot;:&quot;&quot;,&quot;suffix&quot;:&quot;&quot;,&quot;key&quot;:&quot;%s&quot;,&quot;uri&quot;:[&quot;http://zotero.org/users/undefined/items/%s&quot;],&quot;uris&quot;:[&quot;http://zotero.org/users/undefined/items/%s&quot;]}]} %s&quot;")
+
+         (item-key (car (cdr (split-string path "_"))))
+         (rnd (concat "RND" (substring (org-id-new) -10))))
+      (setq zitem
+            (format zitem
+                    desc
+                    item-key
+                    item-key
+                    item-key
+                    rnd)
+            )
+      (setq desc (format "(%s)" desc))
+      (format refmark zitem desc zitem))
+    )
+
 #+end_src
 
 *** babel

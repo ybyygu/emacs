@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-12-07 Thu 20:30>
+;;  UPDATED:    <2018-01-04 Thu 18:16>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -75,6 +75,7 @@ values."
      pdf-tools
      (org :packages
           (not org-projectile))
+     javascript
      gwp
      )
    ;; List of additional packages that will be installed without being

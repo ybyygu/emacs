@@ -148,11 +148,46 @@ DESC. FORMATs understood are 'odt','latex and 'html."
      ((eq format 'latex)
       (format "\\href{zotero:%s}{%s}" path desc))
      ((eq format 'odt)
-      (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc))
+      ;; (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc)
+      (gwp/org-zotero-export-odt path desc)
+      )
      (t desc)
      )
     )
-)
+  )
+
+;;;; The magic string of zitem:
+;; ZOTERO_ITEM CSL_CITATION {
+;; "citationID":"%s-citation-id"
+;; "properties": {"formattedCitation":"%s-desc"},
+;; "citationItems":[
+;;                  {"prefix":"",
+;;                   "locator":"",
+;;                   "suffix":"",
+;;                   "key":"%s-item-key",
+;;                   "uri":["http://zotero.org/users/undefined/items/%s-item-key"],
+;;                   "uris":["http://zotero.org/users/undefined/items/%s-item-key"]}]}
+;; %s-rnd"
+
+;; adopted from https://www.mail-archive.com/emacs-orgmode@gnu.org/msg48905.html
+(defun gwp/org-zotero-export-odt (path desc)
+  (let
+      ((refmark "<text:reference-mark-start text:name=\"%s\"/>%s<text:reference-mark-end text:name=\"%s\"/>")
+       (zitem "ZOTERO_ITEM CSL_CITATION {&quot;properties&quot;: {&quot;formattedCitation&quot;:&quot;%s&quot;}, &quot;citationItems&quot;:[{&quot;prefix&quot;:&quot;&quot;,&quot;locator&quot;:&quot;&quot;,&quot;suffix&quot;:&quot;&quot;,&quot;key&quot;:&quot;%s&quot;,&quot;uri&quot;:[&quot;http://zotero.org/users/undefined/items/%s&quot;],&quot;uris&quot;:[&quot;http://zotero.org/users/undefined/items/%s&quot;]}]} %s&quot;")
+
+       (item-key (car (cdr (split-string path "_"))))
+       (rnd (concat "RND" (substring (org-id-new) -10))))
+    (setq zitem
+          (format zitem
+                  desc
+                  item-key
+                  item-key
+                  item-key
+                  rnd)
+          )
+    (setq desc (format "(%s)" desc))
+    (format refmark zitem desc zitem))
+  )
 ;; 048aa38e-7f6f-4c9f-94da-020c82ea50e4 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::08773fc4-f834-41ef-96bd-695b7eb0668e][08773fc4-f834-41ef-96bd-695b7eb0668e]]

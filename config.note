@@ -408,10 +408,15 @@ SPC u
 * Research Writing Workflow
 ** 基本流程
 - 使用org-mode来完成文字, 图片, 表格, 公式等内容.
-- 导出成odt格式.
-- 使用[[http://zotero-odf-scan.github.io/zotero-odf-scan/][RTF/ODF-Scan for Zotero]] 来格式化zotero引用
+- 导出为odt格式.
+- 使用[[http://zotero-odf-scan.github.io/zotero-odf-scan/][RTF/ODF-Scan for Zotero]] 来格式化zotero引用.
+  - [2018-01-05 Fri] 已自定义export函数, 不必使用odf-scan, odt导出一步到位.
 - 在Libreoffice中进行必要的修改.
 - 输出PDF和或doc.
+** org odt exporter
+- odt导出功能非常强大, 对于普通用户, odt无疑比latex的易用性和可定制性更强.
+- 可以在org buffer里指定odt模板文件. 使用odt而不是ott格式会更方便一些, 因为打开
+  ott时没有具体的内容可参照修改结果.
 
 ** RTF/ODF-scan插件
 这个插件可以将纯文本的引文标记, 格式化为zotero word processor可处理的zotero引文.
@@ -2432,7 +2437,20 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+begin_src emacs-lisp
   (setq org-preview-latex-image-directory ".ltximg/")
 #+end_src
-**** clean unwanted space
+**** odt
+odt导出时, 图表默认以大纲级别来编号. 对于中文文档, 如果章节以中文一二三编号时,
+图表编号默认为一.1, 二.3. 这很古怪, 还是取消的好.
+
+#+name: a0abbfb1-a297-4cb4-9a00-7c502a0bd4db
+#+begin_src emacs-lisp
+  (use-package ox-odt
+    :config
+    ;; continually numbering captions without outline level
+    (setq org-odt-display-outline-level 0)
+    )
+#+end_src
+
+由于手动换行的原因, odt导出时, 中文字符间会有多余的空格. 下面的设置用于解决这个问题:
 #+name: b949e4df-456e-4a69-85eb-77d9302ea0f3
 #+begin_src emacs-lisp
   ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el

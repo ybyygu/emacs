@@ -504,6 +504,14 @@ This is a copy and paste. Additional languages would warrant a refactor."
 (setq org-preview-latex-image-directory ".ltximg/")
 ;; edc2c0a1-b324-4cf5-8f84-816894cb6c7b ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::a0abbfb1-a297-4cb4-9a00-7c502a0bd4db][a0abbfb1-a297-4cb4-9a00-7c502a0bd4db]]
+(use-package ox-odt
+  :config
+  ;; continually numbering captions without outline level
+  (setq org-odt-display-outline-level 0)
+  )
+;; a0abbfb1-a297-4cb4-9a00-7c502a0bd4db ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::b949e4df-456e-4a69-85eb-77d9302ea0f3][b949e4df-456e-4a69-85eb-77d9302ea0f3]]
 ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
 (defun gwp/clear-unwanted-space (text)

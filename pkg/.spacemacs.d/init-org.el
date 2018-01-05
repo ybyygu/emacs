@@ -44,7 +44,7 @@
                         (
                          (org-agenda-overriding-header "ASAP\n------------------")
                          (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         (org-agenda-max-entries 5)
+                         (org-agenda-max-entries 20)
                          )
                         )
 

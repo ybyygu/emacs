@@ -1904,7 +1904,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
                           (
                            (org-agenda-overriding-header "ASAP\n------------------")
                            (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                           (org-agenda-max-entries 5)
+                           (org-agenda-max-entries 20)
                            )
                           )
 

@@ -507,8 +507,14 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; [[file:~/Install/configs/spacemacs/config.note::a0abbfb1-a297-4cb4-9a00-7c502a0bd4db][a0abbfb1-a297-4cb4-9a00-7c502a0bd4db]]
 (use-package ox-odt
   :config
-  ;; continually numbering captions without outline level
-  (setq org-odt-display-outline-level 0)
+  (progn
+    ;; continually numbering captions without outline level
+    (setq org-odt-display-outline-level 0)
+
+    ;; useful for odt export using dvipng
+    (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
+    (setq org-odt-pixels-per-inch 300.0)
+    )
   )
 ;; a0abbfb1-a297-4cb4-9a00-7c502a0bd4db ends here
 

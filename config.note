@@ -1,6 +1,5 @@
 #+TITLE: Emacs 配置 (based on spacemacs)
 #+SETUPFILE: ~/Notes/common.org
-#+SETUPFILE: ~/Notes/latex.org
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
@@ -416,10 +415,17 @@ SPC u
   - [2018-01-05 Fri] 已自定义export函数, 不必使用odf-scan, odt导出一步到位.
 - 在Libreoffice中进行必要的修改.
 - 输出PDF和或doc.
-** org odt exporter
+
+** org odt export
 - odt导出功能非常强大, 对于普通用户, odt无疑比latex的易用性和可定制性更强.
 - 可以在org buffer里指定odt模板文件. 使用odt而不是ott格式会更方便一些, 因为打开
   ott时没有具体的内容可参照修改结果.
+- 码公式的时候, 使用"begin{equation*}"block, odt会自动编号. 不能设置scale, width
+  等图片属性.
+
+References
+- [[https://github.com/emacsmirror/org/blob/master/lisp/ox-odt.el][org/ox-odt.el at master · emacsmirror/org]]
+- [[https://orgmode.org/manual/OpenDocument-Text-export.html][The Org Manual: OpenDocument Text export]]
 
 ** RTF/ODF-scan插件
 这个插件可以将纯文本的引文标记, 格式化为zotero word processor可处理的zotero引文.
@@ -2428,7 +2434,8 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 
 #+END_SRC
 
-默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]):
+默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]).
+
 #+name: 32a6da28-5f14-4433-ac15-6d2749b036f5
 #+BEGIN_SRC emacs-lisp
   ;; bigger latex fragment
@@ -2440,16 +2447,28 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+begin_src emacs-lisp
   (setq org-preview-latex-image-directory ".ltximg/")
 #+end_src
+
 **** odt
 odt导出时, 图表默认以大纲级别来编号. 对于中文文档, 如果章节以中文一二三编号时,
 图表编号默认为一.1, 二.3. 这很古怪, 还是取消的好.
+
+odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 然后通过设置odt dpi为
+300(默认为96), 将image缩小为原始大小.
+
+注意latex公式图片对应的目录ltxpng在ox-odt.el代码里写死了, 没法修改为其它的.
 
 #+name: a0abbfb1-a297-4cb4-9a00-7c502a0bd4db
 #+begin_src emacs-lisp
   (use-package ox-odt
     :config
-    ;; continually numbering captions without outline level
-    (setq org-odt-display-outline-level 0)
+    (progn
+      ;; continually numbering captions without outline level
+      (setq org-odt-display-outline-level 0)
+
+      ;; useful for odt export using dvipng
+      (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
+      (setq org-odt-pixels-per-inch 300.0)
+      )
     )
 #+end_src
 

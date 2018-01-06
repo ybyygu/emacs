@@ -388,6 +388,9 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 2. 在 dired 界面上选择某个文件, 使用 external 程序打开 (SPC fo).
 3. 也可以在 dired 界面上用"!"或"&"命令, 指定任意程序打开.
 
+** 打开buffer文件所在目录
+~SPC u SPC f o~
+
 ** user-init 和 user-config
 from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
 

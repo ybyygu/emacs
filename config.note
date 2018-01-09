@@ -2694,21 +2694,33 @@ file-exists-p函数对symlink的特殊性:
     (raise-frame)
     )
 
-  (defun gwp/org-download-annotate (link)
-    "Annotate LINK with the time of download."
-
+  (defun gwp/org-image-attributes-default ()
+    "default image attributes: caption, name label, width ..."
     (format (concat
-             ;; for easy to delete
+             ;; #+DOWNLOAD mark: for easy to delete using org-download
              (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
              (concat  "#+caption: " (read-input "Caption: ") "\n")
              ;; set unique figure name
              (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
              ;; unit in px; for displaying in org-mode
-             "#+attr_org: :width 600\n"
+             "#+attr_org: :width 800\n"
              ;; unit in cm; for exporting as odt
-             "#+attr_odt: :width 8"
+             "#+attr_odt: :width 10"
              )
             )
+    )
+
+  (defun gwp/org-insert-image-attributes ()
+    "insert image attributes such as caption and labels"
+    (interactive)
+
+    (insert (gwp/org-image-attributes-default))
+    )
+
+  (defun gwp/org-download-annotate (link)
+    "Annotate LINK with the time of download."
+
+    (gwp/org-image-attributes-default)
     )
 
   (use-package org-download

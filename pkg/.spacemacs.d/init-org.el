@@ -581,61 +581,68 @@ This is a copy and paste. Additional languages would warrant a refactor."
   )
 ;; 86d9dfb7-8aed-4cb4-b058-76b456bfe8f6 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::c38fb49c-9ebf-4103-a404-f52514abc11f][c38fb49c-9ebf-4103-a404-f52514abc11f]]
-;; any headline with level <= 2 is a target
-(setq org-refile-targets '(
-                           (org-agenda-files :tag . "Incoming")
-                           )
-      )
-
-(setq org-reverse-note-order t)
-(defun gwp/get-org-file-link-path ()
-  (save-excursion
-    (beginning-of-line)
-    (search-forward "[[file:" (line-end-position))
-    (if (org-in-regexp org-bracket-link-regexp 1)
-        (org-link-unescape (match-string-no-properties 1))
-      )
-    )
-  )
-
-(defun gwp/enter-to-read-state()
-  "evoke external shell script when entering READ state"
-  (when (equal org-state "READ")
-    (setq file (gwp/get-org-file-link-path))
-    (if file
-        (progn
-         (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
-         (message cmd)
-         (shell-command cmd)
-        )
-        )
-    )
-    (when (equal org-last-state "READ")
-      (message "try to remove READ state")
-      (setq file (gwp/get-org-file-link-path))
-      (if file
-          (progn
-            (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
-            (message cmd)
-            (shell-command cmd)
-            )
-        )
-      )
-  )
-(add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
-
-;; show a sparse-tree in READ keyword
-(defun gwp/org-show-read-tree ()
-  "show a sparse-tree in READ keyword"
+;; [[file:~/Install/configs/spacemacs/config.note::fb26a313-8d58-4e2a-b515-3314d860d44c][fb26a313-8d58-4e2a-b515-3314d860d44c]]
+;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
+(defun gwp/take-screenshot ()
+  "Minimize emacs, and take a screenshot using org-download"
   (interactive)
 
-  (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
-    ;; create new macro of the form
-    ;; C-u M-x org-show-todo-tree RET READ RET
-    (execute-kbd-macro (vconcat base-vector
-                                (vector 'return)))))
-;; c38fb49c-9ebf-4103-a404-f52514abc11f ends here
+  (suspend-frame)
+  (org-download-screenshot)
+  (raise-frame)
+  )
+
+(defun gwp/org-image-attributes-default ()
+  "default image attributes: caption, name label, width ..."
+  (format (concat
+           ;; #+DOWNLOAD mark: for easy to delete using org-download
+           (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
+           (concat  "#+caption: " (read-input "Caption: ") "\n")
+           ;; set unique figure name
+           (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+           ;; unit in px; for displaying in org-mode
+           "#+attr_org: :width 800\n"
+           ;; unit in cm; for exporting as odt
+           "#+attr_odt: :width 10"
+           )
+          )
+  )
+
+(defun gwp/org-insert-image-attributes ()
+  "insert image attributes such as caption and labels"
+  (interactive)
+
+  (insert (gwp/org-image-attributes-default))
+  )
+
+(defun gwp/org-download-annotate (link)
+  "Annotate LINK with the time of download."
+
+  (gwp/org-image-attributes-default)
+  )
+
+(use-package org-download
+  :after org
+  :ensure t
+  :bind
+  (("C-c <insert>" . gwp/take-screenshot)
+   ("C-c <delete>" . org-download-delete)
+   )
+  :config
+  (progn
+    (setq org-download-method 'attach)
+    (setq org-download-annotate-function 'gwp/org-download-annotate)
+    ;; (setq org-download-image-html-width 900) ; in px
+    ;; (setq org-download-image-latex-width 16)  ; in cm
+    (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
+    )
+  )
+;; fb26a313-8d58-4e2a-b515-3314d860d44c ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::ef4a7b06-40a2-4ca4-8287-488cc76f4f3b][ef4a7b06-40a2-4ca4-8287-488cc76f4f3b]]
+(require 'org-attach)
+(setq org-attach-commit nil)
+;; ef4a7b06-40a2-4ca4-8287-488cc76f4f3b ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::73c2cba6-d7ba-4692-b09a-d8863a31a338][73c2cba6-d7ba-4692-b09a-d8863a31a338]]
 (setq org-attach-store-link-p 'attached)
@@ -695,63 +702,108 @@ This is a copy and paste. Additional languages would warrant a refactor."
   )
 ;; 140c8695-f25d-4512-b0f1-1fe4c8edd5c2 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::fb26a313-8d58-4e2a-b515-3314d860d44c][fb26a313-8d58-4e2a-b515-3314d860d44c]]
-;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
-(defun gwp/take-screenshot ()
-  "Minimize emacs, and take a screenshot using org-download"
-  (interactive)
-
-  (suspend-frame)
-  (org-download-screenshot)
-  (raise-frame)
-  )
-
-(defun gwp/org-image-attributes-default ()
-  "default image attributes: caption, name label, width ..."
-  (format (concat
-           ;; #+DOWNLOAD mark: for easy to delete using org-download
-           (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
-           (concat  "#+caption: " (read-input "Caption: ") "\n")
-           ;; set unique figure name
-           (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-           ;; unit in px; for displaying in org-mode
-           "#+attr_org: :width 800\n"
-           ;; unit in cm; for exporting as odt
-           "#+attr_odt: :width 10"
-           )
-          )
-  )
-
-(defun gwp/org-insert-image-attributes ()
-  "insert image attributes such as caption and labels"
-  (interactive)
-
-  (insert (gwp/org-image-attributes-default))
-  )
-
-(defun gwp/org-download-annotate (link)
-  "Annotate LINK with the time of download."
-
-  (gwp/org-image-attributes-default)
-  )
-
-(use-package org-download
-  :after org
-  :ensure t
-  :bind
-  (("C-c <insert>" . gwp/take-screenshot)
-   ("C-c <delete>" . org-download-delete)
-   )
-  :config
-  (progn
-    (setq org-download-method 'attach)
-    (setq org-download-annotate-function 'gwp/org-download-annotate)
-    ;; (setq org-download-image-html-width 900) ; in px
-    ;; (setq org-download-image-latex-width 16)  ; in cm
-    (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
+;; [[file:~/Install/configs/spacemacs/config.note::26a9b6db-6902-481b-96c8-7c5ecc96f739][26a9b6db-6902-481b-96c8-7c5ecc96f739]]
+(defun gwp/org-file-link-p (&optional element)
+  (let ((el (or element (org-element-context))))
+    (and (eq (org-element-type el) 'link)
+         (string= (org-element-property :type el) "file")
+         )
     )
   )
-;; fb26a313-8d58-4e2a-b515-3314d860d44c ends here
+;; 26a9b6db-6902-481b-96c8-7c5ecc96f739 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::c6a0a213-14c8-4239-ad63-6a8abe8dbe94][c6a0a213-14c8-4239-ad63-6a8abe8dbe94]]
+(defun gwp/file-path-at-point()
+  "get file path from link at point"
+  (let ((el (org-element-context)))
+    (when (gwp/org-file-link-p el)
+      (org-element-property :path el)
+      )
+    )
+  )
+;; c6a0a213-14c8-4239-ad63-6a8abe8dbe94 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::8854850a-e2c0-4cff-a29f-fdc2a078347f][8854850a-e2c0-4cff-a29f-fdc2a078347f]]
+(require 'org-download)
+
+(defun gwp/org-take-as-local-attachment ()
+  "move file link at point as local attachment"
+  (interactive)
+  (let ((file (gwp/file-path-at-point)))
+    (if file
+        (progn
+         ;; (org-attach-attach file nil 'mv)
+         (org-attach-attach file)
+         ;; remove the old
+         (call-interactively 'org-download-delete)
+         ;; insert the new
+         (gwp/org-insert-image-attributes)
+         (insert "\n")
+         (call-interactively 'org-insert-last-stored-link)
+         ;; refresh the image if possbile
+         (org-display-inline-images)
+         )
+      (user-error "Point is not on a link")
+      )
+    )
+  )
+;; 8854850a-e2c0-4cff-a29f-fdc2a078347f ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::c38fb49c-9ebf-4103-a404-f52514abc11f][c38fb49c-9ebf-4103-a404-f52514abc11f]]
+;; any headline with level <= 2 is a target
+(setq org-refile-targets '(
+                           (org-agenda-files :tag . "Incoming")
+                           )
+      )
+
+(setq org-reverse-note-order t)
+(defun gwp/get-org-file-link-path ()
+  (save-excursion
+    (beginning-of-line)
+    (search-forward "[[file:" (line-end-position))
+    (if (org-in-regexp org-bracket-link-regexp 1)
+        (org-link-unescape (match-string-no-properties 1))
+      )
+    )
+  )
+
+(defun gwp/enter-to-read-state()
+  "evoke external shell script when entering READ state"
+  (when (equal org-state "READ")
+    (setq file (gwp/get-org-file-link-path))
+    (if file
+        (progn
+         (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+         (message cmd)
+         (shell-command cmd)
+        )
+        )
+    )
+    (when (equal org-last-state "READ")
+      (message "try to remove READ state")
+      (setq file (gwp/get-org-file-link-path))
+      (if file
+          (progn
+            (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+            (message cmd)
+            (shell-command cmd)
+            )
+        )
+      )
+  )
+(add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
+
+;; show a sparse-tree in READ keyword
+(defun gwp/org-show-read-tree ()
+  "show a sparse-tree in READ keyword"
+  (interactive)
+
+  (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
+    ;; create new macro of the form
+    ;; C-u M-x org-show-todo-tree RET READ RET
+    (execute-kbd-macro (vconcat base-vector
+                                (vector 'return)))))
+;; c38fb49c-9ebf-4103-a404-f52514abc11f ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::4136bddd-2d62-4d66-8f84-aa28e09006ca][4136bddd-2d62-4d66-8f84-aa28e09006ca]]
 (require 'org-man)

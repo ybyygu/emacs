@@ -3,7 +3,19 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [7/14]
+* Memo [9/16]
+** DONE [2018-01-10 Wed] 实现image-take功能: 将image指向外部的image链接转换为当前outline的attachment
+CLOSED: [2018-01-10 Wed 16:07]
+主调函数:
+: gwp/org-take-as-local-attachment
+- State "DONE"       from "TODO"       [2018-01-10 Wed 16:07]
+
+** DONE [2018-01-06 Sat] 解决odt导出latex公式分辨率太低的问题
+CLOSED: [2018-01-10 Wed 16:18]
+- State "DONE"       from "TODO"       [2018-01-10 Wed 16:18] \\
+  odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 然后通过设置odt dpi为
+  300(默认为96), 将image缩小为原始大小.
+
 ** TODO [2018-01-04 Thu] 改进odt格式导出: 将zotero select链接转换为zotero引文标记 :ATTACH:
 :PROPERTIES:
 :ID:       7bf760c0-56db-4cf8-8640-b2ab653f65d3
@@ -2546,65 +2558,81 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
     )
 #+END_SRC
 
-*** refile
-#+name: c38fb49c-9ebf-4103-a404-f52514abc11f
-#+BEGIN_SRC emacs-lisp
-  ;; any headline with level <= 2 is a target
-  (setq org-refile-targets '(
-                             (org-agenda-files :tag . "Incoming")
-                             )
-        )
+*** screenshot
+使用org-download来实现屏幕截图的功能
+- 自动隐藏emacs窗口, 方便截取其它程序
+- 图片自动保存到org attachment目录
+- 自动添加图片显示参数, 设定在org中显示的大小
+- 可以使用org-download-delete来删除当前image
 
-  (setq org-reverse-note-order t)
-  (defun gwp/get-org-file-link-path ()
-    (save-excursion
-      (beginning-of-line)
-      (search-forward "[[file:" (line-end-position))
-      (if (org-in-regexp org-bracket-link-regexp 1)
-          (org-link-unescape (match-string-no-properties 1))
-        )
-      )
-    )
-
-  (defun gwp/enter-to-read-state()
-    "evoke external shell script when entering READ state"
-    (when (equal org-state "READ")
-      (setq file (gwp/get-org-file-link-path))
-      (if file
-          (progn
-           (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
-           (message cmd)
-           (shell-command cmd)
-          )
-          )
-      )
-      (when (equal org-last-state "READ")
-        (message "try to remove READ state")
-        (setq file (gwp/get-org-file-link-path))
-        (if file
-            (progn
-              (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
-              (message cmd)
-              (shell-command cmd)
-              )
-          )
-        )
-    )
-  (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
-
-  ;; show a sparse-tree in READ keyword
-  (defun gwp/org-show-read-tree ()
-    "show a sparse-tree in READ keyword"
+#+name: fb26a313-8d58-4e2a-b515-3314d860d44c
+#+begin_src emacs-lisp
+  ;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
+  (defun gwp/take-screenshot ()
+    "Minimize emacs, and take a screenshot using org-download"
     (interactive)
 
-    (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
-      ;; create new macro of the form
-      ;; C-u M-x org-show-todo-tree RET READ RET
-      (execute-kbd-macro (vconcat base-vector
-                                  (vector 'return)))))
+    (suspend-frame)
+    (org-download-screenshot)
+    (raise-frame)
+    )
 
-#+END_SRC
+  (defun gwp/org-image-attributes-default ()
+    "default image attributes: caption, name label, width ..."
+    (format (concat
+             ;; #+DOWNLOAD mark: for easy to delete using org-download
+             (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
+             (concat  "#+caption: " (read-input "Caption: ") "\n")
+             ;; set unique figure name
+             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+             ;; unit in px; for displaying in org-mode
+             "#+attr_org: :width 800\n"
+             ;; unit in cm; for exporting as odt
+             "#+attr_odt: :width 10"
+             )
+            )
+    )
+
+  (defun gwp/org-insert-image-attributes ()
+    "insert image attributes such as caption and labels"
+    (interactive)
+
+    (insert (gwp/org-image-attributes-default))
+    )
+
+  (defun gwp/org-download-annotate (link)
+    "Annotate LINK with the time of download."
+
+    (gwp/org-image-attributes-default)
+    )
+
+  (use-package org-download
+    :after org
+    :ensure t
+    :bind
+    (("C-c <insert>" . gwp/take-screenshot)
+     ("C-c <delete>" . org-download-delete)
+     )
+    :config
+    (progn
+      (setq org-download-method 'attach)
+      (setq org-download-annotate-function 'gwp/org-download-annotate)
+      ;; (setq org-download-image-html-width 900) ; in px
+      ;; (setq org-download-image-latex-width 16)  ; in cm
+      (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
+      )
+    )
+#+end_src
+
 *** org-attach
+org-mode添加附件后会自动commit(git only), 禁掉:
+#+name: ef4a7b06-40a2-4ca4-8287-488cc76f4f3b
+#+begin_src emacs-lisp
+  (require 'org-attach)
+  (setq org-attach-commit nil)
+#+end_src
+
+**** copy & paste attachments
 添加附件时生成指向附件的路径, 方便org-insert-link添加.
 #+name: 73c2cba6-d7ba-4692-b09a-d8863a31a338
 #+begin_src emacs-lisp
@@ -2675,72 +2703,118 @@ file-exists-p函数对symlink的特殊性:
       )
     )
 #+end_src
-*** screenshot
-使用org-download来实现屏幕截图的功能
-- 自动隐藏emacs窗口, 方便截取其它程序
-- 图片自动保存到org attachment目录
-- 自动添加图片显示参数, 设定在org中显示的大小
-- 可以使用org-download-delete来删除当前image
 
-#+name: fb26a313-8d58-4e2a-b515-3314d860d44c
+**** take file link as attachment
+***** 从当前位置文件链接提取文件名.
+#+name: 26a9b6db-6902-481b-96c8-7c5ecc96f739
 #+begin_src emacs-lisp
-  ;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
-  (defun gwp/take-screenshot ()
-    "Minimize emacs, and take a screenshot using org-download"
-    (interactive)
-
-    (suspend-frame)
-    (org-download-screenshot)
-    (raise-frame)
-    )
-
-  (defun gwp/org-image-attributes-default ()
-    "default image attributes: caption, name label, width ..."
-    (format (concat
-             ;; #+DOWNLOAD mark: for easy to delete using org-download
-             (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
-             (concat  "#+caption: " (read-input "Caption: ") "\n")
-             ;; set unique figure name
-             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-             ;; unit in px; for displaying in org-mode
-             "#+attr_org: :width 800\n"
-             ;; unit in cm; for exporting as odt
-             "#+attr_odt: :width 10"
-             )
-            )
-    )
-
-  (defun gwp/org-insert-image-attributes ()
-    "insert image attributes such as caption and labels"
-    (interactive)
-
-    (insert (gwp/org-image-attributes-default))
-    )
-
-  (defun gwp/org-download-annotate (link)
-    "Annotate LINK with the time of download."
-
-    (gwp/org-image-attributes-default)
-    )
-
-  (use-package org-download
-    :after org
-    :ensure t
-    :bind
-    (("C-c <insert>" . gwp/take-screenshot)
-     ("C-c <delete>" . org-download-delete)
-     )
-    :config
-    (progn
-      (setq org-download-method 'attach)
-      (setq org-download-annotate-function 'gwp/org-download-annotate)
-      ;; (setq org-download-image-html-width 900) ; in px
-      ;; (setq org-download-image-latex-width 16)  ; in cm
-      (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
+  (defun gwp/org-file-link-p (&optional element)
+    (let ((el (or element (org-element-context))))
+      (and (eq (org-element-type el) 'link)
+           (string= (org-element-property :type el) "file")
+           )
       )
     )
 #+end_src
 
+#+name: c6a0a213-14c8-4239-ad63-6a8abe8dbe94
+#+begin_src emacs-lisp
+  (defun gwp/file-path-at-point()
+    "get file path from link at point"
+    (let ((el (org-element-context)))
+      (when (gwp/org-file-link-p el)
+        (org-element-property :path el)
+        )
+      )
+    )
+#+end_src
+
+***** 使用org-attach将文件move到当到附录中并更新文件链接
+#+name: 8854850a-e2c0-4cff-a29f-fdc2a078347f
+#+begin_src emacs-lisp
+  (require 'org-download)
+
+  (defun gwp/org-take-as-local-attachment ()
+    "move file link at point as local attachment"
+    (interactive)
+    (let ((file (gwp/file-path-at-point)))
+      (if file
+          (progn
+           ;; (org-attach-attach file nil 'mv)
+           (org-attach-attach file)
+           ;; remove the old
+           (call-interactively 'org-download-delete)
+           ;; insert the new
+           (gwp/org-insert-image-attributes)
+           (insert "\n")
+           (call-interactively 'org-insert-last-stored-link)
+           ;; refresh the image if possbile
+           (org-display-inline-images)
+           )
+        (user-error "Point is not on a link")
+        )
+      )
+    )
+#+end_src
+
+*** TODO refile
+#+name: c38fb49c-9ebf-4103-a404-f52514abc11f
+#+BEGIN_SRC emacs-lisp
+  ;; any headline with level <= 2 is a target
+  (setq org-refile-targets '(
+                             (org-agenda-files :tag . "Incoming")
+                             )
+        )
+
+  (setq org-reverse-note-order t)
+  (defun gwp/get-org-file-link-path ()
+    (save-excursion
+      (beginning-of-line)
+      (search-forward "[[file:" (line-end-position))
+      (if (org-in-regexp org-bracket-link-regexp 1)
+          (org-link-unescape (match-string-no-properties 1))
+        )
+      )
+    )
+
+  (defun gwp/enter-to-read-state()
+    "evoke external shell script when entering READ state"
+    (when (equal org-state "READ")
+      (setq file (gwp/get-org-file-link-path))
+      (if file
+          (progn
+           (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+           (message cmd)
+           (shell-command cmd)
+          )
+          )
+      )
+      (when (equal org-last-state "READ")
+        (message "try to remove READ state")
+        (setq file (gwp/get-org-file-link-path))
+        (if file
+            (progn
+              (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+              (message cmd)
+              (shell-command cmd)
+              )
+          )
+        )
+    )
+  (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
+
+  ;; show a sparse-tree in READ keyword
+  (defun gwp/org-show-read-tree ()
+    "show a sparse-tree in READ keyword"
+    (interactive)
+
+    (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
+      ;; create new macro of the form
+      ;; C-u M-x org-show-todo-tree RET READ RET
+      (execute-kbd-macro (vconcat base-vector
+                                  (vector 'return)))))
+
+#+END_SRC
 *** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+name: 4136bddd-2d62-4d66-8f84-aa28e09006ca

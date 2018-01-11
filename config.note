@@ -2733,7 +2733,7 @@ file-exists-p函数对symlink的特殊性:
 ***** 使用org-attach将文件move到当到附录中并更新文件链接
 #+name: 8854850a-e2c0-4cff-a29f-fdc2a078347f
 #+begin_src emacs-lisp
-  (require 'org-download)
+  ;; (require 'org-download)
 
   (defun gwp/org-take-as-local-attachment ()
     "move file link at point as local attachment"

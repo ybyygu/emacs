@@ -724,7 +724,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; c6a0a213-14c8-4239-ad63-6a8abe8dbe94 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::8854850a-e2c0-4cff-a29f-fdc2a078347f][8854850a-e2c0-4cff-a29f-fdc2a078347f]]
-(require 'org-download)
+;; (require 'org-download)
 
 (defun gwp/org-take-as-local-attachment ()
   "move file link at point as local attachment"

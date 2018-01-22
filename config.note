@@ -4,6 +4,14 @@
 # Created: 2016-10-14 14:20
 
 * Memo [9/16]
+** [2018-01-22 Mon] 调整profile report格式
+emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的输出太短, 如果嵌套太深, 命令就看不到了.
+
+默认设置:
+: Its value is ((50 left) (24 right ((19 right) (5 right))))
+修改为:
+: (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
+
 ** DONE [2018-01-10 Wed] 实现image-take功能: 将image指向外部的image链接转换为当前outline的attachment
 CLOSED: [2018-01-10 Wed 16:07]
 主调函数:
@@ -494,6 +502,7 @@ References
 #+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
 #+end_src
+
 ** org-read-todo
 #+name: 35d32554-49c1-49f0-a3b4-133c55d4bb40
 #+BEGIN_SRC sh
@@ -1625,6 +1634,12 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
   (setq-default dired-omit-files-p t) ; Buffer-local variable
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
 #+end_src
+*** profiler
+emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的输出太短, 如果嵌套太深, 命令就看不到了.
+#+name: b50b9af5-8011-44e9-b278-47b71ac0a7d8
+#+begin_src emacs-lisp
+  (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
+#+end_src
 
 ** gwp/keybindings.el
 :PROPERTIES:
@@ -1891,8 +1906,8 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
     ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
     (setq org-agenda-files "~/Notes/.agenda_files")
 
-    (setq org-agenda-include-diary t)
-    (setq org-agenda-span (quote month))
+    (setq org-agenda-include-diary nil)
+    (setq org-agenda-span (quote year))
 
     ;; the default is todo-start
     (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-12-29 Fri 11:26>
+;;  UPDATED:    <2018-01-22 Mon 16:23>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -103,3 +103,7 @@
 (setq-default dired-omit-files-p t) ; Buffer-local variable
 (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
 ;; 7f135717-84cd-444e-8946-c96a9c2429f1 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::b50b9af5-8011-44e9-b278-47b71ac0a7d8][b50b9af5-8011-44e9-b278-47b71ac0a7d8]]
+(setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
+;; b50b9af5-8011-44e9-b278-47b71ac0a7d8 ends here

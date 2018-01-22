@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-01-04 Thu 18:16>
+;;  UPDATED:    <2018-01-22 Mon 20:17>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -48,6 +48,7 @@ values."
      ;; ----------------------------------------------------------------
      ;; ivy
      helm
+     html
      auto-completion
      emacs-lisp
      git

@@ -832,6 +832,7 @@ References
        ;; ----------------------------------------------------------------
        ;; ivy
        helm
+       html
        auto-completion
        emacs-lisp
        git
@@ -2036,15 +2037,15 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
                     ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
                     (org-agenda-todo-keyword-format "")
                     (org-agenda-remove-tags t)
-                    (org-agenda-span 10)
                     )
+                   ;; agenda view exported with: Ctrl-C a e
+                   ("~/Notes/agenda.html" "~/Notes/agenda.txt")
                    )
                  )
     )
 #+end_src
 
 后台自动导出日程
-
 #+name: 9a06a2a8-3a2d-40b0-8701-3999d836f39f
 #+BEGIN_SRC emacs-lisp
   ;; disabled for upgrading to org-9.0
@@ -2057,7 +2058,6 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
 
   ;; ;; export agenda if I am away for 2 minutes
   ;; (run-with-idle-timer 600 t 'gwp/run-agenda-store)
-
 #+END_SRC
 
 *** zotero

@@ -4,92 +4,9 @@
   ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
   (setq org-agenda-files "~/Notes/.agenda_files")
 
-  (setq org-agenda-include-diary t)
-  (setq org-agenda-span (quote month))
-
   ;; the default is todo-start
   (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
   (setq org-icalendar-alarm-time 5)
-
-  (setq org-agenda-custom-commands
-        '(("a" agenda "" nil ("~/Notes/org-cal.ics"))
-          ("g" . "GTD contexts") ; description for "g" prefix
-          )
-        )
-
-  (add-to-list 'org-agenda-custom-commands
-               '("gr" "Reading"
-                 ((tags-todo "Reading|Read"
-                             (
-                              (org-agenda-overriding-header "待读列表\n------------------")
-                              (org-agenda-sorting-strategy '(category-keep priority-down))
-                              (org-agenda-remove-tags t)
-                              (org-agenda-compact-blocks t)
-                              )
-                             )
-                  (tags "REFILE"
-                        (
-                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
-                         (org-tags-match-list-sublevels nil)
-                         )
-                        )
-                  )
-                 ((org-agenda-compact-blocks t))
-                 )
-               )
-
-  (add-to-list 'org-agenda-custom-commands
-               '("gt" "Tasks"
-                 ((tags "ASAP+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "ASAP\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         (org-agenda-max-entries 20)
-                         )
-                        )
-
-                  (tags "Project+Action+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "Project\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         )
-                        )
-                  (tags "Action+Study+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "Topics\n------------------")
-                         (org-agenda-files '("~/Notes/research.note"))
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-
-                  (tags "Action+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "生活琐事\n------------------")
-                         (org-agenda-files '("~/Notes/life.note"))
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-
-                  (tags "Computer+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "电脑调优\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-                  )
-                 ;; options set here apply to the entire block
-                 (
-                  (org-tags-match-list-sublevels nil)
-                  (org-agenda-prefix-format "%-20c ")
-                  (org-agenda-todo-keyword-format "")
-                  (org-agenda-remove-tags t)
-                  (org-agenda-compact-blocks t)
-                  )
-                 )
-               )
 
   ;; Show all future entries for repeating tasks
   (setq org-agenda-repeating-timestamp-show-all t)
@@ -108,6 +25,118 @@
   (setq org-agenda-include-all-todo nil)
   )
 ;; 8494456e-4208-499d-944d-cd14efb43ae7 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::dd7f0533-95bf-4920-8482-e770b06c5e14][dd7f0533-95bf-4920-8482-e770b06c5e14]]
+(with-eval-after-load 'org-agenda
+  (setq org-agenda-custom-commands
+               '(
+                 ("g" . "GTD contexts") ; description for "g" prefix
+                 )
+               )
+  ;; project overview
+  (add-to-list 'org-agenda-custom-commands
+               '("gp" "Project"
+                 (
+                  (tags "Project+Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Project\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         )
+                        )
+                  (tags "Action+Study+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Topics\n------------------")
+                         (org-agenda-files '("~/Notes/research.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  (tags "Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "生活琐事\n------------------")
+                         (org-agenda-files '("~/Notes/life.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  ;; (tags "Computer+TODO=\"TODO\""
+                  ;;       (
+                  ;;        (org-agenda-overriding-header "电脑调优\n------------------")
+                  ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                  ;;        (org-agenda-max-entries 5)
+                  ;;        )
+                  ;;       )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  (org-agenda-prefix-format "%-20c ")
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  (org-agenda-compact-blocks t)
+                  )
+                 )
+               )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gr" "Reading"
+                 (
+                  (tags-todo "Reading|Read"
+                             (
+                              (org-agenda-overriding-header "待读列表\n------------------")
+                              (org-agenda-sorting-strategy '(category-keep priority-down))
+                              (org-agenda-remove-tags t)
+                              (org-agenda-compact-blocks t)
+                              )
+                             )
+                  (tags "REFILE"
+                        (
+                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                         (org-tags-match-list-sublevels nil)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 ((org-agenda-compact-blocks t))
+                 )
+               )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gt" "Tasks"
+                 (
+                  (agenda ""
+                          (
+                           (org-agenda-entry-types '(:scheduled))
+                           (org-agenda-span (quote month)) ;; or (org-agenda-span 60)
+                           (org-agenda-include-diary nil)
+                           (org-agenda-overriding-header "Agenda\n------------------")
+                           )
+                          )
+                  ;; (tags "ASAP+TODO=\"TODO\""
+                  (tags-todo "ASAP"
+                        (
+                         (org-agenda-entry-types '(:timestamp))
+                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                         (org-agenda-overriding-header "\nASAP\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         (org-agenda-max-entries 20)
+                         (org-agenda-prefix-format "%-12c ")
+                         (org-agenda-compact-blocks t)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  (org-agenda-span 10)
+                  )
+                 )
+               )
+  )
+;; dd7f0533-95bf-4920-8482-e770b06c5e14 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::9a06a2a8-3a2d-40b0-8701-3999d836f39f][9a06a2a8-3a2d-40b0-8701-3999d836f39f]]
 ;; disabled for upgrading to org-9.0

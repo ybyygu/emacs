@@ -106,7 +106,7 @@
                  (
                   (agenda ""
                           (
-                           (org-agenda-entry-types '(:scheduled))
+                           (org-agenda-entry-types '(:deadline :scheduled))
                            (org-agenda-span (quote month)) ;; or (org-agenda-span 60)
                            (org-agenda-include-diary nil)
                            (org-agenda-overriding-header "Agenda\n------------------")
@@ -116,7 +116,7 @@
                   (tags-todo "ASAP"
                         (
                          (org-agenda-entry-types '(:timestamp))
-                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
                          (org-agenda-overriding-header "\nASAP\n------------------")
                          (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
                          (org-agenda-max-entries 20)
@@ -131,8 +131,9 @@
                   ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
                   (org-agenda-todo-keyword-format "")
                   (org-agenda-remove-tags t)
-                  (org-agenda-span 10)
                   )
+                 ;; agenda view exported with: Ctrl-C a e
+                 ("~/Notes/agenda.html" "~/Notes/agenda.txt")
                  )
                )
   )

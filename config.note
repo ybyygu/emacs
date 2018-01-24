@@ -3,7 +3,11 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [9/16]
+* Memo [9/17]
+** TODO [2018-01-24 Wed] 修复org-capture, org-protocol中的几个bug
+- [ ] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
+- [X] firefox中, org-protocol在某些网页中无法激活. 是firefox中的"content security policy"导的鬼. 在config里禁用即可. "security.csp.enable"
+
 ** [2018-01-22 Mon] 调整profile report格式
 emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的输出太短, 如果嵌套太深, 命令就看不到了.
 
@@ -131,10 +135,20 @@ CLOSED: [2017-11-10 Fri 20:37]
 ** [2017-10-27 Fri] 使用gnu stow来管理tangle出的各类文件
 ** DONE [2017-10-27 Fri] 完善org-protocol和org-capture
 CLOSED: [2017-11-01 Wed 10:34]
+
+- 进一步优化bookmarklet, 方便在firefox中使用 [2018-01-24 Wed 21:02]
 - State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
 
-在chromium中建立如下的bookmarklet (new style)
-: javascript:location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "untitled page")
+在browser中建立如下的bookmarklet (in org-mode 9 style)
+#+BEGIN_SRC javascript
+  javascript:location.href='org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(window.getSelection()||document.title||"[untitled page]")
+#+END_SRC
+使用当前页面的链接. 如果有选中文字, 使用选中文字为标题, 否则使用页面标题；如果无标题, 使用默认标题.
+
+capture:
+#+BEGIN_SRC javascript
+  javascript:location.href='org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "untitled page") + "&body=" + encodeURIComponent(window.getSelection()|| " ")
+#+END_SRC
 
 References
 - org-capture.el

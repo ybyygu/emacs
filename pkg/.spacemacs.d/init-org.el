@@ -622,12 +622,12 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (raise-frame)
   )
 
-(defun gwp/org-image-attributes-default ()
+(defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
   (format (concat
            ;; #+DOWNLOAD mark: for easy to delete using org-download
            (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
-           (concat  "#+caption: " (read-input "Caption: ") "\n")
+           (concat  "#+caption: " (read-string "Caption: " caption) "\n")
            ;; set unique figure name
            (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
            ;; unit in px; for displaying in org-mode
@@ -638,11 +638,11 @@ This is a copy and paste. Additional languages would warrant a refactor."
           )
   )
 
-(defun gwp/org-insert-image-attributes ()
+(defun gwp/org-insert-image-attributes (&optional caption)
   "insert image attributes such as caption and labels"
   (interactive)
 
-  (insert (gwp/org-image-attributes-default))
+  (insert (gwp/org-image-attributes-default caption))
   )
 
 (defun gwp/org-download-annotate (link)
@@ -756,22 +756,35 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; [[file:~/Install/configs/spacemacs/config.note::8854850a-e2c0-4cff-a29f-fdc2a078347f][8854850a-e2c0-4cff-a29f-fdc2a078347f]]
 ;; (require 'org-download)
 
+(defun gwp/org-store-link-without-desc (file)
+  "store file link without the description part -- a tweak to make odt image exporting correct."
+  (setq org-stored-links
+        (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
+              org-stored-links)
+        )
+  )
+
 (defun gwp/org-take-as-local-attachment ()
   "move file link at point as local attachment"
   (interactive)
   (let ((file (gwp/file-path-at-point)))
     (if file
         (progn
-         ;; (org-attach-attach file nil 'mv)
-         (org-attach-attach file)
-         ;; remove the old
-         (call-interactively 'org-download-delete)
-         ;; insert the new
-         (gwp/org-insert-image-attributes)
-         (insert "\n")
-         (call-interactively 'org-insert-last-stored-link)
-         ;; refresh the image if possbile
-         (org-display-inline-images)
+          ;; 1. store the file using copy
+          ;; or we can use the mv method: (org-attach-attach file nil 'mv)
+          ;; do not store file link since it will corrupt odt image exporting
+          (let ((org-attach-store-link-p nil))
+            (org-attach-attach file))
+          ;; 2. remove the old
+          (call-interactively 'org-download-delete)
+          ;; 3. insert the new
+          ;; use file name as the default caption
+          (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
+          (insert "\n")
+          (gwp/org-store-link-without-desc file)
+          (call-interactively 'org-insert-last-stored-link)
+          ;; refresh the image if possbile
+          (org-display-inline-images)
          )
       (user-error "Point is not on a link")
       )

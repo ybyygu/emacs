@@ -20,6 +20,7 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
 CLOSED: [2018-01-10 Wed 16:07]
 主调函数:
 : gwp/org-take-as-local-attachment
+- 修复链接的图片无法在odt正常导出的问题(去掉file link中的 description 部分).
 - State "DONE"       from "TODO"       [2018-01-10 Wed 16:07]
 
 ** DONE [2018-01-06 Sat] 解决odt导出latex公式分辨率太低的问题
@@ -140,12 +141,14 @@ CLOSED: [2017-11-01 Wed 10:34]
 - State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
 
 在browser中建立如下的bookmarklet (in org-mode 9 style)
+#+name: 66cbeb70-71e9-46f9-ad08-94f9bbec2548
 #+BEGIN_SRC javascript
   javascript:location.href='org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(window.getSelection()||document.title||"[untitled page]")
 #+END_SRC
 使用当前页面的链接. 如果有选中文字, 使用选中文字为标题, 否则使用页面标题；如果无标题, 使用默认标题.
 
 capture:
+#+name: 12d167c2-43c7-4f54-9a27-2b55432d113d
 #+BEGIN_SRC javascript
   javascript:location.href='org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "untitled page") + "&body=" + encodeURIComponent(window.getSelection()|| " ")
 #+END_SRC
@@ -2639,12 +2642,12 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
     (raise-frame)
     )
 
-  (defun gwp/org-image-attributes-default ()
+  (defun gwp/org-image-attributes-default (&optional caption)
     "default image attributes: caption, name label, width ..."
     (format (concat
              ;; #+DOWNLOAD mark: for easy to delete using org-download
              (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
-             (concat  "#+caption: " (read-input "Caption: ") "\n")
+             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
              ;; set unique figure name
              (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
              ;; unit in px; for displaying in org-mode
@@ -2655,11 +2658,11 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
             )
     )
 
-  (defun gwp/org-insert-image-attributes ()
+  (defun gwp/org-insert-image-attributes (&optional caption)
     "insert image attributes such as caption and labels"
     (interactive)
 
-    (insert (gwp/org-image-attributes-default))
+    (insert (gwp/org-image-attributes-default caption))
     )
 
   (defun gwp/org-download-annotate (link)
@@ -2796,22 +2799,35 @@ file-exists-p函数对symlink的特殊性:
 #+begin_src emacs-lisp
   ;; (require 'org-download)
 
+  (defun gwp/org-store-link-without-desc (file)
+    "store file link without the description part -- a tweak to make odt image exporting correct."
+    (setq org-stored-links
+          (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
+                org-stored-links)
+          )
+    )
+
   (defun gwp/org-take-as-local-attachment ()
     "move file link at point as local attachment"
     (interactive)
     (let ((file (gwp/file-path-at-point)))
       (if file
           (progn
-           ;; (org-attach-attach file nil 'mv)
-           (org-attach-attach file)
-           ;; remove the old
-           (call-interactively 'org-download-delete)
-           ;; insert the new
-           (gwp/org-insert-image-attributes)
-           (insert "\n")
-           (call-interactively 'org-insert-last-stored-link)
-           ;; refresh the image if possbile
-           (org-display-inline-images)
+            ;; 1. store the file using copy
+            ;; or we can use the mv method: (org-attach-attach file nil 'mv)
+            ;; do not store file link since it will corrupt odt image exporting
+            (let ((org-attach-store-link-p nil))
+              (org-attach-attach file))
+            ;; 2. remove the old
+            (call-interactively 'org-download-delete)
+            ;; 3. insert the new
+            ;; use file name as the default caption
+            (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
+            (insert "\n")
+            (gwp/org-store-link-without-desc file)
+            (call-interactively 'org-insert-last-stored-link)
+            ;; refresh the image if possbile
+            (org-display-inline-images)
            )
         (user-error "Point is not on a link")
         )

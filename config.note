@@ -137,27 +137,58 @@ CLOSED: [2017-11-10 Fri 20:37]
 ** DONE [2017-10-27 Fri] 完善org-protocol和org-capture
 CLOSED: [2017-11-01 Wed 10:34]
 
+- 进一步完善js代码
 - 进一步优化bookmarklet, 方便在firefox中使用 [2018-01-24 Wed 21:02]
 - State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
 
-在browser中建立如下的bookmarklet (in org-mode 9 style)
-#+name: 66cbeb70-71e9-46f9-ad08-94f9bbec2548
+*** store-link
+版本1: 使用selection或URL做为description
 #+BEGIN_SRC javascript
-  javascript:location.href='org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(window.getSelection()||document.title||"[untitled page]")
-#+END_SRC
-使用当前页面的链接. 如果有选中文字, 使用选中文字为标题, 否则使用页面标题；如果无标题, 使用默认标题.
+  javascript:
+  var title = window.getSelection();
+  if (title == '') {
+      title = 'URL';
+  }
 
-capture:
+  location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
+#+END_SRC
+
+版本2: 使用selection或document title做为description. 如果没有, 默认为URL.
+#+BEGIN_SRC javascript
+  javascript:
+  var title = window.getSelection();
+  if (title == '') {
+      title = document.title;
+      if (title == '') {
+          title = 'URL';
+      }
+  }
+
+  location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
+#+END_SRC
+*** capture
+使用'n'模板: 插入当前页面的链接, 使用页面标题或URL做为链接描述. 引用选中文字.
+
 #+name: 12d167c2-43c7-4f54-9a27-2b55432d113d
 #+BEGIN_SRC javascript
-  javascript:location.href='org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title || "untitled page") + "&body=" + encodeURIComponent(window.getSelection()|| " ")
+  javascript:
+  var title = document.title;
+  if (title == '') {
+      title = 'URL';
+  }
+
+  location.href = 'org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title) + "&body=" + encodeURIComponent(window.getSelection());
 #+END_SRC
 
-References
+*** References
+原理
 - org-capture.el
 - https://github.com/alphapapa/org-protocol-capture-html
 - org capture extensions: https://github.com/sprig/org-capture-extension
 - [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol.el – Intercept calls from emacsclient to trigger custom actions]] (outdated)
+工具
+- [[https://mrcoles.com/bookmarklet/][Bookmarklet Creator with Script Includer - Peter Coles]]
+- [[http://jsbeautifier.org/][Online JavaScript beautifier]]
 
 ** TODO [2017-10-27 Fri] 添加gnome recent files功能, 方便添加attachment
 - 要有清理旧的(不存在)文件的功能

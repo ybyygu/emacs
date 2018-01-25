@@ -3,7 +3,10 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [9/17]
+* Memo [9/18]
+** TODO [2018-01-25 Thu] 修复attach-store的问题
+- [ ] 如果目标链接存在会出问题.
+
 ** TODO [2018-01-24 Wed] 修复org-capture, org-protocol中的几个bug
 - [ ] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
 - [X] firefox中, org-protocol在某些网页中无法激活. 是firefox中的"content security policy"导的鬼. 在config里禁用即可. "security.csp.enable"
@@ -143,6 +146,7 @@ CLOSED: [2017-11-01 Wed 10:34]
 
 *** store-link
 版本1: 使用selection或URL做为description
+#+name: 6d8dcf5a-30ca-46e1-9cc7-0ffc45ca6b29
 #+BEGIN_SRC javascript
   javascript:
   var title = window.getSelection();
@@ -154,6 +158,7 @@ CLOSED: [2017-11-01 Wed 10:34]
 #+END_SRC
 
 版本2: 使用selection或document title做为description. 如果没有, 默认为URL.
+#+name: f5b4d415-ebeb-4a45-b85b-c816d8dfd9cf
 #+BEGIN_SRC javascript
   javascript:
   var title = window.getSelection();
@@ -1977,6 +1982,13 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
     (setq org-agenda-include-all-todo nil)
     )
 #+END_SRC
+
+忽略已经完成的任务
+#+name: 0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206
+#+begin_src emacs-lisp
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
+#+end_src
 
 自定义agenda命令
 #+name: dd7f0533-95bf-4920-8482-e770b06c5e14

@@ -26,6 +26,11 @@
   )
 ;; 8494456e-4208-499d-944d-cd14efb43ae7 ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206][0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206]]
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
+;; 0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206 ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::dd7f0533-95bf-4920-8482-e770b06c5e14][dd7f0533-95bf-4920-8482-e770b06c5e14]]
 (with-eval-after-load 'org-agenda
   (setq org-agenda-custom-commands

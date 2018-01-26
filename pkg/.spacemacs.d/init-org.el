@@ -617,16 +617,6 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; 86d9dfb7-8aed-4cb4-b058-76b456bfe8f6 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::fb26a313-8d58-4e2a-b515-3314d860d44c][fb26a313-8d58-4e2a-b515-3314d860d44c]]
-;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
-(defun gwp/take-screenshot ()
-  "Minimize emacs, and take a screenshot using org-download"
-  (interactive)
-
-  (suspend-frame)
-  (org-download-screenshot)
-  (raise-frame)
-  )
-
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
   (format (concat
@@ -660,7 +650,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
   :after org
   :ensure t
   :bind
-  (("C-c <insert>" . gwp/take-screenshot)
+  (("C-c <insert>" . org-download-screenshot)
    ("C-c <delete>" . org-download-delete)
    )
   :config
@@ -669,7 +659,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
     (setq org-download-annotate-function 'gwp/org-download-annotate)
     ;; (setq org-download-image-html-width 900) ; in px
     ;; (setq org-download-image-latex-width 16)  ; in cm
-    (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
+    (setq org-download-screenshot-method "take-screenshot-dwim %s" )
     )
   )
 ;; fb26a313-8d58-4e2a-b515-3314d860d44c ends here

@@ -3,7 +3,16 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [9/18]
+* Memo [10/19]
+** DONE [2018-01-26 Fri] 解决某些情况下屏幕截图时无法正常隐藏emacs窗口的问题.
+CLOSED: [2018-01-26 Fri 12:25]
+:PROPERTIES:
+:ID:       3472e603-77c5-487c-8214-d48d9445bf0f
+:END:
+
+- State "DONE"       from "DONE"       [2018-01-26 Fri 12:25] \\
+  使用xdotool来实现emacs窗口的隐藏与还原.
+
 ** TODO [2018-01-25 Thu] 修复attach-store的问题
 - [ ] 如果目标链接存在会出问题.
 
@@ -540,6 +549,22 @@ References
 - 重要的tangle参数已在配置文件中做全局设置, 比如: ~padline~ ~mkdirp~ ~comments~
 
 * scripts
+** take-screenshot-dwim
+屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
+
+#+header: :tangle pkg/.local/bin/take-screenshot-dwim :shebang #! /usr/bin/bash
+#+name: 21060be1-2114-40f2-9bcd-319bdbef9e06
+#+begin_src shell
+  [[ $# < 1 ]] && echo "no image path" && exit 0
+
+  # switch to active window
+  xdotool keydown alt key Tab; xdotool keyup alt
+  # take a screenshot
+  deepin-screenshot -n -s "$1" 2>/dev/null
+  # switch back
+  xdotool keydown alt key Tab; xdotool keyup alt
+#+end_src
+
 ** org-capture
 #+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
 #+header: :mkdirp yes :comments yes :padline yes
@@ -1373,14 +1398,15 @@ commit之前更新时间戳
     )
 #+END_SRC
 
-*** init screenshot
-[2017-11-17 Fri] org-download更强大. 使用org-download来实现相同的功能.
-
+*** init screenshot                                               :Scratch:
 org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
 
-感觉这个包比 org-download 质量更高一些. 优点:
-1. 截屏的时候自动隐藏当前编辑窗口.
-2. 使用 org-attach 来处理文件的删除.
+[2017-11-17 Fri] org-download更强大. 使用org-download来实现相同的功能. 以下代码不导出.
+#+BEGIN_EXAMPLE
+  感觉这个包比 org-download 质量更高一些. 优点:
+  1. 截屏的时候自动隐藏当前编辑窗口.
+  2. 使用 org-attach 来处理文件的删除.
+#+END_EXAMPLE
 
 设置使用deepin-screenshot
 #+name: 8b9c6195-c08c-44d8-b5c6-2698402f3cb6
@@ -2667,13 +2693,18 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+END_SRC
 
 *** screenshot
+:PROPERTIES:
+:ID:       38cc15a0-1e46-4dd0-9197-aead341d2537
+:END:
 使用org-download来实现屏幕截图的功能
 - 自动隐藏emacs窗口, 方便截取其它程序
 - 图片自动保存到org attachment目录
 - 自动添加图片显示参数, 设定在org中显示的大小
 - 可以使用org-download-delete来删除当前image
 
-#+name: fb26a313-8d58-4e2a-b515-3314d860d44c
+[2018-01-26 Fri] 使用emacs内置功能来隐藏窗口时不时会遇到问题. 下面代码不导出.
+#+header: :tangle no
+#+name: 4998ea64-ccac-47e4-bfce-25ff03c8462d
 #+begin_src emacs-lisp
   ;; inspired by John Kitchin's config: https://emacs.stackexchange.com/a/26627/17011
   (defun gwp/take-screenshot ()
@@ -2684,7 +2715,12 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
     (org-download-screenshot)
     (raise-frame)
     )
+#+end_src
 
+[2018-01-26 Fri] 使用xdotool来实现emacs窗口的隐藏与还原. 外部程序名: take-screenshot-dwim, 后面跟截图存储路径.
+
+#+name: fb26a313-8d58-4e2a-b515-3314d860d44c
+#+begin_src emacs-lisp
   (defun gwp/org-image-attributes-default (&optional caption)
     "default image attributes: caption, name label, width ..."
     (format (concat
@@ -2718,7 +2754,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
     :after org
     :ensure t
     :bind
-    (("C-c <insert>" . gwp/take-screenshot)
+    (("C-c <insert>" . org-download-screenshot)
      ("C-c <delete>" . org-download-delete)
      )
     :config
@@ -2727,7 +2763,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
       (setq org-download-annotate-function 'gwp/org-download-annotate)
       ;; (setq org-download-image-html-width 900) ; in px
       ;; (setq org-download-image-latex-width 16)  ; in cm
-      (setq org-download-screenshot-method "deepin-screenshot -n -s %s 2>/dev/null" )
+      (setq org-download-screenshot-method "take-screenshot-dwim %s" )
       )
     )
 #+end_src

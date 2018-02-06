@@ -225,8 +225,10 @@ CLOSED: [2017-12-29 Fri 11:24]
 #+name: 730f0521-c198-43aa-879a-4fa5a3e60d4f
 #+begin_src emacs-lisp
   (require 'dired-x)
-  (setq-default dired-omit-files-p t) ; Buffer-local variable
-  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+  (setq-default dired-omit-files-p nil) ; Buffer-local variable
+  ;; (setq dired-omit-files "^\\.+")
+  ;; default is "-al"
+  (setq dired-listing-switches "--group-directories-first -l -X")
 #+end_src
 
 ** [2017-10-21 Sat] How Fast Can You Tangle In Org-Mode [[https://www.wisdomandwonder.com/article/10630/how-fast-can-you-tangle-in-org-mode][URL]]
@@ -1711,9 +1713,12 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 #+name: 7f135717-84cd-444e-8946-c96a9c2429f1
 #+begin_src emacs-lisp
   (require 'dired-x)
-  (setq-default dired-omit-files-p t) ; Buffer-local variable
-  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+  (setq-default dired-omit-files-p nil) ; Buffer-local variable
+  ;; (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+  (setq dired-listing-switches "--group-directories-first -l -X")
+
 #+end_src
+
 *** profiler
 emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的输出太短, 如果嵌套太深, 命令就看不到了.
 #+name: b50b9af5-8011-44e9-b278-47b71ac0a7d8

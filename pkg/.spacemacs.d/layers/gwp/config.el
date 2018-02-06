@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-01-22 Mon 16:23>
+;;  UPDATED:    <2018-02-06 Tue 10:56>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -100,8 +100,9 @@
 
 ;; [[file:~/Install/configs/spacemacs/config.note::7f135717-84cd-444e-8946-c96a9c2429f1][7f135717-84cd-444e-8946-c96a9c2429f1]]
 (require 'dired-x)
-(setq-default dired-omit-files-p t) ; Buffer-local variable
-(setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+(setq-default dired-omit-files-p nil) ; Buffer-local variable
+;; (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+(setq dired-listing-switches "--group-directories-first -l -X")
 ;; 7f135717-84cd-444e-8946-c96a9c2429f1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::b50b9af5-8011-44e9-b278-47b71ac0a7d8][b50b9af5-8011-44e9-b278-47b71ac0a7d8]]

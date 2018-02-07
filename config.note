@@ -4,6 +4,16 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/19]
+** [2018-02-07 Wed] 禁用org layer定义的RET键
+默认为org-open-at-point, 非常容易误按.
+
+#+name: 218748ec-0aa8-4112-bf69-b770f18011da
+#+begin_src emacs-lisp
+  (evil-define-key 'normal org-mode-map
+    ;; (kbd "RET") 'nil
+    (kbd "RET") 'nil)
+#+end_src
+
 ** DONE [2018-01-26 Fri] 解决某些情况下屏幕截图时无法正常隐藏emacs窗口的问题.
 CLOSED: [2018-01-26 Fri 12:25]
 :PROPERTIES:
@@ -1767,6 +1777,12 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
          )
        (evil-define-key 'normal evil-org-mode-map
          "gP" 'helm-org-parent-headings
+         )
+
+       ;; disable Enter key in evil normal mode
+       (evil-define-key 'normal org-mode-map
+         ;; (kbd "RET") 'nil
+         (kbd "RET") 'nil
          )
        )
     )

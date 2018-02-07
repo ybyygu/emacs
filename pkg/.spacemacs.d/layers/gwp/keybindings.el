@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-01-11 Thu 18:15>
+;;  UPDATED:    <2018-02-07 Wed 13:03>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -32,6 +32,12 @@
        )
      (evil-define-key 'normal evil-org-mode-map
        "gP" 'helm-org-parent-headings
+       )
+
+     ;; disable Enter key in evil normal mode
+     (evil-define-key 'normal org-mode-map
+       ;; (kbd "RET") 'nil
+       (kbd "RET") 'nil
        )
      )
   )

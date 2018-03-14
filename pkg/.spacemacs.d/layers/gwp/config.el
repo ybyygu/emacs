@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-02-06 Tue 10:56>
+;;  UPDATED:    <2018-03-14 Wed 17:10>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -108,3 +108,7 @@
 ;; [[file:~/Install/configs/spacemacs/config.note::b50b9af5-8011-44e9-b278-47b71ac0a7d8][b50b9af5-8011-44e9-b278-47b71ac0a7d8]]
 (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
 ;; b50b9af5-8011-44e9-b278-47b71ac0a7d8 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::5c82f9a9-5afd-48e5-bbef-1603120eb3c5][5c82f9a9-5afd-48e5-bbef-1603120eb3c5]]
+(setq magit-revision-show-gravatars nil)
+;; 5c82f9a9-5afd-48e5-bbef-1603120eb3c5 ends here

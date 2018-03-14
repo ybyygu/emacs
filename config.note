@@ -4,6 +4,7 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/19]
+** [2018-03-13 Tue] 平安升级spacemacs至v0.200.13
 ** [2018-02-07 Wed] 禁用org layer定义的RET键
 默认为org-open-at-point, 非常容易误按.
 
@@ -1734,6 +1735,13 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
 #+name: b50b9af5-8011-44e9-b278-47b71ac0a7d8
 #+begin_src emacs-lisp
   (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
+#+end_src
+*** magit
+禁用magit中的gravatars支持, 响应能快一些.
+
+#+name: 5c82f9a9-5afd-48e5-bbef-1603120eb3c5
+#+begin_src emacs-lisp
+  (setq magit-revision-show-gravatars nil)
 #+end_src
 
 ** gwp/keybindings.el

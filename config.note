@@ -4,6 +4,16 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/19]
+** [2018-03-15 Thu] yasnippet升级
+新版 yasnippet包不再包含snippets, 需要单独安装.
+: Yasnippet no longer bundles snippets directly
+
+放在目录:
+: ~/Install/configs/yasnippet-snippets/snippets/rust-mode
+
+从里面找有用的, 挪过来即可.
+: ~/.spacemacs.d/snippets
+
 ** [2018-03-13 Tue] 平安升级spacemacs至v0.200.13
 ** [2018-02-07 Wed] 禁用org layer定义的RET键
 默认为org-open-at-point, 非常容易误按.

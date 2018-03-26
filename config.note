@@ -2706,7 +2706,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(
-          ("i" "interleave" plain (file "~/annotation.note")
+          ("i" "interleave" plain (file "~/Incoming/annotation.note")
            "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
           ("n" "Note" entry (file "~/Notes/refile.note")
            "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)

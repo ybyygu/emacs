@@ -693,7 +693,11 @@ References
       subprocess.Popen(args)
 
 #+end_src
+
 ** org-archive.py
+:PROPERTIES:
+:header-args: :tangle pkg/.local/bin/org-archive.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python2
+:END:
 *** header
 #+name: 41b21fcc-9294-4fac-b9c5-0039ebc9921d
 #+begin_src python

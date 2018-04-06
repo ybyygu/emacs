@@ -1,0 +1,11 @@
+#! /usr/bin/bash
+# [[file:~/Install/configs/spacemacs/config.note::21060be1-2114-40f2-9bcd-319bdbef9e06][21060be1-2114-40f2-9bcd-319bdbef9e06]]
+[[ $# < 1 ]] && echo "no image path" && exit 0
+
+# switch to active window
+xdotool keydown alt key Tab; xdotool keyup alt
+# take a screenshot
+deepin-screenshot -n -s "$1" 2>/dev/null
+# switch back
+xdotool keydown alt key Tab; xdotool keyup alt
+# 21060be1-2114-40f2-9bcd-319bdbef9e06 ends here

@@ -4,6 +4,32 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/19]
+** [2018-04-21 Sat] 使用graphviz来画图
+:PROPERTIES:
+:ID:       50a98a3c-7594-4caa-b295-32cd319b62a8
+:END:
+
+#+BEGIN_SRC dot :file data/50/a98a3c-7594-4caa-b295-32cd319b62a8/dot_success.png :cmdline -Kdot -Tpng
+  digraph {
+  // graph from left to right
+  rankdir=LR;
+  splines=true;
+  node [shape=box];
+
+  id [label="Install Graphviz"]
+  conf [label="Configure org-babel"]
+  dot [label="DOT in org-mode"]
+
+  id -> conf
+  conf -> dot
+  dot -> "Profit"
+  dot -> "Success" [style=dotted]
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:data/50/a98a3c-7594-4caa-b295-32cd319b62a8/dot_success.png]]
+
 ** [2018-03-15 Thu] yasnippet升级
 新版 yasnippet包不再包含snippets, 需要单独安装.
 : Yasnippet no longer bundles snippets directly
@@ -2277,6 +2303,7 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
        (python . t)
        (perl . t)
        (sed . t)
+       (dot . t)
        (shell . t)
        )
      )

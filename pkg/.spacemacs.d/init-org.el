@@ -235,6 +235,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
      (python . t)
      (perl . t)
      (sed . t)
+     (dot . t)
      (shell . t)
      )
    )

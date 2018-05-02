@@ -4,11 +4,15 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/19]
+** [2018-05-02 Wed] 偶然发现一个org新功能 org-tree-to-indirect-buffer
+比subtree narrow更好用一些, 因为可以同时看到全局和局部.
+
 ** [2018-04-21 Sat] 使用graphviz来画图
 :PROPERTIES:
 :ID:       50a98a3c-7594-4caa-b295-32cd319b62a8
 :END:
 
+#+name: 693176cf-9d04-4547-8e58-c78319d64bbd
 #+BEGIN_SRC dot :file data/50/a98a3c-7594-4caa-b295-32cd319b62a8/dot_success.png :cmdline -Kdot -Tpng
   digraph {
   // graph from left to right
@@ -962,6 +966,7 @@ References
        ;; <M-m f e R> (Emacs style) to install them.
        ;; ----------------------------------------------------------------
        ;; ivy
+       yaml
        helm
        html
        auto-completion

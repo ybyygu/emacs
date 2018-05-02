@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-02-07 Wed 13:03>
+;;  UPDATED:    <2018-05-02 Wed 20:02>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -15,6 +15,7 @@
   '(progn
      ;; disable org-toggle-comment since I never use this.
      (put 'org-toggle-comment 'disabled t)
+     ;; (global-set-key (kbd "C-c ;") 'gwp/insert-date)
      (org-defkey org-mode-map [(meta return)] 'org-meta-return)
      ;; use o as org global bindings
      (spacemacs/set-leader-keys
@@ -32,6 +33,10 @@
        )
      (evil-define-key 'normal evil-org-mode-map
        "gP" 'helm-org-parent-headings
+       )
+
+     (spacemacs/set-leader-keys-for-major-mode 'org-mode
+       ";" 'org-edit-special
        )
 
      ;; disable Enter key in evil normal mode

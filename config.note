@@ -3,9 +3,11 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [10/19]
-** [2018-05-02 Wed] 偶然发现一个org新功能 org-tree-to-indirect-buffer
+* Memo [10/20]
+** TODO [2018-05-02 Wed] 偶然发现一个org新功能 org-tree-to-indirect-buffer
 比subtree narrow更好用一些, 因为可以同时看到全局和局部.
+
+重新绑定edit-src, 比较难按.
 
 ** [2018-04-21 Sat] 使用graphviz来画图
 :PROPERTIES:
@@ -1814,6 +1816,7 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
     '(progn
        ;; disable org-toggle-comment since I never use this.
        (put 'org-toggle-comment 'disabled t)
+       ;; (global-set-key (kbd "C-c ;") 'gwp/insert-date)
        (org-defkey org-mode-map [(meta return)] 'org-meta-return)
        ;; use o as org global bindings
        (spacemacs/set-leader-keys
@@ -1831,6 +1834,10 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
          )
        (evil-define-key 'normal evil-org-mode-map
          "gP" 'helm-org-parent-headings
+         )
+
+       (spacemacs/set-leader-keys-for-major-mode 'org-mode
+         ";" 'org-edit-special
          )
 
        ;; disable Enter key in evil normal mode

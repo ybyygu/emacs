@@ -477,6 +477,8 @@ This is a copy and paste. Additional languages would warrant a refactor."
   ;; disable evaluation when export source codes
   (setq org-export-babel-evaluate nil)
 
+  (require 'ox-md)
+
   ;; disabled for updating to version 9.0
   ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)
   ;; http://stackoverflow.com/a/8836108/789593

@@ -4,6 +4,18 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/20]
+** [2018-06-01 Fri] 解决expand-region在org-mode buffer中的问题
+使用扩选功能时, expand-region会自动展开显示之前隐藏outline中的内容, 导致显示内容跳转.
+
+解决方案:
+- 修改expand-region.el, 删除掉 "(eval-after-load 'org" 相关内容
+
+** [2018-05-07 Mon] 新技能: helm-resume: 返回之前的搜索窗口 [[https://emacs.stackexchange.com/questions/10701/how-to-edit-in-the-place-highlighted-by-helm-swoop][how to edit in the place highlighted by helm swoop]] :Starred:
+: SPC r l
+
+也可以从之前的提供历史中选择(太强大了):
+: ctrl-u SPC r l
+
 ** TODO [2018-05-02 Wed] 偶然发现一个org新功能 org-tree-to-indirect-buffer
 比subtree narrow更好用一些, 因为可以同时看到全局和局部.
 
@@ -491,7 +503,6 @@ stow:
 使用vim的方式搜索时, 可以进入iedit-mode, 同时编辑多处匹配项. 退出时, 按两下ESC.
 
 ** 窗口管理 (window/frame)
-
 | ~SPC w F~ | new frame      |
 | ~SPC w v~ | vertical split |
 | ~SPC w d~ | remove window  |
@@ -515,6 +526,7 @@ stow:
 | ~g j~       | Move to next heading on same level     |
 | ~g k~       | Move to previous heading on same level |
 | ~g l~       | Move down one level in headings        |
+
 ** 粘贴替换选中文字
 vi模式下使用P命令.
 ** gold-ratio 可以自动放大当前的 window 区域: SPC t g
@@ -961,7 +973,7 @@ References
      ;; List of configuration layers to load.
      dotspacemacs-configuration-layers
      '(
-       ;; markdown
+       markdown
        ;; ----------------------------------------------------------------
        ;; Example of useful layers you may want to use right away.
        ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -2594,7 +2606,7 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 
 也可以用这个包: https://github.com/tumashu/ox-latex-chinese
 
-**** file association
+**** markdown and others
 #+name: 70ff43af-9dfc-457c-b4b7-e423715cc689
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'ox
@@ -2603,6 +2615,8 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 
     ;; disable evaluation when export source codes
     (setq org-export-babel-evaluate nil)
+
+    (require 'ox-md)
 
     ;; disabled for updating to version 9.0
     ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)
@@ -2621,6 +2635,7 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
     ;; (add-to-list 'org-file-apps '("\\.html\\'" . "firefox %s"))
     )
 #+END_SRC
+
 **** latex
 - 中文设置
 - 可以考虑使用 ox-latex-chinese包

@@ -478,6 +478,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (setq org-export-babel-evaluate nil)
 
   (require 'ox-md)
+  (require 'ox-org)
 
   ;; disabled for updating to version 9.0
   ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)

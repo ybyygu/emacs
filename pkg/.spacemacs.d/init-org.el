@@ -192,35 +192,51 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 
 ;;;; The magic string of zitem:
-;; ZOTERO_ITEM CSL_CITATION {
-;; "citationID":"%s-citation-id"
-;; "properties": {"formattedCitation":"%s-desc"},
-;; "citationItems":[
-;;                  {"prefix":"",
-;;                   "locator":"",
-;;                   "suffix":"",
-;;                   "key":"%s-item-key",
-;;                   "uri":["http://zotero.org/users/undefined/items/%s-item-key"],
-;;                   "uris":["http://zotero.org/users/undefined/items/%s-item-key"]}]}
-;; %s-rnd"
+;; ZOTERO_ITEM CSL_CITATION
+;; {
+;; "properties": {
+;; "formattedCitation": "[1]",
+;; "plainCitation": "[1]"
+;; },
+;; "citationItems": [
+;;                   {
+;;                   "uri": [
+;;                           "http://zotero.org/users/15074/items/S5JM4V35"
+;;                           ]
+;;                   }
+;;                   ],
+;; "schema": "https://github.com/citation-style-language/schema/raw/master/csl-citation.json"
+;; } %s-rnd
 
 ;; adopted from https://www.mail-archive.com/emacs-orgmode@gnu.org/msg48905.html
 (defun gwp/org-zotero-export-odt (path desc)
   (let
       ((refmark "<text:reference-mark-start text:name=\"%s\"/>%s<text:reference-mark-end text:name=\"%s\"/>")
-       (zitem "ZOTERO_ITEM CSL_CITATION {&quot;properties&quot;: {&quot;formattedCitation&quot;:&quot;%s&quot;}, &quot;citationItems&quot;:[{&quot;prefix&quot;:&quot;&quot;,&quot;locator&quot;:&quot;&quot;,&quot;suffix&quot;:&quot;&quot;,&quot;key&quot;:&quot;%s&quot;,&quot;uri&quot;:[&quot;http://zotero.org/users/undefined/items/%s&quot;],&quot;uris&quot;:[&quot;http://zotero.org/users/undefined/items/%s&quot;]}]} %s&quot;")
+       (zitem "ZOTERO_ITEM CSL_CITATION {
+    &quot;properties&quot;: {
+        &quot;formattedCitation&quot;: &quot;%s&quot;,
+        &quot;plainCitation&quot;: &quot;%s&quot;
+    },
+    &quot;citationItems&quot;: [
+        {
+            &quot;uri&quot;: [
+                &quot;http://zotero.org/users/15074/items/%s&quot;
+            ]
+        }
+    ],
+    &quot;schema&quot;: &quot;https://github.com/citation-style-language/schema/raw/master/csl-citation.json&quot;
+} %s ")
 
        (item-key (car (cdr (split-string path "_"))))
        (rnd (concat "RND" (substring (org-id-new) -10))))
     (setq zitem
           (format zitem
                   desc
-                  item-key
-                  item-key
+                  desc
                   item-key
                   rnd)
           )
-    (setq desc (format "(%s)" desc))
+    (setq desc (format "%s" desc))
     (format refmark zitem desc zitem))
   )
 ;; 048aa38e-7f6f-4c9f-94da-020c82ea50e4 ends here

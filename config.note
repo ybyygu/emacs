@@ -4,6 +4,9 @@
 # Created: 2016-10-14 14:20
 
 * Memo [10/20]
+** [2018-08-22 Wed] 禁用自动为babel source block生成name的功能.
+用处不大.
+
 ** [2018-06-01 Fri] 解决expand-region在org-mode buffer中的问题
 使用扩选功能时, expand-region会自动展开显示之前隐藏outline中的内容, 导致显示内容跳转.
 
@@ -884,6 +887,7 @@ References
   Terminal=false
   Categories=Utility;Development;TextEditor;
 #+end_src
+
 ** org-protocol
 #+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :mkdirp yes
 #+name: bf3d535a-e442-47d0-a51c-4f927597df5b
@@ -896,6 +900,7 @@ References
   Terminal=false
   MimeType=x-scheme-handler/org-protocol;
 #+END_SRC
+
 ** install
 1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
 2. 安装桌面文件.
@@ -2526,7 +2531,7 @@ bibtex更新了item link的格式.
 
 为每个block自动生成独立的name:
 #+name: d3151aaf-84cf-484a-9513-40a671de7081
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; add name header automatically
   (with-eval-after-load "ob-tangle"
     (add-hook 'org-babel-pre-tangle-hook #'help/org-prp-src-blk)

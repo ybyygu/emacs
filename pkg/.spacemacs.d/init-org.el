@@ -413,13 +413,6 @@ This is a copy and paste. Additional languages would warrant a refactor."
   (insert "\n"))
 ;; b5128b51-bf3b-48f7-a96e-51417a752882 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::d3151aaf-84cf-484a-9513-40a671de7081][d3151aaf-84cf-484a-9513-40a671de7081]]
-;; add name header automatically
-(with-eval-after-load "ob-tangle"
-  (add-hook 'org-babel-pre-tangle-hook #'help/org-prp-src-blk)
-)
-;; d3151aaf-84cf-484a-9513-40a671de7081 ends here
-
 ;; [[file:~/Install/configs/spacemacs/config.note::a454727c-034e-4967-9193-3beaeb4b984f][a454727c-034e-4967-9193-3beaeb4b984f]]
 (help/set-org-babel-default-header-args :padline "yes")
 (help/set-org-babel-default-header-args :mkdirp "yes")

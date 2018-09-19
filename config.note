@@ -2544,7 +2544,7 @@ bibtex更新了item link的格式.
 #+begin_src emacs-lisp
   (help/set-org-babel-default-header-args :padline "yes")
   (help/set-org-babel-default-header-args :mkdirp "yes")
-  (help/set-org-babel-default-header-args :comments "noweb")
+  (help/set-org-babel-default-header-args :comments "both")
 #+end_src
 
 **** auto time-stamp

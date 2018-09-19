@@ -416,7 +416,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; [[file:~/Install/configs/spacemacs/config.note::a454727c-034e-4967-9193-3beaeb4b984f][a454727c-034e-4967-9193-3beaeb4b984f]]
 (help/set-org-babel-default-header-args :padline "yes")
 (help/set-org-babel-default-header-args :mkdirp "yes")
-(help/set-org-babel-default-header-args :comments "noweb")
+(help/set-org-babel-default-header-args :comments "both")
 ;; a454727c-034e-4967-9193-3beaeb4b984f ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::ec580eca-a4b0-4677-9992-6c62803ce1d7][ec580eca-a4b0-4677-9992-6c62803ce1d7]]

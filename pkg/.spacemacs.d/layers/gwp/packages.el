@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2017-11-28 Tue 10:03>
+;;  UPDATED:    <2018-12-17 Mon 08:49>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;

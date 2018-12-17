@@ -3,7 +3,12 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [10/20]
+* Memo [10/21]
+** TODO [2018-12-17 Mon] 注意去掉ox-latex-chinese依赖
+melpa中已经找不到了
+
+** [2018-12-17 Mon] 修改elpa镜像地址为https, 不然有些包查不到
+
 ** [2018-08-22 Wed] 禁用自动为babel source block生成name的功能.
 用处不大.
 
@@ -1286,15 +1291,15 @@ References
 
     ;; ;; mirror 1
     (setq configuration-layer--elpa-archives
-          '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-            ("org-cn"   . "http://elpa.emacs-china.org/org/")
-            ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+          '(("melpa-cn" . "https://elpa.emacs-china.org/melpa/")
+            ("org-cn"   . "https://elpa.emacs-china.org/org/")
+            ("gnu-cn"   . "https://elpa.emacs-china.org/gnu/")))
 
     ;; mirror 2
     ;; (setq configuration-layer--elpa-archives
-    ;;       '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-    ;;         ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-    ;;         ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+    ;;       '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+    ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+    ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 
     )
 #+END_SRC

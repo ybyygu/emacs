@@ -514,6 +514,10 @@ stow:
 
 * tips
 阅读文档 ~SPC h r~
+** 调试emacs
+真好用.
+: debug-on-error
+
 ** Editing styles
 =dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
 

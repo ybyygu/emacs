@@ -1011,6 +1011,7 @@ References
        ;; ----------------------------------------------------------------
        ;; ivy
        helm
+       lsp
        yaml
        html
        auto-completion
@@ -2576,7 +2577,6 @@ bibtex更新了item link的格式.
   ;; saving a source code buffer back into its base buffer
   ;; 2018-12-17: will cause timerp error
   ;; (setq org-edit-src-auto-save-idle-delay 1)
-  (setq org-edit-src-turn-on-auto-save t)
 #+end_src
 
 *** literate programming

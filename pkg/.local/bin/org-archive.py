@@ -12,7 +12,7 @@
 #         EMAIL:  winpng@gmail.com
 #       LICENCE:  GPL version 2 or upper
 #       CREATED:  <2011-11-18 Fri 13:29>
-#       UPDATED:  <2018-04-06 Fri 14:22>
+#       UPDATED:  <>
 #====================================================================#
 # 41b21fcc-9294-4fac-b9c5-0039ebc9921d ends here
 

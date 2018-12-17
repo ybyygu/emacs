@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-12-17 Mon 11:45>
+;;  UPDATED:    <>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -106,7 +106,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-but-keep-unused))
 ;; d2afe305-9273-4465-ab76-8b9a1317ede1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::7cc69c6f-b91a-4494-b2b0-74b16580105b][7cc69c6f-b91a-4494-b2b0-74b16580105b]]
@@ -525,6 +525,9 @@ before packages are loaded."
 
   ;; (spacemacs/toggle-smartparens-globally-off)
   (spacemacs/toggle-golden-ratio-on)
+
+  ;; 2018-12-17: fix the timerp error?
+  ;; (global-auto-revert-mode -1)
 
   ;; I hate the default undo behavior
   (setq evil-want-fine-undo t)

@@ -283,7 +283,9 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 ;; [[file:~/Install/configs/spacemacs/config.note::39884b8e-6175-4435-88ab-92de1770efde][39884b8e-6175-4435-88ab-92de1770efde]]
 ;; saving a source code buffer back into its base buffer
-(setq org-edit-src-auto-save-idle-delay 1)
+;; 2018-12-17: will cause timerp error
+;; (setq org-edit-src-auto-save-idle-delay 1)
+(setq org-edit-src-turn-on-auto-save t)
 ;; 39884b8e-6175-4435-88ab-92de1770efde ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::c5a08df6-7fd7-408b-9fb3-b4eb7347e84e][c5a08df6-7fd7-408b-9fb3-b4eb7347e84e]]

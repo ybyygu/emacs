@@ -3,8 +3,14 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [10/22]
-** TODO [2018-12-17 Mon] 切换到develop分支
+* Memo [11/22]
+** TODO [2018-12-17 Mon] 解决后台timerp报错的问题
+怀疑是org-src-edit auto-save导致的问题.
+
+** DONE [2018-12-17 Mon] 切换到develop分支
+CLOSED: [2018-12-17 Mon 11:47]
+- State "DONE"       from "TODO"       [2018-12-17 Mon 11:47] \\
+  暂时没发现大的问题
 配置更新:
 : configuration-layer--elpa-archives => configuration-layer-elpa-archives
 
@@ -1056,7 +1062,7 @@ References
      ;; installs only the used packages but won't delete unused ones. `all'
      ;; installs *all* packages supported by Spacemacs and never uninstalls them.
      ;; (default is `used-only')
-     dotspacemacs-install-packages 'used-only))
+     dotspacemacs-install-packages 'used-but-keep-unused))
 #+END_SRC
 
 ** init
@@ -1483,6 +1489,9 @@ References
     ;; (spacemacs/toggle-smartparens-globally-off)
     (spacemacs/toggle-golden-ratio-on)
 
+    ;; 2018-12-17: fix the timerp error?
+    ;; (global-auto-revert-mode -1)
+
     ;; I hate the default undo behavior
     (setq evil-want-fine-undo t)
 
@@ -1565,7 +1574,7 @@ References
       cal-china-x
       ox-latex-chinese
       ;; org-attach-screenshot   ;; disabled since 2017-11-17
-      ;;fcitx
+      fcitx
       interleave                 ;; for PDF annotations
       )
 
@@ -2561,7 +2570,9 @@ bibtex更新了item link的格式.
 #+name: 39884b8e-6175-4435-88ab-92de1770efde
 #+begin_src emacs-lisp
   ;; saving a source code buffer back into its base buffer
-  (setq org-edit-src-auto-save-idle-delay 1)
+  ;; 2018-12-17: will cause timerp error
+  ;; (setq org-edit-src-auto-save-idle-delay 1)
+  (setq org-edit-src-turn-on-auto-save t)
 #+end_src
 
 *** literate programming

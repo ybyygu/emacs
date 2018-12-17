@@ -12,7 +12,7 @@
 #         EMAIL:  winpng@gmail.com
 #       LICENCE:  GPL version 2 or upper
 #       CREATED:  <2010-09-01 Wed 16:04>
-#       UPDATED:  <2017-10-27 Fri 20:00>
+#       UPDATED:  <>
 #==============================================================================#
 #
 # basically, to make emacsclient perfect, there are three things need be done:

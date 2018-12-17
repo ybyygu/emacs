@@ -1440,19 +1440,6 @@ References
   configuration.
   It is mostly for variables that should be set before packages are loaded.
   If you are unsure, try setting them in `dotspacemacs/user-config' first."
-
-    ;; ;; mirror 1
-    (setq configuration-layer-elpa-archives
-          '(("melpa-cn" . "https://elpa.emacs-china.org/melpa/")
-            ("org-cn"   . "https://elpa.emacs-china.org/org/")
-            ("gnu-cn"   . "https://elpa.emacs-china.org/gnu/")))
-
-    ;; mirror 2
-    ;; (setq configuration-layer-elpa-archives
-    ;;       '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-    ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-    ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
-
     )
 #+END_SRC
 
@@ -1483,6 +1470,19 @@ References
   configuration.
   Put your configuration code here, except for variables that should be set
   before packages are loaded."
+
+    ;; ;; mirror 1
+    (setq configuration-layer-elpa-archives
+          '(("melpa-cn" . "https://elpa.emacs-china.org/melpa/")
+            ("org-cn"   . "https://elpa.emacs-china.org/org/")
+            ("gnu-cn"   . "https://elpa.emacs-china.org/gnu/")))
+
+    ;; mirror 2
+    ;; (setq configuration-layer-elpa-archives
+    ;;       '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+    ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+    ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+
 
     ;; relocate import files to keep ~/.emacs.d clean
     ;; (setq spacemacs-cache-directory (expand-file-name ".cache/" dotspacemacs-directory))

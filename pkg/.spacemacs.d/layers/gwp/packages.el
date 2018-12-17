@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-12-17 Mon 08:49>
+;;  UPDATED:    <2018-12-17 Mon 10:05>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -37,7 +37,7 @@
     cal-china-x
     ox-latex-chinese
     ;; org-attach-screenshot   ;; disabled since 2017-11-17
-    fcitx
+    ;;fcitx
     interleave                 ;; for PDF annotations
     )
 

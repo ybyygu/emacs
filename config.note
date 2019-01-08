@@ -3,7 +3,10 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [11/24]
+* Memo [12/24]
+** [2019-01-08 Tue] 使用 alacritty替代gnome-terminal
+可能是由于gnome升级, 没法在emacs中正常启动gnome-terminal
+
 ** TODO [2018-12-17 Mon] 临时解决ox-odt导出的bug
 无法设置文件级别的模板(ODT_STYLES_FILE). 下载最新的ox-odt.el文件, 将
 : org-strip-quotes
@@ -12,7 +15,10 @@
 
 等org v9.2版本升级.
 
-** TODO [2018-12-17 Mon] 解决后台timerp报错的问题
+** DONE [2018-12-17 Mon] 解决后台timerp报错的问题
+CLOSED: [2018-12-20 Thu 08:52]
+- State "DONE"       from "TODO"       [2018-12-20 Thu 08:52] \\
+  确实是
 怀疑是org-src-edit auto-save导致的问题.
 
 ** DONE [2018-12-17 Mon] 切换到develop分支
@@ -1019,7 +1025,7 @@ References
        ;; ----------------------------------------------------------------
        ;; ivy
        helm
-       lsp
+       ; lsp is buggy
        yaml
        html
        auto-completion
@@ -1963,7 +1969,12 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
   (defun gwp/open-in-gnome-terminal (the-directory)
     "Open `the-directory' in external gnome-terminal."
     (let ((process-connection-type nil))
-      (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+      ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+      (start-process "" nil
+                     "alacritty"
+                     (concat "--working-directory=" the-directory)
+                     "-e" "tmux"
+                     )
       )
     )
 

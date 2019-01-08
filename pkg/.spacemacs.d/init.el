@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2018-12-17 Mon 14:24>
+;;  UPDATED:    <2018-12-26 Wed 09:06>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -51,7 +51,7 @@ This function should only modify configuration layer settings."
      ;; ----------------------------------------------------------------
      ;; ivy
      helm
-     lsp
+     ; lsp is buggy
      yaml
      html
      auto-completion

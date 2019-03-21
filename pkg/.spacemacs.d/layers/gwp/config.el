@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-01-08 Tue 09:11>
+;;  UPDATED:    <2019-03-29 Fri 08:52>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -79,7 +79,7 @@
 (add-to-list 'recentf-exclude "\.odt$")
 ;; 33866aac-efb3-45f7-bfc2-f450db84c76f ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::9dfdbbc5-231c-433c-a756-02c7ac96aeb9][9dfdbbc5-231c-433c-a756-02c7ac96aeb9]]
+;; [[file:~/Install/configs/spacemacs/config.note::*open%20in%20terminal][open in terminal:1]]
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
@@ -101,14 +101,14 @@
     (gwp/open-in-gnome-terminal (expand-file-name default-directory))
     )
   )
-;; 9dfdbbc5-231c-433c-a756-02c7ac96aeb9 ends here
+;; open in terminal:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::7f135717-84cd-444e-8946-c96a9c2429f1][7f135717-84cd-444e-8946-c96a9c2429f1]]
+;; [[file:~/Install/configs/spacemacs/config.note::*hide%20dotfiles][hide dotfiles:1]]
 (require 'dired-x)
 (setq-default dired-omit-files-p nil) ; Buffer-local variable
 ;; (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
 (setq dired-listing-switches "--group-directories-first -l -X")
-;; 7f135717-84cd-444e-8946-c96a9c2429f1 ends here
+;; hide dotfiles:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::b50b9af5-8011-44e9-b278-47b71ac0a7d8][b50b9af5-8011-44e9-b278-47b71ac0a7d8]]
 (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))

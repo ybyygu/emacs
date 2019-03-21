@@ -4,8 +4,14 @@
 # Created: 2016-10-14 14:20
 
 * Memo [12/24]
+** [2019-03-21 Thu] 启用server mode
+方便使用 org-protocol
+
+** [2019-02-08 Fri] android中可用的org-mode app [[https://github.com/orgzly/orgzly-android][orgzly/orgzly-android: Outliner for taking notes and managing to-do lists]]
+
 ** [2019-01-08 Tue] 使用 alacritty替代gnome-terminal
 可能是由于gnome升级, 没法在emacs中正常启动gnome-terminal
+[2019-03-01 Fri] 又可以用了. 恢复几天看看.
 
 ** TODO [2018-12-17 Mon] 临时解决ox-odt导出的bug
 无法设置文件级别的模板(ODT_STYLES_FILE). 下载最新的ox-odt.el文件, 将
@@ -243,7 +249,7 @@ CLOSED: [2017-11-10 Fri 20:37]
 : org-src-fontify-natively
 ** TODO [2017-10-27 Fri] bootstrap spacemacs
 ** [2017-10-27 Fri] 使用gnu stow来管理tangle出的各类文件
-** DONE [2017-10-27 Fri] 完善org-protocol和org-capture
+** DONE [2017-10-27 Fri] 完善org-protocol和org-capture             :Starred:
 CLOSED: [2017-11-01 Wed 10:34]
 
 - 进一步完善js代码
@@ -252,7 +258,6 @@ CLOSED: [2017-11-01 Wed 10:34]
 
 *** store-link
 版本1: 使用selection或URL做为description
-#+name: 6d8dcf5a-30ca-46e1-9cc7-0ffc45ca6b29
 #+BEGIN_SRC javascript
   javascript:
   var title = window.getSelection();
@@ -264,7 +269,6 @@ CLOSED: [2017-11-01 Wed 10:34]
 #+END_SRC
 
 版本2: 使用selection或document title做为description. 如果没有, 默认为URL.
-#+name: f5b4d415-ebeb-4a45-b85b-c816d8dfd9cf
 #+BEGIN_SRC javascript
   javascript:
   var title = window.getSelection();
@@ -277,6 +281,7 @@ CLOSED: [2017-11-01 Wed 10:34]
 
   location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
 #+END_SRC
+
 *** capture
 使用'n'模板: 插入当前页面的链接, 使用页面标题或URL做为链接描述. 引用选中文字.
 
@@ -891,7 +896,6 @@ References
 
 * desktop integration
 ** emacsclient-open
-#+name: 69946fa5-45c4-4c87-9de5-eb4a525ff5c8
 #+begin_src config :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
   [Desktop Entry]
   Version=1.0
@@ -906,8 +910,8 @@ References
   Terminal=false
   Categories=Utility;Development;TextEditor;
 #+end_src
+
 ** org-capture
-#+name: 701ec573-5aea-47e5-9bed-995fc3a900d2
 #+begin_src text :tangle pkg/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
   [Desktop Entry]
   Version=1.0
@@ -1378,7 +1382,7 @@ References
 
      ;; If non-nil, start an Emacs server if one is not already running.
      ;; (default nil)
-     dotspacemacs-enable-server nil
+     dotspacemacs-enable-server t
 
      ;; Set the emacs server socket location.
      ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -1964,7 +1968,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 *** open in terminal
 emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 
-#+name: 9dfdbbc5-231c-433c-a756-02c7ac96aeb9
 #+begin_src emacs-lisp
   (defun gwp/open-in-gnome-terminal (the-directory)
     "Open `the-directory' in external gnome-terminal."
@@ -1990,7 +1993,6 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 #+end_src
 
 *** hide dotfiles
-#+name: 7f135717-84cd-444e-8946-c96a9c2429f1
 #+begin_src emacs-lisp
   (require 'dired-x)
   (setq-default dired-omit-files-p nil) ; Buffer-local variable

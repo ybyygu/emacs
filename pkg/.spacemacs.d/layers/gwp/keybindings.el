@@ -1,14 +1,22 @@
-;; [[file:~/Install/configs/spacemacs/config.note::aeb269bf-d17f-4d46-9f32-d31d522b72e0][aeb269bf-d17f-4d46-9f32-d31d522b72e0]]
+;; [[file:~/Install/configs/spacemacs/config.note::*header][header:1]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <>
+;;  UPDATED:    <2019-04-06 Sat 12:04>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; aeb269bf-d17f-4d46-9f32-d31d522b72e0 ends here
+;; header:1 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::*deadgrep][deadgrep:1]]
+(spacemacs/set-leader-keys "s n" 'deadgrep)
+(defun gwp/return-default-notes-dir ()
+  "~/.cache/notes"
+  )
+(setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
+;; deadgrep:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::3631de70-8cb6-494d-bb97-c8d6100f7993][3631de70-8cb6-494d-bb97-c8d6100f7993]]
 (eval-after-load "org"

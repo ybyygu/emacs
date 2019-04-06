@@ -4,6 +4,16 @@
 # Created: 2016-10-14 14:20
 
 * Memo [12/24]
+** [2019-04-06 Sat] 使用deadgrep来搜索笔记
+1. 需要修改deadgrep中默认的ripgrep参数, 跟踪软链接 [[file:~/Workspace/Programming/cmdline-tools/notesearch/deadgrep.el::;;;%20deadgrep.el%20---%20fast,%20friendly%20searching%20with%20ripgrep%20-*-%20lexical-binding:%20t;%20-*-][deadgrep.el]]
+   : --follow
+2. 修改spacemacs, 下载hack版的deadgrep
+   :  dotspacemacs-additional-packages '((deadgrep :location (recipe :fetcher github :repo "ybyygu/notesearch")))
+3. 调整hook函数, 总是搜索~/.cache/notes目录下的链接的文件 [[*deadgrep][deadgrep]]
+
+注意也许可以不修改deadgrep代码?
+- [[https://github.com/Wilfred/deadgrep/issues/24][Please add more options (e.g. hidden) to the ui · Issue #24 · Wilfred/deadgrep]]
+
 ** [2019-03-21 Thu] 启用server mode
 方便使用 org-protocol
 
@@ -1070,7 +1080,7 @@ References
      ;; To use a local version of a package, use the `:location' property:
      ;; '(your-package :location "~/path/to/your-package/")
      ;; Also include the dependencies as they will not be resolved automatically.
-     dotspacemacs-additional-packages '()
+     dotspacemacs-additional-packages '((deadgrep :location (recipe :fetcher github :repo "ybyygu/notesearch")))
 
      ;; A list of packages that cannot be updated.
      dotspacemacs-frozen-packages '()
@@ -1554,7 +1564,6 @@ References
 :END:
 通过 packages.el 接口, 可以将自己的一些设置与 spacemacs 融为一体.
 *** header
-#+name: 0bf61789-4b47-43e0-92a7-474d6bb4595d
 #+BEGIN_SRC emacs-lisp
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;
@@ -1569,7 +1578,6 @@ References
 #+END_SRC
 
 *** define packages
-#+name: 98f62082-87ca-47b9-aba5-86e2210e0705
 #+BEGIN_SRC emacs-lisp
   ;;; packages.el --- gwp layer packages file for Spacemacs.
   ;;  Time-stamp: <2017-03-06 23:37:14 ybyygu>
@@ -2020,7 +2028,6 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
 :header-args: :tangle pkg/.spacemacs.d/layers/gwp/keybindings.el :comments link :padline yes :mkdirp yes
 :END:
 *** header
-#+name: aeb269bf-d17f-4d46-9f32-d31d522b72e0
 #+begin_src emacs-lisp
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;;
@@ -2032,6 +2039,17 @@ emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的�
  ;;
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
+
+*** deadgrep
+search org note files
+#+begin_src emacs-lisp
+  (spacemacs/set-leader-keys "s n" 'deadgrep)
+  (defun gwp/return-default-notes-dir ()
+    "~/.cache/notes"
+    )
+  (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
+#+end_src
+
 *** org
 #+name: 3631de70-8cb6-494d-bb97-c8d6100f7993
 #+begin_src emacs-lisp

@@ -1,4 +1,4 @@
-;; [[file:~/Install/configs/spacemacs/config.note::8494456e-4208-499d-944d-cd14efb43ae7][8494456e-4208-499d-944d-cd14efb43ae7]]
+;; [[file:~/Install/configs/spacemacs/config.note::*agenda][agenda:1]]
 (with-eval-after-load 'org-agenda
   ;; 2013-01-20: less is more
   ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
@@ -10,6 +10,7 @@
 
   ;; Show all future entries for repeating tasks
   (setq org-agenda-repeating-timestamp-show-all t)
+
   ;; do not show agenda dates if they are empty
   (setq org-agenda-show-all-dates nil)
 
@@ -21,17 +22,18 @@
 
   ;; Start the weekly agenda today
   (setq org-agenda-start-on-weekday nil)
+
   ;; do not include todo items
   (setq org-agenda-include-all-todo nil)
   )
-;; 8494456e-4208-499d-944d-cd14efb43ae7 ends here
+;; agenda:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206][0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206]]
+;; [[file:~/Install/configs/spacemacs/config.note::*agenda][agenda:2]]
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
-;; 0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206 ends here
+;; agenda:2 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::dd7f0533-95bf-4920-8482-e770b06c5e14][dd7f0533-95bf-4920-8482-e770b06c5e14]]
+;; [[file:~/Install/configs/spacemacs/config.note::*agenda][agenda:3]]
 (with-eval-after-load 'org-agenda
   (setq org-agenda-custom-commands
                '(
@@ -142,9 +144,9 @@
                  )
                )
   )
-;; dd7f0533-95bf-4920-8482-e770b06c5e14 ends here
+;; agenda:3 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::9a06a2a8-3a2d-40b0-8701-3999d836f39f][9a06a2a8-3a2d-40b0-8701-3999d836f39f]]
+;; [[file:~/Install/configs/spacemacs/config.note::*agenda][agenda:4]]
 ;; disabled for upgrading to org-9.0
 ;; auto export agenda
 ;; (defun gwp/run-agenda-store ()
@@ -155,7 +157,20 @@
 
 ;; ;; export agenda if I am away for 2 minutes
 ;; (run-with-idle-timer 600 t 'gwp/run-agenda-store)
-;; 9a06a2a8-3a2d-40b0-8701-3999d836f39f ends here
+;; agenda:4 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::*agenda][agenda:5]]
+(use-package idle-org-agenda
+  :after org-agenda
+  :ensure t
+  :config (idle-org-agenda-mode))
+
+(custom-set-variables
+ '(idle-org-agenda-interval 600) ;; 10 x 60 seconds
+ '(idle-org-agenda-key "gt")     ;; Choose your specific agenda
+ '(idle-org-agenda-mode t)
+ )
+;; agenda:5 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::048aa38e-7f6f-4c9f-94da-020c82ea50e4][048aa38e-7f6f-4c9f-94da-020c82ea50e4]]
 (with-eval-after-load 'org-compat

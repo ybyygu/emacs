@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-03-29 Fri 08:52>
+;;  UPDATED:    <2019-04-10 Wed 09:25>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -83,12 +83,8 @@
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
-    (start-process "" nil
-                   "alacritty"
-                   (concat "--working-directory=" the-directory)
-                   "-e" "tmux"
-                   )
+    (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
     )
   )
 

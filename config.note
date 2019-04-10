@@ -4,6 +4,9 @@
 # Created: 2016-10-14 14:20
 
 * Memo [12/24]
+** [2019-04-10 Wed] 试用 idle-org-agenda
+[[https://github.com/enisozgen/idle-org-agenda][enisozgen/idle-org-agenda: A package that shows your agenda when Emacs is idle]]
+
 ** [2019-04-06 Sat] 使用deadgrep来搜索笔记
 1. 需要修改deadgrep中默认的ripgrep参数, 跟踪软链接 [[file:~/Workspace/Programming/cmdline-tools/notesearch/deadgrep.el::;;;%20deadgrep.el%20---%20fast,%20friendly%20searching%20with%20ripgrep%20-*-%20lexical-binding:%20t;%20-*-][deadgrep.el]]
    : --follow
@@ -1080,7 +1083,10 @@ References
      ;; To use a local version of a package, use the `:location' property:
      ;; '(your-package :location "~/path/to/your-package/")
      ;; Also include the dependencies as they will not be resolved automatically.
-     dotspacemacs-additional-packages '((deadgrep :location (recipe :fetcher github :repo "ybyygu/notesearch")))
+     dotspacemacs-additional-packages '(
+                                        (deadgrep :location (recipe :fetcher github :repo "ybyygu/notesearch"))
+                                        idle-org-agenda
+                                        )
 
      ;; A list of packages that cannot be updated.
      dotspacemacs-frozen-packages '()
@@ -1980,12 +1986,8 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
   (defun gwp/open-in-gnome-terminal (the-directory)
     "Open `the-directory' in external gnome-terminal."
     (let ((process-connection-type nil))
-      ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
-      (start-process "" nil
-                     "alacritty"
-                     (concat "--working-directory=" the-directory)
-                     "-e" "tmux"
-                     )
+      (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+      ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
       )
     )
 
@@ -2011,10 +2013,10 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 
 *** profiler
 emacs中可以用profiler-report来定位性能瓶颈. 但默认命令部分的输出太短, 如果嵌套太深, 命令就看不到了.
-#+name: b50b9af5-8011-44e9-b278-47b71ac0a7d8
 #+begin_src emacs-lisp
   (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
 #+end_src
+
 *** magit
 禁用magit中的gravatars支持, 响应能快一些.
 
@@ -2303,7 +2305,6 @@ search org note files
 :END:
 *** agenda
 基本设置
-#+name: 8494456e-4208-499d-944d-cd14efb43ae7
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'org-agenda
     ;; 2013-01-20: less is more
@@ -2316,6 +2317,7 @@ search org note files
 
     ;; Show all future entries for repeating tasks
     (setq org-agenda-repeating-timestamp-show-all t)
+
     ;; do not show agenda dates if they are empty
     (setq org-agenda-show-all-dates nil)
 
@@ -2327,20 +2329,19 @@ search org note files
 
     ;; Start the weekly agenda today
     (setq org-agenda-start-on-weekday nil)
+
     ;; do not include todo items
     (setq org-agenda-include-all-todo nil)
     )
 #+END_SRC
 
 忽略已经完成的任务
-#+name: 0e46d988-2dbb-4cc1-a3ce-23dcbdd0a206
 #+begin_src emacs-lisp
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-skip-scheduled-if-done t)
 #+end_src
 
 自定义agenda命令
-#+name: dd7f0533-95bf-4920-8482-e770b06c5e14
 #+begin_src emacs-lisp
   (with-eval-after-load 'org-agenda
     (setq org-agenda-custom-commands
@@ -2455,7 +2456,6 @@ search org note files
 #+end_src
 
 后台自动导出日程
-#+name: 9a06a2a8-3a2d-40b0-8701-3999d836f39f
 #+BEGIN_SRC emacs-lisp
   ;; disabled for upgrading to org-9.0
   ;; auto export agenda
@@ -2468,6 +2468,20 @@ search org note files
   ;; ;; export agenda if I am away for 2 minutes
   ;; (run-with-idle-timer 600 t 'gwp/run-agenda-store)
 #+END_SRC
+
+闲时显示日程
+#+begin_src emacs-lisp
+  (use-package idle-org-agenda
+    :after org-agenda
+    :ensure t
+    :config (idle-org-agenda-mode))
+
+  (custom-set-variables
+   '(idle-org-agenda-interval 600) ;; 10 x 60 seconds
+   '(idle-org-agenda-key "gt")     ;; Choose your specific agenda
+   '(idle-org-agenda-mode t)
+   )
+#+end_src
 
 *** zotero
 主要是用来支持 "zotero:" 链接的.

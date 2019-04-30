@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-04-10 Wed 09:25>
+;;  UPDATED:    <2019-04-30 Tue 14:13>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -33,11 +33,25 @@
 (setq scroll-preserve-screen-position nil)    ; do not reposition the screen when moving the cursor
 ;; e7ef737b-dd78-4ba0-94e6-d63dc64ebb24 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::fc2c78fb-3f6d-47c9-9b92-60cee197beb4][fc2c78fb-3f6d-47c9-9b92-60cee197beb4]]
+;; [[file:~/Install/configs/spacemacs/config.note::*tab%20key][tab key:1]]
 (setq user-mail-address "ybyygu@gmail.com")
 (setq default-tab-width 4)
 (setq tab-width 4)                             ; Length of tab is 4 SPC
-;; fc2c78fb-3f6d-47c9-9b92-60cee197beb4 ends here
+;; tab key:1 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::*bookmark][bookmark:1]]
+(defun gwp-mouse-toggle-bm (e)
+  "Toggle bookmarking
+This command should be bound to a mouse key.
+Argument E is a mouse event used by `mouse-set-point'."
+  (interactive "@e")
+  (save-excursion
+    (mouse-set-point e)
+    (bm-toggle)
+    )
+  )
+
+;; bookmark:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::139c7654-b2cd-4c3c-9b37-a5ee6a64aef4][139c7654-b2cd-4c3c-9b37-a5ee6a64aef4]]
 ;; (defun gwp/quit-frame-and-kill-buffer ()
@@ -106,9 +120,9 @@
 (setq dired-listing-switches "--group-directories-first -l -X")
 ;; hide dotfiles:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::b50b9af5-8011-44e9-b278-47b71ac0a7d8][b50b9af5-8011-44e9-b278-47b71ac0a7d8]]
+;; [[file:~/Install/configs/spacemacs/config.note::*profiler][profiler:1]]
 (setq profiler-report-cpu-line-format '((150 left) (24 right ((19 right) (5 right)))))
-;; b50b9af5-8011-44e9-b278-47b71ac0a7d8 ends here
+;; profiler:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::5c82f9a9-5afd-48e5-bbef-1603120eb3c5][5c82f9a9-5afd-48e5-bbef-1603120eb3c5]]
 (setq magit-revision-show-gravatars nil)

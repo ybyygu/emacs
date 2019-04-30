@@ -20,7 +20,8 @@
 ** [2019-03-21 Thu] 启用server mode
 方便使用 org-protocol
 
-** [2019-02-08 Fri] android中可用的org-mode app [[https://github.com/orgzly/orgzly-android][orgzly/orgzly-android: Outliner for taking notes and managing to-do lists]]
+** [2019-02-08 Fri] android中可用的org-mode app
+[[https://github.com/orgzly/orgzly-android][orgzly/orgzly-android: Outliner for taking notes and managing to-do lists]]
 
 ** [2019-01-08 Tue] 使用 alacritty替代gnome-terminal
 可能是由于gnome升级, 没法在emacs中正常启动gnome-terminal
@@ -549,6 +550,12 @@ stow:
 ** 调试emacs
 真好用.
 : debug-on-error
+** 文档跳转
+: goto-last-change
+
+** 书签管理
+: SPC f b
+: helm-filtered-bookmarks
 
 ** Editing styles
 =dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
@@ -1105,7 +1112,6 @@ References
 #+END_SRC
 
 ** init
-#+name: 7cc69c6f-b91a-4494-b2b0-74b16580105b
 #+BEGIN_SRC emacs-lisp
   (defun dotspacemacs/init ()
     "Initialization:
@@ -1613,6 +1619,7 @@ References
       ;; org-attach-screenshot   ;; disabled since 2017-11-17
       fcitx
       interleave                 ;; for PDF annotations
+      bm                         ;; for visual bookmarks
       )
 
     "The list of Lisp packages required by the gwp layer.")
@@ -1655,7 +1662,6 @@ cal-china-x: https://github.com/xwl/cal-china-x
 *** init vc
 commit之前更新时间戳
 
-#+name: 2f729bdf-5700-4f80-a94f-e73113348e08
 #+BEGIN_SRC emacs-lisp
   (defun gwp/init-vc ()
     (use-package vc
@@ -1674,6 +1680,7 @@ commit之前更新时间戳
       )
     )
 #+END_SRC
+
 *** init fcitx
 自动中英文切换, 解决vim模式下的一大痛点.
 
@@ -1808,7 +1815,6 @@ org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
 *** init cnfonts
 使用chfonts包来处理中文显示设置
 
-#+name: 3ef398cc-9c73-4978-b31c-35f2aa476c44
 #+BEGIN_SRC emacs-lisp
   (defun gwp/init-cnfonts ()
     ;; chinese-fonts-setup is amazing
@@ -1829,11 +1835,11 @@ org-attach-screenshot [[https://github.com/dfeich/org-screenshot][URL]]
       )
     )
 #+END_SRC
+
 *** init org
 用于配置 org-mode 一些必要设置. 其它尽量使用 org-mode in-buffer 设置. 可参考
 tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.el][URL]]
 
-#+name: 8d9d4320-8a15-4b4b-8b4d-40c58b895804
 #+BEGIN_SRC emacs-lisp
   (defun gwp/post-init-org ()
     (with-eval-after-load 'org
@@ -1857,7 +1863,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 
 #+END_SRC
 *** init interleave
-#+name: 3d005e63-c6da-4d15-ad1f-2d8de210e78d
 #+begin_src emacs-lisp
   (defun gwp/init-interleave ()
     (use-package interleave
@@ -1865,13 +1870,88 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
       )
     )
 #+end_src
+
+*** init bm
+主要用 bm, 书签持久化是从 bm.el 里抄来的.
+#+BEGIN_SRC emacs-lisp
+  (defun gwp/init-bm ()
+    (defun gwp-mouse-toggle-bm (e)
+      "Toggle bookmarking
+  This command should be bound to a mouse key.
+  Argument E is a mouse event used by `mouse-set-point'."
+      (interactive "@e")
+      (save-excursion
+        (mouse-set-point e)
+        (bm-toggle)
+        )
+      )
+
+    ;; adopted from: https://github.com/joodland/bm
+    (use-package bm
+      :ensure t
+      :demand t
+
+      :init
+      ;; restore on load (even before you require bm)
+      (setq bm-restore-repository-on-load t)
+
+      :config
+      ;; Allow cross-buffer 'next'
+      (setq bm-cycle-all-buffers nil)
+
+      ;; save bookmarks
+      (setq-default bm-buffer-persistence t)
+
+      ;; Loading the repository from file when on start up.
+      (add-hook 'after-init-hook 'bm-repository-load)
+
+      ;; Saving bookmarks
+      (add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+      ;; Saving the repository to file when on exit.
+      ;; kill-buffer-hook is not called when Emacs is killed, so we
+      ;; must save all bookmarks first.
+      (add-hook 'kill-emacs-hook #'(lambda nil
+                                     (bm-buffer-save-all)
+                                     (bm-repository-save)))
+
+      ;; The `after-save-hook' is not necessary to use to achieve persistence,
+      ;; but it makes the bookmark data in repository more in sync with the file
+      ;; state.
+      (add-hook 'after-save-hook #'bm-buffer-save)
+
+      ;; Restoring bookmarks
+      (add-hook 'find-file-hooks   #'bm-buffer-restore)
+      (add-hook 'after-revert-hook #'bm-buffer-restore)
+
+      ;; The `after-revert-hook' is not necessary to use to achieve persistence,
+      ;; but it makes the bookmark data in repository more in sync with the file
+      ;; state. This hook might cause trouble when using packages
+      ;; that automatically reverts the buffer (like vc after a check-in).
+      ;; This can easily be avoided if the package provides a hook that is
+      ;; called before the buffer is reverted (like `vc-before-checkin-hook').
+      ;; Then new bookmarks can be saved before the buffer is reverted.
+      ;; Make sure bookmarks is saved before check-in (and revert-buffer)
+      (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+      :bind (
+              ([left-fringe mouse-3] . gwp-mouse-toggle-bm)
+              ([left-margin mouse-3] . gwp-mouse-toggle-bm)
+              ([left-fringe mouse-5] . bm-next-mouse)
+              ([left-margin mouse-5] . bm-next-mouse)
+              ([left-fringe mouse-4] . bm-previous-mouse)
+              ([left-margin mouse-4] . bm-previous-mouse)
+              )
+      )
+    )
+#+END_SRC
+
 ** gwp/config.el
 :PROPERTIES:
 :header-args: :tangle pkg/.spacemacs.d/layers/gwp/config.el :comments link :padline yes :mkdirp yes
 :END:
 各种设置
 *** header
-#+name: f457b32b-bcfd-4618-b7d4-e2e83399037e
 #+begin_src emacs-lisp
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  ;;
@@ -1883,6 +1963,7 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
  ;;
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
+
 *** ui
 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
 
@@ -1916,7 +1997,6 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 #+END_SRC
 
 *** tab key
-#+name: fc2c78fb-3f6d-47c9-9b92-60cee197beb4
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "ybyygu@gmail.com")
 (setq default-tab-width 4)
@@ -3488,7 +3568,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 *** 书签&导航等
 主要用 bm, 书签持久化是从 bm.el 里抄来的.
 
-#+name: 31e72f88-fb21-4cd4-b5eb-fcc6d393291a
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'bm)
   (setq bm-restore-repository-on-load t)

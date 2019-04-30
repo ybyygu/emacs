@@ -1,16 +1,16 @@
-;; [[file:~/Install/configs/spacemacs/config.note::0bf61789-4b47-43e0-92a7-474d6bb4595d][0bf61789-4b47-43e0-92a7-474d6bb4595d]]
+;; [[file:~/Install/configs/spacemacs/config.note::*header][header:1]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <>
+;;  UPDATED:    <2019-04-30 Tue 15:16>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 0bf61789-4b47-43e0-92a7-474d6bb4595d ends here
+;; header:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::98f62082-87ca-47b9-aba5-86e2210e0705][98f62082-87ca-47b9-aba5-86e2210e0705]]
+;; [[file:~/Install/configs/spacemacs/config.note::*define%20packages][define packages:1]]
 ;;; packages.el --- gwp layer packages file for Spacemacs.
 ;;  Time-stamp: <2017-03-06 23:37:14 ybyygu>
 
@@ -39,10 +39,11 @@
     ;; org-attach-screenshot   ;; disabled since 2017-11-17
     fcitx
     interleave                 ;; for PDF annotations
+    bm                         ;; for visual bookmarks
     )
 
   "The list of Lisp packages required by the gwp layer.")
-;; 98f62082-87ca-47b9-aba5-86e2210e0705 ends here
+;; define packages:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::3936797b-171a-4257-b96e-c28ad0cec464][3936797b-171a-4257-b96e-c28ad0cec464]]
 (defun gwp/init-cal-china-x ()
@@ -74,7 +75,7 @@
   )
 ;; 3936797b-171a-4257-b96e-c28ad0cec464 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::2f729bdf-5700-4f80-a94f-e73113348e08][2f729bdf-5700-4f80-a94f-e73113348e08]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init%20vc][init vc:1]]
 (defun gwp/init-vc ()
   (use-package vc
     :init
@@ -91,7 +92,7 @@
       )
     )
   )
-;; 2f729bdf-5700-4f80-a94f-e73113348e08 ends here
+;; init vc:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::d1097c8f-3faa-4853-8786-d9d0d9c04575][d1097c8f-3faa-4853-8786-d9d0d9c04575]]
 (defun gwp/init-fcitx ()
@@ -108,7 +109,7 @@
   )
 ;; d1097c8f-3faa-4853-8786-d9d0d9c04575 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::3ef398cc-9c73-4978-b31c-35f2aa476c44][3ef398cc-9c73-4978-b31c-35f2aa476c44]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init%20cnfonts][init cnfonts:1]]
 (defun gwp/init-cnfonts ()
   ;; chinese-fonts-setup is amazing
   (use-package cnfonts
@@ -127,9 +128,9 @@
     (cnfonts-set-spacemacs-fallback-fonts)
     )
   )
-;; 3ef398cc-9c73-4978-b31c-35f2aa476c44 ends here
+;; init cnfonts:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::8d9d4320-8a15-4b4b-8b4d-40c58b895804][8d9d4320-8a15-4b4b-8b4d-40c58b895804]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init%20org][init org:1]]
 (defun gwp/post-init-org ()
   (with-eval-after-load 'org
     (progn
@@ -149,12 +150,85 @@
 (defun gwp/init-ox-latex-chinese ()
   ;;
   )
-;; 8d9d4320-8a15-4b4b-8b4d-40c58b895804 ends here
+;; init org:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::3d005e63-c6da-4d15-ad1f-2d8de210e78d][3d005e63-c6da-4d15-ad1f-2d8de210e78d]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init%20interleave][init interleave:1]]
 (defun gwp/init-interleave ()
   (use-package interleave
     :ensure t
     )
   )
-;; 3d005e63-c6da-4d15-ad1f-2d8de210e78d ends here
+;; init interleave:1 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::*init%20bm][init bm:1]]
+(defun gwp/init-bm ()
+  (defun gwp-mouse-toggle-bm (e)
+    "Toggle bookmarking
+This command should be bound to a mouse key.
+Argument E is a mouse event used by `mouse-set-point'."
+    (interactive "@e")
+    (save-excursion
+      (mouse-set-point e)
+      (bm-toggle)
+      )
+    )
+
+  ;; adopted from: https://github.com/joodland/bm
+  (use-package bm
+    :ensure t
+    :demand t
+
+    :init
+    ;; restore on load (even before you require bm)
+    (setq bm-restore-repository-on-load t)
+
+    :config
+    ;; Allow cross-buffer 'next'
+    (setq bm-cycle-all-buffers nil)
+
+    ;; save bookmarks
+    (setq-default bm-buffer-persistence t)
+
+    ;; Loading the repository from file when on start up.
+    (add-hook 'after-init-hook 'bm-repository-load)
+
+    ;; Saving bookmarks
+    (add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+    ;; Saving the repository to file when on exit.
+    ;; kill-buffer-hook is not called when Emacs is killed, so we
+    ;; must save all bookmarks first.
+    (add-hook 'kill-emacs-hook #'(lambda nil
+                                   (bm-buffer-save-all)
+                                   (bm-repository-save)))
+
+    ;; The `after-save-hook' is not necessary to use to achieve persistence,
+    ;; but it makes the bookmark data in repository more in sync with the file
+    ;; state.
+    (add-hook 'after-save-hook #'bm-buffer-save)
+
+    ;; Restoring bookmarks
+    (add-hook 'find-file-hooks   #'bm-buffer-restore)
+    (add-hook 'after-revert-hook #'bm-buffer-restore)
+
+    ;; The `after-revert-hook' is not necessary to use to achieve persistence,
+    ;; but it makes the bookmark data in repository more in sync with the file
+    ;; state. This hook might cause trouble when using packages
+    ;; that automatically reverts the buffer (like vc after a check-in).
+    ;; This can easily be avoided if the package provides a hook that is
+    ;; called before the buffer is reverted (like `vc-before-checkin-hook').
+    ;; Then new bookmarks can be saved before the buffer is reverted.
+    ;; Make sure bookmarks is saved before check-in (and revert-buffer)
+    (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+    :bind (
+            ([left-fringe mouse-3] . gwp-mouse-toggle-bm)
+            ([left-margin mouse-3] . gwp-mouse-toggle-bm)
+            ([left-fringe mouse-5] . bm-next-mouse)
+            ([left-margin mouse-5] . bm-next-mouse)
+            ([left-fringe mouse-4] . bm-previous-mouse)
+            ([left-margin mouse-4] . bm-previous-mouse)
+            )
+    )
+  )
+;; init bm:1 ends here

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-04-10 Wed 09:05>
+;;  UPDATED:    <2019-04-30 Tue 14:24>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -113,7 +113,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-install-packages 'used-but-keep-unused))
 ;; d2afe305-9273-4465-ab76-8b9a1317ede1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::7cc69c6f-b91a-4494-b2b0-74b16580105b][7cc69c6f-b91a-4494-b2b0-74b16580105b]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init][init:1]]
 (defun dotspacemacs/init ()
   "Initialization:
 This function is called at the very beginning of Spacemacs startup,
@@ -461,7 +461,7 @@ It should only modify the values of Spacemacs settings."
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
    dotspacemacs-pretty-docs nil))
-;; 7cc69c6f-b91a-4494-b2b0-74b16580105b ends here
+;; init:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::*user-env][user-env:1]]
 (defun dotspacemacs/user-env ()

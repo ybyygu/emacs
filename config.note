@@ -26,6 +26,7 @@
 ** [2019-01-08 Tue] 使用 alacritty替代gnome-terminal
 可能是由于gnome升级, 没法在emacs中正常启动gnome-terminal
 [2019-03-01 Fri] 又可以用了. 恢复几天看看.
+[2019-05-13 Mon] 应该与locale设置有关. gnome-terminal更新需要使用locale-gen理更新下?
 
 ** TODO [2018-12-17 Mon] 临时解决ox-odt导出的bug
 无法设置文件级别的模板(ODT_STYLES_FILE). 下载最新的ox-odt.el文件, 将
@@ -1075,11 +1076,10 @@ References
        ;; version-control  ;; will slow down writing buffer
        python
        lua
-       rust
+       ;; rust
+       (rust :packages (not racer))
        pdf-tools
-       (org :packages
-            (not org-projectile)
-            )
+       (org :packages (not org-projectile))
        javascript
        gwp
        )

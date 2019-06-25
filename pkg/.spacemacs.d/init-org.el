@@ -113,8 +113,8 @@
                  (
                   (agenda ""
                           (
-                           (org-agenda-entry-types '(:deadline :scheduled))
-                           (org-agenda-span (quote month)) ;; or (org-agenda-span 60)
+                           ;; (org-agenda-entry-types '(:deadline :scheduled))
+                           (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
                            (org-agenda-include-diary nil)
                            (org-agenda-overriding-header "Agenda\n------------------")
                            )

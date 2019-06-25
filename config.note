@@ -1050,7 +1050,7 @@ References
        ;; ----------------------------------------------------------------
        ;; ivy
        helm
-       ; lsp is buggy
+       ;; lsp is buggy
        yaml
        html
        auto-completion
@@ -2502,8 +2502,8 @@ search org note files
                    (
                     (agenda ""
                             (
-                             (org-agenda-entry-types '(:deadline :scheduled))
-                             (org-agenda-span (quote month)) ;; or (org-agenda-span 60)
+                             ;; (org-agenda-entry-types '(:deadline :scheduled))
+                             (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
                              (org-agenda-include-diary nil)
                              (org-agenda-overriding-header "Agenda\n------------------")
                              )

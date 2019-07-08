@@ -1473,7 +1473,6 @@ References
 #+end_src
 
 ** user-init
-#+name: 967df1e6-6633-4688-a36f-e8a5b8c1dfc5
 #+BEGIN_SRC emacs-lisp
   (defun dotspacemacs/user-init ()
     "Initialization for user code:
@@ -1481,19 +1480,23 @@ References
   configuration.
   It is mostly for variables that should be set before packages are loaded.
   If you are unsure, try setting them in `dotspacemacs/user-config' first."
+    ;; mirror 1
+    (setq configuration-layer-elpa-archives
+          '(("melpa-cn" . "https://elpa.emacs-china.org/melpa/")
+            ("org-cn"   . "https://elpa.emacs-china.org/org/")
+            ("gnu-cn"   . "https://elpa.emacs-china.org/gnu/")))
+
+    ;; mirror 2
+    ;; (setq configuration-layer-elpa-archives
+    ;;       '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+    ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+    ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+
     )
 #+END_SRC
 
-** user-init / user-load
+** user-load
 #+begin_src emacs-lisp
-  (defun dotspacemacs/user-init ()
-    "Initialization for user code:
-  This function is called immediately after `dotspacemacs/init', before layer
-  configuration.
-  It is mostly for variables that should be set before packages are loaded.
-  If you are unsure, try setting them in `dotspacemacs/user-config' first."
-    )
-
   (defun dotspacemacs/user-load ()
     "Library to load while dumping.
   This function is called only while dumping Spacemacs configuration. You can
@@ -1511,19 +1514,6 @@ References
   configuration.
   Put your configuration code here, except for variables that should be set
   before packages are loaded."
-
-    ;; ;; mirror 1
-    (setq configuration-layer-elpa-archives
-          '(("melpa-cn" . "https://elpa.emacs-china.org/melpa/")
-            ("org-cn"   . "https://elpa.emacs-china.org/org/")
-            ("gnu-cn"   . "https://elpa.emacs-china.org/gnu/")))
-
-    ;; mirror 2
-    ;; (setq configuration-layer-elpa-archives
-    ;;       '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-    ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-    ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
-
 
     ;; relocate import files to keep ~/.emacs.d clean
     ;; (setq spacemacs-cache-directory (expand-file-name ".cache/" dotspacemacs-directory))

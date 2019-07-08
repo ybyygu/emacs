@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-05-25 Sat 14:10>
+;;  UPDATED:    <2019-07-08 Mon 10:00>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -472,42 +472,14 @@ See the header of this file for more information."
   (spacemacs/load-spacemacs-env))
 ;; user-env:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::967df1e6-6633-4688-a36f-e8a5b8c1dfc5][967df1e6-6633-4688-a36f-e8a5b8c1dfc5]]
+;; [[file:~/Install/configs/spacemacs/config.note::*user-init][user-init:1]]
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
 This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
-;; 967df1e6-6633-4688-a36f-e8a5b8c1dfc5 ends here
-
-;; [[file:~/Install/configs/spacemacs/config.note::*user-init%20/%20user-load][user-init / user-load:1]]
-(defun dotspacemacs/user-init ()
-  "Initialization for user code:
-This function is called immediately after `dotspacemacs/init', before layer
-configuration.
-It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
-
-(defun dotspacemacs/user-load ()
-  "Library to load while dumping.
-This function is called only while dumping Spacemacs configuration. You can
-`require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
-;; user-init / user-load:1 ends here
-
-;; [[file:~/Install/configs/spacemacs/config.note::fce76046-c66a-4702-a1d3-bc15226fdb78][fce76046-c66a-4702-a1d3-bc15226fdb78]]
-(defun dotspacemacs/user-config ()
-  "Configuration for user code:
-This function is called at the very end of Spacemacs startup, after layer
-configuration.
-Put your configuration code here, except for variables that should be set
-before packages are loaded."
-
-  ;; ;; mirror 1
+  ;; mirror 1
   (setq configuration-layer-elpa-archives
         '(("melpa-cn" . "https://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "https://elpa.emacs-china.org/org/")
@@ -519,6 +491,25 @@ before packages are loaded."
   ;;         ("org-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
   ;;         ("gnu-cn"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 
+  )
+;; user-init:1 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::*user-load][user-load:1]]
+(defun dotspacemacs/user-load ()
+  "Library to load while dumping.
+This function is called only while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included in the
+dump."
+  )
+;; user-load:1 ends here
+
+;; [[file:~/Install/configs/spacemacs/config.note::fce76046-c66a-4702-a1d3-bc15226fdb78][fce76046-c66a-4702-a1d3-bc15226fdb78]]
+(defun dotspacemacs/user-config ()
+  "Configuration for user code:
+This function is called at the very end of Spacemacs startup, after layer
+configuration.
+Put your configuration code here, except for variables that should be set
+before packages are loaded."
 
   ;; relocate import files to keep ~/.emacs.d clean
   ;; (setq spacemacs-cache-directory (expand-file-name ".cache/" dotspacemacs-directory))

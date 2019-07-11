@@ -1072,12 +1072,12 @@ References
                colors-colorize-identifiers 'all
                colors-enable-nyan-cat-progress-bar t
                )
-       ;; version-control  ;; will slow down writing buffer
+       ;; version-control  ;; it will slow down writing buffer
        python
        lua
-       ;; rust
-       (rust :packages (not racer))
+       (rust :packages (not racer)) ;; rust
        pdf
+       bm ;; for visual bookmarks
        (org :packages (not org-projectile))
        javascript
        gwp
@@ -1608,7 +1608,6 @@ References
       ;; org-attach-screenshot   ;; disabled since 2017-11-17
       fcitx
       interleave                 ;; for PDF annotations
-      bm                         ;; for visual bookmarks
       )
 
     "The list of Lisp packages required by the gwp layer.")
@@ -1862,7 +1861,9 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
 
 *** init bm
 主要用 bm, 书签持久化是从 bm.el 里抄来的.
-#+BEGIN_SRC emacs-lisp
+[2019-07-11 Thu] spacemacs有bm layer, 用那个吧.
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun gwp/init-bm ()
     (defun gwp-mouse-toggle-bm (e)
       "Toggle bookmarking

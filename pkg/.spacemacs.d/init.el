@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-07-11 Thu 09:23>
+;;  UPDATED:    <2019-07-11 Thu 09:30>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -74,12 +74,12 @@ This function should only modify configuration layer settings."
              colors-colorize-identifiers 'all
              colors-enable-nyan-cat-progress-bar t
              )
-     ;; version-control  ;; will slow down writing buffer
+     ;; version-control  ;; it will slow down writing buffer
      python
      lua
-     ;; rust
-     (rust :packages (not racer))
+     (rust :packages (not racer)) ;; rust
      pdf
+     bm ;; for visual bookmarks
      (org :packages (not org-projectile))
      javascript
      gwp

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-07-08 Mon 10:00>
+;;  UPDATED:    <2019-07-11 Thu 09:23>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -79,7 +79,7 @@ This function should only modify configuration layer settings."
      lua
      ;; rust
      (rust :packages (not racer))
-     pdf-tools
+     pdf
      (org :packages (not org-projectile))
      javascript
      gwp

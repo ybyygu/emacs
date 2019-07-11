@@ -983,7 +983,6 @@ References
 :PROPERTIES:
 :header-args: :tangle pkg/.spacemacs.d/init.el :comments link :padline yes :mkdirp yes
 :END:
-
 .spacemacs是spacemacs的主配置文件.
 
 - dotfile默认为~/.spacemacs
@@ -1078,7 +1077,7 @@ References
        lua
        ;; rust
        (rust :packages (not racer))
-       pdf-tools
+       pdf
        (org :packages (not org-projectile))
        javascript
        gwp

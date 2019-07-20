@@ -2056,8 +2056,8 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
   (defun gwp/open-in-gnome-terminal (the-directory)
     "Open `the-directory' in external gnome-terminal."
     (let ((process-connection-type nil))
-      (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
-      ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+      ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+      (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
       )
     )
 

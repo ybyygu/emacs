@@ -1,14 +1,14 @@
-;; [[file:~/Install/configs/spacemacs/config.note::f457b32b-bcfd-4618-b7d4-e2e83399037e][f457b32b-bcfd-4618-b7d4-e2e83399037e]]
+;; [[file:~/Install/configs/spacemacs/config.note::*header][header:1]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/config.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-04-30 Tue 14:13>
+;;  UPDATED:    <2019-07-20 Sat 09:29>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; f457b32b-bcfd-4618-b7d4-e2e83399037e ends here
+;; header:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::371dccb7-b33d-4674-8e09-64fa1d9806ab][371dccb7-b33d-4674-8e09-64fa1d9806ab]]
 (set-language-environment "UTF-8")
@@ -38,20 +38,6 @@
 (setq default-tab-width 4)
 (setq tab-width 4)                             ; Length of tab is 4 SPC
 ;; tab key:1 ends here
-
-;; [[file:~/Install/configs/spacemacs/config.note::*bookmark][bookmark:1]]
-(defun gwp-mouse-toggle-bm (e)
-  "Toggle bookmarking
-This command should be bound to a mouse key.
-Argument E is a mouse event used by `mouse-set-point'."
-  (interactive "@e")
-  (save-excursion
-    (mouse-set-point e)
-    (bm-toggle)
-    )
-  )
-
-;; bookmark:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::139c7654-b2cd-4c3c-9b37-a5ee6a64aef4][139c7654-b2cd-4c3c-9b37-a5ee6a64aef4]]
 ;; (defun gwp/quit-frame-and-kill-buffer ()
@@ -97,8 +83,8 @@ Argument E is a mouse event used by `mouse-set-point'."
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
-    ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
     )
   )
 

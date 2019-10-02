@@ -523,7 +523,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
   )
 ;; 70ff43af-9dfc-457c-b4b7-e423715cc689 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::f0388b8f-03f1-4caf-9630-3760aba9bb2d][f0388b8f-03f1-4caf-9630-3760aba9bb2d]]
+;; [[file:~/Install/configs/spacemacs/config.note::*latex][latex:1]]
 (use-package ox-latex
   :config
   (progn
@@ -557,7 +557,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
           )
     )
   )
-;; f0388b8f-03f1-4caf-9630-3760aba9bb2d ends here
+;; latex:1 ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::32a6da28-5f14-4433-ac15-6d2749b036f5][32a6da28-5f14-4433-ac15-6d2749b036f5]]
 ;; bigger latex fragment

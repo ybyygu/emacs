@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-07-11 Thu 09:33>
+;;  UPDATED:    <2019-10-02 Wed 17:52>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -35,7 +35,6 @@
     (hl-todo :excluded t)      ;; shipped with spacemacs in spacemacs-ui-visual layer
     cnfonts                    ;; chinese fonts setup
     cal-china-x
-    ox-latex-chinese
     ;; org-attach-screenshot   ;; disabled since 2017-11-17
     fcitx
     interleave                 ;; for PDF annotations
@@ -144,10 +143,6 @@
       (load-file "~/.spacemacs.d/init-org.el")
       )
     )
-  )
-
-(defun gwp/init-ox-latex-chinese ()
-  ;;
   )
 ;; init org:1 ends here
 

@@ -3,7 +3,8 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [12/24]
+* Memo [13/24]
+** [2019-08-21 Wed] 注意: spacemacs有时会根据文件模式, 自动添加mode, 修改配置文件, 但这会导致emacs启动出败.
 ** [2019-04-10 Wed] 试用 idle-org-agenda
 [[https://github.com/enisozgen/idle-org-agenda][enisozgen/idle-org-agenda: A package that shows your agenda when Emacs is idle]]
 
@@ -49,7 +50,9 @@ CLOSED: [2018-12-17 Mon 11:47]
 配置更新:
 : configuration-layer--elpa-archives => configuration-layer-elpa-archives
 
-** TODO [2018-12-17 Mon] 注意去掉ox-latex-chinese依赖
+** DONE [2018-12-17 Mon] 注意去掉ox-latex-chinese依赖
+CLOSED: [2019-10-02 Wed 17:52]
+- State "DONE"       from "TODO"       [2019-10-02 Wed 17:52]
 melpa中已经找不到了
 
 ** [2018-12-17 Mon] 修改elpa镜像地址为https, 不然有些包查不到
@@ -1075,7 +1078,8 @@ References
        ;; version-control  ;; it will slow down writing buffer
        python
        lua
-       (rust :packages (not racer)) ;; rust
+       (rust) ;; rust
+       ;; (rust :packages (not racer)) ;; rust
        pdf
        bm ;; for visual bookmarks
        (org :packages (not org-projectile))
@@ -1604,7 +1608,6 @@ References
       (hl-todo :excluded t)      ;; shipped with spacemacs in spacemacs-ui-visual layer
       cnfonts                    ;; chinese fonts setup
       cal-china-x
-      ox-latex-chinese
       ;; org-attach-screenshot   ;; disabled since 2017-11-17
       fcitx
       interleave                 ;; for PDF annotations
@@ -1844,12 +1847,8 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
         )
       )
     )
-
-  (defun gwp/init-ox-latex-chinese ()
-    ;;
-    )
-
 #+END_SRC
+
 *** init interleave
 #+begin_src emacs-lisp
   (defun gwp/init-interleave ()
@@ -2940,8 +2939,6 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 *** exports
 主要添加 cn-article classes, 修改使用 xelatex 来处理 tex 文档.
 
-也可以用这个包: https://github.com/tumashu/ox-latex-chinese
-
 **** markdown and others
 #+name: 70ff43af-9dfc-457c-b4b7-e423715cc689
 #+BEGIN_SRC emacs-lisp
@@ -2975,9 +2972,7 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 
 **** latex
 - 中文设置
-- 可以考虑使用 ox-latex-chinese包
 
-#+name: f0388b8f-03f1-4caf-9630-3760aba9bb2d
 #+BEGIN_SRC emacs-lisp
   (use-package ox-latex
     :config

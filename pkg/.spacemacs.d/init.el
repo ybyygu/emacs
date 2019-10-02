@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-07-11 Thu 09:30>
+;;  UPDATED:    <2019-09-06 Fri 18:50>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -77,7 +77,8 @@ This function should only modify configuration layer settings."
      ;; version-control  ;; it will slow down writing buffer
      python
      lua
-     (rust :packages (not racer)) ;; rust
+     (rust) ;; rust
+     ;; (rust :packages (not racer)) ;; rust
      pdf
      bm ;; for visual bookmarks
      (org :packages (not org-projectile))

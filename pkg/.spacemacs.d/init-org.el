@@ -271,22 +271,17 @@ DESC. FORMATs understood are 'odt','latex and 'html."
      )
    )
 
-  ;; add <p for python expansion
-  (add-to-list 'org-structure-template-alist
-               '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
+  ;; add p for python expansion
+  (add-to-list 'org-structure-template-alist '("p" . "src python"))
 
-  ;; add <rs for rust codes
-  (add-to-list 'org-structure-template-alist
-               '("rs" "#+begin_src rust\n?\n#+end_src" "<src lang=\"rust\">\n?\n</src>"))
+  ;; add rs for rust codes
+  (add-to-list 'org-structure-template-alist '("rs" . "src rust"))
 
-  ;; add <el for emacs-lisp expansion
-  (add-to-list 'org-structure-template-alist
-               '("el" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>"))
+  ;; add el for emacs-lisp expansion
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
-  ;; add <sh for shell scritp
-  (add-to-list 'org-structure-template-alist
-               '("sh" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
-
+  ;; add sh for shell scritp
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
  )
 ;; 08773fc4-f834-41ef-96bd-695b7eb0668e ends here
 

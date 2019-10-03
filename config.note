@@ -3,8 +3,17 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [13/24]
-** [2019-08-21 Wed] 注意: spacemacs有时会根据文件模式, 自动添加mode, 修改配置文件, 但这会导致emacs启动出败.
+* Memo [13/25]
+** [2019-10-03 Thu] org-mode 9.2更新导致的问题
+更新后不能使用<rs之类的快速输入模板了. 可以用Ctrl-c Ctrl-, 插入.
+- [[https://orgmode.org/manual/Structure-Templates.html][The Org Manual: Structure Templates]]
+
+** [2019-08-21 Wed] 注意: spacemacs有时会根据文件模式, 自动安装相关主mode, 并修改配置文件, 这会导致emacs启动出败.
+emacs如果自动修改如下文件, 可能导致spacemacs启动出错.
+: ~/.spacemacs.d/custom.el
+不过可以按SPC q d来调试init文件
+: spacemacs/restart-emacs-debug-init
+
 ** [2019-04-10 Wed] 试用 idle-org-agenda
 [[https://github.com/enisozgen/idle-org-agenda][enisozgen/idle-org-agenda: A package that shows your agenda when Emacs is idle]]
 
@@ -29,7 +38,10 @@
 [2019-03-01 Fri] 又可以用了. 恢复几天看看.
 [2019-05-13 Mon] 应该与locale设置有关. gnome-terminal更新需要使用locale-gen理更新下?
 
-** TODO [2018-12-17 Mon] 临时解决ox-odt导出的bug
+** DONE [2018-12-17 Mon] 临时解决ox-odt导出的bug
+CLOSED: [2019-10-02 Wed 17:58]
+- State "DONE"       from "TODO"       [2019-10-02 Wed 17:58] \\
+  似乎没什么问题了
 无法设置文件级别的模板(ODT_STYLES_FILE). 下载最新的ox-odt.el文件, 将
 : org-strip-quotes
 改为
@@ -125,12 +137,11 @@ melpa中已经找不到了
     (kbd "RET") 'nil)
 #+end_src
 
-** DONE [2018-01-26 Fri] 解决某些情况下屏幕截图时无法正常隐藏emacs窗口的问题.
-CLOSED: [2018-01-26 Fri 12:25]
+** TODO [2018-01-26 Fri] 解决某些情况下屏幕截图时无法正常隐藏emacs窗口的问题.
 :PROPERTIES:
 :ID:       3472e603-77c5-487c-8214-d48d9445bf0f
 :END:
-
+- 也许更简单也许更好的办法是通过延时来实现? [2019-10-02 Wed]
 - State "DONE"       from "DONE"       [2018-01-26 Fri 12:25] \\
   使用xdotool来实现emacs窗口的隐藏与还原.
 
@@ -2666,24 +2677,18 @@ bibtex更新了item link的格式.
        )
      )
 
-    ;; add <p for python expansion
-    (add-to-list 'org-structure-template-alist
-                 '("p" "#+begin_src python\n?\n#+end_src" "<src lang=\"python\">\n?\n</src>"))
+    ;; add p for python expansion
+    (add-to-list 'org-structure-template-alist '("p" . "src python"))
 
-    ;; add <rs for rust codes
-    (add-to-list 'org-structure-template-alist
-                 '("rs" "#+begin_src rust\n?\n#+end_src" "<src lang=\"rust\">\n?\n</src>"))
+    ;; add rs for rust codes
+    (add-to-list 'org-structure-template-alist '("rs" . "src rust"))
 
-    ;; add <el for emacs-lisp expansion
-    (add-to-list 'org-structure-template-alist
-                 '("el" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>"))
+    ;; add el for emacs-lisp expansion
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
-    ;; add <sh for shell scritp
-    (add-to-list 'org-structure-template-alist
-                 '("sh" "#+begin_src shell \n?\n#+end_src" "<src lang=\"shell\">\n?\n</src>"))
-
+    ;; add sh for shell scritp
+    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
    )
-
 #+end_src
 
 #+name: 03a57f74-e2b2-467e-b771-42843b8e1c95

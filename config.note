@@ -4,6 +4,8 @@
 # Created: 2016-10-14 14:20
 
 * Memo [13/25]
+** [2019-10-04 Fri] 添加新按键 SPC-o-i 在org-mode中插入新代码, 并进入编辑模式
+
 ** [2019-10-03 Thu] org-mode 9.2更新导致的问题
 更新后不能使用<rs之类的快速输入模板了. 可以用Ctrl-c Ctrl-, 插入.
 - [[https://orgmode.org/manual/Structure-Templates.html][The Org Manual: Structure Templates]]
@@ -2149,6 +2151,7 @@ search org note files
          "ol" 'org-store-link
          "ob" 'gwp/org-babel-tangle-dwim
          "oT" 'gwp/open-terminal-here
+         "oi" 'gwp/edit-structure-inplace
          "om" 'gwp/org-take-as-local-attachment
          "oj" 'helm-org-in-buffer-headings
          "oJ" 'org-babel-tangle-jump-to-org
@@ -2688,6 +2691,13 @@ bibtex更新了item link的格式.
 
     ;; add sh for shell scritp
     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+
+    (defun gwp/edit-structure-inplace (arg)
+      "Insert source strcture and edit the source"
+      (interactive "P")
+      (call-interactively 'org-insert-structure-template)
+      (call-interactively 'org-edit-src-code)
+      )
    )
 #+end_src
 

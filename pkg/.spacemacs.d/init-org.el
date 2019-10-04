@@ -282,6 +282,13 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
   ;; add sh for shell scritp
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+
+  (defun gwp/edit-structure-inplace (arg)
+    "Insert source strcture and edit the source"
+    (interactive "P")
+    (call-interactively 'org-insert-structure-template)
+    (call-interactively 'org-edit-src-code)
+    )
  )
 ;; 08773fc4-f834-41ef-96bd-695b7eb0668e ends here
 

@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/keybindings.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-04-06 Sat 12:04>
+;;  UPDATED:    <2019-10-04 Fri 16:51>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -33,6 +33,7 @@
        "ol" 'org-store-link
        "ob" 'gwp/org-babel-tangle-dwim
        "oT" 'gwp/open-terminal-here
+       "oi" 'gwp/edit-structure-inplace
        "om" 'gwp/org-take-as-local-attachment
        "oj" 'helm-org-in-buffer-headings
        "oJ" 'org-babel-tangle-jump-to-org

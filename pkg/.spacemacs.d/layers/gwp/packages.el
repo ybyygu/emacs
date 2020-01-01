@@ -3,14 +3,14 @@
 ;;
 ;;  File:       ~/.spacemacs.d/layers/gwp/packages.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-10-02 Wed 17:52>
+;;  UPDATED:    <2020-01-01 Wed 11:13>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; header:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::*define%20packages][define packages:1]]
+;; [[file:~/Install/configs/spacemacs/config.note::*define packages][define packages:1]]
 ;;; packages.el --- gwp layer packages file for Spacemacs.
 ;;  Time-stamp: <2017-03-06 23:37:14 ybyygu>
 
@@ -37,7 +37,7 @@
     cal-china-x
     ;; org-attach-screenshot   ;; disabled since 2017-11-17
     fcitx
-    interleave                 ;; for PDF annotations
+    org-noter                  ;; for PDF annotations
     )
 
   "The list of Lisp packages required by the gwp layer.")
@@ -73,7 +73,7 @@
   )
 ;; 3936797b-171a-4257-b96e-c28ad0cec464 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::*init%20vc][init vc:1]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init vc][init vc:1]]
 (defun gwp/init-vc ()
   (use-package vc
     :init
@@ -107,7 +107,7 @@
   )
 ;; d1097c8f-3faa-4853-8786-d9d0d9c04575 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::*init%20cnfonts][init cnfonts:1]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init cnfonts][init cnfonts:1]]
 (defun gwp/init-cnfonts ()
   ;; chinese-fonts-setup is amazing
   (use-package cnfonts
@@ -128,7 +128,7 @@
   )
 ;; init cnfonts:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::*init%20org][init org:1]]
+;; [[file:~/Install/configs/spacemacs/config.note::*init org][init org:1]]
 (defun gwp/post-init-org ()
   (with-eval-after-load 'org
     (progn
@@ -146,10 +146,10 @@
   )
 ;; init org:1 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::*init%20interleave][init interleave:1]]
-(defun gwp/init-interleave ()
-  (use-package interleave
+;; [[file:~/Install/configs/spacemacs/config.note::*init org-noter][init org-noter:1]]
+(defun gwp/init-org-noter ()
+  (use-package org-noter
     :ensure t
     )
   )
-;; init interleave:1 ends here
+;; init org-noter:1 ends here

@@ -624,8 +624,8 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; [[file:~/Install/configs/spacemacs/config.note::7150b085-c305-4285-9fc6-2c5496e0876f][7150b085-c305-4285-9fc6-2c5496e0876f]]
 (setq org-capture-templates
       '(
-        ("i" "interleave" plain (file "~/Incoming/annotation.note")
-         "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
+        ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
+        ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
         ("n" "Note" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")

@@ -676,6 +676,19 @@ References
 - 问题: 不能方便地在zotero界面里进行搜索 (需要fulltext index) (但可以用自编工具
   notesearch来处理, 不过需要定期更新cache)
 
+** 使用org-noter批注
+[2020-01-01 Wed] org-noter比interleave功能更强.
+
+流程:
+- 在zotero界面, 选中待批注的PDF, "copy attachment path"
+- 在普通的org文件中将zotero中的PDF列为附件.
+- 打开org-noter批注该附件.
+
+优点:
+- Note和PDF直接关联, 不需要写任何代码. 方便易用.
+- 原始zotero数据库中的为父本, 不同Note中的批注的有不同的副本.
+- 不需要更新.cache/notes列表.
+
 ** 使用interleave批注流程
 - 在zotero界面, 选中待批注的PDF, "copy attachment path"
 - 打开org-capture, 使用interleave模板, 生成~/annotation.note
@@ -1623,7 +1636,7 @@ References
       cal-china-x
       ;; org-attach-screenshot   ;; disabled since 2017-11-17
       fcitx
-      interleave                 ;; for PDF annotations
+      org-noter                  ;; for PDF annotations
       )
 
     "The list of Lisp packages required by the gwp layer.")
@@ -1862,10 +1875,10 @@ tumashu 的设置 [[https://github.com/tumashu/emacs-helper/blob/master/eh-org.e
     )
 #+END_SRC
 
-*** init interleave
+*** init org-noter
 #+begin_src emacs-lisp
-  (defun gwp/init-interleave ()
-    (use-package interleave
+  (defun gwp/init-org-noter ()
+    (use-package org-noter
       :ensure t
       )
     )
@@ -3112,8 +3125,8 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(
-          ("i" "interleave" plain (file "~/Incoming/annotation.note")
-           "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
+          ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
+          ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
           ("n" "Note" entry (file "~/Notes/refile.note")
            "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
           ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")

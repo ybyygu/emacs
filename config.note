@@ -2909,6 +2909,7 @@ bibtex更新了item link的格式.
     (widen)
     )
 #+end_src
+
 **** tangle blocks
 #+name: 24c35c8a-7587-4c52-bbfb-f7f8a198e292
 #+begin_src emacs-lisp
@@ -2947,6 +2948,13 @@ src blocks多了以后是个灾难, fontify会严重影响响应速度.
 #+begin_src emacs-lisp
   (setq org-src-fontify-natively nil)
 #+end_src
+
+**** org-src-window-setup
+编辑代码时在下方新开窗口
+#+begin_src emacs-lisp
+  (setq org-src-window-setup 'split-window-below)
+#+end_src
+
 *** encryption
 #+name: 7c756a95-fbc4-4159-b6e7-bc4f3ebf972e
 #+begin_src emacs-lisp

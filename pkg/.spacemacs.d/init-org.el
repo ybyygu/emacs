@@ -481,6 +481,10 @@ This is a copy and paste. Additional languages would warrant a refactor."
 (setq org-src-fontify-natively nil)
 ;; 8934f349-26c4-48a4-945d-5944f3baf2f3 ends here
 
+;; [[file:~/Install/configs/spacemacs/config.note::*org-src-window-setup][org-src-window-setup:1]]
+(setq org-src-window-setup 'split-window-below)
+;; org-src-window-setup:1 ends here
+
 ;; [[file:~/Install/configs/spacemacs/config.note::7c756a95-fbc4-4159-b6e7-bc4f3ebf972e][7c756a95-fbc4-4159-b6e7-bc4f3ebf972e]]
 (require 'org-crypt)
 (require 'epa-file)

@@ -879,7 +879,7 @@ This is a copy and paste. Additional languages would warrant a refactor."
 ;; c38fb49c-9ebf-4103-a404-f52514abc11f ends here
 
 ;; [[file:~/Install/configs/spacemacs/config.note::4136bddd-2d62-4d66-8f84-aa28e09006ca][4136bddd-2d62-4d66-8f84-aa28e09006ca]]
-(require 'org-man)
+;; (require 'org-man)
 
 ;; do not commit attachments with git
 (setq org-attach-commit nil)

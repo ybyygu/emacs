@@ -83,6 +83,9 @@ melpa中已经找不到了
 ** [2018-05-07 Mon] 新技能: helm-resume: 返回之前的搜索窗口 [[https://emacs.stackexchange.com/questions/10701/how-to-edit-in-the-place-highlighted-by-helm-swoop][how to edit in the place highlighted by helm swoop]] :Starred:
 : SPC r l
 
+进入edit mode编辑:
+
+
 也可以从之前的提供历史中选择(太强大了):
 : ctrl-u SPC r l
 
@@ -599,6 +602,9 @@ stow:
 | SPC g s  | status                |                             |
 | SPC g S  | stage file            |                             |
 | SPC g fh | magit-log-buffer-file | Show log for current buffer |
+
+: reset: O
+: discard: x
 
 ** Movement
 | Key Binding | Description                            |
@@ -3442,7 +3448,7 @@ file-exists-p函数对symlink的特殊性:
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+name: 4136bddd-2d62-4d66-8f84-aa28e09006ca
 #+begin_src emacs-lisp
-  (require 'org-man)
+  ;; (require 'org-man)
 
   ;; do not commit attachments with git
   (setq org-attach-commit nil)

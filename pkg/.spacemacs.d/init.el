@@ -3,7 +3,7 @@
 ;;
 ;;  File:       ~/.spacemacs.d/init.el
 ;;  Created:    <2017-10-09 Mon>
-;;  UPDATED:    <2019-09-06 Fri 18:50>
+;;  UPDATED:    <2020-02-19 Wed 16:17>
 ;;  Platform:   Emacs (Spacemacs)
 ;;  Author:     Wenping Guo <ybyygu@gmail.com>
 ;;
@@ -94,7 +94,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
                                       (deadgrep :location (recipe :fetcher github :repo "ybyygu/notesearch"))
-                                      idle-org-agenda
+                                      ;; 2020-02-19: 可能与which-key有冲突?
+                                      ;; idle-org-agenda
                                       )
 
    ;; A list of packages that cannot be updated.

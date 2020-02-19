@@ -159,19 +159,6 @@
 ;; (run-with-idle-timer 600 t 'gwp/run-agenda-store)
 ;; agenda:4 ends here
 
-;; [[file:~/Install/configs/spacemacs/config.note::*agenda][agenda:5]]
-(use-package idle-org-agenda
-  :after org-agenda
-  :ensure t
-  :config (idle-org-agenda-mode))
-
-(custom-set-variables
- '(idle-org-agenda-interval 600) ;; 10 x 60 seconds
- '(idle-org-agenda-key "gt")     ;; Choose your specific agenda
- '(idle-org-agenda-mode t)
- )
-;; agenda:5 ends here
-
 ;; [[file:~/Install/configs/spacemacs/config.note::048aa38e-7f6f-4c9f-94da-020c82ea50e4][048aa38e-7f6f-4c9f-94da-020c82ea50e4]]
 (with-eval-after-load 'org-compat
 

@@ -1127,7 +1127,8 @@ References
      ;; Also include the dependencies as they will not be resolved automatically.
      dotspacemacs-additional-packages '(
                                         (deadgrep :location (recipe :fetcher github :repo "ybyygu/notesearch"))
-                                        idle-org-agenda
+                                        ;; 2020-02-19: 可能与which-key有冲突?
+                                        ;; idle-org-agenda
                                         )
 
      ;; A list of packages that cannot be updated.
@@ -2572,7 +2573,7 @@ search org note files
 #+END_SRC
 
 闲时显示日程
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package idle-org-agenda
     :after org-agenda
     :ensure t

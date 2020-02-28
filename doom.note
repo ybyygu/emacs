@@ -88,6 +88,11 @@ flyspell-correct-at-point
 | C-x C-j |
 | SPC-f-j |
 
+** org-edit-special
+| C-c '   | hard to press |
+| SPC-m ; |               |
+
+
 * 配置安装
 ** stow配置管理思路
 - tangle时仅导出到当目录下或子目录下, 方便git管理.
@@ -500,10 +505,15 @@ stow:
 #+end_src
 
 **** 按键行为
-还原在normal/insert state下, Ctrl-k的行为: org-kill-line
+- 还原在normal/insert state下, Ctrl-k的行为: org-kill-line
+- 修改编辑 org-src 快捷键, 默认的不太容易盲按.
 #+begin_src elisp
   (after! org
-          (map! :map org-mode-map :ni "C-k" #'org-kill-line)
+          (map! :map org-mode-map
+                :ni "C-k" #'org-kill-line
+                :ni "C-c ;" #'org-edit-special
+                :localleader ";" #'org-edit-special
+                )
           )
 #+end_src
 

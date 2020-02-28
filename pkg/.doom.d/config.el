@@ -112,7 +112,11 @@
   )
 
 (after! org
-        (map! :map org-mode-map :ni "C-k" #'org-kill-line)
+        (map! :map org-mode-map
+              :ni "C-k" #'org-kill-line
+              :ni "C-c ;" #'org-edit-special
+              :localleader ";" #'org-edit-special
+              )
         )
 
 (after! org

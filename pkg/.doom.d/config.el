@@ -53,6 +53,12 @@
 (map! :map evil-motion-state-map "C-e" nil)
 ;; 常用按键:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:2]]
+(map! :leader
+      (:desc "Dired jump"              "fj"  #'dired-jump)
+      )
+;; 常用按键:2 ends here
+
 ;; chinese fonts setup
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
@@ -102,17 +108,16 @@
   )
 ;; 基本设置:1 ends here
 
-;; 按键
+;; 按键行为
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*按键][按键:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
 (after! org
   (map! :map org-mode-map
         :leader
         :desc "insert inactive timestamp"
         "m SPC !"
-        #'org-time-stamp-inactive)
-  )
-;; 按键:1 ends here
+        #'org-time-stamp-inactive))
+;; 按键行为:1 ends here
 
 ;; 按 SPC-m SPC-t tangle当前代码:
 

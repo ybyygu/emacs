@@ -52,7 +52,7 @@
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
-       ;(evil); come to the dark side, we have cookies
+                                        ;(evil); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        ;;(format +onsave)  ; automated prettiness
@@ -78,7 +78,7 @@
        vterm             ; another terminals in Emacs
 
        :checkers
-       syntax              ; tasing you for every semicolon you forget
+       ;;syntax              ; tasing you for every semicolon you forget
        ;;spell             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -151,7 +151,7 @@
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       ;;python            ; beautiful is better than ugly
+       python            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;rest              ; Emacs as a REST client
@@ -179,4 +179,6 @@
 
        :config
        ;;literate
-       (default +bindings +smartparens))
+       ;;(default +bindings +smartparens)
+       (default +smartparents)
+       )

@@ -3,7 +3,12 @@
 
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
-* Memo [0/4]
+* Memo [0/5]
+** TODO [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
+- [[https://github.com/hlissner/doom-emacs/issues/1897][[BUG] org-mode TAB key mapped to different command when emacs running as daemon · Issue #1897 · hlissner/doom-emacs]]
+
+去掉:config中的 +bindings 开关正常了.
+
 ** TODO [2020-02-28 Fri] 可用的主题
 [[*theme][theme]]
 : doom-acario-light
@@ -22,6 +27,8 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
 ** TODO [2020-02-27 Thu] 解决 org-mode 插入时间戳快捷键被占用的问题
 : C-c ! (org-time-stamp-inactive)
+
+禁用:checkers组中的modules即可.
 
 ** TODO [2020-02-27 Thu] doom尝鲜
 https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/rest/README.org
@@ -65,9 +72,16 @@ https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 https://segmentfault.com/q/1010000000118837
 
 flyspell-correct-at-point
+
 ** TODO [2020-02-27 Thu] Ctrl-E的问题
 : evil-motion-state-map C-e
 
+* 常用按键
+- [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
+
+** dired-jump
+| C-x C-j |
+| SPC-f-j |
 
 * 配置安装
 ** stow配置管理思路
@@ -85,7 +99,8 @@ flyspell-correct-at-point
 doom会根据~/.doom.d中的配置, 更新doom-emacs/.local目录中的内容. 如果doom-emacs目
 录位置发生变化, 需要删除.local/straints/build目录, 再重建:
 : doom-emacs/bin/doom build
-
+* 调试步骤
+- [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#testing-in-dooms-sandbox][doom-emacs/getting_started.org at develop · hlissner/doom-emacs]]
 
 * install
 ** makefile
@@ -151,7 +166,7 @@ stow:
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/init.el :comments nil
 :END:
-*** orig
+*** modules
 #+begin_src elisp
   ;;; init.el -*- lexical-binding: t; -*-
 
@@ -233,9 +248,9 @@ stow:
          vterm             ; another terminals in Emacs
 
          :checkers
-         syntax              ; tasing you for every semicolon you forget
-         spell             ; tasing you for misspelling mispelling
-         grammar           ; tasing grammar mistake every you make
+         ;;syntax              ; tasing you for every semicolon you forget
+         ;;spell             ; tasing you for misspelling mispelling
+         ;;grammar           ; tasing grammar mistake every you make
 
          :tools
          ;;ansible
@@ -334,7 +349,8 @@ stow:
 
          :config
          ;;literate
-         (default +bindings +smartparens)
+         ;;(default +bindings +smartparens)
+         (default +smartparents)
          )
 #+end_src
 
@@ -395,6 +411,12 @@ stow:
   (map! :map evil-motion-state-map "C-e" nil)
 #+end_src
 
+#+begin_src elisp
+  (map! :leader
+        (:desc "Dired jump"              "fj"  #'dired-jump)
+        )
+#+end_src
+
 *** 界面设置
 **** chinese fonts setup
 #+begin_src elisp
@@ -443,15 +465,20 @@ stow:
     )
 #+end_src
 
-**** 按键
+**** 按键行为
 #+begin_src elisp
   (after! org
     (map! :map org-mode-map
           :leader
           :desc "insert inactive timestamp"
           "m SPC !"
-          #'org-time-stamp-inactive)
-    )
+          #'org-time-stamp-inactive))
+#+end_src
+
+doom中的tag行为有些怪异, 禁用之:
+#+begin_src elisp :tangle no
+  (after! evil-org
+          (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
 #+end_src
 
 *** org-babel

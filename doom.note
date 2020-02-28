@@ -1,9 +1,25 @@
 #+TITLE: org-mode config for doom-emacs
-
+#+SETUPFILE: ~/Notes/common.org
 
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
-* Memo [0/2]
+* Memo [0/4]
+** TODO [2020-02-28 Fri] 可用的主题
+[[*theme][theme]]
+: doom-acario-light
+: doom-material
+: doom-moonlight
+: doom-nord-light x
+: doom-nord
+: doom-oceanic-next
+: doom-one-light x
+: doom-opera-light x
+: doom-palenight
+: doom-peacock x
+: doom-snazzy
+: doom-tomorrow-day x
+: doom-vibrant
+
 ** TODO [2020-02-27 Thu] 解决 org-mode 插入时间戳快捷键被占用的问题
 : C-c ! (org-time-stamp-inactive)
 
@@ -49,13 +65,93 @@ https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 https://segmentfault.com/q/1010000000118837
 
 flyspell-correct-at-point
+** TODO [2020-02-27 Thu] Ctrl-E的问题
+: evil-motion-state-map C-e
 
 
-* init.el
+* 配置安装
+** stow配置管理思路
+- tangle时仅导出到当目录下或子目录下, 方便git管理.
+- stow再 "install" 到主目录下.
+
+** 使用chemacs做emacs双启动
+- 进入chemacsk目录, 执行install.sh即可.
+- 修改 ~/.emacs-profiles.el
+
+** 安装doom-emacs
+- 进入doom-emacs目录, 执行:
+  : bin/doom install
+
+doom会根据~/.doom.d中的配置, 更新doom-emacs/.local目录中的内容. 如果doom-emacs目
+录位置发生变化, 需要删除.local/straints/build目录, 再重建:
+: doom-emacs/bin/doom build
+
+
+* install
+** makefile
+使用gnu stow来将pkg目录下的文件安装symlink到$HOME下对应的目录
+
+#+header: :tangle Makefile
+#+BEGIN_SRC makefile -i
+default: doom-sync
+
+install: stow
+	stow --verbose --adopt --no-folding --target ~/ pkg
+uninstall:
+	stow --verbose --target ~/ --delete pkg
+
+# doom 相关操作
+doom-sync: pkg/.doom.d/init.el pkg/.doom.d/packages.el	# 修改doom配置后执行
+	doom-emacs/bin/doom sync
+doom-build:											                        # 重建.local下build目录
+	doom-emacs/bin/doom build
+doom-clean:											                        # 清理过期的.elc文件
+	doom-emacs/bin/doom clean
+doom-upgrade:										                        # 升级doom及packages
+	doom-emacs/bin/doom upgrade
+stow:
+	which stow
+#+END_SRC
+
+** doom commands
+#+begin_src text
+  1. Whenever you edit your doom! block in ~/.doom.d/init.el or modify your
+     modules, run:
+
+       bin/doom refresh
+
+     This will ensure all needed packages are installed, all orphaned packages are
+     removed, and your autoloads files are up to date. This is important! If you
+     forget to do this you will get errors!
+
+  2. If something inexplicably goes wrong, try `bin/doom doctor`
+
+     This will diagnose common issues with your environment and setup, and may
+     give you clues about what is wrong.
+
+  3. Use `bin/doom upgrade` to update Doom. Doing it any other way may require
+     additional work. When in doubt, run `bin/doom sync`.
+
+  4. Check out `bin/doom help` to see what else `bin/doom` can do (and it is
+     recommended you add ~/.emacs.d/bin to your PATH).
+
+  5. You can find Doom's documentation via `M-x doom/help` or `SPC h D`.
+#+end_src
+
+#+begin_src shell :tangle no
+  ./doom-emacs/bin/doom clean
+  ./doom-emacs/bin/doom refresh
+#+end_src
+
+
+* doom config
+共三个配置文件, tangle到pkg/.doom.d目录下, 再由stow软链到$HOME.
+
+** init.el
 :PROPERTIES:
-:header-args: :tangle ~/.doom.d/init.el :comments nil
+:header-args: :tangle pkg/.doom.d/init.el :comments nil
 :END:
-** orig
+*** orig
 #+begin_src elisp
   ;;; init.el -*- lexical-binding: t; -*-
 
@@ -111,7 +207,7 @@ flyspell-correct-at-point
 
          :editor
          (evil +everywhere); come to the dark side, we have cookies
-         ;(evil); come to the dark side, we have cookies
+                                          ;(evil); come to the dark side, we have cookies
          file-templates    ; auto-snippets for empty files
          fold              ; (nigh) universal code folding
          ;;(format +onsave)  ; automated prettiness
@@ -138,8 +234,8 @@ flyspell-correct-at-point
 
          :checkers
          syntax              ; tasing you for every semicolon you forget
-         ;;spell             ; tasing you for misspelling mispelling
-         ;;grammar           ; tasing grammar mistake every you make
+         spell             ; tasing you for misspelling mispelling
+         grammar           ; tasing grammar mistake every you make
 
          :tools
          ;;ansible
@@ -210,7 +306,7 @@ flyspell-correct-at-point
          ;;php               ; perl's insecure younger brother
          ;;plantuml          ; diagrams for confusing people more
          ;;purescript        ; javascript, but functional
-         ;;python            ; beautiful is better than ugly
+         python            ; beautiful is better than ugly
          ;;qt                ; the 'cutest' gui framework ever
          ;;racket            ; a DSL for DSLs
          ;;rest              ; Emacs as a REST client
@@ -238,14 +334,15 @@ flyspell-correct-at-point
 
          :config
          ;;literate
-         (default +bindings +smartparens))
+         (default +bindings +smartparens)
+         )
 #+end_src
 
-* config.el
+** config.el
 :PROPERTIES:
-:header-args: :tangle ~/.doom.d/config.el
+:header-args: :tangle pkg/.doom.d/config.el
 :END:
-** orign
+*** orign
 #+BEGIN_SRC emacs-lisp
   ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
@@ -292,7 +389,14 @@ flyspell-correct-at-point
   ;; they are implemented.
 #+END_SRC
 
-** chinese fonts setup
+*** 常用按键
+禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
+#+begin_src elisp
+  (map! :map evil-motion-state-map "C-e" nil)
+#+end_src
+
+*** 界面设置
+**** chinese fonts setup
 #+begin_src elisp
   (use-package! cnfonts
     :config
@@ -305,8 +409,16 @@ flyspell-correct-at-point
     )
 #+end_src
 
-** org-mode
-*** 基本设置
+**** theme
+#+begin_src elisp
+  ;; There are two ways to load a theme. Both assume the theme is installed and
+  ;; available. You can either set `doom-theme' or manually load a theme with the
+  ;; `load-theme' function. This is the default:
+  (setq doom-theme 'doom-acario-light)
+#+end_src
+
+*** org-mode
+**** 基本设置
 #+begin_src elisp
   ;; If you use `org' and don't want your org files in the default location below,
   ;; change `org-directory'. It must be set before org loads!
@@ -331,9 +443,29 @@ flyspell-correct-at-point
     )
 #+end_src
 
-** org-babel
-*** tangle
-#+begin_src emacs-lisp
+**** 按键
+#+begin_src elisp
+  (after! org
+    (map! :map org-mode-map
+          :leader
+          :desc "insert inactive timestamp"
+          "m SPC !"
+          #'org-time-stamp-inactive)
+    )
+#+end_src
+
+*** org-babel
+**** tangle
+***** 按 SPC-m SPC-t tangle当前代码:
+#+begin_src elisp
+  (after! org
+    (map! :map org-mode-map
+          :leader
+          :desc "tangle src blocks at point"
+          "m SPC t"
+          #'gwp/org-babel-tangle-blocks)
+    )
+
   ;; tangle blocks for current file at point
   ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
   ;; call org-babel-tangle with C-u C-u
@@ -343,7 +475,10 @@ flyspell-correct-at-point
       (call-interactively 'org-babel-tangle)
       )
     )
+#+end_src
 
+下面的代码不太可靠, 禁用
+#+begin_src elisp :tangle no
   (defun gwp/org-edit-save-and-tangle ()
     "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
     (interactive)
@@ -362,24 +497,7 @@ flyspell-correct-at-point
     )
 #+end_src
 
-按 SPC-m Ctrl-t tangle当前代码:
-#+begin_src elisp
-  (map! :leader
-        :desc "tangle src blocks at point"
-        "m C-t"
-        #'gwp/org-babel-tangle-blocks)
-#+end_src
-
-
-** theme设置
-#+begin_src elisp
-  ;; There are two ways to load a theme. Both assume the theme is installed and
-  ;; available. You can either set `doom-theme' or manually load a theme with the
-  ;; `load-theme' function. This is the default:
-  (setq doom-theme 'doom-material)
-#+end_src
-
-** 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+*** 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
 #+begin_src emacs-lisp :tangle no
   (set-language-environment "UTF-8")
   (prefer-coding-system 'utf-8)
@@ -397,11 +515,11 @@ flyspell-correct-at-point
   (setq frame-title-format '("" "%b: " buffer-file-name))
 #+end_src
 
-* packages.el
+** packages.el
 :PROPERTIES:
-:header-args: :tangle ~/.doom.d/packages.el :comments nil
+:header-args: :tangle pkg/.doom.d/packages.el :comments nil
 :END:
-** orig
+*** orig
 #+begin_src elisp
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
@@ -456,13 +574,14 @@ flyspell-correct-at-point
 ;(package! builtin-package :recipe (:branch "develop"))
 #+end_src
 
-** 额外需要安装的包
+*** 需要安装的包
 #+begin_src elisp
   (package! cnfonts)
 #+end_src
 
-** 禁用不需要的内置包
+*** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
+org-bullets由于字体原因, 显示不佳.
 
 #+begin_src elisp
   (disable-packages! org-bullets pangu-spacing)

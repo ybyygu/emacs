@@ -51,5 +51,10 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! cnfonts)
+;; (package! golden-ratio)
+(package! berrys-theme)
+;; (package! material-theme)
+(package! material-theme
+          :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 
 (disable-packages! org-bullets pangu-spacing)

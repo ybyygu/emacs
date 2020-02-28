@@ -388,7 +388,7 @@ stow:
   ;;
   ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
   ;; font string. You generally only need these two:
-  (setq doom-font (font-spec :family "monospace" :size 14))
+  (setq doom-font (font-spec :family "Monaco" :size 14))
 
   ;; This determines the style of line numbers in effect. If set to `nil', line
   ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -479,7 +479,8 @@ stow:
   ;; available. You can either set `doom-theme' or manually load a theme with the
   ;; `load-theme' function. This is the default:
   ;;(setq doom-theme 'doom-acario-light)
-  (setq doom-theme 'doom-one)
+  ;; (setq doom-theme 'doom-one)
+  (load-theme 'material t)
 #+end_src
 
 *** org-mode
@@ -504,10 +505,11 @@ stow:
     (setq org-src-preserve-indentation nil)
     )
 #+end_src
-
 **** 按键行为
-- 还原在normal/insert state下, Ctrl-k的行为: org-kill-line
-- 修改编辑 org-src 快捷键, 默认的不太容易盲按.
+- [ ] 还原在normal/insert state下, Ctrl-k的行为: org-kill-line
+- [ ] 修改编辑 org-src 快捷键, 默认的不太容易盲按.
+- [ ] org-metaright, org-demote-subtree
+
 #+begin_src elisp
   (after! org
           ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
@@ -677,12 +679,17 @@ spacemacs中的习惯, 加回来, 避免忙中出错
 *** 需要安装的包
 - chfonts: 中文显示
 - golden-ratio: 自动放大当前window
+- 修改版material-theme
+  - 改小org-heading字体的scaling系数
+  - 调整TODO, DONE的调色, 别那么刺眼
 
 #+begin_src elisp
   (package! cnfonts)
   ;; (package! golden-ratio)
   (package! berrys-theme)
-
+  ;; (package! material-theme)
+  (package! material-theme
+            :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 #+end_src
 
 *** 需要禁用的包
@@ -1309,3 +1316,5 @@ org-bullets由于字体原因, 显示不佳.
 #+end_src
 * modules/gwp
 - [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]
+* theme
+[[file:emacs-material-theme/][file:~/Workspace/Programming/emacs/emacs-material-theme/]]

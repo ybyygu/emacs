@@ -552,7 +552,7 @@ between the two."
         [remap doom/forward-to-last-non-comment-or-eol] #'org-end-of-line
 
         :localleader
-        "'" #'org-edit-special
+        ";" #'org-edit-special
         "," #'org-switchb
         "." #'org-goto
         (:when (featurep! :completion ivy)

@@ -99,7 +99,7 @@ doom会根据~/.doom.d中的配置, 更新doom-emacs/.local目录中的内容. �
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#testing-in-dooms-sandbox][doom-emacs/getting_started.org at develop · hlissner/doom-emacs]]
 
 * install
-** makefile
+** Makefile
 使用gnu stow来将pkg目录下的文件安装symlink到$HOME下对应的目录
 
 #+header: :tangle Makefile
@@ -120,6 +120,8 @@ doom-clean:											                        # 清理过期的.elc文件
 	doom-emacs/bin/doom clean
 doom-upgrade:										                        # 升级doom及packages
 	doom-emacs/bin/doom upgrade
+start:
+	emacs --with-profile doom
 stow:
 	which stow
 #+END_SRC

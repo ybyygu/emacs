@@ -1,9 +1,9 @@
-# makefile
+# Makefile
 # 使用gnu stow来将pkg目录下的文件安装symlink到$HOME下对应的目录
 
 # #+header: :tangle Makefile
 
-# [[file:~/Workspace/Programming/emacs/doom.note::*makefile][makefile:1]]
+# [[file:~/Workspace/Programming/emacs/doom.note::*Makefile][Makefile:1]]
 default: doom-sync
 
 install: stow
@@ -20,6 +20,8 @@ doom-clean:											                        # 清理过期的.elc文件
 	doom-emacs/bin/doom clean
 doom-upgrade:										                        # 升级doom及packages
 	doom-emacs/bin/doom upgrade
+start:
+	emacs --with-profile doom
 stow:
 	which stow
-# makefile:1 ends here
+# Makefile:1 ends here

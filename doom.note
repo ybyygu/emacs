@@ -6,6 +6,8 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 * Memo [2/6]
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
 
+- [ ] rust中"{|}" 中回车行为.
+
 ** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
 CLOSED: [2020-02-28 Fri 15:42]
 - State "DONE"       from "TODO"       [2020-02-28 Fri 15:42]
@@ -315,13 +317,6 @@ stow:
          ;;nim               ; python + lisp at the speed of c
          ;;nix               ; I hereby declare "nix geht mehr!"
          ;;ocaml             ; an objective camel
-         (org              ; organize your plain life in plain text
-          +dragndrop       ; drag & drop files/images into org buffers
-          ;;+hugo            ; use Emacs for hugo blogging
-          ;;+jupyter        ; ipython/jupyter support for babel
-          ;;+pandoc          ; export-with-pandoc support
-          ;;+pomodoro        ; be fruitful with the tomato technique
-         +present)        ; using org-mode for presentations
          ;;perl              ; write code no one else can comprehend
          ;;php               ; perl's insecure younger brother
          ;;plantuml          ; diagrams for confusing people more
@@ -352,10 +347,8 @@ stow:
          ;;(rss +org)        ; emacs as an RSS reader
          ;;twitter           ; twitter client https://twitter.com/vnought
 
-         :gwp             ; 自定义模块
-         ;(org             ; organize your plain life in plain text
-         ; +dragndro       ; drag & drop files/images into org buffers
-         ; )               ; using org-mode for presentations
+         :gwp                ; 自定义模块
+         (org +dragndro)
 
          :config
          ;;literate
@@ -1266,3 +1259,5 @@ org-bullets由于字体原因, 显示不佳.
                     nil . "maximize")
                   which-key-replacement-alist)))
 #+end_src
+* modules/gwp
+- [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]

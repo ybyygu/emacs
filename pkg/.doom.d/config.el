@@ -87,7 +87,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-acario-light)
+;;(setq doom-theme 'doom-acario-light)
+(setq doom-theme 'doom-one)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -101,9 +102,6 @@
   (setq org-blank-before-new-entry nil)
   (setq org-default-notes-file (concat org-directory "/life.note"))
 
-  ;; 经常按错这个键, 禁用之
-  (put 'org-toggle-comment 'disabled t)
-
   ;; 保留以前的 Alt-Return 键行为, Alt-Return
   (org-defkey org-mode-map [(meta return)] 'org-meta-return)
 
@@ -112,11 +110,17 @@
   )
 
 (after! org
+        ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
+        (put 'org-toggle-comment 'disabled t)
+
         (map! :map org-mode-map
               :ni "C-k" #'org-kill-line
               :ni "C-c ;" #'org-edit-special
+              :ni "C-c C-;" #'org-edit-special
               :localleader ";" #'org-edit-special
+              :n "h" #'org-up-element
               )
+        (setq org-src-fontify-natively nil)
         )
 
 (after! org
@@ -136,3 +140,7 @@
     (call-interactively 'org-babel-tangle)
     )
   )
+
+(after! magit
+        (map! :map doom-leader-git-map "s" #'magit-status)
+        )

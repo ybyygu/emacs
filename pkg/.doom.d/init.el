@@ -171,7 +171,7 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp                ; 自定义模块
-       (org +dragndro)
+       (org)
 
        :config
        ;;literate

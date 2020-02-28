@@ -353,7 +353,7 @@ stow:
          ;;twitter           ; twitter client https://twitter.com/vnought
 
          :gwp                ; 自定义模块
-         (org +dragndro)
+         (org)
 
          :config
          ;;literate
@@ -475,7 +475,8 @@ stow:
   ;; There are two ways to load a theme. Both assume the theme is installed and
   ;; available. You can either set `doom-theme' or manually load a theme with the
   ;; `load-theme' function. This is the default:
-  (setq doom-theme 'doom-acario-light)
+  ;;(setq doom-theme 'doom-acario-light)
+  (setq doom-theme 'doom-one)
 #+end_src
 
 *** org-mode
@@ -493,9 +494,6 @@ stow:
     (setq org-blank-before-new-entry nil)
     (setq org-default-notes-file (concat org-directory "/life.note"))
 
-    ;; 经常按错这个键, 禁用之
-    (put 'org-toggle-comment 'disabled t)
-
     ;; 保留以前的 Alt-Return 键行为, Alt-Return
     (org-defkey org-mode-map [(meta return)] 'org-meta-return)
 
@@ -509,11 +507,17 @@ stow:
 - 修改编辑 org-src 快捷键, 默认的不太容易盲按.
 #+begin_src elisp
   (after! org
+          ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
+          (put 'org-toggle-comment 'disabled t)
+
           (map! :map org-mode-map
                 :ni "C-k" #'org-kill-line
                 :ni "C-c ;" #'org-edit-special
+                :ni "C-c C-;" #'org-edit-special
                 :localleader ";" #'org-edit-special
+                :n "h" #'org-up-element
                 )
+          (setq org-src-fontify-natively nil)
           )
 #+end_src
 
@@ -564,6 +568,21 @@ doom中的tag行为有些怪异, 禁用之:
       (call-interactively 'gwp/org-babel-tangle-blocks)
       )
     )
+#+end_src
+*** golden-ratio
+有bug, 不能用
+#+begin_src elisp :tangle no
+  (use-package! golden-ratio
+                :disabled
+                :diminish golden-ratio-mode
+                :init (golden-ratio-mode 1))
+#+end_src
+*** magit
+spacemacs中的习惯, 加回来, 避免忙中出错
+#+begin_src elisp
+  (after! magit
+          (map! :map doom-leader-git-map "s" #'magit-status)
+          )
 #+end_src
 
 *** 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
@@ -643,8 +662,14 @@ doom中的tag行为有些怪异, 禁用之:
 #+end_src
 
 *** 需要安装的包
+- chfonts: 中文显示
+- golden-ratio: 自动放大当前window
+
 #+begin_src elisp
   (package! cnfonts)
+  ;; (package! golden-ratio)
+  (package! berrys-theme)
+
 #+end_src
 
 *** 需要禁用的包

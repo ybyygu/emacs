@@ -173,7 +173,6 @@ stow:
 
 * doom config
 共三个配置文件, tangle到pkg/.doom.d目录下, 再由stow软链到$HOME.
-
 ** init.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/init.el :comments nil
@@ -218,7 +217,7 @@ stow:
          modeline          ; snazzy, Atom-inspired modeline, plus API
          nav-flash         ; blink the current line after jumping
          ;;neotree           ; a project drawer, like NERDTree for vim
-         ophints           ; highlight the region an operation acts on
+         ;;ophints           ; highlight the region an operation acts on
          (popup            ; tame sudden yet inevitable temporary windows
           +all             ; catch all popups that start with an asterix
           +defaults)       ; default popup rules
@@ -569,6 +568,15 @@ doom中的tag行为有些怪异, 禁用之:
       )
     )
 #+end_src
+**** edit
+编辑代码时在下方新开窗口
+#+begin_src emacs-lisp
+  (after! org
+          (setq org-src-window-setup 'split-window-below)
+          (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit)
+          )
+#+end_src
+
 *** golden-ratio
 有bug, 不能用
 #+begin_src elisp :tangle no
@@ -602,6 +610,7 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   ;; 修改 frame 标题 方便 gnome-shell 桌面切换
   (setq frame-title-format '("" "%b: " buffer-file-name))
 #+end_src
+
 ** packages.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el :comments nil

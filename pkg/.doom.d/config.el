@@ -48,6 +48,10 @@
         )
 
 (map! :map evil-motion-state-map "C-e" nil)
+(map! :map evil-insert-state-map "C-n" nil)
+(map! :map evil-insert-state-map "C-p" nil)
+(map! :map evil-normal-state-map "C-n" nil)
+(map! :map evil-normal-state-map "C-p" nil)
 
 (map! :leader
       (:desc "Dired jump"              "fj"  #'dired-jump)

@@ -1,6 +1,3 @@
-;; orign
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*orign][orign:1]]
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -44,24 +41,39 @@
 ;;
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
-;; orign:1 ends here
 
-;; 常用按键
-;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:1]]
 (map! :map evil-motion-state-map "C-e" nil)
-;; 常用按键:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:2]]
 (map! :leader
       (:desc "Dired jump"              "fj"  #'dired-jump)
       )
-;; 常用按键:2 ends here
 
-;; chinese fonts setup
+;; Make M-x harder to miss
+(define-key! 'override
+  "M-x" #'execute-extended-command
+  "A-x" #'execute-extended-command)
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
+;; A Doom convention where C-s on popups and interactive searches will invoke
+;; ivy/helm for their superior filtering.
+(define-key! :keymaps +default-minibuffer-maps
+  "C-s" (if (featurep! :completion ivy)
+            #'counsel-minibuffer-history
+          #'helm-minibuffer-history))
+
+;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
+;; Pressing it again will send you to the true bol. Same goes for C-e, except
+;; it will ignore comments+trailing whitespace before jumping to eol.
+(map! :gi "C-a" #'doom/backward-to-bol-or-indent
+      :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
+      ;; Standardizes the behavior of modified RET to match the behavior of
+      ;; other editors, particularly Atom, textedit, textmate, and vscode, in
+      ;; which ctrl+RET will add a new "item" below the current one
+      :gn [C-return]    #'+default/newline-below
+      :gn [C-S-return]  #'+default/newline-above
+      )
+
+(load! "bindings")
+
 (use-package! cnfonts
   :config
   (progn
@@ -71,20 +83,12 @@
     )
   (cnfonts-enable)
   )
-;; chinese fonts setup:1 ends here
 
-;; theme
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-acario-light)
-;; theme:1 ends here
 
-;; 基本设置
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*基本设置][基本设置:1]]
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Notes/")
@@ -106,22 +110,14 @@
   ;; doom 默认 src 中不保留缩进.
   (setq org-src-preserve-indentation nil)
   )
-;; 基本设置:1 ends here
 
-;; 按键行为
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
 (after! org
   (map! :map org-mode-map
         :leader
         :desc "insert inactive timestamp"
         "m SPC !"
         #'org-time-stamp-inactive))
-;; 按键行为:1 ends here
 
-;; 按 SPC-m SPC-t tangle当前代码:
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*按 SPC-m SPC-t tangle当前代码:][按 SPC-m SPC-t tangle当前代码::1]]
 (after! org
   (map! :map org-mode-map
         :leader
@@ -139,4 +135,3 @@
     (call-interactively 'org-babel-tangle)
     )
   )
-;; 按 SPC-m SPC-t tangle当前代码::1 ends here

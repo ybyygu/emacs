@@ -1,60 +1,29 @@
 ;;; config/default/+bindings.el -*- lexical-binding: t; -*-
-
-(when (featurep! :editor evil +everywhere)
-  ;; NOTE SPC u replaces C-u as the universal argument.
-
-  ;; Minibuffer
-  (define-key! evil-ex-completion-map
-    "C-a" #'evil-beginning-of-line
-    "C-b" #'evil-backward-char
-    "C-s" (if (featurep! :completion ivy)
-              #'counsel-minibuffer-history
-            #'helm-minibuffer-history))
-
-  (define-key! :keymaps +default-minibuffer-maps
-    [escape] #'abort-recursive-edit
-    "C-a"    #'move-beginning-of-line
-    "C-r"    #'evil-paste-from-register
-    "C-u"    #'evil-delete-back-to-indentation
-    "C-v"    #'yank
-    "C-w"    #'doom/delete-backward-word
-    "C-z"    (λ! (ignore-errors (call-interactively #'undo)))
-    ;; Scrolling lines
-    "C-j"    #'next-line
-    "C-k"    #'previous-line
-    "C-S-j"  #'scroll-up-command
-    "C-S-k"  #'scroll-down-command)
-
-  (define-key! read-expression-map
-    "C-j" #'next-line-or-history-element
-    "C-k" #'previous-line-or-history-element))
-
-
 ;;
 ;;; Global keybindings
 
 ;; Smart tab, these will only work in GUI Emacs
-(map! :i [tab] (general-predicate-dispatch nil ; fall back to nearest keymap
-                 (and (featurep! :editor snippets)
-                      (bound-and-true-p yas-minor-mode)
-                      (yas-maybe-expand-abbrev-key-filter 'yas-expand))
-                 #'yas-expand
-                 (and (featurep! :completion company +tng)
-                      (+company-has-completion-p))
-                 #'+company/complete)
-      :n [tab] (general-predicate-dispatch nil
-                 (and (featurep! :editor fold)
-                      (save-excursion (end-of-line) (invisible-p (point))))
-                 #'+fold/toggle
-                 (fboundp 'evil-jump-item)
-                 #'evil-jump-item)
-      :v [tab] (general-predicate-dispatch nil
-                 (and (bound-and-true-p yas-minor-mode)
-                      (or (eq evil-visual-selection 'line)
-                          (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
-                 #'yas-insert-snippet
-                 (fboundp 'evil-jump-item)
-                 #'evil-jump-item)
+(map! ;; :i [tab] (general-predicate-dispatch nil ; fall back to nearest keymap
+      ;;            (and (featurep! :editor snippets)
+      ;;                 (bound-and-true-p yas-minor-mode)
+      ;;                 (yas-maybe-expand-abbrev-key-filter 'yas-expand))
+      ;;            #'yas-expand
+      ;;            (and (featurep! :completion company +tng)
+      ;;                 (+company-has-completion-p))
+      ;;            #'+company/complete)
+      ;; :n [tab] (general-predicate-dispatch nil
+      ;;            (and (featurep! :editor fold)
+      ;;                 (save-excursion (end-of-line) (invisible-p (point))))
+      ;;            #'+fold/toggle
+      ;;            (fboundp 'evil-jump-item)
+      ;;            #'evil-jump-item)
+      ;; :v [tab] (general-predicate-dispatch nil
+      ;;            (and (bound-and-true-p yas-minor-mode)
+      ;;                 (or (eq evil-visual-selection 'line)
+      ;;                     (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
+      ;;            #'yas-insert-snippet
+      ;;            (fboundp 'evil-jump-item)
+      ;;            #'evil-jump-item)
 
       ;; Smarter newlines
       :i [remap newline] #'newline-and-indent  ; auto-indent on newline

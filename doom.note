@@ -3,8 +3,12 @@
 
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
-* Memo [0/5]
-** TODO [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
+* Memo [2/6]
+** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
+
+** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
+CLOSED: [2020-02-28 Fri 15:42]
+- State "DONE"       from "TODO"       [2020-02-28 Fri 15:42]
 - [[https://github.com/hlissner/doom-emacs/issues/1897][[BUG] org-mode TAB key mapped to different command when emacs running as daemon · Issue #1897 · hlissner/doom-emacs]]
 
 去掉:config中的 +bindings 开关正常了.
@@ -25,7 +29,9 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 : doom-tomorrow-day x
 : doom-vibrant
 
-** TODO [2020-02-27 Thu] 解决 org-mode 插入时间戳快捷键被占用的问题
+** DONE [2020-02-27 Thu] 解决 org-mode 插入时间戳快捷键被占用的问题
+CLOSED: [2020-02-28 Fri 15:42]
+- State "DONE"       from "TODO"       [2020-02-28 Fri 15:42]
 : C-c ! (org-time-stamp-inactive)
 
 禁用:checkers组中的modules即可.
@@ -71,6 +77,7 @@ flyspell-correct-at-point
 
 ** TODO [2020-02-27 Thu] Ctrl-E的问题
 : evil-motion-state-map C-e
+
 
 * 常用按键
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
@@ -314,7 +321,7 @@ stow:
           ;;+jupyter        ; ipython/jupyter support for babel
           ;;+pandoc          ; export-with-pandoc support
           ;;+pomodoro        ; be fruitful with the tomato technique
-          +present)        ; using org-mode for presentations
+         +present)        ; using org-mode for presentations
          ;;perl              ; write code no one else can comprehend
          ;;php               ; perl's insecure younger brother
          ;;plantuml          ; diagrams for confusing people more
@@ -344,6 +351,11 @@ stow:
          ;;irc               ; how neckbeards socialize
          ;;(rss +org)        ; emacs as an RSS reader
          ;;twitter           ; twitter client https://twitter.com/vnought
+
+         :gwp             ; 自定义模块
+         ;(org             ; organize your plain life in plain text
+         ; +dragndro       ; drag & drop files/images into org buffers
+         ; )               ; using org-mode for presentations
 
          :config
          ;;literate
@@ -495,13 +507,11 @@ stow:
 #+end_src
 
 **** 按键行为
+还原在normal/insert state下, Ctrl-k的行为: org-kill-line
 #+begin_src elisp
   (after! org
-    (map! :map org-mode-map
-          :leader
-          :desc "insert inactive timestamp"
-          "m SPC !"
-          #'org-time-stamp-inactive))
+          (map! :map org-mode-map :ni "C-k" #'org-kill-line)
+          )
 #+end_src
 
 doom中的tag行为有些怪异, 禁用之:

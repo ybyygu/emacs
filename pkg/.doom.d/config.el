@@ -112,11 +112,8 @@
   )
 
 (after! org
-  (map! :map org-mode-map
-        :leader
-        :desc "insert inactive timestamp"
-        "m SPC !"
-        #'org-time-stamp-inactive))
+        (map! :map org-mode-map :ni "C-k" #'org-kill-line)
+        )
 
 (after! org
   (map! :map org-mode-map

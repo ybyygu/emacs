@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: #+begin_src rust
+# key: <r
+# --
+#+begin_src rust
+$0
+#+end_src

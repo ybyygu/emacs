@@ -4,13 +4,19 @@
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
 * Memo [2/7]
-** TODO [2020-02-29 Sat] 改进rust编程体系
-- [ ] toml fmt https://github.com/andreyorst/dotfiles/tree/master/.config/emacs#toml
+** TODO [2020-02-29 Sat] 改进rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
+- [X] Tab键自动使用yas展开代码. 禁用init.el中snippets.
+- [ ] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
+  到这个键.
+- [ ] 全局禁有flyspell-mode
+- [X] rustic新加的功能虽多, 但用处都不大. 还是用rust-mode好了.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
 - [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
 - [X] flyspell错字提示 (可以手动关掉, flyspell-mode, SPC-t s)
+- [ ] insert-mode下 Ctrl-y 键应为粘贴
+- [ ] insert-mode下 Ctrl-h 应为help
 
 ** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
 CLOSED: [2020-02-28 Fri 15:42]
@@ -84,7 +90,6 @@ https://segmentfault.com/q/1010000000118837
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
 
 ** dired-jump
-| C-x C-j |
 | SPC-f-j |
 
 ** org-edit-special
@@ -93,6 +98,8 @@ https://segmentfault.com/q/1010000000118837
 
 
 * Literate Programming in Rust
+- 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
+- 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
 
 * 配置安装
 ** stow配置管理思路
@@ -235,7 +242,7 @@ stow:
          :editor
          (evil +everywhere); come to the dark side, we have cookies
                                           ;(evil); come to the dark side, we have cookies
-         file-templates    ; auto-snippets for empty files
+         ;file-templates    ; auto-snippets for empty files
          fold              ; (nigh) universal code folding
          ;;(format +onsave)  ; automated prettiness
          ;;god               ; run Emacs commands without modifier keys
@@ -420,6 +427,7 @@ stow:
 #+begin_src elisp
   (map! :map evil-motion-state-map "C-e" nil)
   (map! :map evil-insert-state-map "C-n" nil)
+  (map! :map evil-insert-state-map "C-y" nil)
   (map! :map evil-insert-state-map "C-p" nil)
   (map! :map evil-normal-state-map "C-n" nil)
   (map! :map evil-normal-state-map "C-p" nil)
@@ -728,6 +736,11 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   (package! zoom)
 #+end_src
 
+- TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
+#+begin_src emacs-lisp
+  (package! doom-snippets :ignore t)
+#+end_src
+
 *** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 org-bullets由于字体原因, 显示不佳.
@@ -735,6 +748,7 @@ org-bullets由于字体原因, 显示不佳.
 #+begin_src elisp
   (disable-packages! org-bullets pangu-spacing)
 #+end_src
+
 ** bindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/bindings.el :comments nil
@@ -1343,7 +1357,14 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Soft line wrapping"           "w" #'visual-line-mode
           (:when (featurep! :ui word-wrap)
             :desc "Soft line wrapping"         "w" #'+word-wrap-mode)
-          :desc "Zen mode"                     "z" #'writeroom-mode))
+          :desc "Zen mode"                     "z" #'writeroom-mode)
+
+        ;;; <leader> z --- misc
+        (:prefix-map ("z" . "misc")
+                     :desc "Zoom window"       "z" #'zoom
+                     )
+        )
+
 
   (after! which-key
     (let ((prefix-re (regexp-opt (list doom-leader-key doom-leader-alt-key))))
@@ -1354,6 +1375,63 @@ org-bullets由于字体原因, 显示不佳.
 
 * modules/gwp
 - [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]
+
+
+* snippets
+:PROPERTIES:
+:header-args: :comments nil
+:END:
+TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统下private snippets目录
+为 ~/.doom.d/snippets.
+
+- [[https://github.com/hlissner/doom-snippets][hlissner/doom-snippets: The Doom Emacs snippets library]]
+
+** org-mode
+*** begin_src
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src
+  # -*- mode: snippet -*-
+  # name: #+begin_src
+  # key: <s
+  # --
+  ,#+begin_src $1
+  $0
+  ,#+end_src
+#+END_SRC
+
+*** begin_src elisp
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_elisp
+  # -*- mode: snippet -*-
+  # name: #+begin_src elisp
+  # key: <el
+  # --
+  ,#+begin_src elisp
+  $0
+  ,#+end_src
+#+END_SRC
+
+*** begin_src python
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_python
+  # -*- mode: snippet -*-
+  # name: #+begin_src python
+  # key: <p
+  # --
+  ,#+begin_src python
+  $0
+  ,#+end_src
+#+END_SRC
+
+*** begin_src rust
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_rust
+  # -*- mode: snippet -*-
+  # name: #+begin_src rust
+  # key: <r
+  # --
+  ,#+begin_src rust
+  $0
+  ,#+end_src
+#+END_SRC
+
+** rust-mode
 
 * theme
 [[file:emacs-material-theme/][file:~/Workspace/Programming/emacs/emacs-material-theme/]]

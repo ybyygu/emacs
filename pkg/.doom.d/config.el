@@ -65,8 +65,6 @@
 ;;           )
 ;;         )
 
-(package! doom-snippets :ignore t)
-
 (map! :map evil-motion-state-map "C-e" nil)
 (map! :map evil-insert-state-map "C-n" nil)
 (map! :map evil-insert-state-map "C-y" nil)

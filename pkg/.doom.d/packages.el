@@ -60,3 +60,5 @@
 
 (package! golden-ratio)
 (package! zoom)
+
+(package! doom-snippets :ignore t)

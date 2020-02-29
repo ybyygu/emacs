@@ -42,6 +42,15 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+(use-package! zoom
+              ;; :after-call pre-command-hook
+              :config
+              (custom-set-variables
+               '(zoom-size '(0.618 . 0.618)))
+              (map! :map evil-window-map
+                    "z" #'zoom)
+              )
+
 (after! org
         (setq org-src-window-setup 'split-window-below)
         (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit)

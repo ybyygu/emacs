@@ -67,17 +67,12 @@ https://github.com/emacs-tw/awesome-emacs
 
 git clone https://code.orgmode.org/bzg/org-mode.git
 
-Failed to load deferred package evil-goggles: (file-missing Cannot open load file No such file or directory evil)
-Failed to load deferred package company: (void-function evil-normalize-keymaps)
-
 doom要clone很多github上的repo, 很容易被RESET, 导致安装失败.
 
 git使用v2ray proxy
 https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 
 https://segmentfault.com/q/1010000000118837
-
-flyspell-correct-at-point
 
 ** TODO [2020-02-27 Thu] Ctrl-E的问题
 : evil-motion-state-map C-e
@@ -94,6 +89,8 @@ flyspell-correct-at-point
 | C-c '   | hard to press |
 | SPC-m ; |               |
 
+
+* Literate Programming in Rust
 
 * 配置安装
 ** stow配置管理思路
@@ -425,12 +422,6 @@ stow:
   (map! :map evil-normal-state-map "C-p" nil)
 #+end_src
 
-#+begin_src elisp
-  (map! :leader
-        (:desc "Dired jump"              "fj"  #'dired-jump)
-        )
-#+end_src
-
 默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
 重要代码. 载入doom中的默认按键绑定: [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#load][load!用法]]
 #+begin_src elisp
@@ -483,6 +474,35 @@ stow:
   ;;(setq doom-theme 'doom-acario-light)
   ;; (setq doom-theme 'doom-one)
   (load-theme 'material t)
+#+end_src
+
+**** window
+自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
+命令手动开启.
+
+对应命令: SPC-w z
+#+begin_src emacs-lisp
+  (use-package! zoom
+                ;; :after-call pre-command-hook
+                :config
+                (custom-set-variables
+                 '(zoom-size '(0.618 . 0.618)))
+                (map! :map evil-window-map
+                      "z" #'zoom)
+                )
+#+end_src
+
+golden-ratio有点问题
+https://github.com/hlissner/doom-emacs/issues/2225
+#+begin_src elisp :tangle no
+  (use-package! golden-ratio
+                :after-call pre-command-hook
+                :config
+                (golden-ratio-mode +1)
+                ;; Using this hook for resizing windows is less precise than
+                ;; `doom-switch-window-hook'.
+                (remove-hook 'window-configuration-change-hook #'golden-ratio)
+                (add-hook 'doom-switch-window-hook #'golden-ratio))
 #+end_src
 
 *** org-mode
@@ -585,14 +605,6 @@ doom中的tag行为有些怪异, 禁用之:
           )
 #+end_src
 
-*** golden-ratio
-有bug, 不能用
-#+begin_src elisp :tangle no
-  (use-package! golden-ratio
-                :disabled
-                :diminish golden-ratio-mode
-                :init (golden-ratio-mode 1))
-#+end_src
 *** rust
 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
@@ -701,12 +713,16 @@ spacemacs中的习惯, 加回来, 避免忙中出错
 
 #+begin_src elisp
   (package! cnfonts)
-  ;; (package! golden-ratio)
   (package! berrys-theme)
   ;; (package! material-theme)
   (package! material-theme
             :recipe (:host github :repo "ybyygu/emacs-material-theme"))
-  ;; (package! clean-aindent-mode)
+#+end_src
+
+- 窗口大小自动调整:
+#+begin_src emacs-lisp
+  (package! golden-ratio)
+  (package! zoom)
 #+end_src
 
 *** 需要禁用的包
@@ -1081,6 +1097,7 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Browse emacs.d"              "E"   #'+default/browse-emacsd
           :desc "Find file"                   "f"   #'find-file
           :desc "Find file from here"         "F"   #'+default/find-file-under-here
+          :desc "Jump to Dired buffer"        "j"   #'dired-jump
           :desc "Locate file"                 "l"   #'locate
           :desc "Find file in private config" "p"   #'doom/find-file-in-private-config
           :desc "Browse private config"       "P"   #'doom/open-private-config
@@ -1331,6 +1348,7 @@ org-bullets由于字体原因, 显示不佳.
                     nil . "maximize")
                   which-key-replacement-alist)))
 #+end_src
+
 * modules/gwp
 - [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]
 

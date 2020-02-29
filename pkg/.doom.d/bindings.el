@@ -353,6 +353,7 @@
         :desc "Browse emacs.d"              "E"   #'+default/browse-emacsd
         :desc "Find file"                   "f"   #'find-file
         :desc "Find file from here"         "F"   #'+default/find-file-under-here
+        :desc "Jump to Dired buffer"        "j"   #'dired-jump
         :desc "Locate file"                 "l"   #'locate
         :desc "Find file in private config" "p"   #'doom/find-file-in-private-config
         :desc "Browse private config"       "P"   #'doom/open-private-config

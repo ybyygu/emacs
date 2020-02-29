@@ -47,6 +47,15 @@
         (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit)
         )
 
+(after! smartparens
+        (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+
+;; (after! rust-mode
+;;         (use-package clean-aindent-mode
+;;           :config (clean-aindent-mode)
+;;           )
+;;         )
+
 (map! :map evil-motion-state-map "C-e" nil)
 (map! :map evil-insert-state-map "C-n" nil)
 (map! :map evil-insert-state-map "C-p" nil)

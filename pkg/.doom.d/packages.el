@@ -56,5 +56,6 @@
 ;; (package! material-theme)
 (package! material-theme
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
+;; (package! clean-aindent-mode)
 
 (disable-packages! org-bullets pangu-spacing)

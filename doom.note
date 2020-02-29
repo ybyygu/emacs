@@ -3,10 +3,12 @@
 
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
-* Memo [2/6]
-** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
+* Memo [2/7]
+** TODO [2020-02-29 Sat] 改进rust编程体系
+- [ ] toml fmt https://github.com/andreyorst/dotfiles/tree/master/.config/emacs#toml
+- [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
 
-- [ ] rust中"{|}" 中回车行为.
+** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
 
 ** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
 CLOSED: [2020-02-28 Fri 15:42]
@@ -591,6 +593,20 @@ doom中的tag行为有些怪异, 禁用之:
                 :diminish golden-ratio-mode
                 :init (golden-ratio-mode 1))
 #+end_src
+*** rust
+解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
+- https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
+#+begin_src emacs-lisp
+  (after! smartparens
+          (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+
+  ;; (after! rust-mode
+  ;;         (use-package clean-aindent-mode
+  ;;           :config (clean-aindent-mode)
+  ;;           )
+  ;;         )
+#+end_src
+
 *** magit
 spacemacs中的习惯, 加回来, 避免忙中出错
 #+begin_src elisp
@@ -690,6 +706,7 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   ;; (package! material-theme)
   (package! material-theme
             :recipe (:host github :repo "ybyygu/emacs-material-theme"))
+  ;; (package! clean-aindent-mode)
 #+end_src
 
 *** 需要禁用的包
@@ -1316,5 +1333,6 @@ org-bullets由于字体原因, 显示不佳.
 #+end_src
 * modules/gwp
 - [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]
+
 * theme
 [[file:emacs-material-theme/][file:~/Workspace/Programming/emacs/emacs-material-theme/]]

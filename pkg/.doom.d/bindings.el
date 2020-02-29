@@ -596,7 +596,14 @@
         :desc "Soft line wrapping"           "w" #'visual-line-mode
         (:when (featurep! :ui word-wrap)
           :desc "Soft line wrapping"         "w" #'+word-wrap-mode)
-        :desc "Zen mode"                     "z" #'writeroom-mode))
+        :desc "Zen mode"                     "z" #'writeroom-mode)
+
+      ;;; <leader> z --- misc
+      (:prefix-map ("z" . "misc")
+                   :desc "Zoom window"       "z" #'zoom
+                   )
+      )
+
 
 (after! which-key
   (let ((prefix-re (regexp-opt (list doom-leader-key doom-leader-alt-key))))

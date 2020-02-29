@@ -9,6 +9,8 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
+- [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
+- [X] flyspell错字提示 (可以手动关掉, flyspell-mode, SPC-t s)
 
 ** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
 CLOSED: [2020-02-28 Fri 15:42]
@@ -259,7 +261,7 @@ stow:
 
          :checkers
          ;;syntax              ; tasing you for every semicolon you forget
-         ;;spell             ; tasing you for misspelling mispelling
+         spell             ; tasing you for misspelling mispelling
          ;;grammar           ; tasing grammar mistake every you make
 
          :tools

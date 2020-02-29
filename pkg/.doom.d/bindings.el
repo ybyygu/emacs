@@ -578,6 +578,8 @@
       (:prefix-map ("t" . "toggle")
         :desc "Big mode"                     "b" #'doom-big-font-mode
         :desc "Flymake"                      "f" #'flymake-mode
+        :desc "Menubar"                      "m" #'menu-bar-mode
+        :desc "Toolbar"                      "t" #'tool-bar-mode
         (:when (featurep! :checkers syntax)
           :desc "Flycheck"                   "f" #'flycheck-mode)
         :desc "Frame fullscreen"             "F" #'toggle-frame-fullscreen
@@ -591,8 +593,6 @@
         :desc "Read-only mode"               "r" #'read-only-mode
         (:when (featurep! :checkers spell)
           :desc "Flyspell"                   "s" #'flyspell-mode)
-        (:when (featurep! :lang org +pomodoro)
-          :desc "Pomodoro timer"             "t" #'org-pomodoro)
         :desc "Soft line wrapping"           "w" #'visual-line-mode
         (:when (featurep! :ui word-wrap)
           :desc "Soft line wrapping"         "w" #'+word-wrap-mode)

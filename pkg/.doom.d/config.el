@@ -52,8 +52,27 @@
               )
 
 (after! org
+        ;; 禁用代码着色, 影响速度
+        (setq org-src-fontify-natively nil)
+
+        ;; 编辑代码时在下方新开窗口
         (setq org-src-window-setup 'split-window-below)
-        (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit)
+        )
+
+        ;; 进入代码编辑模式, 改成容易按的
+        (map! :map org-mode-map
+              :ni "C-c ;" #'org-edit-special
+              :ni "C-c C-;" #'org-edit-special
+              :localleader ";" #'org-edit-special
+              )
+
+(after! org
+        ;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
+        (map! :map org-src-mode-map
+              "C-c ;"   #'org-edit-src-exit  ; 保存退出
+              "C-c C-;" #'org-edit-src-exit  ; 保存退出
+              "C-c C-k" #'org-edit-src-abort ; 放弃修改
+              )
         )
 
 (after! smartparens
@@ -140,20 +159,17 @@
 
         (map! :map org-mode-map
               :ni "C-k" #'org-kill-line
-              :ni "C-c ;" #'org-edit-special
-              :ni "C-c C-;" #'org-edit-special
-              :localleader ";" #'org-edit-special
-              :n "h" #'org-up-element
+              :n "gh" #'org-up-element
               )
-        (setq org-src-fontify-natively nil)
         )
 
 (after! org
   (map! :map org-mode-map
-        :leader
+        :localleader
         :desc "tangle src blocks at point"
-        "m SPC t"
-        #'gwp/org-babel-tangle-blocks)
+        "t"
+        #'gwp/org-babel-tangle-blocks
+        )
   )
 
 ;; tangle blocks for current file at point

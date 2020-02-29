@@ -3,19 +3,21 @@
 
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
-* Memo [2/7]
-** TODO [2020-02-29 Sat] 改进rust编程体验
+* Memo [3/7]
+** TODO [2020-02-29 Sat] 改进literate rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
 - [X] Tab键自动使用yas展开代码. 禁用init.el中snippets.
-- [ ] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
+- [X] 还原在normal/insert state下, Ctrl-k的行为: org-kill-line
+- [X] rustic新加的功能虽多, 但用处都不大. 还是用rust-mode好了.
+- [X] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
   到这个键.
 - [ ] 全局禁有flyspell-mode
-- [X] rustic新加的功能虽多, 但用处都不大. 还是用rust-mode好了.
+- [ ] org-metaright, org-demote-subtree
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
 - [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
 - [X] flyspell错字提示 (可以手动关掉, flyspell-mode, SPC-t s)
-- [ ] insert-mode下 Ctrl-y 键应为粘贴
+- [X] insert-mode下 Ctrl-y 键应为粘贴
 - [ ] insert-mode下 Ctrl-h 应为help
 
 ** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
@@ -25,7 +27,9 @@ CLOSED: [2020-02-28 Fri 15:42]
 
 去掉:config中的 +bindings 开关正常了.
 
-** TODO [2020-02-28 Fri] 可用的主题
+** DONE [2020-02-28 Fri] 可用的主题
+CLOSED: [2020-02-29 Sat 18:12]
+- State "DONE"       from "TODO"       [2020-02-29 Sat 18:12]
 [[*theme][theme]]
 : doom-acario-light
 : doom-material
@@ -81,9 +85,6 @@ git使用v2ray proxy
 https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 
 https://segmentfault.com/q/1010000000118837
-
-** TODO [2020-02-27 Thu] Ctrl-E的问题
-: evil-motion-state-map C-e
 
 
 * 常用按键
@@ -347,7 +348,7 @@ stow:
          ;;swift             ; who asked for emoji variables?
          ;;terra             ; Earth and Moon in alignment for performance.
          ;;web               ; the tubes
-         (org +dragndrop)
+         ;(org +dragndrop)
 
          :email
          ;;(mu4e +gmail)
@@ -361,7 +362,7 @@ stow:
          ;;twitter           ; twitter client https://twitter.com/vnought
 
          :gwp                ; 自定义模块
-         ;(org)
+         (org)
 
          :config
          ;;literate
@@ -538,11 +539,8 @@ https://github.com/hlissner/doom-emacs/issues/2225
     (setq org-src-preserve-indentation nil)
     )
 #+end_src
-**** 按键行为
-- [ ] 还原在normal/insert state下, Ctrl-k的行为: org-kill-line
-- [ ] 修改编辑 org-src 快捷键, 默认的不太容易盲按.
-- [ ] org-metaright, org-demote-subtree
 
+**** 按键行为
 #+begin_src elisp
   (after! org
           ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
@@ -550,12 +548,8 @@ https://github.com/hlissner/doom-emacs/issues/2225
 
           (map! :map org-mode-map
                 :ni "C-k" #'org-kill-line
-                :ni "C-c ;" #'org-edit-special
-                :ni "C-c C-;" #'org-edit-special
-                :localleader ";" #'org-edit-special
-                :n "h" #'org-up-element
+                :n "gh" #'org-up-element
                 )
-          (setq org-src-fontify-natively nil)
           )
 #+end_src
 
@@ -566,15 +560,46 @@ doom中的tag行为有些怪异, 禁用之:
 #+end_src
 
 *** org-babel
+**** enter
+#+begin_src emacs-lisp
+  (after! org
+          ;; 禁用代码着色, 影响速度
+          (setq org-src-fontify-natively nil)
+
+          ;; 编辑代码时在下方新开窗口
+          (setq org-src-window-setup 'split-window-below)
+          )
+
+          ;; 进入代码编辑模式, 改成容易按的
+          (map! :map org-mode-map
+                :ni "C-c ;" #'org-edit-special
+                :ni "C-c C-;" #'org-edit-special
+                :localleader ";" #'org-edit-special
+                )
+#+end_src
+
+**** edit
+#+begin_src emacs-lisp
+  (after! org
+          ;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
+          (map! :map org-src-mode-map
+                "C-c ;"   #'org-edit-src-exit  ; 保存退出
+                "C-c C-;" #'org-edit-src-exit  ; 保存退出
+                "C-c C-k" #'org-edit-src-abort ; 放弃修改
+                )
+          )
+#+end_src
+
 **** tangle
-***** 按 SPC-m SPC-t tangle当前代码:
+ 按 SPC-m SPC-t tangle当前代码:
 #+begin_src elisp
   (after! org
     (map! :map org-mode-map
-          :leader
+          :localleader
           :desc "tangle src blocks at point"
-          "m SPC t"
-          #'gwp/org-babel-tangle-blocks)
+          "t"
+          #'gwp/org-babel-tangle-blocks
+          )
     )
 
   ;; tangle blocks for current file at point
@@ -607,15 +632,6 @@ doom中的tag行为有些怪异, 禁用之:
       )
     )
 #+end_src
-**** edit
-编辑代码时在下方新开窗口
-#+begin_src emacs-lisp
-  (after! org
-          (setq org-src-window-setup 'split-window-below)
-          (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit)
-          )
-#+end_src
-
 *** rust
 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
@@ -1226,7 +1242,6 @@ org-bullets由于字体原因, 显示不佳.
             :desc "Todo list"      "t"  #'org-todo-list
             :desc "Tags search"    "m"  #'org-tags-view
             :desc "View search"    "v"  #'org-search-view)
-          :desc "Default browser"    "b"  #'browse-url-of-file
           :desc "Start debugger"     "d"  #'+debugger/start
           :desc "New frame"          "f"  #'make-frame
           :desc "REPL"               "r"  #'+eval/open-repl-other-window

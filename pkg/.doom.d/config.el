@@ -154,6 +154,10 @@
 
   ;; doom 默认 src 中不保留缩进.
   (setq org-src-preserve-indentation nil)
+
+  ;; 禁用字词检查, 需要了再开
+  (remove-hook! 'org-mode-hook #'flyspell-mode)
+  (flyspell-mode 0)
   )
 
 (after! org

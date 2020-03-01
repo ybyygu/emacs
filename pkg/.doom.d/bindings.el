@@ -303,6 +303,11 @@
         :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
         :desc "Restart Emacs"                "R" #'doom/restart)
 
+      ;;; <leader> j --- jump
+      (:prefix-map ("j" . "jump")
+                   :desc "avy line"    "l" #'evil-avy-goto-line
+                   )
+
       ;;; <leader> r --- resume
       (:prefix-map ("r" . "rings/resume")
                    :desc "Resume last search"    "l" #'ivy-resume

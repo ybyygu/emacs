@@ -18,15 +18,15 @@ doom配置参考
 - [X] rustic新加的功能虽多, 但用处都不大. 还是用rust-mode好了.
 - [X] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
   到这个键.
-- [ ] 全局禁有flyspell-mode
+- [X] 全局禁有flyspell-mode
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
 - [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
 - [X] flyspell错字提示 (可以手动关掉, flyspell-mode, SPC-t s)
 - [X] insert-mode下 Ctrl-y 键应为粘贴
 - [X] org-metaright, org-demote-subtree
+- [X] helm-resume => SPC r l
 - [ ] (spacemacs/open-file-or-directory-in-external-app ARG)
-- [ ] helm-resume => SPC '
 - [ ] deadgrep notes
 - [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
 - [ ] insert-mode下 Ctrl-h 应为help
@@ -532,6 +532,14 @@ stow:
                       "z" #'zoom)
                 )
 #+end_src
+
+用avy在多个窗口下跳转也很方便.
+#+BEGIN_SRC elisp
+  (use-package! avy
+                :config
+                (setq avy-all-windows t)
+                )
+#+END_SRC
 
 golden-ratio有点问题
 https://github.com/hlissner/doom-emacs/issues/2225
@@ -1154,6 +1162,11 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Restore session from file"    "L" #'doom/load-session
           :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
           :desc "Restart Emacs"                "R" #'doom/restart)
+
+        ;;; <leader> j --- jump
+        (:prefix-map ("j" . "jump")
+                     :desc "avy line"    "l" #'evil-avy-goto-line
+                     )
 
         ;;; <leader> r --- resume
         (:prefix-map ("r" . "rings/resume")

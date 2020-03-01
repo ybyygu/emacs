@@ -137,6 +137,11 @@
 ;; (setq doom-theme 'doom-one)
 (load-theme 'material t)
 
+(use-package! avy
+              :config
+              (setq avy-all-windows t)
+              )
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Notes/")

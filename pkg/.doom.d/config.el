@@ -51,6 +51,8 @@
                     "z" #'zoom)
               )
 
+(setq display-line-numbers-type nil)
+
 (after! org
         ;; 禁用代码着色, 影响速度
         (setq org-src-fontify-natively nil)
@@ -182,9 +184,9 @@
         (map! :map org-mode-map
               :localleader
               (:prefix ("s" . "Subtree")
-                       :desc "demote" "l" #'org-demote-subtree
-                       :desc "promote" "h" #'org-promote-subtree
-                       :desc "promote" "A" #'org-archive-subtree
+                       :desc "Demote" "l" #'org-demote-subtree
+                       :desc "Promote" "h" #'org-promote-subtree
+                       :desc "Archive" "A" #'org-archive-subtree
                        )
               (:prefix ("SPC" . "Special")
                        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
@@ -204,6 +206,7 @@
   (map! :map org-mode-map
         :localleader
         (:prefix ("b" . "org-babel")
+                 :desc "insert header argument" "i" #'org-babel-insert-header-arg
                  :desc "tangle blocks at point" "b" #'gwp/org-babel-tangle-blocks
                  :desc "tangle blocks in subtree" "t" #'gwp/org-tangle-subtree
                  :desc "tangle blocks in buffer" "T" #'org-babel-tangle

@@ -10,6 +10,7 @@ doom配置参考
 * Memo [3/7]
 ** TODO [2020-03-01 Sun] doom evil学习
 - 这个和regex-align有点像 https://github.com/edkolev/evil-lion
+- [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 
 ** TODO [2020-02-29 Sat] 改进literate rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
@@ -69,6 +70,7 @@ doom的优点:
 2. 和spacemacs使用类似的key-bindings
 3. 社区质量高, 作者维护热情高
 
+修改配置时注意:
 1. 不要使用emacs中内置的custom机制
 2. 不用使用use-package中的包安装机制(:ensure)
 3. 不要使用org-babel中的rg-babel-do-load-languages机制
@@ -78,12 +80,12 @@ doom的优点:
 
 https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/rest/README.org
 
-
 https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/zen/README.org
 
 https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/workspaces/README.org
 
 https://github.com/hlissner/doom-emacs/issues/2483
+
 doom clean && doom sync && doom build
 
 https://github.com/emacs-tw/awesome-emacs
@@ -216,6 +218,7 @@ stow:
 :header-args: :tangle pkg/.doom.d/init.el :comments nil
 :END:
 *** modules
+- [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop · hlissner/doom-emacs]]
 #+begin_src elisp
   ;;; init.el -*- lexical-binding: t; -*-
 
@@ -553,6 +556,11 @@ https://github.com/hlissner/doom-emacs/issues/2225
                 (remove-hook 'window-configuration-change-hook #'golden-ratio)
                 (add-hook 'doom-switch-window-hook #'golden-ratio))
 #+end_src
+**** line number
+默认不显示行号
+#+begin_src emacs-lisp
+  (setq display-line-numbers-type nil)
+#+end_src
 
 *** org-mode
 **** 基本设置
@@ -601,9 +609,9 @@ https://github.com/hlissner/doom-emacs/issues/2225
           (map! :map org-mode-map
                 :localleader
                 (:prefix ("s" . "Subtree")
-                         :desc "demote" "l" #'org-demote-subtree
-                         :desc "promote" "h" #'org-promote-subtree
-                         :desc "promote" "A" #'org-archive-subtree
+                         :desc "Demote" "l" #'org-demote-subtree
+                         :desc "Promote" "h" #'org-promote-subtree
+                         :desc "Archive" "A" #'org-archive-subtree
                          )
                 (:prefix ("SPC" . "Special")
                          :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
@@ -667,6 +675,7 @@ doom中的tag行为有些怪异, 禁用之:
     (map! :map org-mode-map
           :localleader
           (:prefix ("b" . "org-babel")
+                   :desc "insert header argument" "i" #'org-babel-insert-header-arg
                    :desc "tangle blocks at point" "b" #'gwp/org-babel-tangle-blocks
                    :desc "tangle blocks in subtree" "t" #'gwp/org-tangle-subtree
                    :desc "tangle blocks in buffer" "T" #'org-babel-tangle

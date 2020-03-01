@@ -167,6 +167,17 @@
   (flyspell-mode 0)
   )
 
+(defun gwp/new-memo (arg)
+  "Insert a new org-mode memo entry under heading at point."
+
+  (interactive "P")
+
+  (call-interactively 'evil-open-below)
+  (insert "** ")
+  (call-interactively 'org-time-stamp-inactive)
+  (insert " ")
+  )
+
 (after! org
         ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
         (put 'org-toggle-comment 'disabled t)
@@ -190,6 +201,7 @@
                        )
               (:prefix ("SPC" . "Special")
                        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+                       :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
                        )
               )
         (map! :map org-mode-map

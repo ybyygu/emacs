@@ -7,10 +7,17 @@ doom配置参考
 - https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 
-* Memo [3/7]
+* Memo [4/9]
+** DONE [2020-03-01 Sun] 关于ispell的问题
+CLOSED: [2020-03-01 Sun 19:35]
+- State "DONE"       from "TODO"       [2020-03-01 Sun 19:35]
+以前常用 ispell-word 来查词, 现在发现得开启ispell-mode后才正常, 不然会报错.
+
+** TODO [2020-03-01 Sun] 各种emacs distribution [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
 ** TODO [2020-03-01 Sun] doom evil学习
 - 这个和regex-align有点像 https://github.com/edkolev/evil-lion
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
+- [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 
 ** TODO [2020-02-29 Sat] 改进literate rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
@@ -20,6 +27,7 @@ doom配置参考
 - [X] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
   到这个键.
 - [X] 全局禁有flyspell-mode
+- [ ] visual state下Tab键应该indent代码
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
 - [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
@@ -453,7 +461,6 @@ stow:
   ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
   ;; they are implemented.
 #+END_SRC
-
 *** 常用按键
 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯. [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
 
@@ -497,6 +504,23 @@ stow:
 #+end_src
 
 *** 界面设置
+**** ui
+#+begin_src emacs-lisp :tangle no
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8)
+  (global-font-lock-mode t)
+
+  ;; force a syntax-highlighting refresh
+  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
+  (auto-image-file-mode t)              ; View images inside Emacs
+
+  ;; set line space wider than default
+  (setq-default line-spacing 4)
+
+  ;; 修改 frame 标题 方便 gnome-shell 桌面切换
+  (setq frame-title-format '("" "%b: " buffer-file-name))
+#+end_src
+
 **** chinese fonts setup
 #+begin_src elisp
   (use-package! cnfonts
@@ -592,6 +616,17 @@ https://github.com/hlissner/doom-emacs/issues/2225
 **** 按键行为
 (counsel-org-goto)
 #+begin_src elisp
+  (defun gwp/new-memo (arg)
+    "Insert a new org-mode memo entry under heading at point."
+
+    (interactive "P")
+
+    (call-interactively 'evil-open-below)
+    (insert "** ")
+    (call-interactively 'org-time-stamp-inactive)
+    (insert " ")
+    )
+
   (after! org
           ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
           (put 'org-toggle-comment 'disabled t)
@@ -615,6 +650,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
                          )
                 (:prefix ("SPC" . "Special")
                          :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+                         :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
                          )
                 )
           (map! :map org-mode-map
@@ -1434,6 +1470,7 @@ org-bullets由于字体原因, 显示不佳.
                     nil . "maximize")
                   which-key-replacement-alist)))
 #+end_src
+
 
 * modules/gwp
 - [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]

@@ -56,7 +56,10 @@
         (setq org-src-fontify-natively nil)
 
         ;; 编辑代码时在下方新开窗口
-        (setq org-src-window-setup 'split-window-below)
+        ;;(setq org-src-window-setup 'split-window-below)
+        (setq org-src-window-setup 'current-window)
+        ;;(setq org-src-window-setup 'reorganize-frame)
+        ;;(setq org-src-window-setup 'other-frame)
         )
 
         ;; 进入代码编辑模式, 改成容易按的
@@ -160,15 +163,42 @@
         (map! :map org-mode-map
               :ni "C-k" #'org-kill-line
               :n "gh" #'org-up-element
+              :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+              :n "gk" #'org-previous-visible-heading
+              :n "gj" #'org-next-visible-heading
+              :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
+              :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
+              )
+
+        (map! :map org-mode-map
+              :localleader
+              (:prefix ("s" . "Subtree")
+                       :desc "demote" "l" #'org-demote-subtree
+                       :desc "promote" "h" #'org-promote-subtree
+                       :desc "promote" "A" #'org-archive-subtree
+                       )
+              (:prefix ("SPC" . "Special")
+                       :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+                       )
+              )
+        (map! :map org-mode-map
+              :localleader
+              (:prefix ("g" . "Goto")
+                       :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+                       :desc "Jump to org heading"  "j" #'counsel-org-goto
+                       :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+                       )
               )
         )
 
 (after! org
   (map! :map org-mode-map
         :localleader
-        :desc "tangle src blocks at point"
-        "t"
-        #'gwp/org-babel-tangle-blocks
+        (:prefix ("b" . "org-babel")
+                 :desc "tangle blocks at point" "b" #'gwp/org-babel-tangle-blocks
+                 :desc "tangle blocks in subtree" "t" #'gwp/org-tangle-subtree
+                 :desc "tangle blocks in buffer" "T" #'org-babel-tangle
+                 )
         )
   )
 
@@ -180,6 +210,15 @@
   (let ((current-prefix-arg '(16)))
     (call-interactively 'org-babel-tangle)
     )
+  )
+
+;; narrow to subtree before calling org-babel-tangle
+(defun gwp/org-tangle-subtree ()
+  "tange src blocks in current subtree"
+  (interactive)
+  (org-narrow-to-subtree)
+  (org-babel-tangle)
+  (widen)
   )
 
 (after! magit

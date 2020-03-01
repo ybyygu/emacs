@@ -3,29 +3,7 @@
 ;;; Global keybindings
 
 ;; Smart tab, these will only work in GUI Emacs
-(map! ;; :i [tab] (general-predicate-dispatch nil ; fall back to nearest keymap
-      ;;            (and (featurep! :editor snippets)
-      ;;                 (bound-and-true-p yas-minor-mode)
-      ;;                 (yas-maybe-expand-abbrev-key-filter 'yas-expand))
-      ;;            #'yas-expand
-      ;;            (and (featurep! :completion company +tng)
-      ;;                 (+company-has-completion-p))
-      ;;            #'+company/complete)
-      ;; :n [tab] (general-predicate-dispatch nil
-      ;;            (and (featurep! :editor fold)
-      ;;                 (save-excursion (end-of-line) (invisible-p (point))))
-      ;;            #'+fold/toggle
-      ;;            (fboundp 'evil-jump-item)
-      ;;            #'evil-jump-item)
-      ;; :v [tab] (general-predicate-dispatch nil
-      ;;            (and (bound-and-true-p yas-minor-mode)
-      ;;                 (or (eq evil-visual-selection 'line)
-      ;;                     (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
-      ;;            #'yas-insert-snippet
-      ;;            (fboundp 'evil-jump-item)
-      ;;            #'evil-jump-item)
-
-      ;; Smarter newlines
+(map! ;; Smarter newlines
       :i [remap newline] #'newline-and-indent  ; auto-indent on newline
       :i "C-j"           #'+default/newline    ; default behavior
 
@@ -260,9 +238,9 @@
       :desc "Find file in project"  "SPC"  #'projectile-find-file
       :desc "Jump to bookmark"      "RET"  #'bookmark-jump
 
-      ;;; <leader> TAB --- workspace
+      ;;; <leader> l --- workspace
       (:when (featurep! :ui workspaces)
-        (:prefix-map ("TAB" . "workspace")
+        (:prefix-map ("l" . "workspace")
           :desc "Display tab bar"           "TAB" #'+workspace/display
           :desc "Switch workspace"          "."   #'+workspace/switch-to
           :desc "Switch to last workspace"  "`"   #'+workspace/other

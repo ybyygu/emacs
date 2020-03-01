@@ -3,7 +3,14 @@
 
 spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 
+doom配置参考
+- https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
+- https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
+
 * Memo [3/7]
+** TODO [2020-03-01 Sun] doom evil学习
+- 这个和regex-align有点像 https://github.com/edkolev/evil-lion
+
 ** TODO [2020-02-29 Sat] 改进literate rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
 - [X] Tab键自动使用yas展开代码. 禁用init.el中snippets.
@@ -120,6 +127,24 @@ doom会根据~/.doom.d中的配置, 更新doom-emacs/.local目录中的内容. �
 : doom-emacs/bin/doom build
 * 调试步骤
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#testing-in-dooms-sandbox][doom-emacs/getting_started.org at develop · hlissner/doom-emacs]]
+
+** How to extract a backtrace from an error
+If you encounter an error while using Doom Emacs, you’re probably about to head
+off and file a bug report (or request help on our Discord server). Before you
+do, please generate a backtrace to include with it.
+
+To do so you must enable debug-on-error then recreate the error.
+
+** Enabling debug-on-error
+There are three ways to enable debug-on-error:
+
+Start Emacs with emacs --debug-init. Use this for errors that occur at startup.
+Evil users can press SPC h d d and non-evil users can press C-h d d. If the
+above don’t work, there’s always: M-x toggle-debug-on-error
+
+Now that debug-on-error is on, recreate the error. A window should pop up with a
+backtrace.
+
 
 * install
 ** Makefile
@@ -541,6 +566,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
 #+end_src
 
 **** 按键行为
+(counsel-org-goto)
 #+begin_src elisp
   (after! org
           ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
@@ -549,6 +575,31 @@ https://github.com/hlissner/doom-emacs/issues/2225
           (map! :map org-mode-map
                 :ni "C-k" #'org-kill-line
                 :n "gh" #'org-up-element
+                :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+                :n "gk" #'org-previous-visible-heading
+                :n "gj" #'org-next-visible-heading
+                :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
+                :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
+                )
+
+          (map! :map org-mode-map
+                :localleader
+                (:prefix ("s" . "Subtree")
+                         :desc "demote" "l" #'org-demote-subtree
+                         :desc "promote" "h" #'org-promote-subtree
+                         :desc "promote" "A" #'org-archive-subtree
+                         )
+                (:prefix ("SPC" . "Special")
+                         :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+                         )
+                )
+          (map! :map org-mode-map
+                :localleader
+                (:prefix ("g" . "Goto")
+                         :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+                         :desc "Jump to org heading"  "j" #'counsel-org-goto
+                         :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+                         )
                 )
           )
 #+end_src
@@ -567,7 +618,10 @@ doom中的tag行为有些怪异, 禁用之:
           (setq org-src-fontify-natively nil)
 
           ;; 编辑代码时在下方新开窗口
-          (setq org-src-window-setup 'split-window-below)
+          ;;(setq org-src-window-setup 'split-window-below)
+          (setq org-src-window-setup 'current-window)
+          ;;(setq org-src-window-setup 'reorganize-frame)
+          ;;(setq org-src-window-setup 'other-frame)
           )
 
           ;; 进入代码编辑模式, 改成容易按的
@@ -591,14 +645,16 @@ doom中的tag行为有些怪异, 禁用之:
 #+end_src
 
 **** tangle
- 按 SPC-m SPC-t tangle当前代码:
+注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
 #+begin_src elisp
   (after! org
     (map! :map org-mode-map
           :localleader
-          :desc "tangle src blocks at point"
-          "t"
-          #'gwp/org-babel-tangle-blocks
+          (:prefix ("b" . "org-babel")
+                   :desc "tangle blocks at point" "b" #'gwp/org-babel-tangle-blocks
+                   :desc "tangle blocks in subtree" "t" #'gwp/org-tangle-subtree
+                   :desc "tangle blocks in buffer" "T" #'org-babel-tangle
+                   )
           )
     )
 
@@ -611,9 +667,18 @@ doom中的tag行为有些怪异, 禁用之:
       (call-interactively 'org-babel-tangle)
       )
     )
+
+  ;; narrow to subtree before calling org-babel-tangle
+  (defun gwp/org-tangle-subtree ()
+    "tange src blocks in current subtree"
+    (interactive)
+    (org-narrow-to-subtree)
+    (org-babel-tangle)
+    (widen)
+    )
 #+end_src
 
-下面的代码不太可靠, 禁用
+如何在代码编辑窗口中tangle? 下面的代码不太可靠, 禁用
 #+begin_src elisp :tangle no
   (defun gwp/org-edit-save-and-tangle ()
     "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
@@ -632,6 +697,7 @@ doom中的tag行为有些怪异, 禁用之:
       )
     )
 #+end_src
+
 *** rust
 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
@@ -780,29 +846,7 @@ org-bullets由于字体原因, 显示不佳.
   ;;; Global keybindings
 
   ;; Smart tab, these will only work in GUI Emacs
-  (map! ;; :i [tab] (general-predicate-dispatch nil ; fall back to nearest keymap
-        ;;            (and (featurep! :editor snippets)
-        ;;                 (bound-and-true-p yas-minor-mode)
-        ;;                 (yas-maybe-expand-abbrev-key-filter 'yas-expand))
-        ;;            #'yas-expand
-        ;;            (and (featurep! :completion company +tng)
-        ;;                 (+company-has-completion-p))
-        ;;            #'+company/complete)
-        ;; :n [tab] (general-predicate-dispatch nil
-        ;;            (and (featurep! :editor fold)
-        ;;                 (save-excursion (end-of-line) (invisible-p (point))))
-        ;;            #'+fold/toggle
-        ;;            (fboundp 'evil-jump-item)
-        ;;            #'evil-jump-item)
-        ;; :v [tab] (general-predicate-dispatch nil
-        ;;            (and (bound-and-true-p yas-minor-mode)
-        ;;                 (or (eq evil-visual-selection 'line)
-        ;;                     (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
-        ;;            #'yas-insert-snippet
-        ;;            (fboundp 'evil-jump-item)
-        ;;            #'evil-jump-item)
-
-        ;; Smarter newlines
+  (map! ;; Smarter newlines
         :i [remap newline] #'newline-and-indent  ; auto-indent on newline
         :i "C-j"           #'+default/newline    ; default behavior
 
@@ -1037,9 +1081,9 @@ org-bullets由于字体原因, 显示不佳.
         :desc "Find file in project"  "SPC"  #'projectile-find-file
         :desc "Jump to bookmark"      "RET"  #'bookmark-jump
 
-        ;;; <leader> TAB --- workspace
+        ;;; <leader> l --- workspace
         (:when (featurep! :ui workspaces)
-          (:prefix-map ("TAB" . "workspace")
+          (:prefix-map ("l" . "workspace")
             :desc "Display tab bar"           "TAB" #'+workspace/display
             :desc "Switch workspace"          "."   #'+workspace/switch-to
             :desc "Switch to last workspace"  "`"   #'+workspace/other

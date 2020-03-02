@@ -1,33 +1,9 @@
 ;;; config/default/+bindings.el -*- lexical-binding: t; -*-
+;;
 ;;; Global keybindings
 ;;
+
 (map! :leader
-      :desc "Eval expression"       ";"    #'pp-eval-expression
-      :desc "M-x"                   ":"    #'execute-extended-command
-      :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
-      :desc "Org Capture"           "X"    #'org-capture
-
-      ;; C-u is used by evil
-      :desc "Universal argument"    "u"    #'universal-argument
-      :desc "window"                "w"    evil-window-map
-      :desc "help"                  "h"    help-map
-
-      (:when (featurep! :ui popup)
-        :desc "Toggle last popup"     "~"    #'+popup/toggle)
-      :desc "Find file"             "."    #'find-file
-
-      :desc "Switch buffer"         ","    #'switch-to-buffer
-      (:when (featurep! :ui workspaces)
-        :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
-        :desc "Switch buffer"           "<" #'switch-to-buffer)
-
-      :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
-
-      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
-
-      :desc "Find file in project"  "SPC"  #'projectile-find-file
-      :desc "Jump to bookmark"      "RET"  #'bookmark-jump
-
       ;;; <leader> l --- workspace
       (:when (featurep! :ui workspaces)
         (:prefix-map ("l" . "workspace")
@@ -48,7 +24,36 @@
           :desc "Switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
           :desc "Switch to 4th workspace"   "4"   #'+workspace/switch-to-3
           ))
+      )
 
+(map! :leader
+      ;;; <leader> n --- notes
+      (:prefix-map ("n" . "notes")
+        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
+        :desc "Org agenda"                   "a" #'org-agenda
+        :desc "Toggle org-clock"             "c" #'+org/toggle-clock
+        :desc "Cancel org-clock"             "C" #'org-clock-cancel
+        :desc "Open deft"                    "d" #'deft
+        :desc "Find file in notes"           "f" #'+default/find-in-notes
+        :desc "Browse notes"                 "F" #'+default/browse-notes
+        :desc "Org store link"               "l" #'org-store-link
+        :desc "Tags search"                  "m" #'org-tags-view
+        :desc "Org capture"                  "n" #'org-capture
+        :desc "Active org-clock"             "o" #'org-clock-goto
+        :desc "Todo list"                    "t" #'org-todo-list
+        :desc "Search notes"                 "s" #'+default/org-notes-search
+        :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
+        :desc "View search"                  "v" #'org-search-view
+        :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
+        :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
+
+        (:when (featurep! :lang org +journal)
+          (:prefix ("j" . "journal")
+            :desc "New Entry"      "j" #'org-journal-new-entry
+            :desc "Search Forever" "s" #'org-journal-search-forever)))
+      )
+
+(map! :leader
       ;;; <leader> b --- buffer
       (:prefix-map ("b" . "buffer")
         :desc "Toggle narrowing"            "-"   #'doom/toggle-narrow-buffer
@@ -78,7 +83,9 @@
         :desc "Switch to scratch buffer"    "X"   #'doom/switch-to-scratch-buffer
         :desc "Bury buffer"                 "z"   #'bury-buffer
         :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers)
+    )
 
+(map! :leader
       ;;; <leader> c --- code
       (:prefix-map ("c" . "code")
         :desc "LSP Execute code action"               "a"   #'lsp-execute-code-action
@@ -105,7 +112,9 @@
         :desc "List errors"                           "x"   #'flymake-show-diagnostics-buffer
         (:when (featurep! :checkers syntax)
           :desc "List errors"                         "x"   #'flycheck-list-errors))
+    )
 
+(map! :leader
       ;;; <leader> f --- file
       (:prefix-map ("f" . "file")
         :desc "Open project editorconfig"   "c"   #'editorconfig-find-current-editorconfig
@@ -128,6 +137,9 @@
         :desc "Sudo this file"              "U"   #'doom/sudo-this-file
         :desc "Yank filename"               "y"   #'+default/yank-buffer-filename)
 
+    )
+
+(map! :leader
       ;;; <leader> g --- git
       (:prefix-map ("g" . "git")
         :desc "Git revert file"             "R"   #'vc-revert
@@ -184,42 +196,9 @@
             :desc "Branch"                    "b"   #'magit-branch-and-checkout
             :desc "Issue"                     "i"   #'forge-create-issue
             :desc "Pull request"              "p"   #'forge-create-pullreq)))
+    )
 
-      ;;; <leader> i --- insert
-      (:prefix-map ("i" . "insert")
-        :desc "Current file name"             "f"   #'+default/insert-file-path
-        :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
-        :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
-        :desc "From evil register"            "r"   #'evil-ex-registers
-        :desc "Snippet"                       "s"   #'yas-insert-snippet
-        :desc "Unicode"                       "u"   #'unicode-chars-list-chars
-        :desc "From clipboard"                "y"   #'+default/yank-pop)
-
-      ;;; <leader> n --- notes
-      (:prefix-map ("n" . "notes")
-        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
-        :desc "Org agenda"                   "a" #'org-agenda
-        :desc "Toggle org-clock"             "c" #'+org/toggle-clock
-        :desc "Cancel org-clock"             "C" #'org-clock-cancel
-        :desc "Open deft"                    "d" #'deft
-        :desc "Find file in notes"           "f" #'+default/find-in-notes
-        :desc "Browse notes"                 "F" #'+default/browse-notes
-        :desc "Org store link"               "l" #'org-store-link
-        :desc "Tags search"                  "m" #'org-tags-view
-        :desc "Org capture"                  "n" #'org-capture
-        :desc "Active org-clock"             "o" #'org-clock-goto
-        :desc "Todo list"                    "t" #'org-todo-list
-        :desc "Search notes"                 "s" #'+default/org-notes-search
-        :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
-        :desc "View search"                  "v" #'org-search-view
-        :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
-        :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
-
-        (:when (featurep! :lang org +journal)
-          (:prefix ("j" . "journal")
-            :desc "New Entry"      "j" #'org-journal-new-entry
-            :desc "Search Forever" "s" #'org-journal-search-forever)))
-
+(map! :leader
       ;;; <leader> o --- open
       (:prefix-map ("o" . "open")
         :desc "Org agenda"       "A"  #'org-agenda
@@ -260,7 +239,21 @@
           :desc "Send project to Launchbar"  "L" #'+macos/send-project-to-launchbar)
         (:when (featurep! :tools docker)
           :desc "Docker" "D" #'docker))
+    )
 
+(map! :leader
+      ;;; <leader> i --- insert
+      (:prefix-map ("i" . "insert")
+        :desc "Current file name"             "f"   #'+default/insert-file-path
+        :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
+        :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
+        :desc "From evil register"            "r"   #'evil-ex-registers
+        :desc "Snippet"                       "s"   #'yas-insert-snippet
+        :desc "Unicode"                       "u"   #'unicode-chars-list-chars
+        :desc "From clipboard"                "y"   #'+default/yank-pop)
+    )
+
+(map! :leader
       ;;; <leader> p --- project
       (:prefix-map ("p" . "project")
         :desc "Browse project"               "." #'+default/browse-project
@@ -287,7 +280,9 @@
         :desc "Switch to scratch buffer"     "X" #'doom/switch-to-project-scratch-buffer
         :desc "List project tasks"           "t" #'magit-todos-list
         :desc "Test project"                 "T" #'projectile-test-project)
+    )
 
+(map! :leader
       ;;; <leader> q --- quit/session
       (:prefix-map ("q" . "quit/session")
         :desc "Restart emacs server"         "d" #'+default/restart-server
@@ -302,12 +297,9 @@
         :desc "Restore session from file"    "L" #'doom/load-session
         :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
         :desc "Restart Emacs"                "R" #'doom/restart)
+    )
 
-      ;;; <leader> j --- jump
-      (:prefix-map ("j" . "jump")
-                   :desc "avy line"    "l" #'evil-avy-goto-line
-                   )
-
+(map! :leader
       ;;; <leader> r --- resume
       (:prefix-map ("r" . "rings/resume")
                    :desc "Resume last search"    "l" #'ivy-resume
@@ -316,16 +308,9 @@
                    :desc "Last change"           "c" #'goto-last-change
                    )
 
-      ;;; <leader> R --- remote
-      (:when (featurep! :tools upload)
-        (:prefix-map ("R" . "remote")
-          :desc "Upload local"               "u" #'ssh-deploy-upload-handler
-          :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
-          :desc "Download remote"            "d" #'ssh-deploy-download-handler
-          :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
-          :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
-          :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
+    )
 
+(map! :leader
       ;;; <leader> s --- search
       (:prefix-map ("s" . "search")
         :desc "Search buffer"                "b" #'swiper
@@ -348,7 +333,9 @@
         :desc "Search buffer for thing at point" "S" #'swiper-isearch-thing-at-point
         :desc "Dictionary"                   "t" #'+lookup/dictionary-definition
         :desc "Thesaurus"                    "T" #'+lookup/synonyms)
+    )
 
+(map! :leader
       ;;; <leader> t --- toggle
       (:prefix-map ("t" . "toggle")
         :desc "Big mode"                     "b" #'doom-big-font-mode
@@ -372,11 +359,53 @@
         (:when (featurep! :ui word-wrap)
           :desc "Soft line wrapping"         "w" #'+word-wrap-mode)
         :desc "Zen mode"                     "z" #'writeroom-mode)
+    )
 
-      ;;; <leader> z --- misc
-      (:prefix-map ("z" . "misc")
-                   :desc "Zoom window"       "z" #'zoom
+(map! :leader
+      ;;; <leader> j --- jump
+      (:prefix-map ("j" . "jump")
+                   :desc "avy line"    "l" #'evil-avy-goto-line
                    )
+    )
+
+(map! :leader
+      ;;; <leader> R --- remote
+      (:when (featurep! :tools upload)
+        (:prefix-map ("R" . "remote")
+          :desc "Upload local"               "u" #'ssh-deploy-upload-handler
+          :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
+          :desc "Download remote"            "d" #'ssh-deploy-download-handler
+          :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
+          :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
+          :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
+    )
+
+(map! :leader
+      :desc "Eval expression"       ";"    #'pp-eval-expression
+      :desc "M-x"                   ":"    #'execute-extended-command
+      :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
+      :desc "Org Capture"           "X"    #'org-capture
+
+      ;; C-u is used by evil
+      :desc "Universal argument"    "u"    #'universal-argument
+      :desc "window"                "w"    evil-window-map
+      :desc "help"                  "h"    help-map
+
+      (:when (featurep! :ui popup)
+        :desc "Toggle last popup"     "~"    #'+popup/toggle)
+      :desc "Find file"             "."    #'find-file
+
+      :desc "Switch buffer"         ","    #'switch-to-buffer
+      (:when (featurep! :ui workspaces)
+        :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
+        :desc "Switch buffer"           "<" #'switch-to-buffer)
+
+      :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
+
+      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
+
+      :desc "Find file in project"  "SPC"  #'projectile-find-file
+      :desc "Jump to bookmark"      "RET"  #'bookmark-jump
       )
 
 ;; Smart tab, these will only work in GUI Emacs

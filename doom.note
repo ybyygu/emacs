@@ -892,20 +892,33 @@ org-bullets由于字体原因, 显示不佳.
   (disable-packages! org-bullets pangu-spacing)
 #+end_src
 
-** bindings.el
+
+* bindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/bindings.el :comments nil
 :END:
+** docs
 从doom config module中取出, 禁用Tab键相关设置, 修复按键Bug.
 
 此文件在config.el中使用load!宏来加载
 
 : /home/ybyygu/Workspace/Programming/emacs/doom-emacs/modules/config/default/packages.el
-*** leader commands
-#+begin_src elisp
+** new/template
+#+begin_src emacs-lisp :tangle no
+  (map! :leader
+      )
+#+end_src
+
+** header
+#+begin_src emacs-lisp
   ;;; config/default/+bindings.el -*- lexical-binding: t; -*-
+  ;;
   ;;; Global keybindings
   ;;
+#+end_src
+
+** leader/main
+#+begin_src elisp
   (map! :leader
         :desc "Eval expression"       ";"    #'pp-eval-expression
         :desc "M-x"                   ":"    #'execute-extended-command
@@ -932,7 +945,12 @@ org-bullets由于字体原因, 显示不佳.
 
         :desc "Find file in project"  "SPC"  #'projectile-find-file
         :desc "Jump to bookmark"      "RET"  #'bookmark-jump
+        )
+#+end_src
 
+** leader/workspace
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> l --- workspace
         (:when (featurep! :ui workspaces)
           (:prefix-map ("l" . "workspace")
@@ -953,7 +971,41 @@ org-bullets由于字体原因, 显示不佳.
             :desc "Switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
             :desc "Switch to 4th workspace"   "4"   #'+workspace/switch-to-3
             ))
+        )
+#+end_src
 
+** leader/notes
+#+begin_src emacs-lisp
+  (map! :leader
+        ;;; <leader> n --- notes
+        (:prefix-map ("n" . "notes")
+          :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
+          :desc "Org agenda"                   "a" #'org-agenda
+          :desc "Toggle org-clock"             "c" #'+org/toggle-clock
+          :desc "Cancel org-clock"             "C" #'org-clock-cancel
+          :desc "Open deft"                    "d" #'deft
+          :desc "Find file in notes"           "f" #'+default/find-in-notes
+          :desc "Browse notes"                 "F" #'+default/browse-notes
+          :desc "Org store link"               "l" #'org-store-link
+          :desc "Tags search"                  "m" #'org-tags-view
+          :desc "Org capture"                  "n" #'org-capture
+          :desc "Active org-clock"             "o" #'org-clock-goto
+          :desc "Todo list"                    "t" #'org-todo-list
+          :desc "Search notes"                 "s" #'+default/org-notes-search
+          :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
+          :desc "View search"                  "v" #'org-search-view
+          :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
+          :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
+
+          (:when (featurep! :lang org +journal)
+            (:prefix ("j" . "journal")
+              :desc "New Entry"      "j" #'org-journal-new-entry
+              :desc "Search Forever" "s" #'org-journal-search-forever)))
+        )
+#+end_src
+** leader/buffer
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> b --- buffer
         (:prefix-map ("b" . "buffer")
           :desc "Toggle narrowing"            "-"   #'doom/toggle-narrow-buffer
@@ -983,7 +1035,12 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Switch to scratch buffer"    "X"   #'doom/switch-to-scratch-buffer
           :desc "Bury buffer"                 "z"   #'bury-buffer
           :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers)
+      )
+#+end_src
 
+** leader/code
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> c --- code
         (:prefix-map ("c" . "code")
           :desc "LSP Execute code action"               "a"   #'lsp-execute-code-action
@@ -1010,7 +1067,12 @@ org-bullets由于字体原因, 显示不佳.
           :desc "List errors"                           "x"   #'flymake-show-diagnostics-buffer
           (:when (featurep! :checkers syntax)
             :desc "List errors"                         "x"   #'flycheck-list-errors))
+      )
+#+end_src
 
+** leader/file
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> f --- file
         (:prefix-map ("f" . "file")
           :desc "Open project editorconfig"   "c"   #'editorconfig-find-current-editorconfig
@@ -1033,6 +1095,12 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Sudo this file"              "U"   #'doom/sudo-this-file
           :desc "Yank filename"               "y"   #'+default/yank-buffer-filename)
 
+      )
+#+end_src
+
+** leader/git
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> g --- git
         (:prefix-map ("g" . "git")
           :desc "Git revert file"             "R"   #'vc-revert
@@ -1089,42 +1157,12 @@ org-bullets由于字体原因, 显示不佳.
               :desc "Branch"                    "b"   #'magit-branch-and-checkout
               :desc "Issue"                     "i"   #'forge-create-issue
               :desc "Pull request"              "p"   #'forge-create-pullreq)))
+      )
+#+end_src
 
-        ;;; <leader> i --- insert
-        (:prefix-map ("i" . "insert")
-          :desc "Current file name"             "f"   #'+default/insert-file-path
-          :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
-          :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
-          :desc "From evil register"            "r"   #'evil-ex-registers
-          :desc "Snippet"                       "s"   #'yas-insert-snippet
-          :desc "Unicode"                       "u"   #'unicode-chars-list-chars
-          :desc "From clipboard"                "y"   #'+default/yank-pop)
-
-        ;;; <leader> n --- notes
-        (:prefix-map ("n" . "notes")
-          :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
-          :desc "Org agenda"                   "a" #'org-agenda
-          :desc "Toggle org-clock"             "c" #'+org/toggle-clock
-          :desc "Cancel org-clock"             "C" #'org-clock-cancel
-          :desc "Open deft"                    "d" #'deft
-          :desc "Find file in notes"           "f" #'+default/find-in-notes
-          :desc "Browse notes"                 "F" #'+default/browse-notes
-          :desc "Org store link"               "l" #'org-store-link
-          :desc "Tags search"                  "m" #'org-tags-view
-          :desc "Org capture"                  "n" #'org-capture
-          :desc "Active org-clock"             "o" #'org-clock-goto
-          :desc "Todo list"                    "t" #'org-todo-list
-          :desc "Search notes"                 "s" #'+default/org-notes-search
-          :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
-          :desc "View search"                  "v" #'org-search-view
-          :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
-          :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
-
-          (:when (featurep! :lang org +journal)
-            (:prefix ("j" . "journal")
-              :desc "New Entry"      "j" #'org-journal-new-entry
-              :desc "Search Forever" "s" #'org-journal-search-forever)))
-
+** leader/open
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> o --- open
         (:prefix-map ("o" . "open")
           :desc "Org agenda"       "A"  #'org-agenda
@@ -1165,7 +1203,26 @@ org-bullets由于字体原因, 显示不佳.
             :desc "Send project to Launchbar"  "L" #'+macos/send-project-to-launchbar)
           (:when (featurep! :tools docker)
             :desc "Docker" "D" #'docker))
+      )
+#+end_src
+** leader/insert
+#+begin_src emacs-lisp
+  (map! :leader
+        ;;; <leader> i --- insert
+        (:prefix-map ("i" . "insert")
+          :desc "Current file name"             "f"   #'+default/insert-file-path
+          :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
+          :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
+          :desc "From evil register"            "r"   #'evil-ex-registers
+          :desc "Snippet"                       "s"   #'yas-insert-snippet
+          :desc "Unicode"                       "u"   #'unicode-chars-list-chars
+          :desc "From clipboard"                "y"   #'+default/yank-pop)
+      )
+#+end_src
 
+** leader/project
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> p --- project
         (:prefix-map ("p" . "project")
           :desc "Browse project"               "." #'+default/browse-project
@@ -1192,7 +1249,12 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Switch to scratch buffer"     "X" #'doom/switch-to-project-scratch-buffer
           :desc "List project tasks"           "t" #'magit-todos-list
           :desc "Test project"                 "T" #'projectile-test-project)
+      )
+#+end_src
 
+** leader/quit
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> q --- quit/session
         (:prefix-map ("q" . "quit/session")
           :desc "Restart emacs server"         "d" #'+default/restart-server
@@ -1207,12 +1269,12 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Restore session from file"    "L" #'doom/load-session
           :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
           :desc "Restart Emacs"                "R" #'doom/restart)
+      )
+#+end_src
 
-        ;;; <leader> j --- jump
-        (:prefix-map ("j" . "jump")
-                     :desc "avy line"    "l" #'evil-avy-goto-line
-                     )
-
+** leader/resume
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> r --- resume
         (:prefix-map ("r" . "rings/resume")
                      :desc "Resume last search"    "l" #'ivy-resume
@@ -1221,16 +1283,12 @@ org-bullets由于字体原因, 显示不佳.
                      :desc "Last change"           "c" #'goto-last-change
                      )
 
-        ;;; <leader> R --- remote
-        (:when (featurep! :tools upload)
-          (:prefix-map ("R" . "remote")
-            :desc "Upload local"               "u" #'ssh-deploy-upload-handler
-            :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
-            :desc "Download remote"            "d" #'ssh-deploy-download-handler
-            :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
-            :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
-            :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
+      )
+#+end_src
 
+** leader/search
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> s --- search
         (:prefix-map ("s" . "search")
           :desc "Search buffer"                "b" #'swiper
@@ -1253,7 +1311,12 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Search buffer for thing at point" "S" #'swiper-isearch-thing-at-point
           :desc "Dictionary"                   "t" #'+lookup/dictionary-definition
           :desc "Thesaurus"                    "T" #'+lookup/synonyms)
+      )
+#+end_src
 
+** leader/toggle
+#+begin_src emacs-lisp
+  (map! :leader
         ;;; <leader> t --- toggle
         (:prefix-map ("t" . "toggle")
           :desc "Big mode"                     "b" #'doom-big-font-mode
@@ -1277,16 +1340,35 @@ org-bullets由于字体原因, 显示不佳.
           (:when (featurep! :ui word-wrap)
             :desc "Soft line wrapping"         "w" #'+word-wrap-mode)
           :desc "Zen mode"                     "z" #'writeroom-mode)
-
-        ;;; <leader> z --- misc
-        (:prefix-map ("z" . "misc")
-                     :desc "Zoom window"       "z" #'zoom
-                     )
-        )
-
+      )
 #+end_src
 
-*** misc
+** leader/jump
+#+begin_src emacs-lisp
+  (map! :leader
+        ;;; <leader> j --- jump
+        (:prefix-map ("j" . "jump")
+                     :desc "avy line"    "l" #'evil-avy-goto-line
+                     )
+      )
+#+end_src
+
+** leader/remote
+#+begin_src emacs-lisp
+  (map! :leader
+        ;;; <leader> R --- remote
+        (:when (featurep! :tools upload)
+          (:prefix-map ("R" . "remote")
+            :desc "Upload local"               "u" #'ssh-deploy-upload-handler
+            :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
+            :desc "Download remote"            "d" #'ssh-deploy-download-handler
+            :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
+            :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
+            :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
+      )
+#+end_src
+
+** misc
 #+begin_src elisp
   ;; Smart tab, these will only work in GUI Emacs
   (map! ;; Smarter newlines

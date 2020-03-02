@@ -30,11 +30,11 @@ doom配置参考
 - [ ] visual state下Tab键应该indent代码
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
-- [ ] (spacemacs/open-file-or-directory-in-external-app ARG)
 - [ ] o: evil-org-open-below +org/insert-item-below
 - [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
-- [ ] insert-mode下 Ctrl-h 应为help
-- [ ] insert-mode: ctrl-d evil-shift-left
+- [X] (spacemacs/open-file-or-directory-in-external-app ARG)
+- [X] insert-mode下 Ctrl-h 应为help
+- [X] insert-mode: ctrl-d evil-shift-left
 - [X] SPC-c l, comment line
 - [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
 - [X] flyspell错字提示 (可以手动关掉, flyspell-mode, SPC-t s)
@@ -611,6 +611,32 @@ https://github.com/hlissner/doom-emacs/issues/2225
 #+begin_src emacs-lisp
   (setq display-line-numbers-type nil)
 #+end_src
+*** open-file-externally
+从spacemacs中改过来的
+#+begin_src emacs-lisp
+  (defun spacemacs/open-in-external-app (file-path)
+    "Open `file-path' in external application."
+    (let ((process-connection-type nil))
+      (start-process "" nil "xdg-open" file-path)
+      )
+     )
+
+  (defun spacemacs/open-file-or-directory-in-external-app (arg)
+    "Open current file in external application.
+  If the universal prefix argument is used then open the folder
+  containing the current file by the default explorer."
+    (interactive "P")
+    (if arg
+        (spacemacs/open-in-external-app (expand-file-name default-directory))
+      (let ((file-path (if (derived-mode-p 'dired-mode)
+                           (dired-get-file-for-visit)
+                         buffer-file-name)))
+        (if file-path
+            (spacemacs//open-in-external-app file-path)
+          (message "No file associated to this buffer.")))
+      )
+    )
+#+end_src
 
 *** deadgrep
 search org note files
@@ -1146,6 +1172,7 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Find file from here"         "F"   #'+default/find-file-under-here
           :desc "Jump to Dired buffer"        "j"   #'dired-jump
           :desc "Locate file"                 "l"   #'locate
+          :desc "Open file/dir externally"    "o"   #'spacemacs/open-file-or-directory-in-external-app
           :desc "Find file in private config" "p"   #'doom/find-file-in-private-config
           :desc "Browse private config"       "P"   #'doom/open-private-config
           :desc "Recent files"                "r"   #'recentf-open-files

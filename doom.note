@@ -8,13 +8,16 @@ doom配置参考
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 
 * Memo [5/10]
-** TODO [2020-03-01 Sun] 各种emacs distribution [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
+** TODO [2020-03-01 Sun] 各种emacs distribution
+- [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
+
 ** TODO [2020-03-01 Sun] doom evil学习
 - 这个和regex-align有点像 https://github.com/edkolev/evil-lion
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 - gd: 跳转到函数定义位置
 - 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
+- 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
 
 ** TODO [2020-02-29 Sat] 改进literate rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
@@ -27,15 +30,18 @@ doom配置参考
 - [ ] visual state下Tab键应该indent代码
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭.
+- [ ] (spacemacs/open-file-or-directory-in-external-app ARG)
+- [ ] o: evil-org-open-below +org/insert-item-below
+- [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
+- [ ] insert-mode下 Ctrl-h 应为help
+- [ ] insert-mode: ctrl-d evil-shift-left
+- [X] SPC-c l, comment line
 - [X] 检查单词: z=, flyspell-correct-at-point (启用spell module即可)
 - [X] flyspell错字提示 (可以手动关掉, flyspell-mode, SPC-t s)
 - [X] insert-mode下 Ctrl-y 键应为粘贴
 - [X] org-metaright, org-demote-subtree
 - [X] helm-resume => SPC r l
-- [ ] (spacemacs/open-file-or-directory-in-external-app ARG)
-- [ ] deadgrep notes
-- [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
-- [ ] insert-mode下 Ctrl-h 应为help
+- [X] deadgrep notes
 
 ** DONE [2020-03-02 Mon] 完成ripgrep搜索notes功能
 CLOSED: [2020-03-02 Mon 14:49]
@@ -478,12 +484,19 @@ stow:
 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯. [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
 
 #+begin_src elisp
-  (map! :map evil-motion-state-map "C-e" nil)
+  (map! :map evil-insert-state-map "C-d" nil)
+  (map! :map evil-insert-state-map "C-e" nil)
   (map! :map evil-insert-state-map "C-n" nil)
-  (map! :map evil-insert-state-map "C-y" nil)
   (map! :map evil-insert-state-map "C-p" nil)
-  (map! :map evil-normal-state-map "C-n" nil)
-  (map! :map evil-normal-state-map "C-p" nil)
+  (map! :map evil-insert-state-map "C-k" nil)
+  (map! :map evil-insert-state-map "C-y" nil)
+  ;; 下面的无效
+  ;; (map! :map evil-normal-state-map "C-d" nil)
+  ;; (map! :map evil-normal-state-map "C-e" nil)
+  ;; (map! :map evil-normal-state-map "C-n" nil)
+  ;; (map! :map evil-normal-state-map "C-p" nil)
+  ;; (map! :map evil-motion-state-map "C-k" nil)
+  ;; (map! :map evil-normal-state-map "C-y" nil)
 #+end_src
 
 默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
@@ -670,7 +683,6 @@ deadgrep与doom有冲突, 不能用了.
           (put 'org-toggle-comment 'disabled t)
 
           (map! :map org-mode-map
-                :ni "C-k" #'org-kill-line
                 :n "gh" #'org-up-element
                 :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
                 :n "gk" #'org-previous-visible-heading
@@ -1098,6 +1110,8 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
           :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
           :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
+          :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
+          :desc "复制并注释"                              "y"   #'evilnc-copy-and-comment-lines
           :desc "LSP Format buffer/region"              "F"   #'+default/lsp-format-region-or-buffer
           :desc "LSP Organize imports"                  "i"   #'lsp-organize-imports
           (:when (featurep! :completion ivy)

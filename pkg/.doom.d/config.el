@@ -99,12 +99,19 @@
 ;;           )
 ;;         )
 
-(map! :map evil-motion-state-map "C-e" nil)
+(map! :map evil-insert-state-map "C-d" nil)
+(map! :map evil-insert-state-map "C-e" nil)
 (map! :map evil-insert-state-map "C-n" nil)
-(map! :map evil-insert-state-map "C-y" nil)
 (map! :map evil-insert-state-map "C-p" nil)
-(map! :map evil-normal-state-map "C-n" nil)
-(map! :map evil-normal-state-map "C-p" nil)
+(map! :map evil-insert-state-map "C-k" nil)
+(map! :map evil-insert-state-map "C-y" nil)
+;; 下面的无效
+;; (map! :map evil-normal-state-map "C-d" nil)
+;; (map! :map evil-normal-state-map "C-e" nil)
+;; (map! :map evil-normal-state-map "C-n" nil)
+;; (map! :map evil-normal-state-map "C-p" nil)
+;; (map! :map evil-motion-state-map "C-k" nil)
+;; (map! :map evil-normal-state-map "C-y" nil)
 
 ;; Make M-x harder to miss
 (define-key! 'override
@@ -193,7 +200,6 @@
         (put 'org-toggle-comment 'disabled t)
 
         (map! :map org-mode-map
-              :ni "C-k" #'org-kill-line
               :n "gh" #'org-up-element
               :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
               :n "gk" #'org-previous-visible-heading

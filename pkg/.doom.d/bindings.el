@@ -97,6 +97,8 @@
         :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
         :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
         :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
+        :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
+        :desc "复制并注释"                              "y"   #'evilnc-copy-and-comment-lines
         :desc "LSP Format buffer/region"              "F"   #'+default/lsp-format-region-or-buffer
         :desc "LSP Organize imports"                  "i"   #'lsp-organize-imports
         (:when (featurep! :completion ivy)

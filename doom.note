@@ -7,17 +7,14 @@ doom配置参考
 - https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 
-* Memo [4/9]
-** DONE [2020-03-01 Sun] 关于ispell的问题
-CLOSED: [2020-03-01 Sun 19:35]
-- State "DONE"       from "TODO"       [2020-03-01 Sun 19:35]
-以前常用 ispell-word 来查词, 现在发现得开启ispell-mode后才正常, 不然会报错.
-
+* Memo [5/10]
 ** TODO [2020-03-01 Sun] 各种emacs distribution [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
 ** TODO [2020-03-01 Sun] doom evil学习
 - 这个和regex-align有点像 https://github.com/edkolev/evil-lion
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
+- gd: 跳转到函数定义位置
+- 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
 
 ** TODO [2020-02-29 Sat] 改进literate rust编程体验
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
@@ -39,6 +36,20 @@ CLOSED: [2020-03-01 Sun 19:35]
 - [ ] deadgrep notes
 - [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
 - [ ] insert-mode下 Ctrl-h 应为help
+
+** DONE [2020-03-02 Mon] 完成ripgrep搜索notes功能
+CLOSED: [2020-03-02 Mon 14:49]
+- State "DONE"       from              [2020-03-02 Mon 14:49]
+需要修改ripgrep配置, 使之能follow symlinks. [[https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file][ripgrep/GUIDE.md at master · BurntSushi/ripgrep]]
+
+相关文件:
+: ~/.ripgreprc
+: ~/.zshrc
+
+** DONE [2020-03-01 Sun] 关于ispell的问题
+CLOSED: [2020-03-01 Sun 19:35]
+- State "DONE"       from "TODO"       [2020-03-01 Sun 19:35]
+以前常用 ispell-word 来查词, 现在发现得开启ispell-mode后才正常, 不然会报错.
 
 ** DONE [2020-02-28 Fri] 解决org-mode中怪异的Tab键行为问题
 CLOSED: [2020-02-28 Fri 15:42]
@@ -225,8 +236,10 @@ stow:
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/init.el :comments nil
 :END:
-*** modules
+*** docs
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop · hlissner/doom-emacs]]
+
+*** modules
 #+begin_src elisp
   ;;; init.el -*- lexical-binding: t; -*-
 
@@ -586,6 +599,31 @@ https://github.com/hlissner/doom-emacs/issues/2225
   (setq display-line-numbers-type nil)
 #+end_src
 
+*** deadgrep
+search org note files
+#+begin_src emacs-lisp
+  ;;;###autoload
+  (defun gwp/search-all-notes (arg)
+    "search all notes in ~/.cache/notes"
+    (interactive "P")
+
+    (let ((default-directory "~/.cache/notes"))
+      (call-interactively '+ivy/project-search-from-cwd)
+      )
+    )
+#+end_src
+
+deadgrep与doom有冲突, 不能用了.
+#+begin_src emacs-lisp :tangle no
+  (defun gwp/return-default-notes-dir ()
+    "~/.cache/notes"
+    )
+  (use-package! deadgrep
+                :config
+                (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
+                )
+#+end_src
+
 *** org-mode
 **** 基本设置
 #+begin_src elisp
@@ -884,6 +922,13 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   (package! doom-snippets :ignore t)
 #+end_src
 
+- 使用deadgrep搜索 .note 笔记
+- 与doom的popup有冲突, 不能用
+#+begin_src emacs-lisp :tangle no
+  (package! deadgrep
+            :recipe (:host github :repo "ybyygu/deadgrep"))
+#+end_src
+
 *** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 org-bullets由于字体原因, 显示不佳.
@@ -991,7 +1036,8 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Org capture"                  "n" #'org-capture
           :desc "Active org-clock"             "o" #'org-clock-goto
           :desc "Todo list"                    "t" #'org-todo-list
-          :desc "Search notes"                 "s" #'+default/org-notes-search
+          ;; :desc "Search notes"                 "s" #'+default/org-notes-search
+          :desc "Search all notes"             "s" #'gwp/search-all-notes
           :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
           :desc "View search"                  "v" #'org-search-view
           :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
@@ -1003,6 +1049,7 @@ org-bullets由于字体原因, 显示不佳.
               :desc "Search Forever" "s" #'org-journal-search-forever)))
         )
 #+end_src
+
 ** leader/buffer
 #+begin_src emacs-lisp
   (map! :leader
@@ -1300,6 +1347,7 @@ org-bullets由于字体原因, 显示不佳.
           :desc "Jump to link"                 "L" #'ffap-menu
           :desc "Jump list"                    "j" #'evil-show-jumps
           :desc "Jump to bookmark"             "m" #'bookmark-jump
+          :desc "Search all notes"             "n" #'gwp/search-all-notes
           :desc "Look up online"               "o" #'+lookup/online
           :desc "Look up online (w/ prompt)"   "O" #'+lookup/online-select
           :desc "Look up in local docsets"     "k" #'+lookup/in-docsets

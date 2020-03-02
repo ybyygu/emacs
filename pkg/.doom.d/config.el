@@ -53,6 +53,16 @@
 
 (setq display-line-numbers-type nil)
 
+;;;###autoload
+(defun gwp/search-all-notes (arg)
+  "search all notes in ~/.cache/notes"
+  (interactive "P")
+
+  (let ((default-directory "~/.cache/notes"))
+    (call-interactively '+ivy/project-search-from-cwd)
+    )
+  )
+
 (after! org
         ;; 禁用代码着色, 影响速度
         (setq org-src-fontify-natively nil)

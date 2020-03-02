@@ -41,7 +41,8 @@
         :desc "Org capture"                  "n" #'org-capture
         :desc "Active org-clock"             "o" #'org-clock-goto
         :desc "Todo list"                    "t" #'org-todo-list
-        :desc "Search notes"                 "s" #'+default/org-notes-search
+        ;; :desc "Search notes"                 "s" #'+default/org-notes-search
+        :desc "Search all notes"             "s" #'gwp/search-all-notes
         :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
         :desc "View search"                  "v" #'org-search-view
         :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
@@ -322,6 +323,7 @@
         :desc "Jump to link"                 "L" #'ffap-menu
         :desc "Jump list"                    "j" #'evil-show-jumps
         :desc "Jump to bookmark"             "m" #'bookmark-jump
+        :desc "Search all notes"             "n" #'gwp/search-all-notes
         :desc "Look up online"               "o" #'+lookup/online
         :desc "Look up online (w/ prompt)"   "O" #'+lookup/online-select
         :desc "Look up in local docsets"     "k" #'+lookup/in-docsets

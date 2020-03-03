@@ -97,19 +97,32 @@ containing the current file by the default explorer."
         ;;(setq org-src-window-setup 'other-frame)
         )
 
-        ;; 进入代码编辑模式, 改成容易按的
-        (map! :map org-mode-map
-              :ni "C-c ;" #'org-edit-special
-              :ni "C-c C-;" #'org-edit-special
-              :localleader ";" #'org-edit-special
-              )
+;; 进入代码编辑模式, 改成容易按的
+(map! :map org-mode-map
+      :ni "C-c ;" #'org-edit-special
+      :ni "C-c C-;" #'org-edit-special
+      :localleader ";" #'org-edit-special
+      )
 
 (after! org
+        ;; 用于激活 localleader
+        (add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
+
         ;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
         (map! :map org-src-mode-map
               "C-c ;"   #'org-edit-src-exit  ; 保存退出
               "C-c C-;" #'org-edit-src-exit  ; 保存退出
               "C-c C-k" #'org-edit-src-abort ; 放弃修改
+              )
+        (map! :map org-src-mode-map
+              :localleader
+              ";" #'org-edit-src-exit
+              "c" #'org-edit-src-exit
+              "k" #'org-edit-src-abort
+              )
+        (map! :map rust-mode-map
+              :localleader
+              "=" #'rust-format-buffer
               )
         )
 
@@ -235,6 +248,7 @@ containing the current file by the default explorer."
                        :desc "Demote" "l" #'org-demote-subtree
                        :desc "Promote" "h" #'org-promote-subtree
                        :desc "Archive" "A" #'org-archive-subtree
+                       :desc "Narrow" "n" #'org-toggle-narrow-to-subtree
                        )
               (:prefix ("SPC" . "Special")
                        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按

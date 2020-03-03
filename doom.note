@@ -136,7 +136,8 @@ https://segmentfault.com/q/1010000000118837
 ** org-edit-special
 | C-c '   | hard to press |
 | SPC-m ; |               |
-
+** doom
+spc h m d: doom-help-module
 
 * Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
@@ -723,6 +724,7 @@ deadgrep与doom有冲突, 不能用了.
                          :desc "Demote" "l" #'org-demote-subtree
                          :desc "Promote" "h" #'org-promote-subtree
                          :desc "Archive" "A" #'org-archive-subtree
+                         :desc "Narrow" "n" #'org-toggle-narrow-to-subtree
                          )
                 (:prefix ("SPC" . "Special")
                          :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
@@ -760,22 +762,35 @@ doom中的tag行为有些怪异, 禁用之:
           ;;(setq org-src-window-setup 'other-frame)
           )
 
-          ;; 进入代码编辑模式, 改成容易按的
-          (map! :map org-mode-map
-                :ni "C-c ;" #'org-edit-special
-                :ni "C-c C-;" #'org-edit-special
-                :localleader ";" #'org-edit-special
-                )
+  ;; 进入代码编辑模式, 改成容易按的
+  (map! :map org-mode-map
+        :ni "C-c ;" #'org-edit-special
+        :ni "C-c C-;" #'org-edit-special
+        :localleader ";" #'org-edit-special
+        )
 #+end_src
 
 **** edit
 #+begin_src emacs-lisp
   (after! org
+          ;; 用于激活 localleader
+          (add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
+
           ;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
           (map! :map org-src-mode-map
                 "C-c ;"   #'org-edit-src-exit  ; 保存退出
                 "C-c C-;" #'org-edit-src-exit  ; 保存退出
                 "C-c C-k" #'org-edit-src-abort ; 放弃修改
+                )
+          (map! :map org-src-mode-map
+                :localleader
+                ";" #'org-edit-src-exit
+                "c" #'org-edit-src-exit
+                "k" #'org-edit-src-abort
+                )
+          (map! :map rust-mode-map
+                :localleader
+                "=" #'rust-format-buffer
                 )
           )
 #+end_src

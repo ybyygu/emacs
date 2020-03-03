@@ -34,6 +34,7 @@ doom配置参考
 - [ ] o: evil-org-open-below +org/insert-item-below
 - [ ] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m w
 - [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
+- [ ] 看来还是得用evil-org. 比如dd命令在hide状态下应该为 delete subtree
 - [X] (spacemacs/open-file-or-directory-in-external-app ARG)
 - [X] insert-mode下 Ctrl-h 应为help
 - [X] insert-mode: ctrl-d evil-shift-left
@@ -483,6 +484,12 @@ stow:
   ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
   ;; they are implemented.
 #+END_SRC
+*** 字符编辑
+默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
+#+begin_src emacs-lisp
+  (setq evil-want-fine-undo t)
+#+end_src
+
 *** 常用按键
 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
 

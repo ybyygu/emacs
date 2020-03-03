@@ -122,19 +122,17 @@ containing the current file by the default explorer."
 ;;           )
 ;;         )
 
-(map! :map evil-insert-state-map "C-d" nil)
-(map! :map evil-insert-state-map "C-e" nil)
-(map! :map evil-insert-state-map "C-n" nil)
-(map! :map evil-insert-state-map "C-p" nil)
-(map! :map evil-insert-state-map "C-k" nil)
-(map! :map evil-insert-state-map "C-y" nil)
-;; 下面的无效
-;; (map! :map evil-normal-state-map "C-d" nil)
-;; (map! :map evil-normal-state-map "C-e" nil)
-;; (map! :map evil-normal-state-map "C-n" nil)
-;; (map! :map evil-normal-state-map "C-p" nil)
-;; (map! :map evil-motion-state-map "C-k" nil)
-;; (map! :map evil-normal-state-map "C-y" nil)
+(map! :nvim "C-a" nil)
+;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
+(map! :nvim "C-e" nil)
+(map! :nvim "C-d" nil)
+(map! :nvim "C-k" nil)
+(map! :nvim "C-n" nil)
+(map! :nvim "C-p" nil)
+
+;; evil默认为quoted-insert, 可以 ctrl-q代替
+(map! :i "C-v" #'yank)
+(map! :i "C-y" nil)
 
 ;; Make M-x harder to miss
 (define-key! 'override

@@ -31,10 +31,10 @@ doom配置参考
 - [ ] visual state下Tab键应该indent代码
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
-- [ ] o: evil-org-open-below +org/insert-item-below
 - [ ] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m w
 - [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
-- [ ] 看来还是得用evil-org. 比如dd命令在hide状态下应该为 delete subtree
+- [X] 看来还是得用evil-org. 比如dd命令在hide状态下应该为 delete subtree
+- [X] o: evil-org-open-below +org/insert-item-below, 可以用ctrl-enter, ctrl-shift-enter
 - [X] (spacemacs/open-file-or-directory-in-external-app ARG)
 - [X] insert-mode下 Ctrl-h 应为help
 - [X] insert-mode: ctrl-d evil-shift-left
@@ -1671,8 +1671,219 @@ org-bullets由于字体原因, 显示不佳.
 #+end_src
 
 
-* modules/gwp
-- [[file:pkg/.doom.d/modules/gwp/org/config.el::;;; lang/org/config.el -*- lexical-binding: t; -*-][org/config.el]]
+* modules/gwp/org
+** docs
+以doom org modules为基础, 开始自定义.
+- [[file:doom-emacs/modules/lang/org/README.org]]
+- [[file:pkg/.doom.d/modules/gwp/org/config.el][org/config.el]]
+
+** config.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/org/config.el :comments nil
+:END:
+*** header
+#+begin_src emacs-lisp
+  ;;; lang/org/config.el -*- lexical-binding: t; -*-
+#+end_src
+
+*** evil-org
+#+begin_src emacs-lisp
+  (use-package! evil-org
+    :when (featurep! :editor evil +everywhere)
+    :hook (org-mode . evil-org-mode)
+    :init
+    (defvar evil-org-retain-visual-state-on-shift t)
+    ;; spacemacs中有item项, 按o/O会接续item, 而不是普通的换行. doom中可以用ctrl-enter
+    (defvar evil-org-special-o/O '(table-row))
+    (defvar evil-org-use-additional-insert t)
+    :config
+    (evil-org-set-key-theme)
+    (add-hook! 'org-tab-first-hook :append
+               ;; Only fold the current tree, rather than recursively
+               #'+org-cycle-only-current-subtree-h
+               ;; Clear babel results if point is inside a src block
+               #'+org-clear-babel-results-h)
+    (map! :map evil-org-mode-map
+          :ni [C-return]   #'+org/insert-item-below
+          :ni [C-S-return] #'+org/insert-item-above
+          ;; navigate table cells (from insert-mode)
+          :i "C-l" (general-predicate-dispatch 'org-end-of-line
+                     (org-at-table-p) 'org-table-next-field)
+          :i "C-h" (general-predicate-dispatch 'org-beginning-of-line
+                     (org-at-table-p) 'org-table-previous-field)
+          :i "C-k" (general-predicate-dispatch 'org-up-element
+                     (org-at-table-p) '+org/table-previous-row)
+          :i "C-j" (general-predicate-dispatch 'org-down-element
+                     (org-at-table-p) 'org-table-next-row)
+          ;; moving/(de|pro)moting subtress & expanding tables (prepend/append columns/rows)
+          :ni "C-S-l" #'org-shiftright
+          :ni "C-S-h" #'org-shiftleft
+          :ni "C-S-k" #'org-shiftup
+          :ni "C-S-j" #'org-shiftdown
+          ;; more intuitive RET keybinds
+          :i [return] #'org-return-indent
+          :i "RET"    #'org-return-indent
+          :n [return] #'+org/dwim-at-point
+          :n "RET"    #'+org/dwim-at-point
+          ;; more vim-esque org motion keys (not covered by evil-org-mode)
+          :m "]h"  #'org-forward-heading-same-level
+          :m "[h"  #'org-backward-heading-same-level
+          :m "]l"  #'org-next-link
+          :m "[l"  #'org-previous-link
+          :m "]c"  #'org-babel-next-src-block
+          :m "[c"  #'org-babel-previous-src-block
+          :n "gQ"  #'org-fill-paragraph
+          :n "gr"  #'org-ctrl-c-ctrl-c
+          :n "gR"  #'org-babel-execute-buffer
+          ;; sensible vim-esque folding keybinds
+          :n "za"  #'+org/toggle-fold
+          :n "zA"  #'org-shifttab
+          :n "zc"  #'+org/close-fold
+          :n "zC"  #'outline-hide-subtree
+          :n "zm"  #'+org/hide-next-fold-level
+          :n "zn"  #'org-tree-to-indirect-buffer
+          :n "zo"  #'+org/open-fold
+          :n "zO"  #'outline-show-subtree
+          :n "zr"  #'+org/show-next-fold-level
+          :n "zR"  #'outline-show-all
+          :n "zi"  #'org-toggle-inline-images
+
+          :map org-read-date-minibuffer-local-map
+          "C-h"   (λ! (org-eval-in-calendar '(calendar-backward-day 1)))
+          "C-l"   (λ! (org-eval-in-calendar '(calendar-forward-day 1)))
+          "C-k"   (λ! (org-eval-in-calendar '(calendar-backward-week 1)))
+          "C-j"   (λ! (org-eval-in-calendar '(calendar-forward-week 1)))
+          "C-S-h" (λ! (org-eval-in-calendar '(calendar-backward-month 1)))
+          "C-S-l" (λ! (org-eval-in-calendar '(calendar-forward-month 1)))
+          "C-S-k" (λ! (org-eval-in-calendar '(calendar-backward-year 1)))
+          "C-S-j" (λ! (org-eval-in-calendar '(calendar-forward-year 1))))
+    )
+#+end_src
+
+*** org-pdfview
+#+begin_src emacs-lisp
+  (use-package! org-pdfview
+    :when (featurep! :tools pdf)
+    :commands org-pdfview-open
+    :init
+    (after! org
+      (delete '("\\.pdf\\'" . default) org-file-apps)
+      ;; org links to pdf files are opened in pdf-view-mode
+      (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (_file link) (org-pdfview-open link))))
+      ;; support for links to specific pages
+      (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . (lambda (_file link) (org-pdfview-open link))))))
+#+end_src
+
+** package.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/org/packages.el :comments nil
+:END:
+#+begin_src emacs-lisp
+  ;; -*- no-byte-compile: t; -*-
+  ;;; lang/org/packages.el
+
+  ;; Prevent built-in Org from playing into the byte-compilation of
+  ;; `org-plus-contrib'.
+  (when-let (orglib (locate-library "org" nil doom--initial-load-path))
+    (setq load-path (delete (substring (file-name-directory orglib) 0 -1)
+                            load-path)))
+
+  ;; HACK A necessary hack because org requires a compilation step after being
+  ;;      cloned, and during that compilation a org-version.el is generated with
+  ;;      these two functions, which return the output of a 'git describe ...'
+  ;;      call in the repo's root. Of course, this command won't work in a sparse
+  ;;      clone, and more than that, initiating these compilation step is a
+  ;;      hassle, so...
+  (add-hook! 'straight-use-package-pre-build-functions
+    (defun +org-fix-package-h (package &rest _)
+      (when (equal package "org-mode")
+        (with-temp-file (expand-file-name "org-version.el" (straight--repos-dir "org-mode"))
+          (insert "(fset 'org-release (lambda () \"9.4\"))\n"
+                  "(fset 'org-git-version #'ignore)\n"
+                  "(provide 'org-version)\n")))))
+
+  ;; Install cutting-edge version of org-mode, and from a mirror, because
+  ;; code.orgmode.org runs on a potato.
+  (package! org-mode
+    :recipe (:host github
+             :repo "emacs-straight/org-mode"
+             :files ("*.el" "lisp/*.el" "contrib/lisp/*.el"))
+    :pin "30d0b6e1f6")
+  ;; ...And prevent other packages from pulling org; org-plus-contrib satisfies
+  ;; the dependency already: https://github.com/raxod502/straight.el/issues/352
+  (package! org :recipe (:local-repo nil))
+
+  (package! avy)
+  (package! htmlize :pin "86f22f211e")
+  (package! org-bullets
+    :recipe (:host github :repo "Kaligule/org-bullets")
+    :pin "8b4f0aab6d")
+  (package! org-yt
+    :recipe (:host github :repo "TobiasZawada/org-yt")
+    :pin "40cc1ac76d")
+  (package! ox-clip :pin "bd36f9fb4e")
+  (package! toc-org :pin "379b457fcf")
+  (package! org-cliplink :pin "82402cae7e")
+
+  (when (featurep! :editor evil +everywhere)
+    (package! evil-org
+      :recipe (:host github :repo "hlissner/evil-org-mode")
+      :pin "4d44e9bbdc"))
+  (when (featurep! :tools pdf)
+    (package! org-pdfview :pin "8b71f31363"))
+  (when (featurep! :tools magit)
+    (package! orgit :pin "e7cddf39e3"))
+  (when (featurep! +brain)
+    (package! org-brain :pin "a0625854df"))
+  (when (featurep! +dragndrop)
+    (package! org-download :pin "3c48102793"))
+  (when (featurep! +gnuplot)
+    (package! gnuplot :pin "a406143d52")
+    (package! gnuplot-mode :pin "601f639298"))
+  (when (featurep! +ipython) ; DEPRECATED
+    (package! ob-ipython :pin "7147455230"))
+  (when (featurep! +jupyter)
+    (package! jupyter :pin "9e3c163358"))
+  (when (featurep! +pomodoro)
+    (package! org-pomodoro :pin "aa07c11318"))
+  (when (featurep! +present)
+    (package! centered-window
+      :recipe (:host github :repo "anler/centered-window-mode")
+      :pin "24f7c5be9d")
+    (package! org-tree-slide :pin "7bf09a02bd")
+    (package! ox-reveal :pin "aafedfd805"))
+  (when (featurep! +journal)
+    (package! org-journal :pin "dc120bf42a"))
+
+  ;;; Babel
+  (package! ob-async :pin "80a30b96a0")
+  (when (featurep! :lang crystal)
+    (package! ob-crystal :pin "d84c1adee4"))
+  (when (featurep! :lang go)
+    (package! ob-go :pin "2067ed55f4"))
+  (when (featurep! :lang nim)
+    (package! ob-nim :pin "bf1642cb93"))
+  (when (featurep! :lang racket)
+    (package! ob-racket
+      :recipe (:host github :repo "DEADB17/ob-racket")
+      :pin "d8fd51bddb"))
+  (when (featurep! :lang rest)
+    (package! ob-restclient :pin "c5c22e6035"))
+  (when (featurep! :lang rust)
+    (package! ob-rust :pin "6a82587598"))
+  (when (featurep! :lang scala)
+    (package! ob-ammonite :pin "39937dff39"))
+
+  ;;; Export
+  (when (featurep! +pandoc)
+    (package! ox-pandoc :pin "aa37dc7e94"))
+  (when (featurep! +hugo)
+    (package! ox-hugo
+      :recipe (:host github :repo "kaushalmodi/ox-hugo" :nonrecursive t)
+      :pin "16f1b0c9a9"))
+  (when (featurep! :lang rst)
+    (package! ox-rst :pin "9158bfd180"))
+#+end_src
 
 
 * snippets

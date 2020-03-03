@@ -51,6 +51,8 @@
                     "z" #'zoom)
               )
 
+(map! :i "C-`" #'+popup/toggle)
+
 (setq display-line-numbers-type nil)
 
 (defun spacemacs/open-in-external-app (file-path)

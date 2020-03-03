@@ -595,6 +595,12 @@ stow:
                 )
 #+END_SRC
 
+打开doom popup窗口, 默认仅在normal state下可用.
+#+begin_src emacs-lisp
+  (map! :i "C-`" #'+popup/toggle)
+#+end_src
+
+
 golden-ratio有点问题
 https://github.com/hlissner/doom-emacs/issues/2225
 #+begin_src elisp :tangle no

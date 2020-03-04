@@ -106,7 +106,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 (help/set-org-babel-default-header-args :padline "yes")
 (help/set-org-babel-default-header-args :mkdirp "yes")
-(help/set-org-babel-default-header-args :comments "no")
+(help/set-org-babel-default-header-args :comments "link")
 
 (after! org
         ;; 禁用代码着色, 影响速度

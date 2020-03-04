@@ -792,7 +792,7 @@ doom中的tag行为有些怪异, 禁用之:
 
   (help/set-org-babel-default-header-args :padline "yes")
   (help/set-org-babel-default-header-args :mkdirp "yes")
-  (help/set-org-babel-default-header-args :comments "no")
+  (help/set-org-babel-default-header-args :comments "link")
 #+end_src
 
 **** enter

@@ -90,6 +90,24 @@ containing the current file by the default explorer."
     )
   )
 
+;; helper functions for literate programming
+;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
+(defun help/set-org-babel-default-header-args (property value)
+  "Easily set system header arguments in org mode.
+
+PROPERTY is the system-wide value that you would like to modify.
+
+VALUE is the new value you wish to store.
+
+Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.html#System_002dwide-header-arguments'"
+  (setq org-babel-default-header-args
+        (cons (cons property value)
+              (assq-delete-all property org-babel-default-header-args))))
+
+(help/set-org-babel-default-header-args :padline "yes")
+(help/set-org-babel-default-header-args :mkdirp "yes")
+(help/set-org-babel-default-header-args :comments "no")
+
 (after! org
         ;; 禁用代码着色, 影响速度
         (setq org-src-fontify-natively nil)
@@ -150,6 +168,13 @@ containing the current file by the default explorer."
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
 (map! :i "C-y" nil)
+
+;; evil里也得设置, 不然无效
+(after! evil-org
+        (map! :map evil-org-mode-map
+              :niv "C-d" nil
+              )
+        )
 
 ;; Make M-x harder to miss
 (define-key! 'override
@@ -278,6 +303,9 @@ containing the current file by the default explorer."
                  :desc "tangle blocks in subtree" "t" #'gwp/org-tangle-subtree
                  :desc "tangle blocks in buffer" "T" #'org-babel-tangle
                  )
+        ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
+        :leader
+        :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-blocks
         )
   )
 

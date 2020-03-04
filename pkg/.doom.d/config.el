@@ -80,6 +80,24 @@ containing the current file by the default explorer."
     )
   )
 
+(defun gwp/open-in-gnome-terminal (the-directory)
+  "Open `the-directory' in external gnome-terminal."
+  (let ((process-connection-type nil))
+    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+    )
+  )
+
+(defun gwp/open-terminal-here ()
+  "Open the current dir in a new terminal window"
+  (interactive)
+  (let ((default-directory (or (and (eq major-mode 'dired-mode)
+                                    (dired-current-directory))
+                               default-directory)))
+    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
+    )
+  )
+
 ;;;###autoload
 (defun gwp/search-all-notes (arg)
   "search all notes in ~/.cache/notes"

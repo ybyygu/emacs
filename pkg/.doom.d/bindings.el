@@ -230,17 +230,10 @@
           :desc "Open terminal here"    "T" #'+term/here)
         (:when (featurep! :term vterm)
           :desc "Toggle vterm popup"    "t" #'+vterm/toggle
-          :desc "Open vterm here"       "T" #'+vterm/here)
+          :desc "Open vterm here"       "T" #'gwp/open-terminal-here)
         (:when (featurep! :term eshell)
           :desc "Toggle eshell popup"   "e" #'+eshell/toggle
           :desc "Open eshell here"      "E" #'+eshell/here)
-        (:when (featurep! :tools macos)
-          :desc "Reveal in Finder"           "o" #'+macos/reveal-in-finder
-          :desc "Reveal project in Finder"   "O" #'+macos/reveal-project-in-finder
-          :desc "Send to Transmit"           "u" #'+macos/send-to-transmit
-          :desc "Send project to Transmit"   "U" #'+macos/send-project-to-transmit
-          :desc "Send to Launchbar"          "l" #'+macos/send-to-launchbar
-          :desc "Send project to Launchbar"  "L" #'+macos/send-project-to-launchbar)
         (:when (featurep! :tools docker)
           :desc "Docker" "D" #'docker))
     )

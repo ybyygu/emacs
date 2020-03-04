@@ -122,9 +122,11 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         (cons (cons property value)
               (assq-delete-all property org-babel-default-header-args))))
 
-(help/set-org-babel-default-header-args :padline "yes")
-(help/set-org-babel-default-header-args :mkdirp "yes")
-(help/set-org-babel-default-header-args :comments "link")
+(after! org
+        (help/set-org-babel-default-header-args :padline "yes")
+        (help/set-org-babel-default-header-args :mkdirp "yes")
+        (help/set-org-babel-default-header-args :comments "link")
+        )
 
 (after! org
         ;; 禁用代码着色, 影响速度
@@ -190,7 +192,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 ;; evil里也得设置, 不然无效
 (after! evil-org
         (map! :map evil-org-mode-map
-              :niv "C-d" nil
+              :nivm "C-d" nil
+              :nivm "C-k" nil
               )
         )
 
@@ -291,6 +294,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
         (map! :map org-mode-map
               :localleader
+              ;; FIXME: 与doom/org定义有冲突
               (:prefix ("s" . "Subtree")
                        :desc "Demote" "l" #'org-demote-subtree
                        :desc "Promote" "h" #'org-promote-subtree

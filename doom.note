@@ -28,9 +28,11 @@ doom配置参考
 - [X] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
   到这个键.
 - [X] 全局禁有flyspell-mode
+- [ ] evil-org: 在source code中的enter行为
+- [ ] 添加re-open当前文件功能?
 - [ ] visual state下Tab键应该indent代码
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
-- [ ] ctrl-d又不管用了
+- [ ] ctrl-d又不管用了, alt-l
 - [ ] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如
   gnome-terminal之类顺手.
 
@@ -415,7 +417,7 @@ stow:
          ;;swift             ; who asked for emoji variables?
          ;;terra             ; Earth and Moon in alignment for performance.
          ;;web               ; the tubes
-         ;(org +dragndrop)
+         (org)
 
          :email
          ;;(mu4e +gmail)
@@ -429,7 +431,7 @@ stow:
          ;;twitter           ; twitter client https://twitter.com/vnought
 
          :gwp                ; 自定义模块
-         (org)
+         (org +dragndrop)
 
          :config
          ;;literate
@@ -513,7 +515,8 @@ stow:
   ;; evil里也得设置, 不然无效
   (after! evil-org
           (map! :map evil-org-mode-map
-                :niv "C-d" nil
+                :nivm "C-d" nil
+                :nivm "C-k" nil
                 )
           )
 #+end_src
@@ -739,7 +742,6 @@ deadgrep与doom有冲突, 不能用了.
 #+end_src
 
 **** 按键行为
-(counsel-org-goto)
 #+begin_src elisp
   (defun gwp/new-memo (arg)
     "Insert a new org-mode memo entry under heading at point."
@@ -767,6 +769,7 @@ deadgrep与doom有冲突, 不能用了.
 
           (map! :map org-mode-map
                 :localleader
+                ;; FIXME: 与doom/org定义有冲突
                 (:prefix ("s" . "Subtree")
                          :desc "Demote" "l" #'org-demote-subtree
                          :desc "Promote" "h" #'org-promote-subtree
@@ -813,9 +816,11 @@ doom中的tag行为有些怪异, 禁用之:
           (cons (cons property value)
                 (assq-delete-all property org-babel-default-header-args))))
 
-  (help/set-org-babel-default-header-args :padline "yes")
-  (help/set-org-babel-default-header-args :mkdirp "yes")
-  (help/set-org-babel-default-header-args :comments "link")
+  (after! org
+          (help/set-org-babel-default-header-args :padline "yes")
+          (help/set-org-babel-default-header-args :mkdirp "yes")
+          (help/set-org-babel-default-header-args :comments "link")
+          )
 #+end_src
 
 **** enter
@@ -1758,15 +1763,6 @@ org-bullets由于字体原因, 显示不佳.
     (map! :map evil-org-mode-map
           :ni [C-return]   #'+org/insert-item-below
           :ni [C-S-return] #'+org/insert-item-above
-          ;; navigate table cells (from insert-mode)
-          ;; :i "C-l" (general-predicate-dispatch 'org-end-of-line
-          ;;            (org-at-table-p) 'org-table-next-field)
-          ;; :i "C-h" (general-predicate-dispatch 'org-beginning-of-line
-          ;;            (org-at-table-p) 'org-table-previous-field)
-          ;; :i "C-k" (general-predicate-dispatch 'org-up-element
-          ;;            (org-at-table-p) '+org/table-previous-row)
-          ;; :i "C-j" (general-predicate-dispatch 'org-down-element
-          ;;            (org-at-table-p) 'org-table-next-row)
           ;; moving/(de|pro)moting subtress & expanding tables (prepend/append columns/rows)
           :ni "C-S-l" #'org-shiftright
           :ni "C-S-h" #'org-shiftleft
@@ -2263,6 +2259,15 @@ org-bullets由于字体原因, 显示不佳.
     (package! ox-rst :pin "9158bfd180"))
 #+end_src
 
+* modules/org-hack
+新思路:
+- fork doom-emacs, 修改之. 将其中的org module更名后, 放到pkg下载入?
+- 这样易于跟踪官方进度?
+- 需要同时打开lang/org module, 以正确加载autoload函数(似乎不能加
+  载~/.doom.d/moudles/gwp下的定义).
+- 新的gwp/org会覆盖lang/org中的设置
+
+[[file:doom-hacks/modules/lang/org/][file:~/Workspace/Programming/emacs/doom-hacks/modules/lang/org/]]
 
 * snippets
 :PROPERTIES:

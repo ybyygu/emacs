@@ -158,7 +158,7 @@
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        ;;web               ; the tubes
-       ;(org +dragndrop)
+       (org)
 
        :email
        ;;(mu4e +gmail)
@@ -172,7 +172,7 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp                ; 自定义模块
-       (org)
+       (org +dragndrop)
 
        :config
        ;;literate

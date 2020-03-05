@@ -28,13 +28,12 @@ doom配置参考
 - [X] org-edit-src-exit: 不能定义为Ctrl-C Ctrl-C, 因为org-src里的主模式很多会用
   到这个键.
 - [X] 全局禁有flyspell-mode
-- [ ] evil-org: 在source code中的enter行为
+- [X] ctrl-d又不管用了, alt-l
+- [X] evil-org: 在source code中的enter行为. 改为进入代码.
+- [X] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如gnome-terminal之类顺手.
 - [ ] 添加re-open当前文件功能?
 - [ ] visual state下Tab键应该indent代码
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
-- [ ] ctrl-d又不管用了, alt-l
-- [ ] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如
-  gnome-terminal之类顺手.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
 - [ ] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m w
@@ -517,6 +516,7 @@ stow:
           (map! :map evil-org-mode-map
                 :nivm "C-d" nil
                 :nivm "C-k" nil
+                :i "M-l" nil
                 )
           )
 #+end_src
@@ -639,6 +639,22 @@ https://github.com/hlissner/doom-emacs/issues/2225
 #+begin_src emacs-lisp
   (setq display-line-numbers-type nil)
 #+end_src
+*** dired hacks
+用于在dired中复制当前文件的全路径.
+#+begin_src emacs-lisp
+  (defun gwp/dired-copy-file-path()
+    (interactive)
+    (let ((current-prefix-arg '(0)))
+      (call-interactively 'dired-copy-filename-as-kill)
+      )
+    )
+
+  (map! :map dired-mode-map
+        :localleader
+        :n "y" #'gwp/dired-copy-file-path
+        )
+#+end_src
+
 *** open-file-externally
 从spacemacs中改过来的
 #+begin_src emacs-lisp
@@ -796,6 +812,106 @@ doom中的tag行为有些怪异, 禁用之:
 #+begin_src elisp :tangle no
   (after! evil-org
           (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
+#+end_src
+**** dwim-at-point
+从doom中的org module中摘出来, 略作修改.
+#+begin_src emacs-lisp
+  (defun gwp/dwim-at-point ()
+    "Do-what-I-mean at point.
+
+  If on a:
+  - checkbox list item or todo heading: toggle it.
+  - clock: update its time.
+  - headline: toggle latex fragments and inline images underneath.
+  - footnote reference: jump to the footnote's definition
+  - footnote definition: jump to the first reference of this footnote
+  - table-row or a TBLFM: recalculate the table's formulas
+  - table-cell: clear it and go into insert mode. If this is a formula cell,
+    recaluclate it instead.
+  - babel-call: 改为编辑代码, edit-special
+  - statistics-cookie: update it.
+  - latex fragment: toggle it.
+  - link: follow it
+  - otherwise, refresh all inline images in current tree."
+    (interactive)
+    (let* ((context (org-element-context))
+           (type (org-element-type context)))
+      ;; skip over unimportant contexts
+      (while (and context (memq type '(verbatim code bold italic underline strike-through subscript superscript)))
+        (setq context (org-element-property :parent context)
+              type (org-element-type context)))
+      (pcase type
+        (`headline
+         (cond ((and (fboundp 'toc-org-insert-toc)
+                     (member "TOC" (org-get-tags)))
+                (toc-org-insert-toc)
+                (message "Updating table of contents"))
+               ((string= "ARCHIVE" (car-safe (org-get-tags)))
+                (org-force-cycle-archived))
+               ((or (org-element-property :todo-type context)
+                    (org-element-property :scheduled context))
+                (org-todo
+                 (if (eq (org-element-property :todo-type context) 'done)
+                     (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
+                         'todo)
+                   'done)))
+               (t
+                (+org--refresh-inline-images-in-subtree)
+                (org-clear-latex-preview)
+                (org-latex-preview '(4)))))
+
+        (`clock (org-clock-update-time-maybe))
+
+        (`footnote-reference
+         (org-footnote-goto-definition (org-element-property :label context)))
+
+        (`footnote-definition
+         (org-footnote-goto-previous-reference (org-element-property :label context)))
+
+        ((or `planning `timestamp)
+         (org-follow-timestamp-link))
+
+        ((or `table `table-row)
+         (if (org-at-TBLFM-p)
+             (org-table-calc-current-TBLFM)
+           (ignore-errors
+             (save-excursion
+               (goto-char (org-element-property :contents-begin context))
+               (org-call-with-arg 'org-table-recalculate (or arg t))))))
+
+        (`table-cell
+         (org-table-blank-field)
+         (org-table-recalculate)
+         (when (and (string-empty-p (string-trim (org-table-get-field)))
+                    (bound-and-true-p evil-local-mode))
+           (evil-change-state 'insert)))
+
+        (`babel-call
+         (org-babel-lob-execute-maybe))
+
+        (`statistics-cookie
+         (save-excursion (org-update-statistics-cookies nil)))
+
+        ((or `src-block `inline-src-block)
+         ;; 还是挺方便的
+         (org-edit-special))
+
+        ((or `latex-fragment `latex-environment)
+         (org-latex-preview))
+
+        (`link
+         (let* ((lineage (org-element-lineage context '(link) t))
+                (path (org-element-property :path lineage)))
+           (if (or (equal (org-element-property :type lineage) "img")
+                   (and path (image-type-from-file-name path)))
+               (+org--refresh-inline-images-in-subtree)
+             (org-open-at-point))))
+
+        ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
+         (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
+           (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
+
+        (_ (+org--refresh-inline-images-in-subtree)))))
 #+end_src
 
 *** org-babel

@@ -15,9 +15,9 @@ doom配置参考
 - 这个和regex-align有点像 https://github.com/edkolev/evil-lion
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-- gd: 跳转到函数定义位置
 - 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
-- 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
+- [X] 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
+- [X] gd: 跳转到函数定义位置. 并不总是灵光.
 - Ctrl-h b: 显示所有按键 which-key-show-keymap Ctrl-h b m
 
 ** TODO [2020-02-29 Sat] 改进literate rust编程体验
@@ -30,14 +30,14 @@ doom配置参考
 - [X] 全局禁有flyspell-mode
 - [X] ctrl-d又不管用了, alt-l
 - [X] evil-org: 在source code中的enter行为. 改为进入代码.
-- [X] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如gnome-terminal之类顺手.
-- [ ] 添加re-open当前文件功能?
 - [ ] visual state下Tab键应该indent代码
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
-- [ ] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m w
-- [ ] https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org
+- [ ] 添加re-open当前文件功能?
+- [X] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m y
+- [X] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如gnome-terminal之类顺手.
+- [X] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org][window-select]] 可以用C-w C-w, 比spacemacs下更方便.
 - [X] 看来还是得用evil-org. 比如dd命令在hide状态下应该为 delete subtree
 - [X] o: evil-org-open-below +org/insert-item-below, 可以用ctrl-enter, ctrl-shift-enter
 - [X] (spacemacs/open-file-or-directory-in-external-app ARG)
@@ -142,6 +142,7 @@ https://segmentfault.com/q/1010000000118837
 ** org-edit-special
 | C-c '   | hard to press |
 | SPC-m ; |               |
+
 ** doom
 spc h m d: doom-help-module
 
@@ -676,7 +677,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
                            (dired-get-file-for-visit)
                          buffer-file-name)))
         (if file-path
-            (spacemacs//open-in-external-app file-path)
+            (spacemacs/open-in-external-app file-path)
           (message "No file associated to this buffer.")))
       )
     )
@@ -1194,6 +1195,7 @@ org-bullets由于字体原因, 显示不佳.
 此文件在config.el中使用load!宏来加载
 
 : /home/ybyygu/Workspace/Programming/emacs/doom-emacs/modules/config/default/packages.el
+
 ** new/template
 #+begin_src emacs-lisp :tangle no
   (map! :leader
@@ -1844,7 +1846,17 @@ org-bullets由于字体原因, 显示不佳.
 #+end_src
 
 
-* modules/gwp/org
+* modules/org-hack
+新思路:
+- fork doom-emacs, 修改之. 将其中的org module更名后, 放到pkg下载入?
+- 这样易于跟踪官方进度?
+- 需要同时打开lang/org module, 以正确加载autoload函数(似乎不能加
+  载~/.doom.d/moudles/gwp下的定义).
+- 新的gwp/org会覆盖lang/org中的设置
+
+[[file:doom-hacks/modules/lang/org/][file:~/Workspace/Programming/emacs/doom-hacks/modules/lang/org/]]
+
+* modules/gwp/org/deprecated
 ** docs
 以doom org modules为基础, 开始自定义.
 - [[file:doom-emacs/modules/lang/org/README.org]]
@@ -2374,16 +2386,6 @@ org-bullets由于字体原因, 显示不佳.
   (when (featurep! :lang rst)
     (package! ox-rst :pin "9158bfd180"))
 #+end_src
-
-* modules/org-hack
-新思路:
-- fork doom-emacs, 修改之. 将其中的org module更名后, 放到pkg下载入?
-- 这样易于跟踪官方进度?
-- 需要同时打开lang/org module, 以正确加载autoload函数(似乎不能加
-  载~/.doom.d/moudles/gwp下的定义).
-- 新的gwp/org会覆盖lang/org中的设置
-
-[[file:doom-hacks/modules/lang/org/][file:~/Workspace/Programming/emacs/doom-hacks/modules/lang/org/]]
 
 * snippets
 :PROPERTIES:

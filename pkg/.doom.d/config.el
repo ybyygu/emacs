@@ -87,7 +87,7 @@ containing the current file by the default explorer."
                          (dired-get-file-for-visit)
                        buffer-file-name)))
       (if file-path
-          (spacemacs//open-in-external-app file-path)
+          (spacemacs/open-in-external-app file-path)
         (message "No file associated to this buffer.")))
     )
   )

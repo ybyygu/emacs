@@ -61,4 +61,6 @@
 (package! golden-ratio)
 (package! zoom)
 
+(package! org-download)
+
 (package! doom-snippets :ignore t)

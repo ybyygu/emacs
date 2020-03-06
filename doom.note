@@ -8,10 +8,7 @@ doom配置参考
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 
 * Memo [5/11]
-** TODO [2020-03-05 Thu] 截图新方式: org-capture + org-download
-:PROPERTIES:
-:ID:       c66ea641-b7d3-41e5-9cba-5c10c47ebe0f
-:END:
+** TODO [2020-03-05 Thu] 截图新方式: org-capture + org-download?
 - 参考: [[https://emacs.stackexchange.com/questions/41016/how-can-i-yank-images-from-emacs][osx - How can I yank images from Emacs? - Emacs Stack Exchange]]
 - [2020-03-06 Fri] org-download-delete有问题, 不能用了.
 - 使用下面的脚本, 从X11 clipboard复制截图, 这样避免了截图时emacs窗口如何最小化的
@@ -511,6 +508,7 @@ stow:
   ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
   ;; they are implemented.
 #+END_SRC
+
 *** 字符编辑
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
@@ -620,6 +618,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
         :n "y" #'gwp/dired-copy-file-path
         )
 #+end_src
+
 *** org
 #+begin_src emacs-lisp
   ;; If you use `org' and don't want your org files in the default location below,
@@ -714,12 +713,6 @@ deadgrep与doom有冲突, 不能用了.
 #+begin_src emacs-lisp
   (after! smartparens
           (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
-
-  ;; (after! rust-mode
-  ;;         (use-package clean-aindent-mode
-  ;;           :config (clean-aindent-mode)
-  ;;           )
-  ;;         )
 #+end_src
 
 *** magit
@@ -1084,7 +1077,7 @@ org-bullets由于字体原因, 显示不佳.
 #+end_src
 
 ** screenshot
-[2020-03-06 Fri] 目前最佳方案: 使用org-download来实现屏幕截图的功能
+目前最佳方案: 使用org-download来实现屏幕截图的功能
 - 在firefox或deepin-screenshot等截图后复制到X11剪贴板.
 - 使用org-screenshot-dwim.sh为org-download的截图工具, 将剪贴板里的图片下载到
   org-download指定的临时文件.
@@ -1093,44 +1086,29 @@ org-bullets由于字体原因, 显示不佳.
   - 自动添加图片显示参数, 设定在org中显示的大小
   - 可以使用org-download-delete来删除当前image
 
-[2020-03-06 Fri] 在doom中org-download的annotation功能无效. 下面的代码禁用, 直接
-在org module修改了.
+目前的问题 ([2020-03-06 Fri])
+- 第二次执行截图时, 如果clipboard无图, emacs会挂住, 原因不明, 现在无解.
+
 #+begin_src emacs-lisp
-  ;; 原版的容易把emacs挂住, 由于shell-coomand-to-string
-  (defun gwp/org-download-screenshot ()
-    "Capture screenshot and insert the resulting file.
-  The screenshot tool is determined by `org-download-screenshot-method'."
-    (interactive)
-    (require 'org-download)
-    (let ((default-directory "~"))
-      (make-directory (file-name-directory org-download-screenshot-file) t)
-      ;; (shell-command-to-string
-      ;;  (format org-download-screenshot-method
-      ;;          org-download-screenshot-file))
-      (start-process-shell-command
-       "org-download-edit"
-       "org-download-edit"
-       (format "txclip paste --image -o %s" org-download-screenshot-file)
-       ))
-    (when (file-exists-p org-download-screenshot-file)
-      (org-download-image org-download-screenshot-file)
-      (delete-file org-download-screenshot-file)))
-
-
   (defun gwp/org-image-attributes-default (&optional caption)
     "default image attributes: caption, name label, width ..."
-    (format (concat
-             ;; #+DOWNLOAD mark: for easy to delete using org-download
-             (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
-             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
-             ;; set unique figure name
-             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-             ;; unit in px; for displaying in org-mode
-             "#+attr_org: :width 800\n"
-             ;; unit in cm; for exporting as odt
-             "#+attr_odt: :width 10"
-             )
-            )
+      "Annotate LINK with the time of download."
+      (format (concat
+               (format "#+DOWNLOADED: %s @ %s\n"
+                       (if (equal link org-download-screenshot-file)
+                           "screenshot"
+                         link)
+                       (format-time-string "%Y-%m-%d %H:%M:%S"))
+               (concat  "#+caption: " (read-string "Caption: " caption) "\n")
+               ;; set unique figure name
+               (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+               ;; unit in px; for displaying in org-mode
+               "#+attr_org: :width 800\n"
+               ;; unit in cm; for exporting as odt
+               "#+attr_odt: :width 10\n"
+               )
+              )
+
     )
 
   (defun gwp/org-insert-image-attributes (&optional caption)
@@ -1152,7 +1130,7 @@ org-bullets由于字体原因, 显示不佳.
                 :config
                 (progn
                   (setq org-download-method 'attach
-                        ;; org-download-annotate-function 'gwp/org-download-annotate ; 有点问题, 暂时禁用
+                        org-download-annotate-function 'gwp/org-download-annotate
                         ;; org-download-image-html-width 900 ; in px
                         ;; org-download-image-latex-width 16 ; in cm
                         org-download-screenshot-method

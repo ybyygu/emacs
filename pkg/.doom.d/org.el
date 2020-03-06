@@ -195,41 +195,25 @@ If on a:
 ;; dwim-at-point:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*screenshot][screenshot:1]]
-;; 原版的容易把emacs挂住, 由于shell-coomand-to-string
-(defun gwp/org-download-screenshot ()
-  "Capture screenshot and insert the resulting file.
-The screenshot tool is determined by `org-download-screenshot-method'."
-  (interactive)
-  (require 'org-download)
-  (let ((default-directory "~"))
-    (make-directory (file-name-directory org-download-screenshot-file) t)
-    ;; (shell-command-to-string
-    ;;  (format org-download-screenshot-method
-    ;;          org-download-screenshot-file))
-    (start-process-shell-command
-     "org-download-edit"
-     "org-download-edit"
-     (format "txclip paste --image -o %s" org-download-screenshot-file)
-     ))
-  (when (file-exists-p org-download-screenshot-file)
-    (org-download-image org-download-screenshot-file)
-    (delete-file org-download-screenshot-file)))
-
-
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
-  (format (concat
-           ;; #+DOWNLOAD mark: for easy to delete using org-download
-           (format "#+DOWNLOADED: @ %s\n" (format-time-string "%Y-%m-%d %H:%M:%S"))
-           (concat  "#+caption: " (read-string "Caption: " caption) "\n")
-           ;; set unique figure name
-           (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-           ;; unit in px; for displaying in org-mode
-           "#+attr_org: :width 800\n"
-           ;; unit in cm; for exporting as odt
-           "#+attr_odt: :width 10"
-           )
-          )
+    "Annotate LINK with the time of download."
+    (format (concat
+             (format "#+DOWNLOADED: %s @ %s\n"
+                     (if (equal link org-download-screenshot-file)
+                         "screenshot"
+                       link)
+                     (format-time-string "%Y-%m-%d %H:%M:%S"))
+             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
+             ;; set unique figure name
+             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+             ;; unit in px; for displaying in org-mode
+             "#+attr_org: :width 800\n"
+             ;; unit in cm; for exporting as odt
+             "#+attr_odt: :width 10\n"
+             )
+            )
+
   )
 
 (defun gwp/org-insert-image-attributes (&optional caption)
@@ -251,7 +235,7 @@ The screenshot tool is determined by `org-download-screenshot-method'."
               :config
               (progn
                 (setq org-download-method 'attach
-                      ;; org-download-annotate-function 'gwp/org-download-annotate ; 有点问题, 暂时禁用
+                      org-download-annotate-function 'gwp/org-download-annotate
                       ;; org-download-image-html-width 900 ; in px
                       ;; org-download-image-latex-width 16 ; in cm
                       org-download-screenshot-method

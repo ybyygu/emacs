@@ -1,5 +1,3 @@
-;; orign
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*orign][orign:1]]
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
@@ -46,18 +44,9 @@
 ;; they are implemented.
 ;; orign:1 ends here
 
-;; 字符编辑
-;; 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*字符编辑][字符编辑:1]]
 (setq evil-want-fine-undo t)
 ;; 字符编辑:1 ends here
-
-;; window
-;; 自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
-;; 命令手动开启.
-
-;; 对应命令: SPC-w z
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
 (use-package! zoom
@@ -70,23 +59,13 @@
               )
 ;; window:1 ends here
 
-
-
-;; 打开doom popup窗口, 默认仅在normal state下可用.
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]
 (map! :i "C-`" #'+popup/toggle)
 ;; window:3 ends here
 
-;; line number
-;; 默认不显示行号
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*line number][line number:1]]
 (setq display-line-numbers-type nil)
 ;; line number:1 ends here
-
-;; dired hacks
-;; 用于在dired中复制当前文件的全路径.
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dired hacks][dired hacks:1]]
 (defun gwp/dired-copy-file-path()
@@ -102,8 +81,6 @@
       )
 ;; dired hacks:1 ends here
 
-;; org
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*org][org:1]]
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -115,9 +92,6 @@
 
 (after! org (load! "org"))
 ;; org:1 ends here
-
-;; open-file-externally
-;; 从spacemacs中改过来的
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*open-file-externally][open-file-externally:1]]
 (defun spacemacs/open-in-external-app (file-path)
@@ -144,10 +118,6 @@ containing the current file by the default explorer."
   )
 ;; open-file-externally:1 ends here
 
-;; open in terminal
-;; emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
-
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*open in terminal][open in terminal:1]]
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
@@ -168,9 +138,6 @@ containing the current file by the default explorer."
   )
 ;; open in terminal:1 ends here
 
-;; deadgrep
-;; search org note files
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*deadgrep][deadgrep:1]]
 ;;;###autoload
 (defun gwp/search-all-notes (arg)
@@ -183,22 +150,10 @@ containing the current file by the default explorer."
   )
 ;; deadgrep:1 ends here
 
-;; rust
-;; 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
-;; - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*rust][rust:1]]
 (after! smartparens
         (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
-
-;; (after! rust-mode
-;;         (use-package clean-aindent-mode
-;;           :config (clean-aindent-mode)
-;;           )
-;;         )
 ;; rust:1 ends here
-
-;; chinese fonts setup
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
 (use-package! cnfonts
@@ -212,8 +167,6 @@ containing the current file by the default explorer."
   )
 ;; chinese fonts setup:1 ends here
 
-;; theme
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -223,10 +176,6 @@ containing the current file by the default explorer."
 (load-theme 'material t)
 ;; theme:1 ends here
 
-
-
-;; 用avy在多个窗口下跳转也很方便.
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:2]]
 (use-package! avy
               :config
@@ -234,18 +183,11 @@ containing the current file by the default explorer."
               )
 ;; window:2 ends here
 
-;; magit
-;; spacemacs中的习惯, 加回来, 避免忙中出错
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*magit][magit:1]]
 (after! magit
         (map! :map doom-leader-git-map "s" #'magit-status)
         )
 ;; magit:1 ends here
-
-;; 常用按键
-;; [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
-
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:1]]
 (map! :nvim "C-a" nil)
@@ -269,11 +211,6 @@ containing the current file by the default explorer."
               )
         )
 ;; 常用按键:1 ends here
-
-
-
-;; 默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
-;; 重要代码. 载入doom中的默认按键绑定: [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#load][load!用法]]
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:2]]
 ;; Make M-x harder to miss

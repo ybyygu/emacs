@@ -7,7 +7,10 @@ doom配置参考
 - https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 
-* Memo [5/10]
+* Memo [5/11]
+** TODO [2020-03-05 Thu] 截图新方式: org-capture + org-download
+- [[https://emacs.stackexchange.com/questions/41016/how-can-i-yank-images-from-emacs][osx - How can I yank images from Emacs? - Emacs Stack Exchange]]
+
 ** TODO [2020-03-01 Sun] 各种emacs distribution
 - [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
 
@@ -1338,6 +1341,8 @@ org-bullets由于字体原因, 显示不佳.
   (map! :leader
         ;;; <leader> c --- code
         (:prefix-map ("c" . "code")
+          :desc "indent region"                         "TAB" #'indent-region
+          :desc "indent region"                         [tab] #'indent-region
           :desc "LSP Execute code action"               "a"   #'lsp-execute-code-action
           :desc "Compile"                               "c"   #'compile
           :desc "Recompile"                             "C"   #'recompile

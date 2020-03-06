@@ -89,6 +89,8 @@
 (map! :leader
       ;;; <leader> c --- code
       (:prefix-map ("c" . "code")
+        :desc "indent region"                         "TAB" #'indent-region
+        :desc "indent region"                         [tab] #'indent-region
         :desc "LSP Execute code action"               "a"   #'lsp-execute-code-action
         :desc "Compile"                               "c"   #'compile
         :desc "Recompile"                             "C"   #'recompile

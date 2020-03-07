@@ -1,3 +1,5 @@
+;; 基本设置
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*基本设置][基本设置:1]]
 (setq org-blank-before-new-entry nil)
 (setq org-default-notes-file (concat org-directory "/life.note"))
@@ -12,6 +14,8 @@
 (remove-hook! 'org-mode-hook #'flyspell-mode)
 (flyspell-mode 0)
 ;; 基本设置:1 ends here
+
+;; 按键行为
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
 (defun gwp/new-memo (arg)
@@ -61,20 +65,30 @@
       )
 ;; 按键行为:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:1]]
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("b" . "org-babel")
-        :desc "insert header argument" "i" #'org-babel-insert-header-arg
-        :desc "tangle blocks at point" "b" #'gwp/org-babel-tangle-blocks
-        :desc "tangle blocks in subtree" "t" #'gwp/org-tangle-subtree
-        :desc "tangle blocks in buffer" "T" #'org-babel-tangle
-        )
-      ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
-      :leader
-      :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-blocks
-      )
+;; jump
+;; 从org文件跳转到tangled file
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*jump][jump:1]]
+;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
+(defun gwp/org-babel-tangle-jump-to-file ()
+  "Jump to tangle file for the source block at point."
+  (interactive)
+  (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
+    (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
+                         (setq file filename)))
+          ((symbol-function 'delete-file) #'ignore))
+      (org-babel-tangle '(4)))
+    (when file
+      (setq file (expand-file-name file))
+      (if (file-readable-p file)
+      (find-file file)
+    (error "Cannot open tangle file %S" file)))))
+;; jump:1 ends here
+
+;; tangle
+;; 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:1]]
 ;; tangle blocks for current file at point
 ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
 ;; call org-babel-tangle with C-u C-u
@@ -94,6 +108,39 @@
   (widen)
   )
 ;; tangle:1 ends here
+
+;; bindings
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("b" . "org-babel")
+        :desc "check src block headers"    "c" #'org-babel-check-src-block
+        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
+        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
+        :desc "demarcate block"            "d" #'org-babel-demarcate-block
+        :desc "jump to file tangled file"  "j" #'gwp/org-babel-tangle-jump-to-file
+        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
+        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-blocks
+        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+        )
+      ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
+      :leader
+      :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-blocks
+      )
+;; bindings:1 ends here
+
+;; org-noter
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter][org-noter:1]]
+(use-package! org-noter
+  :after org-mode
+  )
+;; org-noter:1 ends here
+
+;; dwim-at-point
+;; 从doom中的org module中摘出来, 略作修改.
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-at-point][dwim-at-point:1]]
 (defun gwp/dwim-at-point ()
@@ -194,6 +241,20 @@ If on a:
       (_ (+org--refresh-inline-images-in-subtree)))))
 ;; dwim-at-point:1 ends here
 
+;; screenshot
+;; 目前最佳方案: 使用org-download来实现屏幕截图的功能
+;; - 在firefox或deepin-screenshot等截图后复制到X11剪贴板.
+;; - 使用org-screenshot-dwim.sh为org-download的截图工具, 将剪贴板里的图片下载到
+;;   org-download指定的临时文件.
+;; - 调用org-download-screenshot完成后续操作.
+;;   - 图片自动保存到org attachment目录
+;;   - 自动添加图片显示参数, 设定在org中显示的大小
+;;   - 可以使用org-download-delete来删除当前image
+
+;; 目前的问题 ([2020-03-06 Fri])
+;; - 第二次执行截图时, 如果clipboard无图, emacs会挂住, 原因不明, 现在无解.
+
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
@@ -245,6 +306,9 @@ If on a:
                       )))
 ;; screenshot:1 ends here
 
+;; init
+;; 几个重要的header args:
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*init][init:1]]
 ;; helper functions for literate programming
 ;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
@@ -265,6 +329,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 ;; init:1 ends here
 
+;; enter
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*enter][enter:1]]
 ;; 禁用代码着色, 影响速度
 (setq org-src-fontify-natively nil)
@@ -282,6 +348,11 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       :localleader ";" #'org-edit-special
       )
 ;; enter:1 ends here
+
+;; edit
+;; - org-babel-demarcate-block: 可以用来将选中代码分割为不同的代码块.
+;; - org-babel-do-key-sequence-in-edit-buffer: 在当前代码下直接执行src code语境下的命令
+
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*edit][edit:1]]
 ;; 用于激活 localleader

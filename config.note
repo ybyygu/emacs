@@ -3,7 +3,9 @@
 #+STARTUP: indent
 # Created: 2016-10-14 14:20
 
-* Memo [13/25]
+* Memo [13/24]
+** [2020-03-08 Sun] 弃用spacemacs, 改投doom-emacs. 这里不再更新.
+
 ** [2019-10-04 Fri] 添加新按键 SPC-o-i 在org-mode中插入新代码, 并进入编辑模式
 
 ** [2019-10-03 Thu] org-mode 9.2更新导致的问题

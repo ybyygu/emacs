@@ -199,6 +199,10 @@ https://segmentfault.com/q/1010000000118837
 ** 编辑功能
 选中文字后按S, 再按"(" 可在选中字符前后加括号.
 
+** magit
+- 在magit status窗口, 可以直接使用dired访问文件: magit-dired-jump (C-M-i)
+- 使用yadm管理dotfiles, SPC-g-.
+
 ** dired-jump
 | SPC-f-j |
 
@@ -212,9 +216,707 @@ https://segmentfault.com/q/1010000000118837
 ** doom
 spc h m d: doom-help-module
 
-* Literate Programming in Rust
+* Tips
+阅读文档 ~SPC h r~
+** 调试emacs
+真好用.
+: debug-on-error
+** 文档跳转
+: goto-last-change
+
+** 书签管理
+: SPC f b
+: helm-filtered-bookmarks
+
+** Editing styles
+=dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
+
+** iedit mode
+使用vim的方式搜索时, 可以进入iedit-mode, 同时编辑多处匹配项. 退出时, 按两下ESC.
+
+** 窗口管理 (window/frame)
+| ~SPC w F~ | new frame      |
+| ~SPC w v~ | vertical split |
+| ~SPC w d~ | remove window  |
+| ~SPC w r~ | swap windows   |
+| ~SPC w f~ | follow mode    |
+
+看所有与~SPC w~有关的绑定 ~SPC w C-h C-h~
+
+** 删除空格
+- just-one-space 默认绑定为 ~Ｍ-SPC~
+
+** 切换只读模式
+: SPC b w
+
+** magit
+| SPC g s  | status                |                             |
+| SPC g S  | stage file            |                             |
+| SPC g fh | magit-log-buffer-file | Show log for current buffer |
+
+: reset: O
+: discard: x
+
+** Movement
+| Key Binding | Description                            |
+|-------------+----------------------------------------|
+| ~g h~       | Move up one level in headings          |
+| ~g j~       | Move to next heading on same level     |
+| ~g k~       | Move to previous heading on same level |
+| ~g l~       | Move down one level in headings        |
+
+** 粘贴替换选中文字
+vi模式下使用P命令.
+** gold-ratio 可以自动放大当前的 window 区域: SPC t g
+** 使用外部程序打开文件的方式
+emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:
+1. dired-jump (SPC fj): 使用 dired 打开当前文件所在目录
+2. 在 dired 界面上选择某个文件, 使用 external 程序打开 (SPC fo).
+3. 也可以在 dired 界面上用"!"或"&"命令, 指定任意程序打开.
+
+** 打开buffer文件所在目录
+~SPC u SPC f o~
+
+** user-init 和 user-config
+from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
+
+1.12 Should I place my settings in user-init or user-config?
+
+Any variable that layer configuration code will read and act on must be set in
+user-init, and any variable that Spacemacs explicitly sets but you wish to
+override must be set in user-config.
+
+Anything that isn't just setting a variable should 99% be in user-config.
+** 打开.spacemacs 配置文件
+: SPC f e d
+** 调整字体大小 (zoom)
+: SPC z x +/-
+** universal arguments
+SPC u
+
+
+* TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
+
+* TODO Research Writing Workflow
+** 基本流程
+- 使用org-mode来完成文字, 图片, 表格, 公式等内容.
+- 导出为odt格式.
+- 使用[[http://zotero-odf-scan.github.io/zotero-odf-scan/][RTF/ODF-Scan for Zotero]] 来格式化zotero引用.
+  - [2018-01-05 Fri] 已自定义export函数, 不必使用odf-scan, odt导出一步到位.
+- 在Libreoffice中进行必要的修改.
+- 输出PDF和或doc.
+
+** org odt export
+- odt导出功能非常强大, 对于普通用户, odt无疑比latex的易用性和可定制性更强.
+- 可以在org buffer里指定odt模板文件. 使用odt而不是ott格式会更方便一些, 因为打开
+  ott时没有具体的内容可参照修改结果.
+- 码公式的时候, 使用"begin{equation*}"block, odt会自动编号. 不能设置scale, width
+  等图片属性.
+
+References
+- [[https://github.com/emacsmirror/org/blob/master/lisp/ox-odt.el][org/ox-odt.el at master · emacsmirror/org]]
+- [[https://orgmode.org/manual/OpenDocument-Text-export.html][The Org Manual: OpenDocument Text export]]
+
+** RTF/ODF-scan插件
+这个插件可以将纯文本的引文标记, 格式化为zotero word processor可处理的zotero引文.
+此外, 这个扩展还可以反向的将zotero word processor处理后的引文转换成纯文件标记.
+
+从官网下载扩展后, 在zotero standalone的addone窗口安装.
+
+1. 在zotero中设置好quick copy的输出格式为 "scannable cite".
+2. 在zotero中选择目标条目, 将其拖入org-mode当即可.
+3. 通过修改config选项(ODFScan.useZoteroSelect), odfscan marker字段中的最后一项也
+   可以为zotero链接. 但在格式化时不能正常生成odt文件, 这可能是一个bug.
+
+* TODO Research Literature Management Workflow
+将annotation.note放到zotero内置库里的优点和问题:
+- 优点: 以zotero为中心进行数据管理. 从文献到笔记很方便.
+- 优点: note和pdf路径相对稳定, 不用担心更换系统后文件路径变化导致的问题.
+- 问题: 不能方便地在zotero界面里进行搜索 (需要fulltext index) (但可以用自编工具
+  notesearch来处理, 不过需要定期更新cache)
+
+** 使用org-noter批注
+[2020-01-01 Wed] org-noter比interleave功能更强.
+
+流程:
+- 在zotero界面, 选中待批注的PDF, "copy attachment path"
+- 在普通的org文件中将zotero中的PDF列为附件.
+- 打开org-noter批注该附件.
+
+优点:
+- Note和PDF直接关联, 不需要写任何代码. 方便易用.
+- 原始zotero数据库中的为父本, 不同Note中的批注的有不同的副本.
+- 不需要更新.cache/notes列表.
+
+** 使用interleave批注流程
+- 在zotero界面, 选中待批注的PDF, "copy attachment path"
+- 打开org-capture, 使用interleave模板, 生成~/annotation.note
+- 在zotero界面, 使用zotfile的 "Attach New File"功能, 自动将annotation.note加入附
+  件. (注意需要修改设置, 将note列入zotfile可管理的文件类型)
+- 在zotero界面, 双击打开附入的note文件, 进入interleave编辑模式.
+
+** References
+- [[https://codearsonist.com/reading-for-programmers][Piotr Limanowski: Reading for Programmers]]
+- [[https://www.researchgate.net/post/What_reference_manager_is_used_for_Emacs_users][What reference manager is used for Emacs users?]]
+- [[http://www.mkbehr.com/posts/a-research-workflow-with-zotero-and-org-mode/][A research workflow with Zotero and Org mode | mkbehr.com]]
+- [[https://emacs.stackexchange.com/questions/24725/zotero-workflow-into-emacs][org mode - zotero workflow into emacs? - Emacs Stack Exchange]]
+
+* TODO Literate Programming Workflow
+- 在代码窗口编辑时, 使用C-x C-s来保存buffer. 不要使用:w, 这样会多出一份代码的临时文件
+- 代码修改后, 使用gwp/org-babel-tangle-block函数来仅tangle当前block对应的代码文
+  件. 可以在代码编辑窗口直接使用, 该函数会自动保存代码.
+- 使用swoop来实现常规跳转, 使用helm-org-in-buffer-headings实验代码块跳转.
+- 重要的tangle参数已在配置文件中做全局设置, 比如: ~padline~ ~mkdirp~ ~comments~
+
+* TODO scripts
+** take-screenshot-dwim
+屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
+
+#+header: :tangle pkg/.local/bin/take-screenshot-dwim :shebang #! /usr/bin/bash
+#+name: 21060be1-2114-40f2-9bcd-319bdbef9e06
+#+begin_src shell
+  [[ $# < 1 ]] && echo "no image path" && exit 0
+
+  # switch to active window
+  xdotool keydown alt key Tab; xdotool keyup alt
+  # take a screenshot
+  deepin-screenshot -n -s "$1" 2>/dev/null
+  # switch back
+  xdotool keydown alt key Tab; xdotool keyup alt
+#+end_src
+
+** org-capture
+#+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
+#+header: :mkdirp yes :comments yes :padline yes
+#+name: 3fad2a66-0391-420f-8a2d-049460433d5c
+#+begin_src shell
+  emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
+#+end_src
+
+** org-agenda
+#+header: :mkdirp yes :comments yes :padline yes
+#+header: :shebang #! /usr/bin/env bash
+#+name: 97e265a3-58ad-40b4-9d45-432f8cd691e1
+#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
+  emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
+#+end_src
+
+** org-read-todo
+#+name: 35d32554-49c1-49f0-a3b4-133c55d4bb40
+#+BEGIN_SRC sh
+  dir_read_root=~/ToDo/READ/Research
+  dir_topic=$(basename "`pwd`")
+
+  dir_read="$dir_read_root"/"$dir_topic"
+
+  mkdir -p "$dir_read"
+
+  cp "$(pwd)/${1#file:}" "$dir_read"/
+
+#+END_SRC
+** org-read-done
+#+name: 9f195a19-a2f1-4e9a-b957-eecd963d0bbf
+#+BEGIN_SRC sh
+  dir_read_root=~/ToDo/READ/Research
+  dir_topic=$(basename "`pwd`")
+
+  dir_read="$dir_read_root"/"$dir_topic"
+
+  path="$dir_read"/$(basename "${1#file:}")
+
+  [[ -f "$path" ]] && rm -f "$path"
+
+#+END_SRC
+** emacsclient-open
+:PROPERTIES:
+:header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
+:END:
+*** header
+#+name: 0c47c380-c352-46e3-adf7-4dcc4ff91461
+#+begin_src python
+  # -*- coding: utf-8 -*-
+  #==============================================================================#
+  #   DESCRIPTION:  open text file with emacsclient and register the it into the
+  #                 recently-used-files list (~/.recently-used.xbel)
+  #
+  #       OPTIONS:  ---
+  #  REQUIREMENTS:  ---
+  #         NOTES:
+  #        AUTHOR:  Wenping Guo (ybyygu)
+  #         EMAIL:  winpng@gmail.com
+  #       LICENCE:  GPL version 2 or upper
+  #       CREATED:  <2010-09-01 Wed 16:04>
+  #       UPDATED:  <>
+  #==============================================================================#
+  #
+  # basically, to make emacsclient perfect, there are three things need be done:
+  # 1. use parameter "-a ''", that is, use a void alternate-editor to automatically start
+  #    emacs daemon
+  # 2. open the file without "-n" option to make sure the file buffer will be killed when frame
+  #    is closed
+  # 3. if the file has been opened, use "-n" option.
+
+#+end_src
+
+*** main
+#+name: 3f61daf6-b502-45be-b24b-cbf63b31fed4
+#+begin_src python
+  import os
+  import sys
+  import subprocess
+
+  def check_emacs_client(path):
+      """check if the file has been opened by emacsclient"""
+      cmdlines = ["/usr/bin/pgrep", "-fa", "emacsclient -c"]
+      output = subprocess.Popen(cmdlines,
+                                universal_newlines=True,  # output is a str not bytes
+                                stdout=subprocess.PIPE).stdout.read()
+      print(output)
+      if path in output:
+          return True
+      return False
+
+  if len(sys.argv) == 1:
+      print("%s: open file using emacsclient." % (__file__))
+      sys.exit(0)
+
+  path = os.path.abspath(sys.argv[1])
+  if check_emacs_client(path):
+      print("{:} is opened.".format(path))
+      args = ["emacsclient", "-n", path]
+      subprocess.call(args)
+  else:
+      args = ["emacsclient", "-c", "-a", "", path]
+      subprocess.Popen(args)
+
+#+end_src
+
+** org-archive.py
+:PROPERTIES:
+:header-args: :tangle pkg/.local/bin/org-archive.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python2
+:END:
+*** header
+#+name: 41b21fcc-9294-4fac-b9c5-0039ebc9921d
+#+begin_src python
+  # -*- coding: utf-8 -*-
+  #====================================================================#
+  #   DESCRIPTION:  create tar.xz archive of org-mode file including
+  #                 all files under current directory
+  #
+  #       OPTIONS:  ---
+  #  REQUIREMENTS:  ---
+  #         NOTES:  ---
+  #        AUTHOR:  Wenping Guo (ybyygu)
+  #         EMAIL:  winpng@gmail.com
+  #       LICENCE:  GPL version 2 or upper
+  #       CREATED:  <2011-11-18 Fri 13:29>
+  #       UPDATED:  <>
+  #====================================================================#
+#+end_src
+
+*** globals
+#+name: 53bf16e1-b093-45ae-8f22-22c27f7447f2
+#+begin_src python
+  __VERSION__ = '0.1'
+  __UPDATED__ = '2013-01-16 14:13:56 ybyygu'
+
+  import sys
+  import os
+  import re
+  import urllib
+
+  rex_file = re.compile(r'.*\[\[file:([^\]]+)\]')
+  rex_css = re.compile(r'.*href="([^"]+)".*')
+
+#+end_src
+*** main
+#+name: 6f7a73df-dc80-42a4-bdd8-adebd1546683
+#+begin_src python
+  def find_linked_files(filename):
+      """
+      find linked files (image or css style etc) from filename in
+      org-mode syntax
+      """
+      files = []
+
+      with open(filename) as fp:
+          for line in fp:
+              if rex_file.match(line):
+                  afile = rex_file.match(line).groups()[0]
+                  if afile:
+                      files.append(afile)
+              elif rex_css.match(line):
+                  afile = rex_css.match(line).groups()[0]
+                  if afile and not afile.startswith("http"):
+                      files.append(afile)
+
+      return files
+
+  def make_tar_archive(files, archive_name):
+      import tarfile
+
+      tar = tarfile.open(archive_name, mode="w", dereference=True)
+      lists = set([])
+      for afile in files:
+          afile = urllib.unquote(afile)
+          if os.path.exists(afile):
+              print("included {}".format(afile))
+              lists.add(afile)
+          else:
+              print("{} is not in current directory!".format(afile))
+      for afile in lists:
+          tar.add(afile)
+      tar.close()
+
+
+  def main(argv=None):
+      import optparse
+
+      if argv == None: argv = sys.argv
+
+      # parsing cmdline
+      cmdl_usage = 'usage: %prog [options]...[queue_id]'
+      cmdl_version = "%prog " + __VERSION__
+      cmdl_parser = optparse.OptionParser(usage=cmdl_usage, \
+                                          version=cmdl_version, \
+                                          conflict_handler='resolve')
+      cmdl_parser.add_option('-h', '--help',
+                             action='help',
+                             help='print this help text and exit')
+      cmdl_parser.add_option('-v', '--version',
+                             action='version',
+                             help='print program version and exit')
+      # cmdl_parser.add_option('-f', '--file', dest='file',
+      #                         help='start from this gjf file')
+      # cmdl_parser.add_option('-p', '--pause', dest='pause',
+      #                         action="store_true", default=False,
+      #                         help='pause running job.')
+      (cmdl_opts, cmdl_args) = cmdl_parser.parse_args()
+
+      filename = cmdl_args[0]
+
+      files = find_linked_files(filename)
+      files.append(filename)
+      make_tar_archive(files, archive_name="{}.tar".format(filename))
+
+  if __name__ == '__main__':
+      main()
+#+end_src
+
+* TODO desktop integration
+** emacsclient-open
+#+begin_src config :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
+  [Desktop Entry]
+  Version=1.0
+  Name=Emacs Client - GWP
+  GenericName=Text Editor
+  Comment=View and edit files
+  MimeType=application/x-note;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+  Exec=emacsclient-open.py %F
+  TryExec=emacs
+  Icon=emacs
+  Type=Application
+  Terminal=false
+  Categories=Utility;Development;TextEditor;
+#+end_src
+
+** org-capture
+#+begin_src text :tangle pkg/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
+  [Desktop Entry]
+  Version=1.0
+  Name=Org Capture
+  Comment=Capture using emacs org-mode
+  Exec=org-capture.sh
+  TryExec=emacs
+  Icon=emacs
+  Type=Application
+  Terminal=false
+  Categories=Utility;Development;TextEditor;
+#+end_src
+
+** org-protocol
+#+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :mkdirp yes
+#+name: bf3d535a-e442-47d0-a51c-4f927597df5b
+#+BEGIN_SRC text
+  [Desktop Entry]
+  Name=org-protocol
+  Exec=emacsclient %U
+  Icon=zotero
+  Type=Application
+  Terminal=false
+  MimeType=x-scheme-handler/org-protocol;
+#+END_SRC
+
+** install
+1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
+2. 安装桌面文件.
+3. 将python脚本软链接到$HOME/.local/bin目录下. 注意这里的路径要与
+   desktop文件所指定的一定.
+
+更新desktop数据库
+#+name: e841dc00-8b8d-41f2-9bbd-544002bd491a
+#+BEGIN_SRC shell
+  update-desktop-database ~/.local/share/applications/
+#+END_SRC
+
+#+name: 4b022845-2350-486c-a709-bda609c878fb
+#+begin_src shell
+  desktop-file-validate gwp-emacsclient.desktop
+  desktop-file-validate gwp-org-capture.desktop
+  xdg-desktop-menu install gwp-emacsclient.desktop
+  xdg-desktop-menu install gwp-org-capture.desktop
+#+end_src
+
+* TODO deprecated
+** text
+*** 常规操作
+1. mark: C-@, C-M-SPC
+2. goto-line
+
+#+name: 85ccc98a-549e-42b1-a13c-a181c211a3c7
+#+BEGIN_SRC emacs-lisp
+  (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
+
+  ;; more convenient than C-M-BACKSPC
+  ;; (global-set-key (kbd "<f5> k") 'kill-whole-line)
+  ;; (global-set-key (kbd  "M-k") 'kill-whole-line)
+  ;; (global-set-key (kbd  "M-K") 'kill-sentence)
+
+#+END_SRC
+
+*** 按行或段移动
+: [ e move line up
+: ] e move line down
+
+#+name: e6587a14-89c7-410e-9fd2-de4cdb455092
+#+BEGIN_SRC emacs-lisp
+  (defun move-text-internal (arg)
+     (cond
+      ((and mark-active transient-mark-mode)
+       (if (> (point) (mark))
+          (exchange-point-and-mark))
+       (let ((column (current-column))
+            (text (delete-and-extract-region (point) (mark))))
+         (forward-line arg)
+         (move-to-column column t)
+         (set-mark (point))
+         (insert text)
+         (exchange-point-and-mark)
+         (setq deactivate-mark nil)))
+      (t
+       (beginning-of-line)
+       (when (or (> arg 0) (not (bobp)))
+         (forward-line)
+         (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg))
+         (forward-line -1)))))
+
+  (defun move-text-down (arg)
+     "Move region (transient-mark-mode active) or current line
+    arg lines down."
+     (interactive "*p")
+     (move-text-internal arg))
+
+  (defun move-text-up (arg)
+     "Move region (transient-mark-mode active) or current line
+    arg lines up."
+     (interactive "*p")
+     (move-text-internal (- arg))
+     )
+
+  (defun move-paragraph-down (arg)
+     "Move current paragraph down."
+     (interactive "*p")
+     (transpose-paragraphs arg)
+     (backward-paragraph arg)
+     (forward-char))
+
+  (defun move-paragraph-up (arg)
+     "Move current paragraph down."
+     (interactive "*p")
+     (transpose-paragraphs (- arg))
+     (backward-paragraph arg)
+     (forward-char))
+
+#+END_SRC
+*** 符号对操作
+**** smart-parens [[https://github.com/Fuco1/smartparens][URL]]
+比想像中的强大的多, 完全可以代替之前的设置.
+1. 可以一对对的插入或删除
+2. 可以在 region 里插入括号. 在 insert-mode 下选择区域, 按括号即可.
+
+使用方法可以参考这里: [[https://ebzzry.github.io/emacs-pairs.html][URL]]
+*** 同时编辑多处文本
+**** old config
+#+name: 8ac9b8bd-0ccb-4bb6-89a6-914381c0f406
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'iedit)
+  (require 'iedit)
+  (define-key global-map (kbd "C-;") 'iedit-mode)
+  ;; disable flyspell mode for the annoying conflicting key bindings
+  (flyspell-mode 0)
+#+END_SRC
+
+*** goto-last-change
+**** 如果需要先安装下.
+
+#+name: 1dbc4a26-174b-4ebd-ba80-1f6066815d1b
+#+BEGIN_SRC emacs-lisp
+(starter-kit-install-if-needed 'goto-last-change)
+#+END_SRC
+
+#+RESULTS:
+**** 设置快捷键
+#+name: bf562780-7ae5-49b1-ae33-3c8b18a73221
+#+BEGIN_SRC emacs-lisp
+(require 'goto-last-change)
+(global-set-key (kbd "<f5> b") 'goto-last-change)
+#+END_SRC
+
+#+RESULTS:
+: goto-last-change
+
+*** gjf-mode: 编译 gaussian GJF 文件
+#+name: da044c86-580b-4341-aa69-6331911d2969
+#+BEGIN_SRC emacs-lisp
+(require 'gjf-mode)
+#+END_SRC
+
+** development
+*** 高亮当前行
+所有已定义的颜色:
+: list-colors-display
+
+#+name: 52fcb671-cd31-4c84-bb30-c22b87b85558
+#+BEGIN_SRC emacs-lisp
+  (global-hl-line-mode 1)
+  (set-face-attribute hl-line-face nil :underline nil :background "gray0")
+#+END_SRC
+
+*** 书签&导航等
+主要用 bm, 书签持久化是从 bm.el 里抄来的.
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'bm)
+  (setq bm-restore-repository-on-load t)
+
+  (require 'bm)
+  (global-set-key (kbd "<left-fringe> <mouse-5>") 'bm-next-mouse)
+  (global-set-key (kbd "<left-margin> <mouse-5>") 'bm-next-mouse)
+  (global-set-key (kbd "<left-fringe> <mouse-4>") 'bm-previous-mouse)
+  (global-set-key (kbd "<left-margin> <mouse-4>") 'bm-previous-mouse)
+  (global-set-key [left-margin mouse-3] 'gwp-mouse-toggle-bm)
+  (global-set-key [left-fringe mouse-3] 'gwp-mouse-toggle-bm)
+
+  (setq-default bm-buffer-persistence t)
+  (add-hook' after-init-hook 'bm-repository-load)
+  (add-hook 'find-file-hooks 'bm-buffer-restore)
+  (add-hook 'kill-buffer-hook 'bm-buffer-save)
+  (add-hook 'kill-emacs-hook '(lambda nil
+                    (bm-buffer-save-all)
+                    (bm-repository-save)))
+
+  (add-hook 'after-save-hook 'bm-buffer-save)
+  ;; Restore bookmarks when buffer is reverted.
+  (add-hook 'after-revert-hook 'bm-buffer-restore)
+  ;; make sure bookmarks is saved before check-in (and revert-buffer)
+  (add-hook 'vc-before-checkin-hook 'bm-buffer-save)
+
+  (defun gwp-mouse-toggle-bm (e)
+    "Toggle bookmarking
+  This command should be bound to a mouse key.
+  Argument E is a mouse event used by `mouse-set-point'."
+    (interactive "@e")
+    (save-excursion
+      (mouse-set-point e)
+      (bm-toggle)
+      (bm-save)
+      )
+    )
+
+
+#+END_SRC
+
+#+RESULTS:
+: gwp-mouse-toggle-bm
+
+** python
+*** 使用 emacs 中自带的 python.el
+   试了下, 一切都正常. 先这么着吧.
+
+  #+name: 90a43e0b-e10c-4ce9-8d1f-d5ee95fd77f6
+  #+begin_src emacs-lisp
+    ;; (starter-kit-load "python")
+    ;; Why python.el is better than python-mode.el:
+    ;; http://mail.python.org/pipermail/python-mode/2007-October/000411.html
+
+    (starter-kit-install-if-needed 'highlight-indentation)
+
+    ;; enables IPython globally
+    (setq python-shell-interpreter "ipython"
+         python-shell-interpreter-args "--simple-prompt")
+
+    (defun my-python-hook ()
+      ;; disabled at 2013-01-19. will slow down the scrolling when codes was folded
+      (linum-mode 1)
+      ;; make left margin not jumpy
+      ;; learned from:
+      (setq linum-format "%3d\u2502")
+      (menu-bar-mode 1)
+
+      ;; easy reading the hierarchy of the code; I known that from elpy package
+      (highlight-indentation-mode 1)
+
+      ;; (load-ropemacs)
+      ;; (ropemacs-mode 1)
+
+      ;; org-mode style cycling folding
+      ;; actually does not work in v6.0.12; maybe latter version will be ok
+      ;; (setq py-org-cycle-p t)
+
+      ;; outline-magic is better than org-cycle, indeed
+      ;; http://stackoverflow.com/a/4093889/173271?sgp=2
+      ;; (define-key python-mode-map [backtab] 'outline-cycle)
+      ;; (define-key outline-minor-mode-map [M-S-down] 'outline-move-subtree-down)
+      ;; (define-key outline-minor-mode-map [M-S-up] 'outline-move-subtree-up)
+    )
+    (add-hook 'python-mode-hook 'my-python-hook)
+  #+end_src
+
+*** jedi
+jedi 依赖 auto-complete. jedi-server 安装时要将 virtualenv2 软链为
+virtualenv
+
+jedi 的快捷键:
+: C-c .
+: C-c ,
+
+#+name: 56091f33-28ce-43d6-bd64-c41bdc4f8959
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'jedi)
+  ;; (add-hook 'python-mode-hook 'jedi:setup)
+  ;; (setq jedi:complete-on-dot t)                 ; optional
+#+END_SRC
+
+** 界面显示相关
+*** 配色主题
+[[http://emacsthemes.caisah.info/][这里]] 有很多主题的图示, 看花眼了. [[https://github.com/owainlewis/emacs-color-themes][这个]] 也不错, 以很多程序员的名字命名.
+
+#+name: 5dcc9a75-85d3-4672-ab27-8b12686a61f0
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'zenburn-theme)
+  (starter-kit-install-if-needed 'smyx-theme)
+  ;;(load-theme 'zenburn t)
+  (load-theme 'smyx t)
+  ;;(load-theme 'desert t)
+  ;;(load-theme 'odersky t)
+  ;; (load-file "~/.emacs.d/src/desert-theme.el" )
+  ;; (load-file "~/.emacs.d/src/gwp-color-theme.el" )
+
+#+END_SRC
+
 
 * 配置安装
 ** stow配置管理思路

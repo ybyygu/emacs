@@ -51,6 +51,7 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! cnfonts)
+(package! fcitx)
 (package! berrys-theme)
 ;; (package! material-theme)
 (package! material-theme

@@ -302,6 +302,18 @@ containing the current file by the default explorer."
   )
 ;; vc commit之前更新时间戳:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO fcitx][fcitx:1]]
+(use-package! fcitx
+  :after evil
+  :config
+  (when (executable-find "fcitx-remote")
+    ;; (fcitx-prefix-keys-add "M-m")
+    ;; 有响应问题
+    ;; (setq fcitx-use-dbus t)
+    (fcitx-aggressive-setup)
+    ))
+;; fcitx:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
 (use-package! cnfonts
   :config

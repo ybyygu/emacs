@@ -57,9 +57,9 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
-- [ ] org-capture功能
-- [ ] odt exports功能
-- [ ] zotero links
+- [X] org-capture功能
+- [X] odt exports功能
+- [X] zotero links
 - [X] 添加re-open当前文件功能? [[https://emacs.stackexchange.com/questions/3330/how-to-reopen-just-killed-buffer-like-c-s-t-in-firefox-browser][URL]]
 - [X] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m y
 - [X] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如gnome-terminal之类顺手.
@@ -340,8 +340,6 @@ stow:
   ;;      directory (for easy access to its source code).
 
   (doom! :input
-         chinese
-         ;;japanese
 
          :completion
          company           ; the ultimate code completion backend
@@ -935,7 +933,22 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   ;; 修改 frame 标题 方便 gnome-shell 桌面切换
   (setq frame-title-format '("" "%b: " buffer-file-name))
 #+end_src
-*** vc commit之前更新时间戳
+
+*** fcitx
+自动中英文切换, 解决vim模式下的一大痛点.
+#+BEGIN_SRC emacs-lisp
+  (use-package! fcitx
+    :after evil
+    :config
+    (when (executable-find "fcitx-remote")
+      ;; (fcitx-prefix-keys-add "M-m")
+      ;; 有响应问题
+      ;; (setq fcitx-use-dbus t)
+      (fcitx-aggressive-setup)
+      ))
+#+END_SRC
+
+*** vc commit更新时间戳
 #+BEGIN_SRC emacs-lisp
   (use-package vc
     :init
@@ -951,32 +964,6 @@ spacemacs中的习惯, 加回来, 避免忙中出错
       (setq vc-follow-symlinks t)
       )
     )
-#+END_SRC
-
-*** TODO fcitx
-自动中英文切换, 解决vim模式下的一大痛点.
-#+BEGIN_SRC emacs-lisp :tangle no
-  (defun gwp/init-fcitx ()
-    (use-package fcitx
-      :init
-      (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
-      ;; M-m is common in Spacemacs
-      (fcitx-prefix-keys-add "M-m")
-
-      ;; for Linux users, it is recommended
-      (fcitx-aggressive-setup)
-      (setq fcitx-use-dbus t)
-      )
-    )
-#+END_SRC
-
-doom chinese module里的设置
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package! fcitx
-  :after evil
-  :config
-  (when (executable-find "fcitx-remote")
-    (fcitx-evil-turn-on)))
 #+END_SRC
 
 *** TODO bm
@@ -1174,12 +1161,14 @@ doom chinese module里的设置
 *** 需要安装的包
 - chfonts: 中文显示
 - golden-ratio: 自动放大当前window
+- fcitx 自动中英文切换
 - 修改版material-theme
   - 改小org-heading字体的scaling系数
   - 调整TODO, DONE的调色, 别那么刺眼
 
 #+begin_src elisp
   (package! cnfonts)
+  (package! fcitx)
   (package! berrys-theme)
   ;; (package! material-theme)
   (package! material-theme

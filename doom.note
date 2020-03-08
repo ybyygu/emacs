@@ -306,6 +306,7 @@ SPC u
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
+- 以上按键在org代码块中也可直接执行, org-babel-do-key-sequence-in-edit-buffer
 
 * TODO Research Writing Workflow
 ** 基本流程
@@ -398,7 +399,6 @@ References
 ** org-capture
 #+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
 #+header: :mkdirp yes :comments yes :padline yes
-#+name: 3fad2a66-0391-420f-8a2d-049460433d5c
 #+begin_src shell
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
 #+end_src
@@ -406,13 +406,11 @@ References
 ** org-agenda
 #+header: :mkdirp yes :comments yes :padline yes
 #+header: :shebang #! /usr/bin/env bash
-#+name: 97e265a3-58ad-40b4-9d45-432f8cd691e1
 #+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
 #+end_src
 
 ** org-read-todo
-#+name: 35d32554-49c1-49f0-a3b4-133c55d4bb40
 #+BEGIN_SRC sh
   dir_read_root=~/ToDo/READ/Research
   dir_topic=$(basename "`pwd`")
@@ -422,10 +420,9 @@ References
   mkdir -p "$dir_read"
 
   cp "$(pwd)/${1#file:}" "$dir_read"/
-
 #+END_SRC
+
 ** org-read-done
-#+name: 9f195a19-a2f1-4e9a-b957-eecd963d0bbf
 #+BEGIN_SRC sh
   dir_read_root=~/ToDo/READ/Research
   dir_topic=$(basename "`pwd`")
@@ -435,8 +432,8 @@ References
   path="$dir_read"/$(basename "${1#file:}")
 
   [[ -f "$path" ]] && rm -f "$path"
-
 #+END_SRC
+
 ** emacsclient-open
 :PROPERTIES:
 :header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
@@ -469,7 +466,6 @@ References
 #+end_src
 
 *** main
-#+name: 3f61daf6-b502-45be-b24b-cbf63b31fed4
 #+begin_src python
   import os
   import sys
@@ -498,7 +494,6 @@ References
   else:
       args = ["emacsclient", "-c", "-a", "", path]
       subprocess.Popen(args)
-
 #+end_src
 
 ** org-archive.py
@@ -506,7 +501,6 @@ References
 :header-args: :tangle pkg/.local/bin/org-archive.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python2
 :END:
 *** header
-#+name: 41b21fcc-9294-4fac-b9c5-0039ebc9921d
 #+begin_src python
   # -*- coding: utf-8 -*-
   #====================================================================#
@@ -525,7 +519,6 @@ References
 #+end_src
 
 *** globals
-#+name: 53bf16e1-b093-45ae-8f22-22c27f7447f2
 #+begin_src python
   __VERSION__ = '0.1'
   __UPDATED__ = '2013-01-16 14:13:56 ybyygu'
@@ -540,7 +533,6 @@ References
 
 #+end_src
 *** main
-#+name: 6f7a73df-dc80-42a4-bdd8-adebd1546683
 #+begin_src python
   def find_linked_files(filename):
       """
@@ -646,7 +638,6 @@ References
 
 ** org-protocol
 #+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :mkdirp yes
-#+name: bf3d535a-e442-47d0-a51c-4f927597df5b
 #+BEGIN_SRC text
   [Desktop Entry]
   Name=org-protocol
@@ -664,12 +655,10 @@ References
    desktop文件所指定的一定.
 
 更新desktop数据库
-#+name: e841dc00-8b8d-41f2-9bbd-544002bd491a
 #+BEGIN_SRC shell
   update-desktop-database ~/.local/share/applications/
 #+END_SRC
 
-#+name: 4b022845-2350-486c-a709-bda609c878fb
 #+begin_src shell
   desktop-file-validate gwp-emacsclient.desktop
   desktop-file-validate gwp-org-capture.desktop
@@ -683,7 +672,6 @@ References
 1. mark: C-@, C-M-SPC
 2. goto-line
 
-#+name: 85ccc98a-549e-42b1-a13c-a181c211a3c7
 #+BEGIN_SRC emacs-lisp
   (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
 
@@ -912,7 +900,6 @@ jedi 的快捷键:
 *** 配色主题
 [[http://emacsthemes.caisah.info/][这里]] 有很多主题的图示, 看花眼了. [[https://github.com/owainlewis/emacs-color-themes][这个]] 也不错, 以很多程序员的名字命名.
 
-#+name: 5dcc9a75-85d3-4672-ab27-8b12686a61f0
 #+BEGIN_SRC emacs-lisp
   (starter-kit-install-if-needed 'zenburn-theme)
   (starter-kit-install-if-needed 'smyx-theme)
@@ -922,7 +909,6 @@ jedi 的快捷键:
   ;;(load-theme 'odersky t)
   ;; (load-file "~/.emacs.d/src/desert-theme.el" )
   ;; (load-file "~/.emacs.d/src/gwp-color-theme.el" )
-
 #+END_SRC
 
 
@@ -3189,7 +3175,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (map! :leader
         ;;; <leader> g --- git
         (:prefix-map ("g" . "git")
-          :desc "Manage dotfiles using yadm"  "."   (lambda! (magit-status "/yadm::"))
           :desc "Git revert file"             "R"   #'vc-revert
           :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill-file-or-region
           :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage
@@ -3202,6 +3187,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
             :desc "Jump to next hunk"         "]"   #'git-gutter:next-hunk
             :desc "Jump to previous hunk"     "["   #'git-gutter:previous-hunk)
           (:when (featurep! :tools magit)
+            :desc "Manage dotfiles (yadm)"    "."   (lambda! (magit-status "/yadm::"))
             :desc "Magit dispatch"            "/"   #'magit-dispatch
             :desc "Forge dispatch"            "'"   #'forge-dispatch
             :desc "Magit switch branch"       "b"   #'magit-branch-checkout

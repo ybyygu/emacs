@@ -149,7 +149,6 @@
 (map! :leader
       ;;; <leader> g --- git
       (:prefix-map ("g" . "git")
-        :desc "Manage dotfiles using yadm"  "."   (lambda! (magit-status "/yadm::"))
         :desc "Git revert file"             "R"   #'vc-revert
         :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill-file-or-region
         :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage
@@ -162,6 +161,7 @@
           :desc "Jump to next hunk"         "]"   #'git-gutter:next-hunk
           :desc "Jump to previous hunk"     "["   #'git-gutter:previous-hunk)
         (:when (featurep! :tools magit)
+          :desc "Manage dotfiles (yadm)"    "."   (lambda! (magit-status "/yadm::"))
           :desc "Magit dispatch"            "/"   #'magit-dispatch
           :desc "Forge dispatch"            "'"   #'forge-dispatch
           :desc "Magit switch branch"       "b"   #'magit-branch-checkout

@@ -44,9 +44,128 @@
 ;; they are implemented.
 ;; orign:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*字符编辑][字符编辑:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*doom tuning][doom tuning:1]]
 (setq evil-want-fine-undo t)
-;; 字符编辑:1 ends here
+;; doom tuning:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO insert date][insert date:1]]
+(defun gwp/insert-date (arg)
+  "Insert date at point. With prefix argument, insert date and time."
+  (interactive "P")
+  (insert (format-time-string "%Y-%m-%d"))
+  (when arg
+    (insert (format-time-string " %H:%M"))
+    )
+  )
+
+;; make it easier to update time-stamp
+(map! :i "C-c i" #'gwp/insert-date)
+;; insert date:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO white space][white space:1]]
+(setq show-trailing-whitespace t)
+(global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+;; make sure this always work
+(global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+;; white space:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO advanced selection][advanced selection:1]]
+;; expand selection
+;; http://xahlee.org/emacs/modernization_mark-word.html
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun semnav-up (arg)
+  (interactive "p")
+  (when (nth 3 (syntax-ppss))
+    (if (> arg 0)
+        (progn
+          (skip-syntax-forward "^\"")
+          (goto-char (1+ (point)))
+          (decf arg))
+      (skip-syntax-backward "^\"")
+      (goto-char (1- (point)))
+      (incf arg)))
+  (up-list arg))
+
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun gwp/extend-selection (arg &optional incremental)
+  "Select the current word.
+Subsequent calls expands the selection to larger semantic unit."
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+                     (or (and transient-mark-mode mark-active)
+                         (eq last-command this-command))))
+  (if incremental
+      (progn
+        (semnav-up (- arg))
+        (forward-sexp)
+        (mark-sexp -1))
+    (if (> arg 1)
+        (extend-selection (1- arg) t)
+      (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
+          (goto-char (match-end 0))
+        (unless (memq (char-before) '(?\) ?\"))
+          (forward-sexp)))
+      (mark-sexp -1))))
+
+;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
+
+(defun gwp/select-text-in-quote ()
+"Select text between the nearest left and right delimiters.
+Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
+ (interactive)
+ (let (b1 b2)
+   (skip-chars-backward "^<>(“{[「«\"‘")
+   (setq b1 (point))
+   (skip-chars-forward "^<>)”}]」»\"’")
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+(defun gwp/select-none-blank-text ()
+"Select none blank chars near the point in current line"
+ (interactive)
+ (let (b1 b2)
+   (skip-chars-backward "^ \n")
+   (setq b1 (point))
+   (skip-chars-forward "^ \n")
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+(defun gwp/select-word ()
+"Select none blank chars near the point in current line"
+ (interactive)
+ (let (b1 b2)
+   (backward-word)
+   (setq b1 (point))
+   (forward-word)
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+(defun gwp/select-line ()
+"Select current line"
+ (interactive)
+ (let (b1 b2)
+   (move-beginning-of-line nil)
+   (setq b1 (point))
+   (move-end-of-line nil)
+   (setq b2 (point))
+   (set-mark b1)
+   )
+ )
+
+;; (global-set-key (kbd "M-*") 'select-text-in-quote)
+;; (global-set-key (kbd "M-6") 'select-line)
+;; (global-set-key (kbd "M-4") 'select-word)
+(global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
+
+;; https://github.com/magnars/expand-region.el
+;; (require 'expand-region)
+;; (global-set-key (kbd "M-4") 'er/expand-region)
+;; advanced selection:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
 (use-package! zoom
@@ -155,6 +274,34 @@ containing the current file by the default explorer."
         (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
 ;; rust:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*recent files][recent files:1]]
+(require 'recentf)
+;; the default is only 20
+(setq recentf-max-saved-items 1000)
+(add-to-list 'recentf-exclude "autosave$")
+(add-to-list 'recentf-exclude "\.png$")
+(add-to-list 'recentf-exclude "\.pdf$")
+(add-to-list 'recentf-exclude "\.svg$")
+(add-to-list 'recentf-exclude "\.odt$")
+;; recent files:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*vc commit之前更新时间戳][vc commit之前更新时间戳:1]]
+(use-package vc
+  :init
+  (progn
+    (add-hook 'vc-before-checkin-hook #'time-stamp)
+    )
+  )
+
+(use-package vc-hooks
+  :init
+  (progn
+    ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
+    (setq vc-follow-symlinks t)
+    )
+  )
+;; vc commit之前更新时间戳:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
 (use-package! cnfonts
   :config
@@ -185,8 +332,11 @@ containing the current file by the default explorer."
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*magit][magit:1]]
 (after! magit
-        (map! :map doom-leader-git-map "s" #'magit-status)
-        )
+  ;;禁用magit中的gravatars支持, 响应能快一些.
+  (setq magit-revision-show-gravatars nil)
+
+  (map! :map doom-leader-git-map "s" #'magit-status)
+  )
 ;; magit:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:1]]

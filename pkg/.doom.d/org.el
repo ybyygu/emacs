@@ -1,5 +1,3 @@
-;; 基本设置
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*基本设置][基本设置:1]]
 (setq org-blank-before-new-entry nil)
 (setq org-default-notes-file (concat org-directory "/life.note"))
@@ -14,8 +12,6 @@
 (remove-hook! 'org-mode-hook #'flyspell-mode)
 (flyspell-mode 0)
 ;; 基本设置:1 ends here
-
-;; 按键行为
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
 (defun gwp/new-memo (arg)
@@ -65,9 +61,6 @@
       )
 ;; 按键行为:1 ends here
 
-;; jump
-;; 从org文件跳转到tangled file
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*jump][jump:1]]
 ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
 (defun gwp/org-babel-tangle-jump-to-file ()
@@ -84,9 +77,6 @@
       (find-file file)
     (error "Cannot open tangle file %S" file)))))
 ;; jump:1 ends here
-
-;; tangle
-;; 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:1]]
 ;; tangle blocks for current file at point
@@ -109,8 +99,6 @@
   )
 ;; tangle:1 ends here
 
-;; bindings
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :map org-mode-map
       :localleader
@@ -131,16 +119,11 @@
       )
 ;; bindings:1 ends here
 
-;; org-noter
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter][org-noter:1]]
 (use-package! org-noter
   :after org-mode
   )
 ;; org-noter:1 ends here
-
-;; dwim-at-point
-;; 从doom中的org module中摘出来, 略作修改.
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-at-point][dwim-at-point:1]]
 (defun gwp/dwim-at-point ()
@@ -241,20 +224,6 @@ If on a:
       (_ (+org--refresh-inline-images-in-subtree)))))
 ;; dwim-at-point:1 ends here
 
-;; screenshot
-;; 目前最佳方案: 使用org-download来实现屏幕截图的功能
-;; - 在firefox或deepin-screenshot等截图后复制到X11剪贴板.
-;; - 使用org-screenshot-dwim.sh为org-download的截图工具, 将剪贴板里的图片下载到
-;;   org-download指定的临时文件.
-;; - 调用org-download-screenshot完成后续操作.
-;;   - 图片自动保存到org attachment目录
-;;   - 自动添加图片显示参数, 设定在org中显示的大小
-;;   - 可以使用org-download-delete来删除当前image
-
-;; 目前的问题 ([2020-03-06 Fri])
-;; - 第二次执行截图时, 如果clipboard无图, emacs会挂住, 原因不明, 现在无解.
-
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
@@ -306,9 +275,6 @@ If on a:
                       )))
 ;; screenshot:1 ends here
 
-;; init
-;; 几个重要的header args:
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*init][init:1]]
 ;; helper functions for literate programming
 ;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
@@ -329,8 +295,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 ;; init:1 ends here
 
-;; enter
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*enter][enter:1]]
 ;; 禁用代码着色, 影响速度
 (setq org-src-fontify-natively nil)
@@ -348,11 +312,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       :localleader ";" #'org-edit-special
       )
 ;; enter:1 ends here
-
-;; edit
-;; - org-babel-demarcate-block: 可以用来将选中代码分割为不同的代码块.
-;; - org-babel-do-key-sequence-in-edit-buffer: 在当前代码下直接执行src code语境下的命令
-
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*edit][edit:1]]
 ;; 用于激活 localleader
@@ -375,3 +334,409 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       "=" #'rust-format-buffer
       )
 ;; edit:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*template][template:1]]
+(with-eval-after-load 'ob
+  ;; add p for python expansion
+  (add-to-list 'org-structure-template-alist '("p" . "src python"))
+
+  ;; add rs for rust codes
+  (add-to-list 'org-structure-template-alist '("rs" . "src rust"))
+
+  ;; add el for emacs-lisp expansion
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+
+  (defun gwp/edit-structure-inplace (arg)
+    "Insert source strcture and edit the source"
+    (interactive "P")
+    (call-interactively 'org-insert-structure-template)
+    (call-interactively 'org-edit-src-code)
+    )
+ )
+;; template:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*auto time-stamp][auto time-stamp:1]]
+(with-eval-after-load "ob-tangle"
+  ;; update timestamps on tangled files
+  (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
+  (defun org-babel-post-tangle-hook--time-stamp ()
+    "Update timestamps on tangled files."
+    (time-stamp)
+    (save-buffer))
+  (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
+;; auto time-stamp:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero][zotero:1]]
+(with-eval-after-load 'org-compat
+
+  ;; since org 9
+  (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
+
+  (defun gwp/org-zotero-open (path)
+    (setq url (format "zotero:%s" path))
+    (browse-url url)
+    )
+
+  (defun gwp/org-zotero-export (path desc format)
+    "Create the export version of zotero link specified by PATH and
+DESC. FORMATs understood are 'odt','latex and 'html."
+    (cond
+     ((eq format 'html)
+      (format "<a href=\"zotero:%s\">%s</a>" path desc))
+     ((eq format 'latex)
+      (format "\\href{zotero:%s}{%s}" path desc))
+     ((eq format 'odt)
+      ;; (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc)
+      (gwp/org-zotero-export-odt path desc)
+      )
+     (t desc)
+     )
+    )
+  )
+
+;;;; The magic string of zitem:
+;; ZOTERO_ITEM CSL_CITATION
+;; {
+;; "properties": {
+;; "formattedCitation": "[1]",
+;; "plainCitation": "[1]"
+;; },
+;; "citationItems": [
+;;                   {
+;;                   "uri": [
+;;                           "http://zotero.org/users/15074/items/S5JM4V35"
+;;                           ]
+;;                   }
+;;                   ],
+;; "schema": "https://github.com/citation-style-language/schema/raw/master/csl-citation.json"
+;; } %s-rnd
+
+;; adopted from https://www.mail-archive.com/emacs-orgmode@gnu.org/msg48905.html
+(defun gwp/org-zotero-export-odt (path desc)
+  (let
+      ((refmark "<text:reference-mark-start text:name=\"%s\"/>%s<text:reference-mark-end text:name=\"%s\"/>")
+       (zitem "ZOTERO_ITEM CSL_CITATION {
+    &quot;properties&quot;: {
+        &quot;formattedCitation&quot;: &quot;%s&quot;,
+        &quot;plainCitation&quot;: &quot;%s&quot;
+    },
+    &quot;citationItems&quot;: [
+        {
+            &quot;uri&quot;: [
+                &quot;http://zotero.org/users/15074/items/%s&quot;
+            ]
+        }
+    ],
+    &quot;schema&quot;: &quot;https://github.com/citation-style-language/schema/raw/master/csl-citation.json&quot;
+} %s ")
+
+       (item-key (car (cdr (split-string path "_"))))
+       (rnd (concat "RND" (substring (org-id-new) -10))))
+    (setq zitem
+          (format zitem
+                  desc
+                  desc
+                  item-key
+                  rnd)
+          )
+    (setq desc (format "%s" desc))
+    (format refmark zitem desc zitem))
+  )
+;; zotero:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*odt export][odt export:1]]
+(use-package ox-odt
+  :config
+  (progn
+    ;; continually numbering captions without outline level
+    (setq org-odt-display-outline-level 0)
+
+    ;; useful for odt export using dvipng
+    (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
+    (setq org-odt-pixels-per-inch 300.0)
+    )
+  )
+;; odt export:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*odt export][odt export:2]]
+;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
+(defun gwp/clear-unwanted-space (text)
+  "clear unwanted space when exporting org-mode to other formats"
+  (let ((regexp "[[:multibyte:]]")
+        (string text))
+    ;; org-mode 默认将一个换行符转换为空格，但中文不需要这个空格，删除。
+    (setq string
+          (replace-regexp-in-string
+           (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
+           "\\1\\2" string))
+    ;; 删除粗体之后的空格
+    (dolist (str '("</b>" "</code>" "</del>" "</i>"))
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\)\\(%s\\)[ ]+\\(%s\\)" regexp str regexp)
+             "\\1\\2\\3" string)))
+    ;; 删除粗体之前的空格
+    (dolist (str '("<b>" "<code>" "<del>" "<i>" "<span class=\"underline\">"))
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\)[ ]+\\(%s\\)\\(%s\\)" regexp str regexp)
+             "\\1\\2\\3" string)))
+    string)
+  )
+
+(defun gwp/ox-odt-wash-text (text backend info)
+  "导出 org file 时，删除中文之间不必要的空格。"
+  (when (org-export-derived-backend-p backend 'odt 'html 'latex)
+    (gwp/clear-unwanted-space text)
+    )
+  )
+
+(add-hook 'org-export-filter-headline-functions #'gwp/ox-odt-wash-text)
+(add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
+;; odt export:2 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*capture & protocol][capture & protocol:1]]
+(setq org-capture-templates
+      '(
+        ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
+        ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
+        ("n" "Note" entry (file "~/Notes/refile.note")
+         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
+        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+         "* TODO %^T\n  %i" :prepend t)
+        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+         "* %u %?\n  %i\n" :prepend t)
+        ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
+         "* %u %? %x\n  %i\n" :prepend t)
+        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+         "* %u %?\n  %i\n" :prepend t)
+        )
+      )
+;; capture & protocol:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*encryption][encryption:1]]
+(require 'org-crypt)
+(require 'epa-file)
+
+(epa-file-enable)
+
+;; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-crypt-tag-matcher "crypt")
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+                                        ; GPG key to use for encryption
+(setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+(setq org-crypt-disable-auto-save nil)
+;; encryption:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO refile][refile:1]]
+;; any headline with level <= 2 is a target
+(setq org-refile-targets '(
+                           (org-agenda-files :tag . "Incoming")
+                           )
+      )
+
+(setq org-reverse-note-order t)
+(defun gwp/get-org-file-link-path ()
+  (save-excursion
+    (beginning-of-line)
+    (search-forward "[[file:" (line-end-position))
+    (if (org-in-regexp org-bracket-link-regexp 1)
+        (org-link-unescape (match-string-no-properties 1))
+      )
+    )
+  )
+
+(defun gwp/enter-to-read-state()
+  "evoke external shell script when entering READ state"
+  (when (equal org-state "READ")
+    (setq file (gwp/get-org-file-link-path))
+    (if file
+        (progn
+         (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+         (message cmd)
+         (shell-command cmd)
+        )
+        )
+    )
+    (when (equal org-last-state "READ")
+      (message "try to remove READ state")
+      (setq file (gwp/get-org-file-link-path))
+      (if file
+          (progn
+            (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+            (message cmd)
+            (shell-command cmd)
+            )
+        )
+      )
+  )
+(add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
+
+;; show a sparse-tree in READ keyword
+(defun gwp/org-show-read-tree ()
+  "show a sparse-tree in READ keyword"
+  (interactive)
+
+  (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
+    ;; create new macro of the form
+    ;; C-u M-x org-show-todo-tree RET READ RET
+    (execute-kbd-macro (vconcat base-vector
+                                (vector 'return)))))
+;; refile:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*agenda][agenda:1]]
+(with-eval-after-load 'org-agenda
+  ;; 2013-01-20: less is more
+  ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
+  (setq org-agenda-files "~/Notes/.agenda_files")
+
+  ;; the default is todo-start
+  (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
+  (setq org-icalendar-alarm-time 5)
+
+  ;; Show all future entries for repeating tasks
+  (setq org-agenda-repeating-timestamp-show-all t)
+
+  ;; do not show agenda dates if they are empty
+  (setq org-agenda-show-all-dates nil)
+
+  ;; Sorting order for tasks on the agenda
+  (setq org-agenda-sorting-strategy
+        (quote ((agenda time-up priority-down category-up)
+                (todo priority-down)
+                (tags priority-down))))
+
+  ;; Start the weekly agenda today
+  (setq org-agenda-start-on-weekday nil)
+
+  ;; do not include todo items
+  (setq org-agenda-include-all-todo nil)
+  )
+;; agenda:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*agenda][agenda:2]]
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
+;; agenda:2 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*agenda][agenda:3]]
+(with-eval-after-load 'org-agenda
+  (setq org-agenda-custom-commands
+               '(
+                 ("g" . "GTD contexts") ; description for "g" prefix
+                 )
+               )
+  ;; project overview
+  (add-to-list 'org-agenda-custom-commands
+               '("gp" "Project"
+                 (
+                  (tags "Project+Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Project\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         )
+                        )
+                  (tags "Action+Study+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Topics\n------------------")
+                         (org-agenda-files '("~/Notes/research.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  (tags "Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "生活琐事\n------------------")
+                         (org-agenda-files '("~/Notes/life.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  ;; (tags "Computer+TODO=\"TODO\""
+                  ;;       (
+                  ;;        (org-agenda-overriding-header "电脑调优\n------------------")
+                  ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                  ;;        (org-agenda-max-entries 5)
+                  ;;        )
+                  ;;       )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  (org-agenda-prefix-format "%-20c ")
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  (org-agenda-compact-blocks t)
+                  )
+                 )
+               )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gr" "Reading"
+                 (
+                  (tags-todo "Reading|Read"
+                             (
+                              (org-agenda-overriding-header "待读列表\n------------------")
+                              (org-agenda-sorting-strategy '(category-keep priority-down))
+                              (org-agenda-remove-tags t)
+                              (org-agenda-compact-blocks t)
+                              )
+                             )
+                  (tags "REFILE"
+                        (
+                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                         (org-tags-match-list-sublevels nil)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 ((org-agenda-compact-blocks t))
+                 )
+               )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gt" "Tasks"
+                 (
+                  (agenda ""
+                          (
+                           ;; (org-agenda-entry-types '(:deadline :scheduled))
+                           (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
+                           (org-agenda-include-diary nil)
+                           (org-agenda-overriding-header "Agenda\n------------------")
+                           )
+                          )
+                  ;; (tags "ASAP+TODO=\"TODO\""
+                  (tags-todo "ASAP"
+                        (
+                         (org-agenda-entry-types '(:timestamp))
+                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                         (org-agenda-overriding-header "\nASAP\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         (org-agenda-max-entries 20)
+                         (org-agenda-prefix-format "%-12c ")
+                         (org-agenda-compact-blocks t)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  )
+                 ;; agenda view exported with: Ctrl-C a e
+                 ("~/Notes/agenda.html" "~/Notes/agenda.txt")
+                 )
+               )
+  )
+;; agenda:3 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
+;; (require 'org-man)
+;; misc:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:2]]
+(setq org-fontify-emphasized-text nil)
+;; misc:2 ends here

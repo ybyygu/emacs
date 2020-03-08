@@ -57,9 +57,10 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
-- [ ] 添加re-open当前文件功能?
 - [ ] org-capture功能
 - [ ] odt exports功能
+- [ ] zotero links
+- [X] 添加re-open当前文件功能? [[https://emacs.stackexchange.com/questions/3330/how-to-reopen-just-killed-buffer-like-c-s-t-in-firefox-browser][URL]]
 - [X] dired-copy-filename-as-kill 复制文件路径, 可以 spc-m y
 - [X] 将spc-o-T改成和spacemacs一样. vterm也就是图方便, 功能上还是不如gnome-terminal之类顺手.
 - [X] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/ui/window-select/README.org][window-select]] 可以用C-w C-w, 比spacemacs下更方便.
@@ -557,9 +558,132 @@ stow:
 #+END_SRC
 
 *** 字符编辑
+**** doom tuning
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
   (setq evil-want-fine-undo t)
+#+end_src
+
+**** TODO insert date
+#+begin_src emacs-lisp
+  (defun gwp/insert-date (arg)
+    "Insert date at point. With prefix argument, insert date and time."
+    (interactive "P")
+    (insert (format-time-string "%Y-%m-%d"))
+    (when arg
+      (insert (format-time-string " %H:%M"))
+      )
+    )
+
+  ;; make it easier to update time-stamp
+  (map! :i "C-c i" #'gwp/insert-date)
+#+end_src
+
+**** TODO white space
+#+begin_src emacs-lisp
+  (setq show-trailing-whitespace t)
+  (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+  ;; make sure this always work
+  (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+#+end_src
+
+**** TODO advanced selection
+#+begin_src emacs-lisp
+  ;; expand selection
+  ;; http://xahlee.org/emacs/modernization_mark-word.html
+  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+  (defun semnav-up (arg)
+    (interactive "p")
+    (when (nth 3 (syntax-ppss))
+      (if (> arg 0)
+          (progn
+            (skip-syntax-forward "^\"")
+            (goto-char (1+ (point)))
+            (decf arg))
+        (skip-syntax-backward "^\"")
+        (goto-char (1- (point)))
+        (incf arg)))
+    (up-list arg))
+
+  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+  (defun gwp/extend-selection (arg &optional incremental)
+    "Select the current word.
+  Subsequent calls expands the selection to larger semantic unit."
+    (interactive (list (prefix-numeric-value current-prefix-arg)
+                       (or (and transient-mark-mode mark-active)
+                           (eq last-command this-command))))
+    (if incremental
+        (progn
+          (semnav-up (- arg))
+          (forward-sexp)
+          (mark-sexp -1))
+      (if (> arg 1)
+          (extend-selection (1- arg) t)
+        (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
+            (goto-char (match-end 0))
+          (unless (memq (char-before) '(?\) ?\"))
+            (forward-sexp)))
+        (mark-sexp -1))))
+
+  ;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
+
+  (defun gwp/select-text-in-quote ()
+  "Select text between the nearest left and right delimiters.
+  Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
+   (interactive)
+   (let (b1 b2)
+     (skip-chars-backward "^<>(“{[「«\"‘")
+     (setq b1 (point))
+     (skip-chars-forward "^<>)”}]」»\"’")
+     (setq b2 (point))
+     (set-mark b1)
+     )
+   )
+
+  (defun gwp/select-none-blank-text ()
+  "Select none blank chars near the point in current line"
+   (interactive)
+   (let (b1 b2)
+     (skip-chars-backward "^ \n")
+     (setq b1 (point))
+     (skip-chars-forward "^ \n")
+     (setq b2 (point))
+     (set-mark b1)
+     )
+   )
+
+  (defun gwp/select-word ()
+  "Select none blank chars near the point in current line"
+   (interactive)
+   (let (b1 b2)
+     (backward-word)
+     (setq b1 (point))
+     (forward-word)
+     (setq b2 (point))
+     (set-mark b1)
+     )
+   )
+
+  (defun gwp/select-line ()
+  "Select current line"
+   (interactive)
+   (let (b1 b2)
+     (move-beginning-of-line nil)
+     (setq b1 (point))
+     (move-end-of-line nil)
+     (setq b2 (point))
+     (set-mark b1)
+     )
+   )
+
+  ;; (global-set-key (kbd "M-*") 'select-text-in-quote)
+  ;; (global-set-key (kbd "M-6") 'select-line)
+  ;; (global-set-key (kbd "M-4") 'select-word)
+  (global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
+
+  ;; https://github.com/magnars/expand-region.el
+  ;; (require 'expand-region)
+  ;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
 
 *** 界面设置
@@ -678,6 +802,15 @@ https://github.com/hlissner/doom-emacs/issues/2225
 
   (after! org (load! "org"))
 #+end_src
+*** re-open-current-file
+可以用revert-buffer SPC-b-r
+#+begin_src elisp :tangle no
+  (defun gwp/reopen-current-file ()
+    "Kill current buffer and re-open it again."
+    (interactive)
+    (call-interactively 'kill-current-buffer)
+    (call-interactively 'recentf-open-most-recent-file))
+#+end_src
 
 *** open-file-externally
 从spacemacs中改过来的
@@ -766,8 +899,23 @@ deadgrep与doom有冲突, 不能用了.
 spacemacs中的习惯, 加回来, 避免忙中出错
 #+begin_src elisp
   (after! magit
-          (map! :map doom-leader-git-map "s" #'magit-status)
-          )
+    ;;禁用magit中的gravatars支持, 响应能快一些.
+    (setq magit-revision-show-gravatars nil)
+
+    (map! :map doom-leader-git-map "s" #'magit-status)
+    )
+#+end_src
+
+*** recent files
+#+begin_src emacs-lisp
+  (require 'recentf)
+  ;; the default is only 20
+  (setq recentf-max-saved-items 1000)
+  (add-to-list 'recentf-exclude "autosave$")
+  (add-to-list 'recentf-exclude "\.png$")
+  (add-to-list 'recentf-exclude "\.pdf$")
+  (add-to-list 'recentf-exclude "\.svg$")
+  (add-to-list 'recentf-exclude "\.odt$")
 #+end_src
 
 *** 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
@@ -787,6 +935,126 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   ;; 修改 frame 标题 方便 gnome-shell 桌面切换
   (setq frame-title-format '("" "%b: " buffer-file-name))
 #+end_src
+*** vc commit之前更新时间戳
+#+BEGIN_SRC emacs-lisp
+  (use-package vc
+    :init
+    (progn
+      (add-hook 'vc-before-checkin-hook #'time-stamp)
+      )
+    )
+
+  (use-package vc-hooks
+    :init
+    (progn
+      ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
+      (setq vc-follow-symlinks t)
+      )
+    )
+#+END_SRC
+
+*** TODO fcitx
+自动中英文切换, 解决vim模式下的一大痛点.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun gwp/init-fcitx ()
+    (use-package fcitx
+      :init
+      (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
+      ;; M-m is common in Spacemacs
+      (fcitx-prefix-keys-add "M-m")
+
+      ;; for Linux users, it is recommended
+      (fcitx-aggressive-setup)
+      (setq fcitx-use-dbus t)
+      )
+    )
+#+END_SRC
+
+doom chinese module里的设置
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package! fcitx
+  :after evil
+  :config
+  (when (executable-find "fcitx-remote")
+    (fcitx-evil-turn-on)))
+#+END_SRC
+
+*** TODO bm
+主要用 bm, 书签持久化是从 bm.el 里抄来的.
+[2019-07-11 Thu] spacemacs有bm layer, 用那个吧.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun gwp/init-bm ()
+    (defun gwp-mouse-toggle-bm (e)
+      "Toggle bookmarking
+  This command should be bound to a mouse key.
+  Argument E is a mouse event used by `mouse-set-point'."
+      (interactive "@e")
+      (save-excursion
+        (mouse-set-point e)
+        (bm-toggle)
+        )
+      )
+
+    ;; adopted from: https://github.com/joodland/bm
+    (use-package bm
+      :ensure t
+      :demand t
+
+      :init
+      ;; restore on load (even before you require bm)
+      (setq bm-restore-repository-on-load t)
+
+      :config
+      ;; Allow cross-buffer 'next'
+      (setq bm-cycle-all-buffers nil)
+
+      ;; save bookmarks
+      (setq-default bm-buffer-persistence t)
+
+      ;; Loading the repository from file when on start up.
+      (add-hook 'after-init-hook 'bm-repository-load)
+
+      ;; Saving bookmarks
+      (add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+      ;; Saving the repository to file when on exit.
+      ;; kill-buffer-hook is not called when Emacs is killed, so we
+      ;; must save all bookmarks first.
+      (add-hook 'kill-emacs-hook #'(lambda nil
+                                     (bm-buffer-save-all)
+                                     (bm-repository-save)))
+
+      ;; The `after-save-hook' is not necessary to use to achieve persistence,
+      ;; but it makes the bookmark data in repository more in sync with the file
+      ;; state.
+      (add-hook 'after-save-hook #'bm-buffer-save)
+
+      ;; Restoring bookmarks
+      (add-hook 'find-file-hooks   #'bm-buffer-restore)
+      (add-hook 'after-revert-hook #'bm-buffer-restore)
+
+      ;; The `after-revert-hook' is not necessary to use to achieve persistence,
+      ;; but it makes the bookmark data in repository more in sync with the file
+      ;; state. This hook might cause trouble when using packages
+      ;; that automatically reverts the buffer (like vc after a check-in).
+      ;; This can easily be avoided if the package provides a hook that is
+      ;; called before the buffer is reverted (like `vc-before-checkin-hook').
+      ;; Then new bookmarks can be saved before the buffer is reverted.
+      ;; Make sure bookmarks is saved before check-in (and revert-buffer)
+      (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+      :bind (
+              ([left-fringe mouse-3] . gwp-mouse-toggle-bm)
+              ([left-margin mouse-3] . gwp-mouse-toggle-bm)
+              ([left-fringe mouse-5] . bm-next-mouse)
+              ([left-margin mouse-5] . bm-next-mouse)
+              ([left-fringe mouse-4] . bm-previous-mouse)
+              ([left-margin mouse-4] . bm-previous-mouse)
+              )
+      )
+    )
+#+END_SRC
 
 *** 常用按键
 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
@@ -1359,11 +1627,642 @@ org-babel-expand-src-block (可以展开noweb macro)
         )
 #+end_src
 
+*** template
+- http://orgmode.org/manual/Languages.html
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ob
+    ;; add p for python expansion
+    (add-to-list 'org-structure-template-alist '("p" . "src python"))
+
+    ;; add rs for rust codes
+    (add-to-list 'org-structure-template-alist '("rs" . "src rust"))
+
+    ;; add el for emacs-lisp expansion
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+
+    (defun gwp/edit-structure-inplace (arg)
+      "Insert source strcture and edit the source"
+      (interactive "P")
+      (call-interactively 'org-insert-structure-template)
+      (call-interactively 'org-edit-src-code)
+      )
+   )
+#+end_src
+
+*** auto time-stamp
+格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "ob-tangle"
+    ;; update timestamps on tangled files
+    (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
+    (defun org-babel-post-tangle-hook--time-stamp ()
+      "Update timestamps on tangled files."
+      (time-stamp)
+      (save-buffer))
+    (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
+#+end_src
+
 ** org-noter
 #+begin_src elisp
   (use-package! org-noter
     :after org-mode
     )
+#+end_src
+
+** zotero
+支持 "zotero" 链接的点击行为及odt导出.
+
+bibtex更新了item link的格式.
+之前的:
+: zotero://select/items/1_WZKAZKJG
+新的
+: zotero://select/items/6974
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org-compat
+
+    ;; since org 9
+    (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
+
+    (defun gwp/org-zotero-open (path)
+      (setq url (format "zotero:%s" path))
+      (browse-url url)
+      )
+
+    (defun gwp/org-zotero-export (path desc format)
+      "Create the export version of zotero link specified by PATH and
+  DESC. FORMATs understood are 'odt','latex and 'html."
+      (cond
+       ((eq format 'html)
+        (format "<a href=\"zotero:%s\">%s</a>" path desc))
+       ((eq format 'latex)
+        (format "\\href{zotero:%s}{%s}" path desc))
+       ((eq format 'odt)
+        ;; (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc)
+        (gwp/org-zotero-export-odt path desc)
+        )
+       (t desc)
+       )
+      )
+    )
+
+  ;;;; The magic string of zitem:
+  ;; ZOTERO_ITEM CSL_CITATION
+  ;; {
+  ;; "properties": {
+  ;; "formattedCitation": "[1]",
+  ;; "plainCitation": "[1]"
+  ;; },
+  ;; "citationItems": [
+  ;;                   {
+  ;;                   "uri": [
+  ;;                           "http://zotero.org/users/15074/items/S5JM4V35"
+  ;;                           ]
+  ;;                   }
+  ;;                   ],
+  ;; "schema": "https://github.com/citation-style-language/schema/raw/master/csl-citation.json"
+  ;; } %s-rnd
+
+  ;; adopted from https://www.mail-archive.com/emacs-orgmode@gnu.org/msg48905.html
+  (defun gwp/org-zotero-export-odt (path desc)
+    (let
+        ((refmark "<text:reference-mark-start text:name=\"%s\"/>%s<text:reference-mark-end text:name=\"%s\"/>")
+         (zitem "ZOTERO_ITEM CSL_CITATION {
+      &quot;properties&quot;: {
+          &quot;formattedCitation&quot;: &quot;%s&quot;,
+          &quot;plainCitation&quot;: &quot;%s&quot;
+      },
+      &quot;citationItems&quot;: [
+          {
+              &quot;uri&quot;: [
+                  &quot;http://zotero.org/users/15074/items/%s&quot;
+              ]
+          }
+      ],
+      &quot;schema&quot;: &quot;https://github.com/citation-style-language/schema/raw/master/csl-citation.json&quot;
+  } %s ")
+
+         (item-key (car (cdr (split-string path "_"))))
+         (rnd (concat "RND" (substring (org-id-new) -10))))
+      (setq zitem
+            (format zitem
+                    desc
+                    desc
+                    item-key
+                    rnd)
+            )
+      (setq desc (format "%s" desc))
+      (format refmark zitem desc zitem))
+    )
+
+#+end_src
+
+** odt export
+odt导出时, 图表默认以大纲级别来编号. 对于中文文档, 如果章节以中文一二三编号时,
+图表编号默认为一.1, 二.3. 这很古怪, 还是取消的好.
+
+odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 然后通过设置odt dpi为
+300(默认为96), 将image缩小为原始大小.
+
+注意latex公式图片对应的目录ltxpng在ox-odt.el代码里写死了, 没法修改为其它的.
+
+#+begin_src emacs-lisp
+  (use-package ox-odt
+    :config
+    (progn
+      ;; continually numbering captions without outline level
+      (setq org-odt-display-outline-level 0)
+
+      ;; useful for odt export using dvipng
+      (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
+      (setq org-odt-pixels-per-inch 300.0)
+      )
+    )
+#+end_src
+
+由于手动换行的原因, odt导出时, 中文字符间会有多余的空格. 下面的设置用于解决这个问题:
+#+begin_src emacs-lisp
+  ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
+  (defun gwp/clear-unwanted-space (text)
+    "clear unwanted space when exporting org-mode to other formats"
+    (let ((regexp "[[:multibyte:]]")
+          (string text))
+      ;; org-mode 默认将一个换行符转换为空格，但中文不需要这个空格，删除。
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
+             "\\1\\2" string))
+      ;; 删除粗体之后的空格
+      (dolist (str '("</b>" "</code>" "</del>" "</i>"))
+        (setq string
+              (replace-regexp-in-string
+               (format "\\(%s\\)\\(%s\\)[ ]+\\(%s\\)" regexp str regexp)
+               "\\1\\2\\3" string)))
+      ;; 删除粗体之前的空格
+      (dolist (str '("<b>" "<code>" "<del>" "<i>" "<span class=\"underline\">"))
+        (setq string
+              (replace-regexp-in-string
+               (format "\\(%s\\)[ ]+\\(%s\\)\\(%s\\)" regexp str regexp)
+               "\\1\\2\\3" string)))
+      string)
+    )
+
+  (defun gwp/ox-odt-wash-text (text backend info)
+    "导出 org file 时，删除中文之间不必要的空格。"
+    (when (org-export-derived-backend-p backend 'odt 'html 'latex)
+      (gwp/clear-unwanted-space text)
+      )
+    )
+
+  (add-hook 'org-export-filter-headline-functions #'gwp/ox-odt-wash-text)
+  (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
+#+end_src
+
+** capture & protocol
+占位符:
+| %:link         | URL of the web-page       |
+| %:description  | The title of the web-page |
+| %:initial / %i | Selected text.            |
+
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+        '(
+          ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
+          ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
+          ("n" "Note" entry (file "~/Notes/refile.note")
+           "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
+          ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+           "* TODO %^T\n  %i" :prepend t)
+          ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+           "* %u %?\n  %i\n" :prepend t)
+          ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
+           "* %u %? %x\n  %i\n" :prepend t)
+          ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+           "* %u %?\n  %i\n" :prepend t)
+          )
+        )
+#+end_src
+
+** encryption
+#+begin_src emacs-lisp
+  (require 'org-crypt)
+  (require 'epa-file)
+
+  (epa-file-enable)
+
+  ;; Encrypt all entries before saving
+  (org-crypt-use-before-save-magic)
+  (setq org-crypt-tag-matcher "crypt")
+  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+                                          ; GPG key to use for encryption
+  (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+  (setq org-crypt-disable-auto-save nil)
+#+end_src
+
+** TODO org-attach
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+这里都先禁掉, 以后有时间再优化.
+*** setup
+org-mode添加附件后会自动commit(git only), 禁掉:
+#+begin_src emacs-lisp :tangle no
+  (require 'org-attach)
+  (setq org-attach-commit nil)
+#+end_src
+
+*** copy & paste attachments
+添加附件时生成指向附件的路径, 方便org-insert-link添加.
+#+begin_src emacs-lisp
+  (setq org-attach-store-link-p 'attached)
+#+end_src
+
+使用软链接保存当前entry的附件目录. 注意make-symbolic-link的特殊性:
+- 如果dest是个目录, 会在目录下建立目录
+- 如果dest是个文件或symlink, 会报错
+
+file-exists-p函数对symlink的特殊性:
+- 如果测试目标是个boken symlink, 该函数返回nil
+- 此外后续再symlink, 仍然会报错.
+
+#+begin_src emacs-lisp
+  ;; 1. store the directory
+  (defun gwp/org-attach-store (&optional force)
+    "store org attachment directory of current enetry"
+    (interactive "P")
+    ;; make a temporary symlink to store the attachment path
+    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+    (let ((attach-dir (org-attach-dir)))
+      (when attach-dir
+        (progn
+          ;; remove existing directory
+          (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
+          ;; remove existing file and symlink
+          (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+          ;; remove broken symlink
+          (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
+          (make-symbolic-link attach-dir file-attach-tmp)
+          (message (format "stored to: %s" file-attach-tmp))
+          )
+        )
+      )
+    )
+#+end_src
+
+从存储的软链接中读取之前的entry的附件, 并移动到当前entry的附件目录里.
+#+name: 140c8695-f25d-4512-b0f1-1fe4c8edd5c2
+#+begin_src emacs-lisp
+  ;; 2. move the stored directory to new location
+  (defun gwp/org-attach-move (&optional force)
+    "move stored attachments to current entry"
+    (interactive "P")
+    ;; ~/.emacs.d/.cache/.gwp-attach-tmp
+    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+
+    (if (file-exists-p file-attach-tmp)
+        ;; create attachment directory if not exists using org-attach-dir function
+        (let ((attach-dir (org-attach-dir t)))
+          (progn
+            ;; read old attach directory from previous stored symlink
+            (setq attach-dir-old (file-chase-links file-attach-tmp))
+            ;; sanity check
+            (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
+                (progn
+                  (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
+                  ;; remove stale tmp-link
+                  (delete-file file-attach-tmp)
+                  )
+              (message "cancelled")
+              )
+            )
+          )
+      (message (format "no stored symbolic link found: %s" file-attach-tmp))
+      )
+    )
+#+end_src
+
+*** take file link as attachment
+**** 从当前位置文件链接提取文件名.
+#+begin_src emacs-lisp
+  (defun gwp/org-file-link-p (&optional element)
+    (let ((el (or element (org-element-context))))
+      (and (eq (org-element-type el) 'link)
+           (string= (org-element-property :type el) "file")
+           )
+      )
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun gwp/file-path-at-point()
+    "get file path from link at point"
+    (let ((el (org-element-context)))
+      (when (gwp/org-file-link-p el)
+        (org-element-property :path el)
+        )
+      )
+    )
+#+end_src
+
+**** 使用org-attach将文件move到当到附录中并更新文件链接
+#+begin_src emacs-lisp
+  ;; (require 'org-download)
+
+  (defun gwp/org-store-link-without-desc (file)
+    "store file link without the description part -- a tweak to make odt image exporting correct."
+    (setq org-stored-links
+          (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
+                org-stored-links)
+          )
+    )
+
+  (defun gwp/org-take-as-local-attachment ()
+    "move file link at point as local attachment"
+    (interactive)
+    (let ((file (gwp/file-path-at-point)))
+      (if file
+          (progn
+            ;; 1. store the file using copy
+            ;; or we can use the mv method: (org-attach-attach file nil 'mv)
+            ;; do not store file link since it will corrupt odt image exporting
+            (let ((org-attach-store-link-p nil))
+              (org-attach-attach file))
+            ;; 2. remove the old
+            (call-interactively 'org-download-delete)
+            ;; 3. insert the new
+            ;; use file name as the default caption
+            (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
+            (insert "\n")
+            (gwp/org-store-link-without-desc file)
+            (call-interactively 'org-insert-last-stored-link)
+            ;; refresh the image if possbile
+            (org-display-inline-images)
+           )
+        (user-error "Point is not on a link")
+        )
+      )
+    )
+#+end_src
+
+** TODO refile
+#+BEGIN_SRC emacs-lisp
+  ;; any headline with level <= 2 is a target
+  (setq org-refile-targets '(
+                             (org-agenda-files :tag . "Incoming")
+                             )
+        )
+
+  (setq org-reverse-note-order t)
+  (defun gwp/get-org-file-link-path ()
+    (save-excursion
+      (beginning-of-line)
+      (search-forward "[[file:" (line-end-position))
+      (if (org-in-regexp org-bracket-link-regexp 1)
+          (org-link-unescape (match-string-no-properties 1))
+        )
+      )
+    )
+
+  (defun gwp/enter-to-read-state()
+    "evoke external shell script when entering READ state"
+    (when (equal org-state "READ")
+      (setq file (gwp/get-org-file-link-path))
+      (if file
+          (progn
+           (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+           (message cmd)
+           (shell-command cmd)
+          )
+          )
+      )
+      (when (equal org-last-state "READ")
+        (message "try to remove READ state")
+        (setq file (gwp/get-org-file-link-path))
+        (if file
+            (progn
+              (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+              (message cmd)
+              (shell-command cmd)
+              )
+          )
+        )
+    )
+  (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
+
+  ;; show a sparse-tree in READ keyword
+  (defun gwp/org-show-read-tree ()
+    "show a sparse-tree in READ keyword"
+    (interactive)
+
+    (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
+      ;; create new macro of the form
+      ;; C-u M-x org-show-todo-tree RET READ RET
+      (execute-kbd-macro (vconcat base-vector
+                                  (vector 'return)))))
+
+#+END_SRC
+** agenda
+基本设置
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'org-agenda
+    ;; 2013-01-20: less is more
+    ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
+    (setq org-agenda-files "~/Notes/.agenda_files")
+
+    ;; the default is todo-start
+    (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
+    (setq org-icalendar-alarm-time 5)
+
+    ;; Show all future entries for repeating tasks
+    (setq org-agenda-repeating-timestamp-show-all t)
+
+    ;; do not show agenda dates if they are empty
+    (setq org-agenda-show-all-dates nil)
+
+    ;; Sorting order for tasks on the agenda
+    (setq org-agenda-sorting-strategy
+          (quote ((agenda time-up priority-down category-up)
+                  (todo priority-down)
+                  (tags priority-down))))
+
+    ;; Start the weekly agenda today
+    (setq org-agenda-start-on-weekday nil)
+
+    ;; do not include todo items
+    (setq org-agenda-include-all-todo nil)
+    )
+#+END_SRC
+
+忽略已经完成的任务
+#+begin_src emacs-lisp
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
+#+end_src
+
+自定义agenda命令
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-custom-commands
+                 '(
+                   ("g" . "GTD contexts") ; description for "g" prefix
+                   )
+                 )
+    ;; project overview
+    (add-to-list 'org-agenda-custom-commands
+                 '("gp" "Project"
+                   (
+                    (tags "Project+Action+TODO=\"TODO\""
+                          (
+                           (org-agenda-overriding-header "Project\n------------------")
+                           (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                           )
+                          )
+                    (tags "Action+Study+TODO=\"TODO\""
+                          (
+                           (org-agenda-overriding-header "Topics\n------------------")
+                           (org-agenda-files '("~/Notes/research.note"))
+                           (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                           (org-agenda-max-entries 5)
+                           )
+                          )
+                    (tags "Action+TODO=\"TODO\""
+                          (
+                           (org-agenda-overriding-header "生活琐事\n------------------")
+                           (org-agenda-files '("~/Notes/life.note"))
+                           (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                           (org-agenda-max-entries 5)
+                           )
+                          )
+                    ;; (tags "Computer+TODO=\"TODO\""
+                    ;;       (
+                    ;;        (org-agenda-overriding-header "电脑调优\n------------------")
+                    ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                    ;;        (org-agenda-max-entries 5)
+                    ;;        )
+                    ;;       )
+                    )
+                   ;; options set here apply to the entire block
+                   (
+                    (org-tags-match-list-sublevels nil)
+                    (org-agenda-prefix-format "%-20c ")
+                    (org-agenda-todo-keyword-format "")
+                    (org-agenda-remove-tags t)
+                    (org-agenda-compact-blocks t)
+                    )
+                   )
+                 )
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("gr" "Reading"
+                   (
+                    (tags-todo "Reading|Read"
+                               (
+                                (org-agenda-overriding-header "待读列表\n------------------")
+                                (org-agenda-sorting-strategy '(category-keep priority-down))
+                                (org-agenda-remove-tags t)
+                                (org-agenda-compact-blocks t)
+                                )
+                               )
+                    (tags "REFILE"
+                          (
+                           (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                           (org-tags-match-list-sublevels nil)
+                           )
+                          )
+                    )
+                   ;; options set here apply to the entire block
+                   ((org-agenda-compact-blocks t))
+                   )
+                 )
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("gt" "Tasks"
+                   (
+                    (agenda ""
+                            (
+                             ;; (org-agenda-entry-types '(:deadline :scheduled))
+                             (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
+                             (org-agenda-include-diary nil)
+                             (org-agenda-overriding-header "Agenda\n------------------")
+                             )
+                            )
+                    ;; (tags "ASAP+TODO=\"TODO\""
+                    (tags-todo "ASAP"
+                          (
+                           (org-agenda-entry-types '(:timestamp))
+                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                           (org-agenda-overriding-header "\nASAP\n------------------")
+                           (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                           (org-agenda-max-entries 20)
+                           (org-agenda-prefix-format "%-12c ")
+                           (org-agenda-compact-blocks t)
+                           )
+                          )
+                    )
+                   ;; options set here apply to the entire block
+                   (
+                    (org-tags-match-list-sublevels nil)
+                    ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
+                    (org-agenda-todo-keyword-format "")
+                    (org-agenda-remove-tags t)
+                    )
+                   ;; agenda view exported with: Ctrl-C a e
+                   ("~/Notes/agenda.html" "~/Notes/agenda.txt")
+                   )
+                 )
+    )
+#+end_src
+
+后台自动导出日程. 暂时禁用
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; disabled for upgrading to org-9.0
+  ;; auto export agenda
+  (defun gwp/run-agenda-store ()
+    ""
+    (message "Exporting agenda... ")
+    (org-batch-store-agenda-views)
+    (message "Agenda exported."))
+
+  ;; export agenda if I am away for 2 minutes
+  (run-with-idle-timer 600 t 'gwp/run-agenda-store)
+#+END_SRC
+
+闲时显示日程. 有兼容性问题, 暂时禁用.
+#+begin_src emacs-lisp :tangle no
+  (use-package idle-org-agenda
+    :after org-agenda
+    :ensure t
+    :config (idle-org-agenda-mode))
+
+  (custom-set-variables
+   '(idle-org-agenda-interval 600) ;; 10 x 60 seconds
+   '(idle-org-agenda-key "gt")     ;; Choose your specific agenda
+   '(idle-org-agenda-mode t)
+   )
+#+end_src
+** misc
+Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
+#+begin_src emacs-lisp
+  ;; (require 'org-man)
+#+end_src
+
+禁用*bold*等标注的字体效果. 写代码时容易弄花显示. 比如__init__.
+#+begin_src emacs-lisp
+  (setq org-fontify-emphasized-text nil)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (defun gwp/org-confirm-babel-evaluate (lang body)
+    (not (string= lang "python")))  ; don't ask for python
+  (setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
+#+end_src
+
+自动保存编辑的代码. [2018-12-17 Mon] will cause timerp error
+#+begin_src emacs-lisp :tangle no
+  ;; saving a source code buffer back into its base buffer
+  (setq org-edit-src-auto-save-idle-delay 1)
 #+end_src
 
 * bindings.el
@@ -1493,8 +2392,8 @@ org-babel-expand-src-block (可以展开noweb macro)
           (:unless (featurep! :ui workspaces)
             :desc "Switch buffer"           "b" #'switch-to-buffer)
           :desc "Kill buffer"                 "d"   #'kill-current-buffer
-          :desc "ibuffer"                     "i"   #'ibuffer
           :desc "Kill buffer"                 "k"   #'kill-current-buffer
+          :desc "ibuffer"                     "i"   #'ibuffer
           :desc "Kill all buffers"            "K"   #'doom/kill-all-buffers
           :desc "Switch to last buffer"       "l"   #'evil-switch-to-windows-last-buffer
           :desc "Set bookmark"                "m"   #'bookmark-set

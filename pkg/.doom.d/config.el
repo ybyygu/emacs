@@ -1,9 +1,8 @@
-;; [[file:~/Workspace/Programming/emacs/doom.note::*orign][orign:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*orig][orig:1]]
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
-
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -42,7 +41,26 @@
 ;;
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
-;; orign:1 ends here
+;; orig:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
+(use-package! zoom
+              ;; :after-call pre-command-hook
+              :config
+              (custom-set-variables
+               '(zoom-size '(0.618 . 0.618)))
+              (map! :map evil-window-map
+                    "z" #'zoom)
+              )
+;; window:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]
+(map! :i "C-`" #'+popup/toggle)
+;; window:3 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*line number][line number:1]]
+(setq display-line-numbers-type nil)
+;; line number:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*doom tuning][doom tuning:1]]
 (setq evil-want-fine-undo t)
@@ -167,26 +185,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
 ;; advanced selection:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
-(use-package! zoom
-              ;; :after-call pre-command-hook
-              :config
-              (custom-set-variables
-               '(zoom-size '(0.618 . 0.618)))
-              (map! :map evil-window-map
-                    "z" #'zoom)
-              )
-;; window:1 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]
-(map! :i "C-`" #'+popup/toggle)
-;; window:3 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*line number][line number:1]]
-(setq display-line-numbers-type nil)
-;; line number:1 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dired hacks][dired hacks:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:1]]
 (defun gwp/dired-copy-file-path()
   (interactive)
   (let ((current-prefix-arg '(0)))
@@ -198,7 +197,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
       :localleader
       :n "y" #'gwp/dired-copy-file-path
       )
-;; dired hacks:1 ends here
+;; dired:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*org][org:1]]
 ;; If you use `org' and don't want your org files in the default location below,
@@ -269,10 +268,9 @@ containing the current file by the default explorer."
   )
 ;; deadgrep:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*rust][rust:1]]
-(after! smartparens
-        (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
-;; rust:1 ends here
+;; [[file:~/Workspace/Programming/emacs/doom.note::*develop][develop:1]]
+(load! "develop")
+;; develop:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*recent files][recent files:1]]
 (require 'recentf)
@@ -285,24 +283,7 @@ containing the current file by the default explorer."
 (add-to-list 'recentf-exclude "\.odt$")
 ;; recent files:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*vc commit之前更新时间戳][vc commit之前更新时间戳:1]]
-(use-package vc
-  :init
-  (progn
-    (add-hook 'vc-before-checkin-hook #'time-stamp)
-    )
-  )
-
-(use-package vc-hooks
-  :init
-  (progn
-    ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
-    (setq vc-follow-symlinks t)
-    )
-  )
-;; vc commit之前更新时间戳:1 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO fcitx][fcitx:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*fcitx][fcitx:1]]
 (use-package! fcitx
   :after evil
   :config
@@ -342,16 +323,7 @@ containing the current file by the default explorer."
               )
 ;; window:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*magit][magit:1]]
-(after! magit
-  ;;禁用magit中的gravatars支持, 响应能快一些.
-  (setq magit-revision-show-gravatars nil)
-
-  (map! :map doom-leader-git-map "s" #'magit-status)
-  )
-;; magit:1 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)
 ;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
 (map! :nvim "C-e" nil)
@@ -372,9 +344,9 @@ containing the current file by the default explorer."
               :i "M-l" nil
               )
         )
-;; 常用按键:1 ends here
+;; bindings:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*常用按键][常用按键:2]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:2]]
 ;; Make M-x harder to miss
 (define-key! 'override
   "M-x" #'execute-extended-command
@@ -400,4 +372,4 @@ containing the current file by the default explorer."
       )
 
 (load! "bindings")
-;; 常用按键:2 ends here
+;; bindings:2 ends here

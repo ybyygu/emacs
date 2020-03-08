@@ -508,13 +508,12 @@ stow:
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/config.el
 :END:
-*** orign
+*** orig
 #+BEGIN_SRC emacs-lisp
   ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
   ;; Place your private configuration here! Remember, you do not need to run 'doom
   ;; sync' after modifying this file!
-
 
   ;; Some functionality uses this to identify you, e.g. GPG configuration, email
   ;; clients, file templates and snippets.
@@ -555,7 +554,78 @@ stow:
   ;; they are implemented.
 #+END_SRC
 
-*** 字符编辑
+*** ui
+**** chinese fonts setup
+#+begin_src elisp
+  (use-package! cnfonts
+    :config
+    (progn
+      (setq cnfonts-profiles
+            '("program" "org-mode" "read-book"))
+      (setq cnfonts-use-face-font-rescale t)
+      )
+    (cnfonts-enable)
+    )
+#+end_src
+
+**** theme
+#+begin_src elisp
+  ;; There are two ways to load a theme. Both assume the theme is installed and
+  ;; available. You can either set `doom-theme' or manually load a theme with the
+  ;; `load-theme' function. This is the default:
+  ;;(setq doom-theme 'doom-acario-light)
+  ;; (setq doom-theme 'doom-one)
+  (load-theme 'material t)
+#+end_src
+
+**** window
+自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
+命令手动开启.
+
+对应命令: SPC-w z
+#+begin_src emacs-lisp
+  (use-package! zoom
+                ;; :after-call pre-command-hook
+                :config
+                (custom-set-variables
+                 '(zoom-size '(0.618 . 0.618)))
+                (map! :map evil-window-map
+                      "z" #'zoom)
+                )
+#+end_src
+
+用avy在多个窗口下跳转也很方便.
+#+BEGIN_SRC elisp
+  (use-package! avy
+                :config
+                (setq avy-all-windows t)
+                )
+#+END_SRC
+
+打开doom popup窗口, 默认仅在normal state下可用.
+#+begin_src emacs-lisp
+  (map! :i "C-`" #'+popup/toggle)
+#+end_src
+
+
+golden-ratio有点问题
+https://github.com/hlissner/doom-emacs/issues/2225
+#+begin_src elisp :tangle no
+  (use-package! golden-ratio
+                :after-call pre-command-hook
+                :config
+                (golden-ratio-mode +1)
+                ;; Using this hook for resizing windows is less precise than
+                ;; `doom-switch-window-hook'.
+                (remove-hook 'window-configuration-change-hook #'golden-ratio)
+                (add-hook 'doom-switch-window-hook #'golden-ratio))
+#+end_src
+**** line number
+默认不显示行号
+#+begin_src emacs-lisp
+  (setq display-line-numbers-type nil)
+#+end_src
+*** edit
 **** doom tuning
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
@@ -683,96 +753,7 @@ stow:
   ;; (require 'expand-region)
   ;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
-
-*** 界面设置
-**** ui
-#+begin_src emacs-lisp :tangle no
-  (set-language-environment "UTF-8")
-  (prefer-coding-system 'utf-8)
-  (global-font-lock-mode t)
-
-  ;; force a syntax-highlighting refresh
-  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
-  (auto-image-file-mode t)              ; View images inside Emacs
-
-  ;; set line space wider than default
-  (setq-default line-spacing 4)
-
-  ;; 修改 frame 标题 方便 gnome-shell 桌面切换
-  (setq frame-title-format '("" "%b: " buffer-file-name))
-#+end_src
-
-**** chinese fonts setup
-#+begin_src elisp
-  (use-package! cnfonts
-    :config
-    (progn
-      (setq cnfonts-profiles
-            '("program" "org-mode" "read-book"))
-      (setq cnfonts-use-face-font-rescale t)
-      )
-    (cnfonts-enable)
-    )
-#+end_src
-
-**** theme
-#+begin_src elisp
-  ;; There are two ways to load a theme. Both assume the theme is installed and
-  ;; available. You can either set `doom-theme' or manually load a theme with the
-  ;; `load-theme' function. This is the default:
-  ;;(setq doom-theme 'doom-acario-light)
-  ;; (setq doom-theme 'doom-one)
-  (load-theme 'material t)
-#+end_src
-
-**** window
-自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
-命令手动开启.
-
-对应命令: SPC-w z
-#+begin_src emacs-lisp
-  (use-package! zoom
-                ;; :after-call pre-command-hook
-                :config
-                (custom-set-variables
-                 '(zoom-size '(0.618 . 0.618)))
-                (map! :map evil-window-map
-                      "z" #'zoom)
-                )
-#+end_src
-
-用avy在多个窗口下跳转也很方便.
-#+BEGIN_SRC elisp
-  (use-package! avy
-                :config
-                (setq avy-all-windows t)
-                )
-#+END_SRC
-
-打开doom popup窗口, 默认仅在normal state下可用.
-#+begin_src emacs-lisp
-  (map! :i "C-`" #'+popup/toggle)
-#+end_src
-
-
-golden-ratio有点问题
-https://github.com/hlissner/doom-emacs/issues/2225
-#+begin_src elisp :tangle no
-  (use-package! golden-ratio
-                :after-call pre-command-hook
-                :config
-                (golden-ratio-mode +1)
-                ;; Using this hook for resizing windows is less precise than
-                ;; `doom-switch-window-hook'.
-                (remove-hook 'window-configuration-change-hook #'golden-ratio)
-                (add-hook 'doom-switch-window-hook #'golden-ratio))
-#+end_src
-**** line number
-默认不显示行号
-#+begin_src emacs-lisp
-  (setq display-line-numbers-type nil)
-#+end_src
-*** dired hacks
+*** dired
 用于在dired中复制当前文件的全路径.
 #+begin_src emacs-lisp
   (defun gwp/dired-copy-file-path()
@@ -800,6 +781,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
 
   (after! org (load! "org"))
 #+end_src
+
 *** re-open-current-file
 可以用revert-buffer SPC-b-r
 #+begin_src elisp :tangle no
@@ -884,24 +866,9 @@ deadgrep与doom有冲突, 不能用了.
                 (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
                 )
 #+end_src
-
-*** rust
-解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
-- https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
+*** develop
 #+begin_src emacs-lisp
-  (after! smartparens
-          (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
-#+end_src
-
-*** magit
-spacemacs中的习惯, 加回来, 避免忙中出错
-#+begin_src elisp
-  (after! magit
-    ;;禁用magit中的gravatars支持, 响应能快一些.
-    (setq magit-revision-show-gravatars nil)
-
-    (map! :map doom-leader-git-map "s" #'magit-status)
-    )
+  (load! "develop")
 #+end_src
 
 *** recent files
@@ -916,7 +883,7 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   (add-to-list 'recentf-exclude "\.odt$")
 #+end_src
 
-*** 中文问题相关 [[https://github.com/hick/emacs-chinese][URL]]
+*** encodes [[https://github.com/hick/emacs-chinese][URL]]
 #+begin_src emacs-lisp :tangle no
   (set-language-environment "UTF-8")
   (prefer-coding-system 'utf-8)
@@ -946,24 +913,6 @@ spacemacs中的习惯, 加回来, 避免忙中出错
       ;; (setq fcitx-use-dbus t)
       (fcitx-aggressive-setup)
       ))
-#+END_SRC
-
-*** vc commit更新时间戳
-#+BEGIN_SRC emacs-lisp
-  (use-package vc
-    :init
-    (progn
-      (add-hook 'vc-before-checkin-hook #'time-stamp)
-      )
-    )
-
-  (use-package vc-hooks
-    :init
-    (progn
-      ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
-      (setq vc-follow-symlinks t)
-      )
-    )
 #+END_SRC
 
 *** TODO bm
@@ -1043,7 +992,7 @@ spacemacs中的习惯, 加回来, 避免忙中出错
     )
 #+END_SRC
 
-*** 常用按键
+*** bindings
 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
 
 #+begin_src elisp
@@ -1216,6 +1165,63 @@ github支持, 减慢速度.
   (package! forge :ignore t)
   ;; 不能简单的禁用了事
   ;; (package! github-review :ignore t)
+#+end_src
+
+* develop.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/develop.el
+:END:
+** magit
+spacemacs中的习惯, 加回来, 避免忙中出错
+#+begin_src elisp
+  (after! magit
+    ;;禁用magit中的gravatars支持, 响应能快一些.
+    (setq magit-revision-show-gravatars nil)
+
+    (map! :map doom-leader-git-map "s" #'magit-status)
+    )
+#+end_src
+
+** vc commit
+自动更新时间戳
+#+BEGIN_SRC emacs-lisp
+  (use-package vc
+    :init
+    (progn
+      (add-hook 'vc-before-checkin-hook #'time-stamp)
+      )
+    )
+
+  (use-package vc-hooks
+    :init
+    (progn
+      ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
+      (setq vc-follow-symlinks t)
+      )
+    )
+#+END_SRC
+
+** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
+快捷键 SPC g .
+#+BEGIN_SRC emacs-lisp
+  ;; (magit-status  "/yadm::")
+  (after! tramp
+    (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c"))))
+    )
+#+END_SRC
+
+** TODO rust
+解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
+- https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
+#+begin_src emacs-lisp
+  (after! smartparens
+          (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
 #+end_src
 
 
@@ -2472,6 +2478,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (map! :leader
         ;;; <leader> g --- git
         (:prefix-map ("g" . "git")
+          :desc "Manage dotfiles using yadm"  "."   (lambda! (magit-status "/yadm::"))
           :desc "Git revert file"             "R"   #'vc-revert
           :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill-file-or-region
           :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage

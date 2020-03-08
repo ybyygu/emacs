@@ -66,8 +66,8 @@
         (:unless (featurep! :ui workspaces)
           :desc "Switch buffer"           "b" #'switch-to-buffer)
         :desc "Kill buffer"                 "d"   #'kill-current-buffer
-        :desc "ibuffer"                     "i"   #'ibuffer
         :desc "Kill buffer"                 "k"   #'kill-current-buffer
+        :desc "ibuffer"                     "i"   #'ibuffer
         :desc "Kill all buffers"            "K"   #'doom/kill-all-buffers
         :desc "Switch to last buffer"       "l"   #'evil-switch-to-windows-last-buffer
         :desc "Set bookmark"                "m"   #'bookmark-set
@@ -148,6 +148,7 @@
 (map! :leader
       ;;; <leader> g --- git
       (:prefix-map ("g" . "git")
+        :desc "Manage dotfiles using yadm"  "."   (lambda! (magit-status "/yadm::"))
         :desc "Git revert file"             "R"   #'vc-revert
         :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill-file-or-region
         :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage

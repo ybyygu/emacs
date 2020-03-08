@@ -122,6 +122,7 @@
 (map! :leader
       ;;; <leader> f --- file
       (:prefix-map ("f" . "file")
+        :desc "Open bookmarks"              "b"   #'counsel-bookmark
         :desc "Open project editorconfig"   "c"   #'editorconfig-find-current-editorconfig
         :desc "Copy this file"              "C"   #'doom/copy-this-file
         :desc "Find directory"              "d"   #'dired
@@ -302,6 +303,7 @@
 (map! :leader
       ;;; <leader> r --- resume
       (:prefix-map ("r" . "rings/resume")
+                   :desc "Open bookmarks"        "b" #'counsel-bookmark
                    :desc "Resume last search"    "l" #'ivy-resume
                    :desc "Evil registers"        "e" #'counsel-register
                    :desc "Evil marks"            "m" #'counsel-evil-marks

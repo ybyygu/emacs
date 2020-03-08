@@ -221,12 +221,20 @@ spc h m d: doom-help-module
 ** 调试emacs
 真好用.
 : debug-on-error
+
+在doom里可以用 SPC-h-d-d
+
+也可启用profiler, SPC-h-d-t, 查看命令调用堆栈
+
 ** 文档跳转
 : goto-last-change
 
 ** 书签管理
-: SPC f b
-: helm-filtered-bookmarks
+: SPC-f-b, SPC-RET
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (counsel-bookmark)
+#+END_SRC
 
 ** Editing styles
 =dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
@@ -1183,7 +1191,7 @@ stow:
          ;;swift             ; who asked for emoji variables?
          ;;terra             ; Earth and Moon in alignment for performance.
          ;;web               ; the tubes
-         org
+         org                 ; 为了激活autoloads, 原modules也得留着, 不过会被后面的覆盖
 
          :email
          ;;(mu4e +gmail)
@@ -3151,6 +3159,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (map! :leader
         ;;; <leader> f --- file
         (:prefix-map ("f" . "file")
+          :desc "Open bookmarks"              "b"   #'counsel-bookmark
           :desc "Open project editorconfig"   "c"   #'editorconfig-find-current-editorconfig
           :desc "Copy this file"              "C"   #'doom/copy-this-file
           :desc "Find directory"              "d"   #'dired
@@ -3348,6 +3357,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (map! :leader
         ;;; <leader> r --- resume
         (:prefix-map ("r" . "rings/resume")
+                     :desc "Open bookmarks"        "b" #'counsel-bookmark
                      :desc "Resume last search"    "l" #'ivy-resume
                      :desc "Evil registers"        "e" #'counsel-register
                      :desc "Evil marks"            "m" #'counsel-evil-marks

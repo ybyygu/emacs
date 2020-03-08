@@ -156,7 +156,7 @@
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        ;;web               ; the tubes
-       org
+       org                 ; 为了激活autoloads, 原modules也得留着, 不过会被后面的覆盖
 
        :email
        ;;(mu4e +gmail)

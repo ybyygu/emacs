@@ -190,8 +190,12 @@ https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 https://segmentfault.com/q/1010000000118837
 
 
-* 常用按键
+* Tips
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
+阅读文档 ~SPC h d~
+** universal arguments
+SPC u
+
 ** 各种跳转
 : g; last-change
 : spc si => imenu symbol
@@ -209,15 +213,18 @@ https://segmentfault.com/q/1010000000118837
 ** org-edit-special
 | C-c '   | hard to press |
 | SPC-m ; |               |
-** window
-** 最大化或还原当前窗口
-- Ctrl-w mm 或SPC-w mm: Maximize / restore the current buffer
 
-** doom
-spc h m d: doom-help-module
+** window/frame
+- 最大化或还原当前窗口: Ctrl-w mm 或SPC-w mm: Maximize / restore the current buffer
+- SPC-w o, 最大化popup
+- 新开frame, SPC-o-f, make-frame
+- zoom: 可以自动放大当前的 window 区域: SPC w z
 
-* Tips
-阅读文档 ~SPC h r~
+| ~SPC w v~ | vertical split |
+| ~SPC w d~ | remove window  |
+| ~SPC w r~ | swap windows   |
+| ~SPC w f~ | follow mode    |
+
 ** 调试emacs
 真好用.
 : debug-on-error
@@ -226,9 +233,6 @@ spc h m d: doom-help-module
 
 也可启用profiler, SPC-h-d-t, 查看命令调用堆栈
 
-** 文档跳转
-: goto-last-change
-
 ** 书签管理
 : SPC-f-b, SPC-RET
 
@@ -236,31 +240,20 @@ spc h m d: doom-help-module
   (counsel-bookmark)
 #+END_SRC
 
-** Editing styles
-=dotspacemacs-editing-style= 使用hybrid做为主编辑模式.
-
-** iedit mode
+** TODO multiple-cursors
 使用vim的方式搜索时, 可以进入iedit-mode, 同时编辑多处匹配项. 退出时, 按两下ESC.
-
-** 窗口管理 (window/frame)
-| ~SPC w F~ | new frame      |
-| ~SPC w v~ | vertical split |
-| ~SPC w d~ | remove window  |
-| ~SPC w r~ | swap windows   |
-| ~SPC w f~ | follow mode    |
-
-看所有与~SPC w~有关的绑定 ~SPC w C-h C-h~
 
 ** 删除空格
 - just-one-space 默认绑定为 ~Ｍ-SPC~
 
 ** 切换只读模式
-: SPC b w
+: C-x C-q
+: SPC-t r
 
 ** magit
-| SPC g s  | status                |                             |
-| SPC g S  | stage file            |                             |
-| SPC g fh | magit-log-buffer-file | Show log for current buffer |
+| magit-status          |                             |
+| magit-stage-file      |                             |
+| magit-log-buffer-file | Show log for current buffer |
 
 : reset: O
 : discard: x
@@ -275,7 +268,7 @@ spc h m d: doom-help-module
 
 ** 粘贴替换选中文字
 vi模式下使用P命令.
-** gold-ratio 可以自动放大当前的 window 区域: SPC t g
+
 ** 使用外部程序打开文件的方式
 emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太方便. 操作步骤:
 1. dired-jump (SPC fj): 使用 dired 打开当前文件所在目录
@@ -284,24 +277,6 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 
 ** 打开buffer文件所在目录
 ~SPC u SPC f o~
-
-** user-init 和 user-config
-from FAQ: [[http://spacemacs.org/doc/FAQ.html][URL]]
-
-1.12 Should I place my settings in user-init or user-config?
-
-Any variable that layer configuration code will read and act on must be set in
-user-init, and any variable that Spacemacs explicitly sets but you wish to
-override must be set in user-config.
-
-Anything that isn't just setting a variable should 99% be in user-config.
-** 打开.spacemacs 配置文件
-: SPC f e d
-** 调整字体大小 (zoom)
-: SPC z x +/-
-** universal arguments
-SPC u
-
 
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
@@ -381,10 +356,9 @@ References
 
 * TODO scripts
 ** take-screenshot-dwim
+[2020-03-08 Sun] 用不上了.
 屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
-
-#+header: :tangle pkg/.local/bin/take-screenshot-dwim :shebang #! /usr/bin/bash
-#+name: 21060be1-2114-40f2-9bcd-319bdbef9e06
+#+header: :tangle no
 #+begin_src shell
   [[ $# < 1 ]] && echo "no image path" && exit 0
 
@@ -666,238 +640,14 @@ References
   xdg-desktop-menu install gwp-org-capture.desktop
 #+end_src
 
+
 * TODO deprecated
-** text
-*** 常规操作
-1. mark: C-@, C-M-SPC
-2. goto-line
-
-#+BEGIN_SRC emacs-lisp
-  (global-set-key "\C-l" 'goto-line) ; [Ctrl]-[L]
-
-  ;; more convenient than C-M-BACKSPC
-  ;; (global-set-key (kbd "<f5> k") 'kill-whole-line)
-  ;; (global-set-key (kbd  "M-k") 'kill-whole-line)
-  ;; (global-set-key (kbd  "M-K") 'kill-sentence)
-
-#+END_SRC
-
-*** 按行或段移动
-: [ e move line up
-: ] e move line down
-
-#+name: e6587a14-89c7-410e-9fd2-de4cdb455092
-#+BEGIN_SRC emacs-lisp
-  (defun move-text-internal (arg)
-     (cond
-      ((and mark-active transient-mark-mode)
-       (if (> (point) (mark))
-          (exchange-point-and-mark))
-       (let ((column (current-column))
-            (text (delete-and-extract-region (point) (mark))))
-         (forward-line arg)
-         (move-to-column column t)
-         (set-mark (point))
-         (insert text)
-         (exchange-point-and-mark)
-         (setq deactivate-mark nil)))
-      (t
-       (beginning-of-line)
-       (when (or (> arg 0) (not (bobp)))
-         (forward-line)
-         (when (or (< arg 0) (not (eobp)))
-          (transpose-lines arg))
-         (forward-line -1)))))
-
-  (defun move-text-down (arg)
-     "Move region (transient-mark-mode active) or current line
-    arg lines down."
-     (interactive "*p")
-     (move-text-internal arg))
-
-  (defun move-text-up (arg)
-     "Move region (transient-mark-mode active) or current line
-    arg lines up."
-     (interactive "*p")
-     (move-text-internal (- arg))
-     )
-
-  (defun move-paragraph-down (arg)
-     "Move current paragraph down."
-     (interactive "*p")
-     (transpose-paragraphs arg)
-     (backward-paragraph arg)
-     (forward-char))
-
-  (defun move-paragraph-up (arg)
-     "Move current paragraph down."
-     (interactive "*p")
-     (transpose-paragraphs (- arg))
-     (backward-paragraph arg)
-     (forward-char))
-
-#+END_SRC
-*** 符号对操作
-**** smart-parens [[https://github.com/Fuco1/smartparens][URL]]
-比想像中的强大的多, 完全可以代替之前的设置.
-1. 可以一对对的插入或删除
-2. 可以在 region 里插入括号. 在 insert-mode 下选择区域, 按括号即可.
-
-使用方法可以参考这里: [[https://ebzzry.github.io/emacs-pairs.html][URL]]
-*** 同时编辑多处文本
-**** old config
-#+name: 8ac9b8bd-0ccb-4bb6-89a6-914381c0f406
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'iedit)
-  (require 'iedit)
-  (define-key global-map (kbd "C-;") 'iedit-mode)
-  ;; disable flyspell mode for the annoying conflicting key bindings
-  (flyspell-mode 0)
-#+END_SRC
-
-*** goto-last-change
-**** 如果需要先安装下.
-
-#+name: 1dbc4a26-174b-4ebd-ba80-1f6066815d1b
-#+BEGIN_SRC emacs-lisp
-(starter-kit-install-if-needed 'goto-last-change)
-#+END_SRC
-
-#+RESULTS:
-**** 设置快捷键
-#+name: bf562780-7ae5-49b1-ae33-3c8b18a73221
-#+BEGIN_SRC emacs-lisp
-(require 'goto-last-change)
-(global-set-key (kbd "<f5> b") 'goto-last-change)
-#+END_SRC
-
-#+RESULTS:
-: goto-last-change
-
-*** gjf-mode: 编译 gaussian GJF 文件
-#+name: da044c86-580b-4341-aa69-6331911d2969
+** gjf-mode: 编译 gaussian GJF 文件
 #+BEGIN_SRC emacs-lisp
 (require 'gjf-mode)
 #+END_SRC
 
-** development
-*** 高亮当前行
-所有已定义的颜色:
-: list-colors-display
-
-#+name: 52fcb671-cd31-4c84-bb30-c22b87b85558
-#+BEGIN_SRC emacs-lisp
-  (global-hl-line-mode 1)
-  (set-face-attribute hl-line-face nil :underline nil :background "gray0")
-#+END_SRC
-
-*** 书签&导航等
-主要用 bm, 书签持久化是从 bm.el 里抄来的.
-
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'bm)
-  (setq bm-restore-repository-on-load t)
-
-  (require 'bm)
-  (global-set-key (kbd "<left-fringe> <mouse-5>") 'bm-next-mouse)
-  (global-set-key (kbd "<left-margin> <mouse-5>") 'bm-next-mouse)
-  (global-set-key (kbd "<left-fringe> <mouse-4>") 'bm-previous-mouse)
-  (global-set-key (kbd "<left-margin> <mouse-4>") 'bm-previous-mouse)
-  (global-set-key [left-margin mouse-3] 'gwp-mouse-toggle-bm)
-  (global-set-key [left-fringe mouse-3] 'gwp-mouse-toggle-bm)
-
-  (setq-default bm-buffer-persistence t)
-  (add-hook' after-init-hook 'bm-repository-load)
-  (add-hook 'find-file-hooks 'bm-buffer-restore)
-  (add-hook 'kill-buffer-hook 'bm-buffer-save)
-  (add-hook 'kill-emacs-hook '(lambda nil
-                    (bm-buffer-save-all)
-                    (bm-repository-save)))
-
-  (add-hook 'after-save-hook 'bm-buffer-save)
-  ;; Restore bookmarks when buffer is reverted.
-  (add-hook 'after-revert-hook 'bm-buffer-restore)
-  ;; make sure bookmarks is saved before check-in (and revert-buffer)
-  (add-hook 'vc-before-checkin-hook 'bm-buffer-save)
-
-  (defun gwp-mouse-toggle-bm (e)
-    "Toggle bookmarking
-  This command should be bound to a mouse key.
-  Argument E is a mouse event used by `mouse-set-point'."
-    (interactive "@e")
-    (save-excursion
-      (mouse-set-point e)
-      (bm-toggle)
-      (bm-save)
-      )
-    )
-
-
-#+END_SRC
-
-#+RESULTS:
-: gwp-mouse-toggle-bm
-
-** python
-*** 使用 emacs 中自带的 python.el
-   试了下, 一切都正常. 先这么着吧.
-
-  #+name: 90a43e0b-e10c-4ce9-8d1f-d5ee95fd77f6
-  #+begin_src emacs-lisp
-    ;; (starter-kit-load "python")
-    ;; Why python.el is better than python-mode.el:
-    ;; http://mail.python.org/pipermail/python-mode/2007-October/000411.html
-
-    (starter-kit-install-if-needed 'highlight-indentation)
-
-    ;; enables IPython globally
-    (setq python-shell-interpreter "ipython"
-         python-shell-interpreter-args "--simple-prompt")
-
-    (defun my-python-hook ()
-      ;; disabled at 2013-01-19. will slow down the scrolling when codes was folded
-      (linum-mode 1)
-      ;; make left margin not jumpy
-      ;; learned from:
-      (setq linum-format "%3d\u2502")
-      (menu-bar-mode 1)
-
-      ;; easy reading the hierarchy of the code; I known that from elpy package
-      (highlight-indentation-mode 1)
-
-      ;; (load-ropemacs)
-      ;; (ropemacs-mode 1)
-
-      ;; org-mode style cycling folding
-      ;; actually does not work in v6.0.12; maybe latter version will be ok
-      ;; (setq py-org-cycle-p t)
-
-      ;; outline-magic is better than org-cycle, indeed
-      ;; http://stackoverflow.com/a/4093889/173271?sgp=2
-      ;; (define-key python-mode-map [backtab] 'outline-cycle)
-      ;; (define-key outline-minor-mode-map [M-S-down] 'outline-move-subtree-down)
-      ;; (define-key outline-minor-mode-map [M-S-up] 'outline-move-subtree-up)
-    )
-    (add-hook 'python-mode-hook 'my-python-hook)
-  #+end_src
-
-*** jedi
-jedi 依赖 auto-complete. jedi-server 安装时要将 virtualenv2 软链为
-virtualenv
-
-jedi 的快捷键:
-: C-c .
-: C-c ,
-
-#+name: 56091f33-28ce-43d6-bd64-c41bdc4f8959
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'jedi)
-  ;; (add-hook 'python-mode-hook 'jedi:setup)
-  ;; (setq jedi:complete-on-dot t)                 ; optional
-#+END_SRC
-
-** 界面显示相关
-*** 配色主题
+** 配色主题
 [[http://emacsthemes.caisah.info/][这里]] 有很多主题的图示, 看花眼了. [[https://github.com/owainlewis/emacs-color-themes][这个]] 也不错, 以很多程序员的名字命名.
 
 #+BEGIN_SRC emacs-lisp

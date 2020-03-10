@@ -57,7 +57,7 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
-- [ ] 去掉dired中图标显示及其它多余功能, 简单稳定就好
+- [X] 去掉dired中图标显示及其它多余功能, 简单稳定就好
 - [X] org-capture功能
 - [X] odt exports功能
 - [X] zotero links
@@ -836,7 +836,7 @@ stow:
          ;;word-wrap         ; soft wrapping with language-aware indent
 
          :emacs
-         (dired +icons)             ; making dired pretty [functional]
+         (dired)           ; making dired pretty [functional]
          electric          ; smarter, keyword-based electric-indent
          ibuffer           ; interactive buffer management
          vc                ; version-control and Emacs, sitting in a tree

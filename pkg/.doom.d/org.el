@@ -114,6 +114,27 @@
   )
 ;; tangle:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:2]]
+(defun gwp/org-edit-save-and-tangle ()
+  "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+  (interactive)
+  (when (buffer-modified-p) (org-edit-src-save))
+  (org-edit-src-exit)
+  (call-interactively 'gwp/org-babel-tangle-blocks)
+  (org-edit-src-code)
+  )
+
+(defun gwp/org-babel-tangle-dwim()
+  "tangle current file blocks whenever in a sub-editing buffer or not"
+  (interactive)
+  (save-excursion
+    (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
+      (call-interactively 'gwp/org-babel-tangle-blocks)
+      )
+    )
+  )
+;; tangle:2 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :map org-mode-map
       :localleader
@@ -125,13 +146,13 @@
         :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
         :desc "jump to file tangled file"  "j" #'gwp/org-babel-tangle-jump-to-file
         :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-blocks
+        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
         :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
         )
       ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
       :leader
-      :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-blocks
+      :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
       )
 ;; bindings:1 ends here
 

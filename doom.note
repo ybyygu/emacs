@@ -2046,8 +2046,8 @@ org-babel-expand-src-block (可以展开noweb macro)
     )
 #+end_src
 
-如何在代码编辑窗口中tangle? 下面的代码不太可靠, 禁用
-#+begin_src elisp :tangle no
+如何在代码编辑窗口中tangle?
+#+begin_src elisp
   (defun gwp/org-edit-save-and-tangle ()
     "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
     (interactive)
@@ -2060,11 +2060,14 @@ org-babel-expand-src-block (可以展开noweb macro)
   (defun gwp/org-babel-tangle-dwim()
     "tangle current file blocks whenever in a sub-editing buffer or not"
     (interactive)
-    (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
-      (call-interactively 'gwp/org-babel-tangle-blocks)
+    (save-excursion
+      (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
+        (call-interactively 'gwp/org-babel-tangle-blocks)
+        )
       )
     )
 #+end_src
+
 *** template
 - http://orgmode.org/manual/Languages.html
 
@@ -2113,13 +2116,13 @@ org-babel-expand-src-block (可以展开noweb macro)
           :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
           :desc "jump to file tangled file"  "j" #'gwp/org-babel-tangle-jump-to-file
           :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-          :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-blocks
+          :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
           :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
           :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
           )
         ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
         :leader
-        :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-blocks
+        :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
         )
 #+end_src
 

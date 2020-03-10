@@ -196,6 +196,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (map! :map dired-mode-map
       :localleader
       :n "y" #'gwp/dired-copy-file-path
+      :n "l" #'dired-do-symlink
       )
 ;; dired:1 ends here
 

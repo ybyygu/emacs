@@ -15,6 +15,16 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
 * Memo [6/12]
+** [2020-03-10 Tue] 启用format模块
+- [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]]
+
+需要的工具:
+- Shell script (shfmt)
+- Python (black)
+- Rust (rustfmt)
+
+对于快捷键 SPC-c-f
+
 ** TODO [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
 #+begin_src elisp
   ;; If you want to make use of the `doom-themes' package API (e.g. `doom-color',
@@ -822,10 +832,10 @@ stow:
 
          :editor
          (evil +everywhere); come to the dark side, we have cookies
-                                          ;(evil); come to the dark side, we have cookies
          ;file-templates    ; auto-snippets for empty files
          fold              ; (nigh) universal code folding
          ;;(format +onsave)  ; automated prettiness
+         (format)  ; automated prettiness
          ;;god               ; run Emacs commands without modifier keys
          ;;lispy             ; vim for lisp, for people who don't like vim
          multiple-cursors  ; editing in many places at once
@@ -1213,6 +1223,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
   (map! :map dired-mode-map
         :localleader
         :n "y" #'gwp/dired-copy-file-path
+        :n "l" #'dired-do-symlink
         )
 #+end_src
 

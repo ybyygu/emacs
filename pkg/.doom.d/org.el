@@ -122,6 +122,7 @@
         :desc "insert header argument"     "i" #'org-babel-insert-header-arg
         :desc "view header arguments"      "I" #'org-babel-view-src-block-info
         :desc "demarcate block"            "d" #'org-babel-demarcate-block
+        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
         :desc "jump to file tangled file"  "j" #'gwp/org-babel-tangle-jump-to-file
         :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
         :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-blocks
@@ -352,16 +353,15 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*template][template:1]]
 (with-eval-after-load 'ob
-  ;; add p for python expansion
-  (add-to-list 'org-structure-template-alist '("p" . "src python"))
+    (setq org-structure-template-alist
+          '(
+            ("py" . "src python :results output")
+            ("rs" . "src rust")
+            ("el" . "src emacs-lisp")
+            ("sh" . "src sh")
+          ))
 
-  ;; add rs for rust codes
-  (add-to-list 'org-structure-template-alist '("rs" . "src rust"))
-
-  ;; add el for emacs-lisp expansion
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-
-  (defun gwp/edit-structure-inplace (arg)
+  (defun gwp/org-babel-edit-structure-in-place (arg)
     "Insert source strcture and edit the source"
     (interactive "P")
     (call-interactively 'org-insert-structure-template)

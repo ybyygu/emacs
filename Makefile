@@ -16,7 +16,7 @@ doom-clean:                                            # 清理过期的.elc文�
 doom-upgrade:                                          # 升级doom及packages
 	doom-emacs/bin/doom upgrade
 start:
-	emacs --with-profile doom
+	emacs --with-profile default
 stow:
 	which stow
 # Makefile:1 ends here

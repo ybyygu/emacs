@@ -61,6 +61,21 @@
       )
 ;; 按键行为:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-open-at-point][dwim-open-at-point:1]]
+;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
+;; Depending on universal argument try opening link
+(defun gwp/org-open-at-point-dwim (&optional arg)
+  (interactive "P")
+  (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
+            (org-open-at-point)
+            )
+        (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
+          (org-open-at-point)
+          (zoom))
+        ))
+(map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
+;; dwim-open-at-point:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*jump][jump:1]]
 ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
 (defun gwp/org-babel-tangle-jump-to-file ()
@@ -125,7 +140,7 @@
   )
 ;; org-noter:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-at-point][dwim-at-point:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-enter-at-point][dwim-enter-at-point:1]]
 (defun gwp/dwim-at-point ()
   "Do-what-I-mean at point.
 
@@ -222,7 +237,7 @@ If on a:
          (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
 
       (_ (+org--refresh-inline-images-in-subtree)))))
-;; dwim-at-point:1 ends here
+;; dwim-enter-at-point:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)

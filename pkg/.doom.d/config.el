@@ -331,6 +331,7 @@ containing the current file by the default explorer."
 (map! :nvim "C-k" nil)
 (map! :nvim "C-n" nil)
 (map! :nvim "C-p" nil)
+(map! :nvim "C-u" nil)                  ; universal argument
 
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)

@@ -57,6 +57,7 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [ ] use structopt::*中, 输出*会出现两个, 按/会出现两个.
 
 ** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
+- [ ] 去掉dired中图标显示及其它多余功能, 简单稳定就好
 - [X] org-capture功能
 - [X] odt exports功能
 - [X] zotero links
@@ -189,7 +190,6 @@ https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 
 https://segmentfault.com/q/1010000000118837
 
-
 * Tips
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
 阅读文档 ~SPC h d~
@@ -277,6 +277,7 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 
 ** 打开buffer文件所在目录
 ~SPC u SPC f o~
+
 
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
@@ -722,7 +723,7 @@ doom-clean:                                            # 清理过期的.elc文�
 doom-upgrade:                                          # 升级doom及packages
 	doom-emacs/bin/doom upgrade
 start:
-	emacs --with-profile doom
+	emacs --with-profile default
 stow:
 	which stow
 #+END_SRC
@@ -1449,6 +1450,7 @@ deadgrep与doom有冲突, 不能用了.
   (map! :nvim "C-k" nil)
   (map! :nvim "C-n" nil)
   (map! :nvim "C-p" nil)
+  (map! :nvim "C-u" nil)                  ; universal argument
 
   ;; evil默认为quoted-insert, 可以 ctrl-q代替
   (map! :i "C-v" #'yank)
@@ -1743,7 +1745,7 @@ spacemacs中的习惯, 加回来, 避免忙中出错
         )
 #+end_src
 
-** dwim-at-point
+** dwim-enter-at-point
 从doom中的org module中摘出来, 略作修改.
 #+begin_src emacs-lisp
   (defun gwp/dwim-at-point ()
@@ -1842,6 +1844,22 @@ spacemacs中的习惯, 加回来, 避免忙中出错
            (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
 
         (_ (+org--refresh-inline-images-in-subtree)))))
+#+end_src
+** dwim-open-at-point
+默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
+#+begin_src elisp
+  ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
+  ;; Depending on universal argument try opening link
+  (defun gwp/org-open-at-point-dwim (&optional arg)
+    (interactive "P")
+    (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
+              (org-open-at-point)
+              )
+          (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
+            (org-open-at-point)
+            (zoom))
+          ))
+  (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 #+end_src
 
 ** screenshot

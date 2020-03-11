@@ -565,6 +565,130 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (setq org-crypt-disable-auto-save nil)
 ;; encryption:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*setup][setup:1]]
+(require 'org-attach)
+;; org-mode添加附件后会自动commit(git only), 禁掉:
+;; (setq org-attach-commit nil)
+;; setup:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:1]]
+(setq org-attach-store-link-p 'attached)
+;; copy & paste attachments:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:2]]
+;; 1. store the directory
+(defun gwp/org-attach-store (&optional force)
+  "store org attachment directory of current enetry"
+  (interactive "P")
+  ;; make a temporary symlink to store the attachment path
+  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+  (let ((attach-dir (org-attach-dir)))
+    (when attach-dir
+      (progn
+        ;; remove existing directory
+        (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
+        ;; remove existing file and symlink
+        (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+        ;; remove broken symlink
+        (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
+        (make-symbolic-link attach-dir file-attach-tmp)
+        (message (format "stored to: %s" file-attach-tmp))
+        )
+      )
+    )
+  )
+;; copy & paste attachments:2 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:3]]
+;; 2. move the stored directory to new location
+(defun gwp/org-attach-move (&optional force)
+  "move stored attachments to current entry"
+  (interactive "P")
+  ;; ~/.emacs.d/.cache/.gwp-attach-tmp
+  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+
+  (if (file-exists-p file-attach-tmp)
+      ;; create attachment directory if not exists using org-attach-dir function
+      (let ((attach-dir (org-attach-dir t)))
+        (progn
+          ;; read old attach directory from previous stored symlink
+          (setq attach-dir-old (file-chase-links file-attach-tmp))
+          ;; sanity check
+          (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
+              (progn
+                (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
+                ;; remove stale tmp-link
+                (delete-file file-attach-tmp)
+                )
+            (message "cancelled")
+            )
+          )
+        )
+    (message (format "no stored symbolic link found: %s" file-attach-tmp))
+    )
+  )
+;; copy & paste attachments:3 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
+(defun gwp/org-file-link-p (&optional element)
+  (let ((el (or element (org-element-context))))
+    (and (eq (org-element-type el) 'link)
+         (string= (org-element-property :type el) "file")
+         )
+    )
+  )
+;; 从当前位置文件链接提取文件名.:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:2]]
+(defun gwp/file-path-at-point()
+  "get file path from link at point"
+  (let ((el (org-element-context)))
+    (when (gwp/org-file-link-p el)
+      (org-element-property :path el)
+      )
+    )
+  )
+;; 从当前位置文件链接提取文件名.:2 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
+;; (require 'org-download)
+
+(defun gwp/org-store-link-without-desc (file)
+  "store file link without the description part -- a tweak to make odt image exporting correct."
+  (setq org-stored-links
+        (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
+              org-stored-links)
+        )
+  )
+
+(defun gwp/org-take-as-local-attachment ()
+  "move file link at point as local attachment"
+  (interactive)
+  (let ((file (gwp/file-path-at-point)))
+    (if file
+        (progn
+          ;; 1. store the file using copy
+          ;; or we can use the mv method: (org-attach-attach file nil 'mv)
+          ;; do not store file link since it will corrupt odt image exporting
+          (let ((org-attach-store-link-p nil))
+            (org-attach-attach file))
+          ;; 2. remove the old
+          (call-interactively 'org-download-delete)
+          ;; 3. insert the new
+          ;; use file name as the default caption
+          (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
+          (insert "\n")
+          (gwp/org-store-link-without-desc file)
+          (call-interactively 'org-insert-last-stored-link)
+          ;; refresh the image if possbile
+          (org-display-inline-images)
+         )
+      (user-error "Point is not on a link")
+      )
+    )
+  )
+;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO refile][refile:1]]
 ;; any headline with level <= 2 is a target
 (setq org-refile-targets '(

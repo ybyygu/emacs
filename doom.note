@@ -2336,15 +2336,12 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+end_src
 
 ** TODO org-attach
-:PROPERTIES:
-:header-args: :tangle no
-:END:
 这里都先禁掉, 以后有时间再优化.
 *** setup
-org-mode添加附件后会自动commit(git only), 禁掉:
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (require 'org-attach)
-  (setq org-attach-commit nil)
+  ;; org-mode添加附件后会自动commit(git only), 禁掉:
+  ;; (setq org-attach-commit nil)
 #+end_src
 
 *** copy & paste attachments
@@ -2386,7 +2383,6 @@ file-exists-p函数对symlink的特殊性:
 #+end_src
 
 从存储的软链接中读取之前的entry的附件, 并移动到当前entry的附件目录里.
-#+name: 140c8695-f25d-4512-b0f1-1fe4c8edd5c2
 #+begin_src emacs-lisp
   ;; 2. move the stored directory to new location
   (defun gwp/org-attach-move (&optional force)

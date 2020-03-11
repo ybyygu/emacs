@@ -41,23 +41,23 @@
       :localleader
       ;; FIXME: 与doom/org定义有冲突
       (:prefix ("s" . "Subtree")
-               :desc "Demote" "l" #'org-demote-subtree
-               :desc "Promote" "h" #'org-promote-subtree
-               :desc "Archive" "A" #'org-archive-subtree
-               :desc "Narrow" "n" #'org-toggle-narrow-to-subtree
-               )
+        :desc "Demote" "l" #'org-demote-subtree
+        :desc "Promote" "h" #'org-promote-subtree
+        :desc "Archive" "A" #'org-archive-subtree
+        :desc "Narrow" "n" #'org-toggle-narrow-to-subtree
+        )
       (:prefix ("SPC" . "Special")
-               :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-               :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-               )
+        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
+        )
       )
 (map! :map org-mode-map
       :localleader
       (:prefix ("g" . "Goto")
-               :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-               :desc "Jump to org heading"  "j" #'counsel-org-goto
-               :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-               )
+        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+        )
       )
 ;; 按键行为:1 ends here
 
@@ -69,10 +69,10 @@
   (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
             (org-open-at-point)
             )
-        (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
-          (org-open-at-point)
-          (zoom))
-        ))
+    (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
+      (org-open-at-point)
+      (zoom))
+    ))
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 ;; dwim-open-at-point:1 ends here
 
@@ -166,20 +166,20 @@
 (defun gwp/dwim-at-point ()
   "Do-what-I-mean at point.
 
-If on a:
-- checkbox list item or todo heading: toggle it.
-- clock: update its time.
-- headline: toggle latex fragments and inline images underneath.
-- footnote reference: jump to the footnote's definition
-- footnote definition: jump to the first reference of this footnote
-- table-row or a TBLFM: recalculate the table's formulas
-- table-cell: clear it and go into insert mode. If this is a formula cell,
-  recaluclate it instead.
-- babel-call: 改为编辑代码, edit-special
-- statistics-cookie: update it.
-- latex fragment: toggle it.
-- link: follow it
-- otherwise, refresh all inline images in current tree."
+  If on a:
+  - checkbox list item or todo heading: toggle it.
+  - clock: update its time.
+  - headline: toggle latex fragments and inline images underneath.
+  - footnote reference: jump to the footnote's definition
+  - footnote definition: jump to the first reference of this footnote
+  - table-row or a TBLFM: recalculate the table's formulas
+  - table-cell: clear it and go into insert mode. If this is a formula cell,
+    recaluclate it instead.
+  - babel-call: 改为编辑代码, edit-special
+  - statistics-cookie: update it.
+  - latex fragment: toggle it.
+  - link: follow it
+  - otherwise, refresh all inline images in current tree."
   (interactive)
   (let* ((context (org-element-context))
          (type (org-element-type context)))

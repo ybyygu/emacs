@@ -14,17 +14,7 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
-* Memo [6/12]
-** [2020-03-10 Tue] 启用format模块
-- [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]]
-
-需要的工具:
-- Shell script (shfmt)
-- Python (black)
-- Rust (rustfmt)
-
-对于快捷键 SPC-c-f
-
+* Memo [7/13]
 ** TODO [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
 #+begin_src elisp
   ;; If you want to make use of the `doom-themes' package API (e.g. `doom-color',
@@ -87,6 +77,17 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [X] org-metaright, org-demote-subtree
 - [X] helm-resume => SPC r l
 - [X] deadgrep notes
+
+** DONE [2020-03-10 Tue] 启用format模块
+- State "DONE"       from "TODO"       [2020-03-10 Tue 21:16]
+- [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]]
+
+需要的工具:
+- Shell script (shfmt)
+- Python (black)
+- Rust (rustfmt)
+
+对于快捷键 SPC-c-f
 
 ** DONE [2020-03-05 Thu] 截图新方式: org-capture + org-download? :ATTACH:
 :PROPERTIES:
@@ -3480,5 +3481,97 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 #+END_SRC
 
 ** rust-mode
+*** for
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/for
+  # -*- mode: snippet -*-
+  # name: for var in iterable { ... }
+  # key: for
+  # --
+  for ${1:var} in ${2:iterable} {
+      $0
+  }
+#+END_SRC
+
+*** print
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/print
+  # -*- mode: snippet -*-
+  # name: print!("{}", value);
+  # key: print
+  # --
+  print!("${1:{}}", $2);
+#+END_SRC
+
+*** println
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/println
+  # -*- mode: snippet -*-
+  # name: println!("{}", value);
+  # key: println
+  # --
+  println!("${1:{}}", $2);
+#+END_SRC
+
+*** eprintln
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/eprintln
+# -*- mode: snippet -*-
+# name: eprintln!("{}", value);
+# key: eprintln
+# --
+eprintln!("${1:{}}", $2);
+#+END_SRC
+
+*** fn
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fn
+# -*- mode: snippet -*-
+# name: fn name() { ... }
+# key: fn
+# --
+fn ${1:name}($2) {
+    $0
+}
+#+END_SRC
+
+*** fnr
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fnr
+# -*- mode: snippet -*-
+# name: fn name() -> Type { ... }
+# key: fnr
+# --
+fn ${1:name}($2) -> ${3:Type} {
+     $0
+}
+#+END_SRC
+
+*** main
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/main
+  # -*- mode: snippet -*-
+  # name: fn main() { ... }
+  # key: main
+  # --
+  fn main() {
+     $0
+  }
+#+END_SRC
+
+** prog-mode
+*** fixme
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/prog-mode/fixme
+  # -*- mode: snippet -*-
+  # name: fixme
+  # key: fi
+  # condition: (not (eq major-mode 'sh-mode))
+  # --
+  `comment-start`FIXME: $0`comment-end`
+#+END_SRC
+
+*** todo
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/prog-mode/todo
+# -*- mode: snippet -*-
+# name: todo
+# key: to
+# --
+`comment-start`TODO: $0`comment-end`
+#+END_SRC
+
+
 * theme
 [[file:emacs-material-theme/][file:~/Workspace/Programming/emacs/emacs-material-theme/]]

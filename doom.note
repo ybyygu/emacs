@@ -874,7 +874,7 @@ stow:
          ;;gist              ; interacting with github gists
          (lookup           ; helps you navigate your code and documentation
           +docsets)        ; ...or in Dash docsets locally
-         ;;lsp
+         lsp
          ;;macos             ; MacOS-specific commands
          magit             ; a git porcelain for Emacs
          ;;make              ; run make tasks from Emacs
@@ -931,7 +931,8 @@ stow:
          ;;rest              ; Emacs as a REST client
          ;;rst               ; ReST in peace
          ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-         rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+         ;; (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+         (rust)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
          ;;scala             ; java, but good
          ;;scheme            ; a fully conniving family of lisps
          sh                ; she sells {ba,z,fi}sh shells on the C xor
@@ -1679,9 +1680,16 @@ spacemacs中的习惯, 加回来, 避免忙中出错
 ** TODO rust
 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
+- rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
+
 #+begin_src emacs-lisp
   (after! smartparens
           (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+
+  ;; 启用rust LSP: 用不起来
+  ;; (after! rustic
+  ;;   )
+  ;; (setq rustic-lsp-server 'rust-analyzer)
 #+end_src
 
 

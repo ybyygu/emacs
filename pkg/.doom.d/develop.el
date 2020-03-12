@@ -40,4 +40,9 @@
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO rust][rust:1]]
 (after! smartparens
         (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+
+;; 启用rust LSP: 用不起来
+;; (after! rustic
+;;   )
+(setq rustic-lsp-server 'rust-analyzer)
 ;; rust:1 ends here

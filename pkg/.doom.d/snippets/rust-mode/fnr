@@ -2,6 +2,6 @@
 # name: fn name() -> Type { ... }
 # key: fnr
 # --
-fn ${1:name}($2) -> ${3:Type} {
+fn ${1:name}($2) -> ${3:Result<${4:()}>} {
      $0
 }

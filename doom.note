@@ -3532,9 +3532,50 @@ fn ${1:name}($2) {
 # name: fn name() -> Type { ... }
 # key: fnr
 # --
-fn ${1:name}($2) -> ${3:Type} {
+fn ${1:name}($2) -> ${3:Result<${4:()}>} {
      $0
 }
+#+END_SRC
+
+*** fnw
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fnw
+  # -*- mode: snippet -*-
+  # name: fn name<T>(x: T) where T: Clone { ... }
+  # key: fnw
+  # --
+  fn ${1:name}<${2:T}>(${3:x: T}) where ${4:T: Clone} {
+       $0
+  }
+#+END_SRC
+
+*** test
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/test
+# -*- mode: snippet -*-
+# name: #[test] fn test_name() { .. }
+# key: _test
+# --
+#[test]
+fn ${1:test_name}() {
+   $0
+}
+#+END_SRC
+
+*** result
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/result
+# -*- mode: snippet -*-
+# name: -> Result<()>
+# key: result
+# --
+-> Result<${1:()}>
+#+END_SRC
+
+*** derive
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/derive
+# -*- mode: snippet -*-
+# name: #[derive(Debug)]
+# key: _derive
+# --
+#[derive(${1:Debug})]
 #+END_SRC
 
 *** main

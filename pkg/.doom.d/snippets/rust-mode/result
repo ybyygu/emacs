@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: -> Result<()>
+# key: result
+# --
+-> Result<${1:()}>

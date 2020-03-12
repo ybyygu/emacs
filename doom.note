@@ -207,6 +207,9 @@ https://segmentfault.com/q/1010000000118837
 ** universal arguments
 SPC u
 
+** 查看buffer major mode
+eval: major-mode
+
 ** 各种跳转
 : g; last-change
 : spc si => imenu symbol
@@ -1677,11 +1680,12 @@ spacemacs中的习惯, 加回来, 避免忙中出错
     )
 #+END_SRC
 
-** TODO rust
+** rust
 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
 - rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
 
+*** edit
 #+begin_src emacs-lisp
   (after! smartparens
           (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
@@ -1692,6 +1696,54 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   ;; (setq rustic-lsp-server 'rust-analyzer)
 #+end_src
 
+*** cargo
+rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如果使用C-u 调用, 可以
+修改cargo命令.
+- [[https://github.com/kwrooijen/cargo.el][kwrooijen/cargo.el: Emacs Minor Mode for Cargo, Rust's Package Manager.]]
+
+#+begin_src elisp
+  (use-package cargo
+    :defer t
+    :init
+    (map! :map rust-mode-map
+          :localleader
+          (:prefix ("c" . "cargo")
+            :desc "cargo check"
+            "c" #'cargo-process-check
+            :desc "cargo test (all)"
+            "t" #'cargo-process-test
+            :desc "cargo test (current)"
+            "T" #'cargo-process-current-test
+            :desc "cargo run"
+            "r" #'cargo-process-test
+            :desc "repeat last cargo cmd"
+            "." #'cargo-process-repeat
+            :desc "cargo clippy"
+            "l" #'cargo-process-clippy
+            :desc "cargo update"
+            "u" #'cargo-process-update
+            :desc "cargo doc --open"
+            "d" #'cargo-process-doc-open
+            )))
+#+end_src
+*** racer
+#+begin_src elisp
+    (use-package cargo
+      :defer t
+      :init
+      (progn
+        (add-hook 'rust-mode-hook #'racer-mode)
+        (add-hook 'racer-mode-hook #'eldoc-mode)
+        (add-hook 'racer-mode-hook #'company-mode)
+        ))
+#+end_src
+
+*** packages
+需要安装cargo.el包
+#+begin_src elisp :tangle pkg/.doom.d/packages.el
+  (package! cargo)
+  (package! racer)
+#+end_src
 
 * org.el
 :PROPERTIES:
@@ -2005,7 +2057,6 @@ spacemacs中的习惯, 加回来, 避免忙中出错
   (map! :map org-src-mode-map
         :localleader
         ";" #'org-edit-src-exit
-        "c" #'org-edit-src-exit
         "k" #'org-edit-src-abort
         )
   (map! :map rust-mode-map

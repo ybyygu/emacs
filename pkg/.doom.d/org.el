@@ -363,7 +363,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (map! :map org-src-mode-map
       :localleader
       ";" #'org-edit-src-exit
-      "c" #'org-edit-src-exit
       "k" #'org-edit-src-abort
       )
 (map! :map rust-mode-map

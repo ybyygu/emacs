@@ -59,6 +59,11 @@
 
 (disable-packages! org-bullets pangu-spacing)
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*packages][packages:1]]
+(package! cargo)
+(package! racer)
+;; packages:1 ends here
+
 (package! golden-ratio)
 (package! zoom)
 

@@ -3576,24 +3576,24 @@ eprintln!("${1:{}}", $2);
 
 *** fn
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fn
-# -*- mode: snippet -*-
-# name: fn name() { ... }
-# key: fn
-# --
-fn ${1:name}($2) {
-    $0
-}
+  # -*- mode: snippet -*-
+  # name: fn name() { ... }
+  # key: fn
+  # --
+  fn ${1:name}($2) {
+     ${0:todo!()}
+  }
 #+END_SRC
 
 *** fnr
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fnr
-# -*- mode: snippet -*-
-# name: fn name() -> Type { ... }
-# key: fnr
-# --
-fn ${1:name}($2) -> ${3:Result<${4:()}>} {
-     $0
-}
+  # -*- mode: snippet -*-
+  # name: fn name() -> Type { ... }
+  # key: fnr
+  # --
+  fn ${1:name}($2) -> ${3:Result<${4:()}>} {
+       ${0:todo!()}
+  }
 #+END_SRC
 
 *** fnw
@@ -3611,7 +3611,7 @@ fn ${1:name}($2) -> ${3:Result<${4:()}>} {
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/test
 # -*- mode: snippet -*-
 # name: #[test] fn test_name() { .. }
-# key: _test
+# key: #test
 # --
 #[test]
 fn ${1:test_name}() {

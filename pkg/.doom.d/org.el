@@ -162,6 +162,18 @@
   )
 ;; org-noter:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:1]]
+(after! smartparens-org
+  (sp-with-modes '(org-mode)
+    (sp-local-pair "/" nil :actions :rem)
+    (sp-local-pair "=" nil :actions :rem)
+    (sp-local-pair "~" nil :actions :rem)
+    (sp-local-pair "*" nil :actions :rem)
+    (sp-local-pair "_" nil :actions :rem)
+    )
+  )
+;; pairs:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-enter-at-point][dwim-enter-at-point:1]]
 (defun gwp/dwim-at-point ()
   "Do-what-I-mean at point.

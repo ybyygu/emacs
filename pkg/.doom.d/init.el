@@ -177,4 +177,5 @@
        ;;literate
        ;;(default +bindings +smartparens)
        (default +smartparents)
+       ;; (default)
        )

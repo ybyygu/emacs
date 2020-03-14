@@ -881,7 +881,7 @@ stow:
          ;;gist              ; interacting with github gists
          (lookup           ; helps you navigate your code and documentation
           +docsets)        ; ...or in Dash docsets locally
-         lsp
+         ;lsp
          ;;macos             ; MacOS-specific commands
          magit             ; a git porcelain for Emacs
          ;;make              ; run make tasks from Emacs
@@ -1640,6 +1640,12 @@ github支持, 减慢速度.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/develop.el
 :END:
+** vterm
+安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
+#+begin_src elisp :tangle pkg/.doom.d/packages.el
+  (package! vterm-toggle)
+#+end_src
+
 ** magit
 spacemacs中的习惯, 加回来, 避免忙中出错
 #+begin_src elisp
@@ -2976,6 +2982,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
           :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
           :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
           :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
+          :desc "切换终端(vterm)"                        "t"   #'vterm-toggle
           :desc "复制并注释"                              "y"   #'evilnc-copy-and-comment-lines
           :desc "LSP Format buffer/region"              "F"   #'+default/lsp-format-region-or-buffer
           :desc "LSP Organize imports"                  "i"   #'lsp-organize-imports
@@ -3246,7 +3253,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
           :desc "Big mode"                     "b" #'doom-big-font-mode
           :desc "Flymake"                      "f" #'flymake-mode
           :desc "Menubar"                      "m" #'menu-bar-mode
-          :desc "Toolbar"                      "t" #'tool-bar-mode
+          :desc "切换终端(vterm)"               "t" #'vterm-toggle
+          :desc "Toolbar"                      "T" #'tool-bar-mode
           (:when (featurep! :checkers syntax)
             :desc "Flycheck"                   "f" #'flycheck-mode)
           :desc "Frame fullscreen"             "F" #'toggle-frame-fullscreen

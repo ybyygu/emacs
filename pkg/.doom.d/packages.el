@@ -59,6 +59,10 @@
 
 (disable-packages! org-bullets pangu-spacing)
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:2]]
+(package! vterm-toggle)
+;; vterm:2 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*packages][packages:1]]
 (package! cargo)
 (package! racer)

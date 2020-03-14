@@ -100,6 +100,7 @@
         :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
         :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
         :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
+        :desc "切换终端(vterm)"                        "t"   #'vterm-toggle
         :desc "复制并注释"                              "y"   #'evilnc-copy-and-comment-lines
         :desc "LSP Format buffer/region"              "F"   #'+default/lsp-format-region-or-buffer
         :desc "LSP Organize imports"                  "i"   #'lsp-organize-imports
@@ -344,7 +345,8 @@
         :desc "Big mode"                     "b" #'doom-big-font-mode
         :desc "Flymake"                      "f" #'flymake-mode
         :desc "Menubar"                      "m" #'menu-bar-mode
-        :desc "Toolbar"                      "t" #'tool-bar-mode
+        :desc "切换终端(vterm)"               "t" #'vterm-toggle
+        :desc "Toolbar"                      "T" #'tool-bar-mode
         (:when (featurep! :checkers syntax)
           :desc "Flycheck"                   "f" #'flycheck-mode)
         :desc "Frame fullscreen"             "F" #'toggle-frame-fullscreen

@@ -14,9 +14,10 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
-* Memo [7/16]
-** TODO [2020-03-14 Sat] [[https://emacs-china.org/t/doom-modeline-2-1-0/9251/13][doom-modeline 2.1.0 - Emacs-general - Emacs China]]
+* Memo [8/16]
 ** TODO [2020-03-13 Fri] smartparens学习 [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
+| sp-kill-sexp | 删除光标附近符号对内容 |
+|              |                        |
 
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
 这个可以自定义的地方更多.
@@ -82,6 +83,10 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [X] org-metaright, org-demote-subtree
 - [X] helm-resume => SPC r l
 - [X] deadgrep notes
+
+** DONE [2020-03-14 Sat] 中文字体设置 [[https://emacs-china.org/t/doom-modeline-2-1-0/9251/13][URL]]
+- State "DONE"       from "TODO"       [2020-03-15 Sun 09:45]
+可以去掉cnfonts, 直接中英文分开设置, 解决modeline显示异常的问题.
 
 ** DONE [2020-03-10 Tue] 启用format模块
 - State "DONE"       from "TODO"       [2020-03-10 Tue 21:16]
@@ -209,12 +214,14 @@ https://segmentfault.com/q/1010000000118837
 * Tips
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
 阅读文档 ~SPC h d~
+
 ** universal arguments
 SPC u
+
 ** 自动补全
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/completion/company/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-| C-x C-f | filename |
-| C-x s   | snippet  |
+| C-x C-f | 补全文件名, 类vim |
+| C-x s   | 补全 yasnippet    |
 
 ** 查看buffer major mode
 eval: major-mode
@@ -1002,7 +1009,7 @@ stow:
   ;;
   ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
   ;; font string. You generally only need these two:
-  (setq doom-font (font-spec :family "Monaco" :size 14))
+  ;; (setq doom-font (font-spec :family "Monaco" :size 13))
 
   ;; This determines the style of line numbers in effect. If set to `nil', line
   ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -1029,14 +1036,46 @@ stow:
 *** ui
 **** chinese fonts setup
 #+begin_src elisp
-  (use-package! cnfonts
-    :config
-    (progn
-      (setq cnfonts-profiles
-            '("program" "org-mode" "read-book"))
-      (setq cnfonts-use-face-font-rescale t)
+  ;; (use-package! cnfonts
+  ;;   :config
+  ;;   (progn
+  ;;     (setq cnfonts-profiles
+  ;;           '("program" "org-mode" "read-book"))
+  ;;     (setq cnfonts-use-face-font-rescale t)
+  ;;     )
+  ;;   (cnfonts-enable)
+  ;;   )
+
+  ;; 这样modeline就正常了
+  ;; https://emacs-china.org/t/doom-emacs/10390
+  (defun gwp/set-fonts()
+    (interactive)
+    (if (display-graphic-p)
+        (progn
+          ;; english font
+          ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
+          (setq doom-font (font-spec :family "Monaco" :size 16))
+          ;; chinese font
+          (dolist (charset '(kana han symbol cjk-misc bopomofo))
+            (set-fontset-font (frame-parameter nil 'font)
+                              charset
+                              (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
+      ))
+
+  (defun gwp/init-fonts(frame)
+    (with-selected-frame frame
+      (if (display-graphic-p)
+          (gwp/set-fonts))))
+
+  (if (and (fboundp 'daemonp) (daemonp))
+      (add-hook 'after-make-frame-functions #'gwp/init-fonts)
+    (gwp/set-fonts))
+
+  ;; org-mode表格中文混排对齐
+  (after! org
+    (custom-set-faces!
+      `(org-table :family "Ubuntu Mono")
       )
-    (cnfonts-enable)
     )
 #+end_src
 
@@ -1590,9 +1629,9 @@ deadgrep与doom有冲突, 不能用了.
   - 调整TODO, DONE的调色, 别那么刺眼
 
 #+begin_src elisp
-  (package! cnfonts)
+  ;; (package! cnfonts)
   (package! fcitx)
-  (package! berrys-theme)
+  ;; (package! berrys-theme)
   ;; (package! material-theme)
   (package! material-theme
             :recipe (:host github :repo "ybyygu/emacs-material-theme"))

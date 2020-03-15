@@ -50,18 +50,18 @@
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 
-(package! cnfonts)
+;; (package! cnfonts)
 (package! fcitx)
-(package! berrys-theme)
+;; (package! berrys-theme)
 ;; (package! material-theme)
 (package! material-theme
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 
 (disable-packages! org-bullets pangu-spacing)
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:2]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)
-;; vterm:2 ends here
+;; vterm:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*packages][packages:1]]
 (package! cargo)

@@ -19,7 +19,7 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "Monaco" :size 14))
+;; (setq doom-font (font-spec :family "Monaco" :size 13))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -297,14 +297,46 @@ containing the current file by the default explorer."
 ;; fcitx:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
-(use-package! cnfonts
-  :config
-  (progn
-    (setq cnfonts-profiles
-          '("program" "org-mode" "read-book"))
-    (setq cnfonts-use-face-font-rescale t)
+;; (use-package! cnfonts
+;;   :config
+;;   (progn
+;;     (setq cnfonts-profiles
+;;           '("program" "org-mode" "read-book"))
+;;     (setq cnfonts-use-face-font-rescale t)
+;;     )
+;;   (cnfonts-enable)
+;;   )
+
+;; 这样modeline就正常了
+;; https://emacs-china.org/t/doom-emacs/10390
+(defun gwp/set-fonts()
+  (interactive)
+  (if (display-graphic-p)
+      (progn
+        ;; english font
+        ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
+        (setq doom-font (font-spec :family "Monaco" :size 16))
+        ;; chinese font
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
+    ))
+
+(defun gwp/init-fonts(frame)
+  (with-selected-frame frame
+    (if (display-graphic-p)
+        (gwp/set-fonts))))
+
+(if (and (fboundp 'daemonp) (daemonp))
+    (add-hook 'after-make-frame-functions #'gwp/init-fonts)
+  (gwp/set-fonts))
+
+;; org-mode表格中文混排对齐
+(after! org
+  (custom-set-faces!
+    `(org-table :family "Ubuntu Mono")
     )
-  (cnfonts-enable)
   )
 ;; chinese fonts setup:1 ends here
 

@@ -14,7 +14,8 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
-* Memo [7/15]
+* Memo [7/16]
+** TODO [2020-03-14 Sat] [[https://emacs-china.org/t/doom-modeline-2-1-0/9251/13][doom-modeline 2.1.0 - Emacs-general - Emacs China]]
 ** TODO [2020-03-13 Fri] smartparens学习 [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
 
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
@@ -210,6 +211,10 @@ https://segmentfault.com/q/1010000000118837
 阅读文档 ~SPC h d~
 ** universal arguments
 SPC u
+** 自动补全
+- [[https://github.com/hlissner/doom-emacs/blob/develop/modules/completion/company/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
+| C-x C-f | filename |
+| C-x s   | snippet  |
 
 ** 查看buffer major mode
 eval: major-mode
@@ -807,10 +812,10 @@ stow:
   (doom! :input
 
          :completion
-         company           ; the ultimate code completion backend
+         (company +tng)           ; the ultimate code completion backend
          ;;helm              ; the *other* search engine for love and life
          ;;ido               ; the other *other* search engine...
-         ivy               ; a search engine for love and life
+         (ivy +fuzzy +prescient)               ; a search engine for love and life
 
          :ui
          ;;deft              ; notational velocity for Emacs

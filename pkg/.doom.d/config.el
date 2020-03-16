@@ -329,8 +329,8 @@ containing the current file by the default explorer."
         (gwp/set-fonts))))
 
 (if (and (fboundp 'daemonp) (daemonp))
-    (add-hook 'after-make-frame-functions #'gwp/init-fonts)
-  (gwp/set-fonts))
+    (add-hook 'after-make-frame-functions #'gwp/init-fonts))
+(call-interactively 'gwp/set-fonts)
 
 ;; org-mode表格中文混排对齐
 (after! org

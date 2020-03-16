@@ -212,7 +212,6 @@ https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 https://segmentfault.com/q/1010000000118837
 
 * Tips
-- [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
 阅读文档 ~SPC h d~
 
 ** universal arguments
@@ -671,7 +670,6 @@ References
   xdg-desktop-menu install gwp-org-capture.desktop
 #+end_src
 
-
 * TODO deprecated
 ** gjf-mode: 编译 gaussian GJF 文件
 #+BEGIN_SRC emacs-lisp
@@ -1068,8 +1066,8 @@ stow:
           (gwp/set-fonts))))
 
   (if (and (fboundp 'daemonp) (daemonp))
-      (add-hook 'after-make-frame-functions #'gwp/init-fonts)
-    (gwp/set-fonts))
+      (add-hook 'after-make-frame-functions #'gwp/init-fonts))
+  (call-interactively 'gwp/set-fonts)
 
   ;; org-mode表格中文混排对齐
   (after! org
@@ -2260,6 +2258,11 @@ org-babel-expand-src-block (可以展开noweb macro)
 #+end_src
 ** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
+
+#+begin_src elisp :tangle pkg/.doom.d/packages.el
+  (package! smartparens-org :ignore t)
+#+end_src
+
 #+begin_src elisp
   (after! smartparens-org
     (sp-with-modes '(org-mode)
@@ -2867,6 +2870,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 :header-args: :tangle pkg/.doom.d/bindings.el :comments nil
 :END:
 ** docs
+- [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
+
 从doom config module中取出, 禁用Tab键相关设置, 修复按键Bug.
 
 此文件在config.el中使用load!宏来加载

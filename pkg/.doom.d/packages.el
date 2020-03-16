@@ -68,6 +68,10 @@
 (package! racer)
 ;; packages:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:1]]
+(package! smartparens-org :ignore t)
+;; pairs:1 ends here
+
 (package! golden-ratio)
 (package! zoom)
 

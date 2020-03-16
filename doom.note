@@ -17,7 +17,7 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 * Memo [8/16]
 ** TODO [2020-03-13 Fri] smartparens学习 [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
 | sp-kill-sexp | 删除光标附近符号对内容 |
-|              |                        |
+
 
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
 这个可以自定义的地方更多.
@@ -212,9 +212,8 @@ https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 https://segmentfault.com/q/1010000000118837
 
 * Tips
-阅读文档 ~SPC h d~
-
-** universal arguments
+~SPC h d~
+** Universal arguments
 SPC u
 
 ** 自动补全
@@ -306,8 +305,6 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 
 ** 打开buffer文件所在目录
 ~SPC u SPC f o~
-
-
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
@@ -443,7 +440,6 @@ References
 :header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
 :END:
 *** header
-#+name: 0c47c380-c352-46e3-adf7-4dcc4ff91461
 #+begin_src python
   # -*- coding: utf-8 -*-
   #==============================================================================#
@@ -466,7 +462,6 @@ References
   # 2. open the file without "-n" option to make sure the file buffer will be killed when frame
   #    is closed
   # 3. if the file has been opened, use "-n" option.
-
 #+end_src
 
 *** main
@@ -618,7 +613,7 @@ References
   GenericName=Text Editor
   Comment=View and edit files
   MimeType=application/x-note;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-  Exec=emacsclient-open.py %F
+  Exec=emacsclient %F
   TryExec=emacs
   Icon=emacs
   Type=Application
@@ -641,16 +636,22 @@ References
 #+end_src
 
 ** org-protocol
-#+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :mkdirp yes
+#+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :comments nil
 #+BEGIN_SRC text
   [Desktop Entry]
   Name=org-protocol
   Exec=emacsclient %U
-  Icon=zotero
+  Icon=emacs
   Type=Application
   Terminal=false
   MimeType=x-scheme-handler/org-protocol;
 #+END_SRC
+
+** firefox
+- 注册 [[*org-protocol][org-protocol]]
+- 并用 update-desktop-database, 更新MIME数据库
+- 在Firefox中禁用security.csp.enable选项
+- 使用bookmarklets来capture网页内容
 
 ** install
 1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
@@ -663,12 +664,14 @@ References
   update-desktop-database ~/.local/share/applications/
 #+END_SRC
 
-#+begin_src shell
+#+begin_src shell :dir ~/.local/share/applications
   desktop-file-validate gwp-emacsclient.desktop
   desktop-file-validate gwp-org-capture.desktop
   xdg-desktop-menu install gwp-emacsclient.desktop
   xdg-desktop-menu install gwp-org-capture.desktop
 #+end_src
+
+#+RESULTS:
 
 * TODO deprecated
 ** gjf-mode: 编译 gaussian GJF 文件
@@ -707,6 +710,21 @@ References
 doom会根据~/.doom.d中的配置, 更新doom-emacs/.local目录中的内容. 如果doom-emacs目
 录位置发生变化, 需要删除.local/straints/build目录, 再重建:
 : doom-emacs/bin/doom build
+
+** .note文件搜索
+- 需要在~/.cache/notes建立软链接
+- 添加ripgrep配置文件, 添加--follow symlink选项.
+
+** syncthing .stignore
+sycnthing同步时要避免同步某些文件, 以免不同机器间emacs冲
+突
+
+- https://docs.syncthing.net/users/ignoring.html
+
+需要写在~/Workspace目录下:
+/Programming/emacs/doom-emacs/.local/cache
+
+
 * 调试步骤
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#testing-in-dooms-sandbox][doom-emacs/getting_started.org at develop · hlissner/doom-emacs]]
 

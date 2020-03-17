@@ -10,8 +10,8 @@
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:1]]
 (use-package cargo
   :defer t
+  :hook (rust-mode . cargo-minor-mode)
   :init
-  (add-hook 'rust-mode-hook 'cargo-minor-mode)      ; when edit Rust source
   (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
   (map! :map cargo-minor-mode-map
         :localleader

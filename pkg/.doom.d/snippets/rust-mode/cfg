@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: #[cfg(feature = X)]
+# key: #cfg
+# --
+#[cfg(${1:${2:feature} = "${3:adhoc}"})]

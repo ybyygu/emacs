@@ -837,7 +837,7 @@ stow:
          (company +tng)           ; the ultimate code completion backend
          ;;helm              ; the *other* search engine for love and life
          ;;ido               ; the other *other* search engine...
-         (ivy +fuzzy +prescient)               ; a search engine for love and life
+         (ivy +prescient)    ; a search engine for love and life
 
          :ui
          ;;deft              ; notational velocity for Emacs
@@ -1775,8 +1775,8 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
 #+begin_src elisp
   (use-package cargo
     :defer t
+    :hook (rust-mode . cargo-minor-mode)
     :init
-    (add-hook 'rust-mode-hook 'cargo-minor-mode)      ; when edit Rust source
     (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
     (map! :map cargo-minor-mode-map
           :localleader
@@ -3638,8 +3638,8 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 #+END_SRC
 
 ** rust-mode
-*** TODO feature
-: #[cfg(feature = "adhoc")]
+*** cfg
+: pkg/.doom.d/snippets/rust-mode/cfg
 
 *** structopt
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/structopt

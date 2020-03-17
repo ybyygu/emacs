@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: #[derive(Debug)]
-# key: _derive
+# key: #derive
 # --
 #[derive(${1:Debug})]

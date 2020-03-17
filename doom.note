@@ -18,7 +18,6 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 ** TODO [2020-03-13 Fri] smartparens学习 [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
 | sp-kill-sexp | 删除光标附近符号对内容 |
 
-
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
 这个可以自定义的地方更多.
 
@@ -3629,6 +3628,29 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 #+END_SRC
 
 ** rust-mode
+*** TODO structopt
+: #[derive(StructOpt, Debug)]
+: struct Cli {
+:     /// The filename containing molecular trajectory.
+:     #[structopt(name = "TRAJECTORY_FILE", parse(from_os_str))]
+:     trajectory_file: PathBuf,
+: }
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/structopt
+  # -*- mode: snippet -*-
+  # name: #[derive(StructOpt)]
+  # key: structopt
+  # --
+  #[derive(StructOpt, Debug, Clone)]
+  struct ${1:Cli} {
+      #[structopt(long, short)]
+      n: usize
+  }
+#+END_SRC
+
+
+*** TODO feature
+: #[cfg(feature = "adhoc")]
+
 *** for
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/for
   # -*- mode: snippet -*-
@@ -3723,11 +3745,11 @@ fn ${1:test_name}() {
 
 *** derive
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/derive
-# -*- mode: snippet -*-
-# name: #[derive(Debug)]
-# key: _derive
-# --
-#[derive(${1:Debug})]
+  # -*- mode: snippet -*-
+  # name: #[derive(Debug)]
+  # key: #derive
+  # --
+  #[derive(${1:Debug})]
 #+END_SRC
 
 *** main

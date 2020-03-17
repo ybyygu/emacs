@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: #[derive(StructOpt)]
+# key: structopt
+# --
+#[derive(StructOpt, Debug, Clone)]
+struct ${1:Cli} {
+    #[structopt(long, short)]
+    n: usize
+}

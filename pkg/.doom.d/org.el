@@ -155,9 +155,11 @@
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
         :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
         )
-      ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
+
+      :map org-mode-map
       :leader
       :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
+      :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       )
 ;; bindings:1 ends here
 

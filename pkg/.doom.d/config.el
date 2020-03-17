@@ -356,6 +356,17 @@ containing the current file by the default explorer."
               )
 ;; window:2 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*smartparens][smartparens:1]]
+(map! :leader
+      :nvi
+      "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
+      [deletechar] #'sp-kill-sexp       ; DELETE
+      [right] #'sp-forward-slurp-sexp   ; Array right ==>
+      [left]  #'sp-backward-slurp-sexp  ; Array left  <==
+      "C-k"   #'sp-unwrap-sexp
+      )
+;; smartparens:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)
 ;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.

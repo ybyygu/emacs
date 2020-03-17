@@ -1152,6 +1152,35 @@ https://github.com/hlissner/doom-emacs/issues/2225
   (setq display-line-numbers-type nil)
 #+end_src
 *** edit
+**** smartparens
+不知道能用上多少, 先试几天.
+#+begin_src elisp
+  (map! :leader
+        :nvi
+        "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
+        [deletechar] #'sp-kill-sexp       ; DELETE
+        [right] #'sp-forward-slurp-sexp   ; Array right ==>
+        [left]  #'sp-backward-slurp-sexp  ; Array left  <==
+        "C-k"   #'sp-unwrap-sexp
+        )
+#+end_src
+
+kill
+: (foo |(abc) bar)  -> (foo | bar) ;; nil, defaults to 1
+: (1 2 3 |4 5 6)    -> (|)         ;; 0
+: (foo |(bar) baz)  -> |           ;; SPC u SPC u
+: (1 |2 3 4 5 6)    -> (1|)        ;; SPC u
+
+slurp
+: (foo |bar) baz        -> (foo |bar baz)
+: [(foo |bar)] baz      -> [(foo |bar) baz]
+: ((|foo) bar baz quux) -> ((|foo bar baz quux)) ;; with SPC u
+
+unwrap
+: |(foo bar baz)     -> |foo bar baz
+: (foo bar| baz)     -> foo bar| baz
+
+
 **** doom tuning
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
@@ -2271,9 +2300,11 @@ org-babel-expand-src-block (可以展开noweb macro)
           :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
           :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
           )
-        ;; 为了顺应spacemacs中的设置, 保留spc-ob 按键
+
+        :map org-mode-map
         :leader
         :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
+        :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer
         )
 #+end_src
 
@@ -2944,9 +2975,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
         :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
 
         :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
-
-        :desc "Find file in project"  "SPC"  #'projectile-find-file
-        :desc "Jump to bookmark"      "RET"  #'bookmark-jump
         )
 #+end_src
 

@@ -408,9 +408,6 @@
       :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
 
       :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
-
-      :desc "Find file in project"  "SPC"  #'projectile-find-file
-      :desc "Jump to bookmark"      "RET"  #'bookmark-jump
       )
 
 ;; Smart tab, these will only work in GUI Emacs

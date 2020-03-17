@@ -1751,6 +1751,7 @@ spacemacs中的习惯, 加回来, 避免忙中出错
 #+END_SRC
 
 ** rust
+*** docs
 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
 - rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
@@ -1775,7 +1776,9 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
   (use-package cargo
     :defer t
     :init
-    (map! :map rust-mode-map
+    (add-hook 'rust-mode-hook 'cargo-minor-mode)      ; when edit Rust source
+    (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
+    (map! :map cargo-minor-mode-map
           :localleader
           (:prefix ("c" . "cargo")
             :desc "cargo check"
@@ -1796,6 +1799,7 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
             "d" #'cargo-process-doc-open
             )))
 #+end_src
+
 *** racer
 #+begin_src elisp
     (use-package cargo
@@ -2108,6 +2112,12 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
         :ni "C-c C-;" #'org-edit-special
         :localleader ";" #'org-edit-special
         )
+#+end_src
+*** toml
+方便写Cargo.toml, 指定为toml为conf-toml-mode, 而不用写全 "conf-toml".
+#+begin_src elisp
+  ;; Add convenience lang alias for markdown blocks
+  (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 #+end_src
 
 *** edit
@@ -3728,13 +3738,7 @@ fn ${1:test_name}() {
 #+END_SRC
 
 *** result
-#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/result
-# -*- mode: snippet -*-
-# name: -> Result<()>
-# key: result
-# --
--> Result<${1:()}>$0
-#+END_SRC
+: pkg/.doom.d/snippets/rust-mode/result
 
 *** todo!
 : pkg/.doom.d/snippets/rust-mode/todo

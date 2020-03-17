@@ -11,7 +11,9 @@
 (use-package cargo
   :defer t
   :init
-  (map! :map rust-mode-map
+  (add-hook 'rust-mode-hook 'cargo-minor-mode)      ; when edit Rust source
+  (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
+  (map! :map cargo-minor-mode-map
         :localleader
         (:prefix ("c" . "cargo")
           :desc "cargo check"

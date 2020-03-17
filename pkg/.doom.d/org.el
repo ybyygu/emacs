@@ -76,6 +76,11 @@
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 ;; dwim-open-at-point:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*toml][toml:1]]
+;; Add convenience lang alias for markdown blocks
+(add-to-list 'org-src-lang-modes '("toml" . conf-toml))
+;; toml:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*jump][jump:1]]
 ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
 (defun gwp/org-babel-tangle-jump-to-file ()

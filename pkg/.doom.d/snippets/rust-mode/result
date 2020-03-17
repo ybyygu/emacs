@@ -2,4 +2,4 @@
 # name: -> Result<()>
 # key: result
 # --
--> Result<${1:()}>
+-> Result<${1:()}>$0

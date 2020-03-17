@@ -5,5 +5,5 @@
 #[derive(StructOpt, Debug, Clone)]
 struct ${1:Cli} {
     #[structopt(long, short)]
-    n: usize
+    ${2:n}: ${0:usize}
 }

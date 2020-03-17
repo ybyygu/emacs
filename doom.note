@@ -3628,13 +3628,10 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 #+END_SRC
 
 ** rust-mode
-*** TODO structopt
-: #[derive(StructOpt, Debug)]
-: struct Cli {
-:     /// The filename containing molecular trajectory.
-:     #[structopt(name = "TRAJECTORY_FILE", parse(from_os_str))]
-:     trajectory_file: PathBuf,
-: }
+*** TODO feature
+: #[cfg(feature = "adhoc")]
+
+*** structopt
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/structopt
   # -*- mode: snippet -*-
   # name: #[derive(StructOpt)]
@@ -3643,13 +3640,9 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
   #[derive(StructOpt, Debug, Clone)]
   struct ${1:Cli} {
       #[structopt(long, short)]
-      n: usize
+      ${2:n}: ${0:usize}
   }
 #+END_SRC
-
-
-*** TODO feature
-: #[cfg(feature = "adhoc")]
 
 *** for
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/for
@@ -3740,8 +3733,11 @@ fn ${1:test_name}() {
 # name: -> Result<()>
 # key: result
 # --
--> Result<${1:()}>
+-> Result<${1:()}>$0
 #+END_SRC
+
+*** todo!
+: pkg/.doom.d/snippets/rust-mode/todo
 
 *** derive
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/derive
@@ -3749,7 +3745,7 @@ fn ${1:test_name}() {
   # name: #[derive(Debug)]
   # key: #derive
   # --
-  #[derive(${1:Debug})]
+  #[derive(${1:Debug}, ${0:Clone})]
 #+END_SRC
 
 *** main
@@ -3765,23 +3761,10 @@ fn ${1:test_name}() {
 
 ** prog-mode
 *** fixme
-#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/prog-mode/fixme
-  # -*- mode: snippet -*-
-  # name: fixme
-  # key: fi
-  # condition: (not (eq major-mode 'sh-mode))
-  # --
-  `comment-start`FIXME: $0`comment-end`
-#+END_SRC
+: pkg/.doom.d/snippets/prog-mode/fixme
 
 *** todo
-#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/prog-mode/todo
-# -*- mode: snippet -*-
-# name: todo
-# key: to
-# --
-`comment-start`TODO: $0`comment-end`
-#+END_SRC
+: pkg/.doom.d/snippets/prog-mode/todo
 
 
 * theme

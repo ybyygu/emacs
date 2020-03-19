@@ -1788,7 +1788,15 @@ spacemacs中的习惯, 加回来, 避免忙中出错
 *** edit
 #+begin_src emacs-lisp
   (after! smartparens
-          (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+    (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
+    ;; Rust closure中使用
+    (sp-with-modes '(rust-mode)
+      (sp-local-pair "|" "|"))
+    )
+
+  (add-hook 'rust-mode-hook
+            (lambda () (require 'smartparens-rust)))
+
 
   ;; 启用rust LSP: 用不起来
   ;; (after! rustic
@@ -1846,6 +1854,7 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
   (package! cargo)
   (package! racer)
+  ;; (package! smartparens-rust) ; 不确定需要
 #+end_src
 
 * org.el
@@ -3591,7 +3600,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+end_src
 
 
-* modules/org-hack
+* [[file:doom-hacks/modules/lang/org/][edit]] modules/org-hack
 新思路:
 - fork doom-emacs, 仅做必要的修改. 将其中的org module更名后, 放到pkg下载入?
 - 这样易于跟踪官方进度?
@@ -3599,7 +3608,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   载~/.doom.d/moudles/gwp下的定义).
 - 新的gwp/org会覆盖lang/org中的设置
 
-[[file:doom-hacks/modules/lang/org/][file:~/Workspace/Programming/emacs/doom-hacks/modules/lang/org/]]
 
 * snippets
 :PROPERTIES:

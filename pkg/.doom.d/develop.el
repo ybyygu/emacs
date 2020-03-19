@@ -78,7 +78,15 @@
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*edit][edit:1]]
 (after! smartparens
-        (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
+  (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
+  ;; Rust closure中使用
+  (sp-with-modes '(rust-mode)
+    (sp-local-pair "|" "|"))
+  )
+
+(add-hook 'rust-mode-hook
+          (lambda () (require 'smartparens-rust)))
+
 
 ;; 启用rust LSP: 用不起来
 ;; (after! rustic

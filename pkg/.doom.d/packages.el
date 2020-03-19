@@ -66,6 +66,7 @@
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*packages][packages:1]]
 (package! cargo)
 (package! racer)
+;; (package! smartparens-rust) ; 不确定需要
 ;; packages:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:1]]

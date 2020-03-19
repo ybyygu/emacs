@@ -322,6 +322,7 @@ containing the current file by the default explorer."
                             charset
                             (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
     ))
+(global-set-key (kbd "<f5> <f5>") 'gwp/set-fonts)
 
 (defun gwp/init-fonts(frame)
   (with-selected-frame frame

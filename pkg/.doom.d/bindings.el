@@ -394,6 +394,7 @@
       ;; C-u is used by evil
       :desc "Universal argument"    "u"    #'universal-argument
       :desc "window"                "w"    evil-window-map
+      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
       :desc "help"                  "h"    help-map
 
       (:when (featurep! :ui popup)

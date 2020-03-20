@@ -1,7 +1,9 @@
 #+TITLE: org-mode config for doom-emacs
 #+SETUPFILE: ~/Notes/common.org
 
-spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
+历史设置
+- [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
+- [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 
 * 配置参考
 - [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
@@ -14,7 +16,7 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
-* Memo [8/16]
+* Memo [12/22]
 ** [2020-03-20 Fri] org中narrow功能 :Idea:
 org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
 必要配合narrow来进行view或tangle.
@@ -221,6 +223,154 @@ git使用v2ray proxy
 https://gist.github.com/evantoli/f8c23a37eb3558ab8765
 
 https://segmentfault.com/q/1010000000118837
+
+** [2018-08-22 Wed] 禁用自动为babel source block生成name的功能.
+用处不大.
+
+** [2018-06-01 Fri] 解决expand-region在org-mode buffer中的问题
+使用扩选功能时, expand-region会自动展开显示之前隐藏outline中的内容, 导致显示内容跳转.
+
+解决方案:
+- 修改expand-region.el, 删除掉 "(eval-after-load 'org" 相关内容
+
+** TODO [2018-01-24 Wed] 修复org-capture, org-protocol中的几个bug
+- [ ] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
+- [X] firefox中, org-protocol在某些网页中无法激活. 是firefox中的"content security policy"导的鬼. 在config里禁用即可. "security.csp.enable"
+
+** DONE [2018-01-06 Sat] 解决odt导出latex公式分辨率太低的问题
+CLOSED: [2018-01-10 Wed 16:18]
+- State "DONE"       from "TODO"       [2018-01-10 Wed 16:18] \\
+  odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 然后通过设置odt dpi为
+  300(默认为96), 将image缩小为原始大小.
+
+** [2017-12-12 Tue] 修改org-download设置, 调整odt导出参数
+自定义org-download-annotate-function
+- 自动添加图片的 ~name~ ~caption~, 方便odt导出时图片自动编号及交叉引用.
+- 自动添加 ~#+attr_org~ 属性, 设置org预览图片的大小
+- 自动添加 ~#+attr_odt~ 属性, 设置odt导出时的图片大小
+
+References
+- [[http://kitchingroup.cheme.cmu.edu/blog/2015/07/10/Drag-images-and-files-onto-org-mode-and-insert-a-link-to-them/][Drag images and files onto org-mode and insert a link to them]]
+
+** [2017-11-19 Sun] 添加新功能, 在buffer或dired当前目录中打开gnome-terminal
+按键: ~SPC o T~
+
+** TODO [2017-11-13 Mon] 完善org-to-read 实现类似zotfile的功能
+[2017-11-17 Fri] 类似没太大必要. 有更流畅的方式?
+
+- 自动将当前headline下的附件放至某个READ目录
+- 手机上阅读并注释, 并同步回修改.
+- 切回DONE状态时从READ目录里取回修改后的版本, 并导出pdf注释.
+
+References
+- [[https://github.com/machc/pdf-tools-org][machc/pdf-tools-org: pdf-tools and org-mode integration]]
+- [[http://tech.memoryimprintstudio.com/pdf-annotation-related-tools/][PDF Annotation Related Tools – Emacs, Arduino, Raspberry Pi, Linux and Programming etc]]
+- [[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][View and annotate PDFs in Emacs with PDF-tools | Pragmatic Emacs]]
+- [[https://matt.hackinghistory.ca/2015/11/11/note-taking-with-pdf-tools/][Note Taking with PDF Tools | Thoughts on Code & History]]
+- [[https://github.com/politza/pdf-tools/issues/134][extract annotations? · Issue #134 · politza/pdf-tools]]
+- [[https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/][Help me with my org-mode workflow for note-taking? : emacs]]
+
+** DONE [2017-11-10 Fri] 进一步改进org-attach功能 方便移动不同的outline及其attachments
+CLOSED: [2017-11-10 Fri 20:37]
+- State "DONE"       from "TODO"       [2017-11-10 Fri 20:37]
+
+操作流程
+- 存储当前entry的附件内容: gwp/org-attach-store
+- 将当前enetry文本移动到新的文件中
+- 将之前存储的附件内容移回到新的attachment目录中来: gwp/org-attach-move
+
+此外:
+修改了变量 org-attach-store-link-p, 这样可以方便的生成指向data目录的文件链接.
+
+** [2017-11-10 Fri] 修改tangle函数, 能更方便的tangle代码
+将gwp/org-babel-tangle-dwim绑定到 ~SPC o b~
+- 使用 ~Ctrl-c '~ 进入代码窗口
+- 修改代码后, 按 ~SPC o b~
+- 该函数自动保存代码, 并tangle对应文件
+
+** DONE [2017-10-27 Fri] 完善org-protocol和org-capture             :Starred:
+CLOSED: [2017-11-01 Wed 10:34]
+
+- 进一步完善js代码
+- 进一步优化bookmarklet, 方便在firefox中使用 [2018-01-24 Wed 21:02]
+- State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
+
+*** store-link
+版本1: 使用selection或URL做为description
+#+BEGIN_SRC javascript
+  javascript:
+  var title = window.getSelection();
+  if (title == '') {
+      title = 'URL';
+  }
+
+  location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
+#+END_SRC
+
+版本2: 使用selection或document title做为description. 如果没有, 默认为URL.
+#+BEGIN_SRC javascript
+  javascript:
+  var title = window.getSelection();
+  if (title == '') {
+      title = document.title;
+      if (title == '') {
+          title = 'URL';
+      }
+  }
+
+  location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
+#+END_SRC
+
+*** capture
+使用'n'模板: 插入当前页面的链接, 使用页面标题或URL做为链接描述. 引用选中文字.
+
+#+name: 12d167c2-43c7-4f54-9a27-2b55432d113d
+#+BEGIN_SRC javascript
+  javascript:
+  var title = document.title;
+  if (title == '') {
+      title = 'URL';
+  }
+
+  location.href = 'org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title) + "&body=" + encodeURIComponent(window.getSelection());
+#+END_SRC
+
+*** References
+原理
+- org-capture.el
+- https://github.com/alphapapa/org-protocol-capture-html
+- org capture extensions: https://github.com/sprig/org-capture-extension
+- [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol.el – Intercept calls from emacsclient to trigger custom actions]] (outdated)
+工具
+- [[https://mrcoles.com/bookmarklet/][Bookmarklet Creator with Script Includer - Peter Coles]]
+- [[http://jsbeautifier.org/][Online JavaScript beautifier]]
+
+** DONE [2017-10-21 Sat] dired: 不显示隐藏文件
+CLOSED: [2017-12-29 Fri 11:24]
+- State "DONE"       from "TODO"       [2017-12-29 Fri 11:24]
+- [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
+
+#+name: 730f0521-c198-43aa-879a-4fa5a3e60d4f
+#+begin_src emacs-lisp
+  (require 'dired-x)
+  (setq-default dired-omit-files-p nil) ; Buffer-local variable
+  ;; (setq dired-omit-files "^\\.+")
+  ;; default is "-al"
+  (setq dired-listing-switches "--group-directories-first -l -X")
+#+end_src
+
+** [2017-10-06 Fri] 解决org-mode加载大文件太慢的问题
+- [2017-10-07 Sat] 发现是hl-todo这个包导致的问题. 禁用该包即可.
+- [2017-10-06 Fri] 使用spacemacs-base distrubtion即可.
+** [2016-12-10 Sat] 禁用选中的文字进入clipboard的功能 [[https://github.com/syl20bnr/spacemacs/blob/master/doc/FAQ.org#prevent-the-visual-selection-overriding-my-system-clipboard][URL]]
+: ;; Prevent the visual selection overriding my system clipboard
+: (fset 'evil-visual-update-x-selection 'ignore)
+
+** [2016-12-10 Sat] 修改spacemacs中默认的undo行为 默认的undo太变态了
+: (setq evil-want-fine-undo t)
+
+** [2016-10-14 Fri] emacs24-starter-kit 更新维护不是很活跃. 现在已是 emacs25 时代了. 考虑换到 spacemacs
+
 
 * Tips
 ~SPC h d~
@@ -684,7 +834,7 @@ References
 
 #+RESULTS:
 
-* TODO deprecated
+* deprecated
 ** gjf-mode: 编译 gaussian GJF 文件
 #+BEGIN_SRC emacs-lisp
 (require 'gjf-mode)

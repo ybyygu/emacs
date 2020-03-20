@@ -1254,6 +1254,11 @@ stow:
 #+end_src
 
 **** window
+修改 frame 标题 方便 gnome-shell 桌面切换
+#+begin_src elisp
+  (setq frame-title-format '("%b: " buffer-file-name))
+#+end_src
+
 自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
 命令手动开启.
 
@@ -1494,7 +1499,6 @@ unwrap
     )
 #+end_src
 
-
 *** org
 #+begin_src emacs-lisp
   ;; If you use `org' and don't want your org files in the default location below,
@@ -1622,9 +1626,6 @@ deadgrep与doom有冲突, 不能用了.
 
   ;; set line space wider than default
   (setq-default line-spacing 4)
-
-  ;; 修改 frame 标题 方便 gnome-shell 桌面切换
-  (setq frame-title-format '("" "%b: " buffer-file-name))
 #+end_src
 
 *** fcitx

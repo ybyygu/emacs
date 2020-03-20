@@ -43,7 +43,7 @@
 ;; they are implemented.
 ;; orig:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:2]]
 (use-package! zoom
               ;; :after-call pre-command-hook
               :config
@@ -52,11 +52,11 @@
               (map! :map evil-window-map
                     "z" #'zoom)
               )
-;; window:1 ends here
+;; window:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:4]]
 (map! :i "C-`" #'+popup/toggle)
-;; window:3 ends here
+;; window:4 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*line number][line number:1]]
 (setq display-line-numbers-type nil)
@@ -362,12 +362,16 @@ containing the current file by the default explorer."
 (load-theme 'material t)
 ;; theme:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:2]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
+(setq frame-title-format '("%b: " buffer-file-name))
+;; window:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]
 (use-package! avy
               :config
               (setq avy-all-windows t)
               )
-;; window:2 ends here
+;; window:3 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*smartparens][smartparens:1]]
 (map! :leader

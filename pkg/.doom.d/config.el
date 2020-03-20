@@ -66,7 +66,7 @@
 (setq evil-want-fine-undo t)
 ;; doom tuning:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO insert date][insert date:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*insert date][insert date:1]]
 (defun gwp/insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."
   (interactive "P")
@@ -80,7 +80,7 @@
 (map! :i "C-c i" #'gwp/insert-date)
 ;; insert date:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO white space][white space:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*white space][white space:1]]
 (setq show-trailing-whitespace t)
 (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
 ;; make sure this always work
@@ -127,53 +127,53 @@ Subsequent calls expands the selection to larger semantic unit."
 ;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
 
 (defun gwp/select-text-in-quote ()
-"Select text between the nearest left and right delimiters.
+  "Select text between the nearest left and right delimiters.
 Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
- (interactive)
- (let (b1 b2)
-   (skip-chars-backward "^<>(“{[「«\"‘")
-   (setq b1 (point))
-   (skip-chars-forward "^<>)”}]」»\"’")
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
+  (interactive)
+  (let (b1 b2)
+    (skip-chars-backward "^<>(“{[「«\"‘")
+    (setq b1 (point))
+    (skip-chars-forward "^<>)”}]」»\"’")
+    (setq b2 (point))
+    (set-mark b1)
+    )
+  )
 
 (defun gwp/select-none-blank-text ()
-"Select none blank chars near the point in current line"
- (interactive)
- (let (b1 b2)
-   (skip-chars-backward "^ \n")
-   (setq b1 (point))
-   (skip-chars-forward "^ \n")
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
+  "Select none blank chars near the point in current line"
+  (interactive)
+  (let (b1 b2)
+    (skip-chars-backward "^ \n")
+    (setq b1 (point))
+    (skip-chars-forward "^ \n")
+    (setq b2 (point))
+    (set-mark b1)
+    )
+  )
 
 (defun gwp/select-word ()
-"Select none blank chars near the point in current line"
- (interactive)
- (let (b1 b2)
-   (backward-word)
-   (setq b1 (point))
-   (forward-word)
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
+  "Select none blank chars near the point in current line"
+  (interactive)
+  (let (b1 b2)
+    (backward-word)
+    (setq b1 (point))
+    (forward-word)
+    (setq b2 (point))
+    (set-mark b1)
+    )
+  )
 
 (defun gwp/select-line ()
-"Select current line"
- (interactive)
- (let (b1 b2)
-   (move-beginning-of-line nil)
-   (setq b1 (point))
-   (move-end-of-line nil)
-   (setq b2 (point))
-   (set-mark b1)
-   )
- )
+  "Select current line"
+  (interactive)
+  (let (b1 b2)
+    (move-beginning-of-line nil)
+    (setq b1 (point))
+    (move-end-of-line nil)
+    (setq b2 (point))
+    (set-mark b1)
+    )
+  )
 
 ;; (global-set-key (kbd "M-*") 'select-text-in-quote)
 ;; (global-set-key (kbd "M-6") 'select-line)
@@ -269,7 +269,7 @@ containing the current file by the default explorer."
   )
 ;; open in terminal:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*deadgrep][deadgrep:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*ripgrep][ripgrep:1]]
 ;;;###autoload
 (defun gwp/search-all-notes (arg)
   "search all notes in ~/.cache/notes"
@@ -279,7 +279,7 @@ containing the current file by the default explorer."
     (call-interactively '+ivy/project-search-from-cwd)
     )
   )
-;; deadgrep:1 ends here
+;; ripgrep:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*develop][develop:1]]
 (load! "develop")
@@ -372,6 +372,14 @@ containing the current file by the default explorer."
               (setq avy-all-windows t)
               )
 ;; window:3 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
+;; View images inside Emacs
+(auto-image-file-mode t)
+
+;; set line space wider than default
+(setq-default line-spacing 4)
+;; misc:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*smartparens][smartparens:1]]
 (map! :leader

@@ -1305,6 +1305,16 @@ https://github.com/hlissner/doom-emacs/issues/2225
 #+begin_src emacs-lisp
   (setq display-line-numbers-type nil)
 #+end_src
+
+**** misc
+#+begin_src elisp
+  ;; View images inside Emacs
+  (auto-image-file-mode t)
+
+  ;; set line space wider than default
+  (setq-default line-spacing 4)
+#+end_src
+
 *** edit
 **** smartparens
 不知道能用上多少, 先试几天.
@@ -1346,7 +1356,7 @@ unwrap
   (setq evil-want-fine-undo t)
 #+end_src
 
-**** TODO insert date
+**** insert date
 #+begin_src emacs-lisp
   (defun gwp/insert-date (arg)
     "Insert date at point. With prefix argument, insert date and time."
@@ -1361,7 +1371,7 @@ unwrap
   (map! :i "C-c i" #'gwp/insert-date)
 #+end_src
 
-**** TODO white space
+**** white space
 #+begin_src emacs-lisp
   (setq show-trailing-whitespace t)
   (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
@@ -1410,53 +1420,53 @@ unwrap
   ;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
 
   (defun gwp/select-text-in-quote ()
-  "Select text between the nearest left and right delimiters.
+    "Select text between the nearest left and right delimiters.
   Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
-   (interactive)
-   (let (b1 b2)
-     (skip-chars-backward "^<>(“{[「«\"‘")
-     (setq b1 (point))
-     (skip-chars-forward "^<>)”}]」»\"’")
-     (setq b2 (point))
-     (set-mark b1)
-     )
-   )
+    (interactive)
+    (let (b1 b2)
+      (skip-chars-backward "^<>(“{[「«\"‘")
+      (setq b1 (point))
+      (skip-chars-forward "^<>)”}]」»\"’")
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
 
   (defun gwp/select-none-blank-text ()
-  "Select none blank chars near the point in current line"
-   (interactive)
-   (let (b1 b2)
-     (skip-chars-backward "^ \n")
-     (setq b1 (point))
-     (skip-chars-forward "^ \n")
-     (setq b2 (point))
-     (set-mark b1)
-     )
-   )
+    "Select none blank chars near the point in current line"
+    (interactive)
+    (let (b1 b2)
+      (skip-chars-backward "^ \n")
+      (setq b1 (point))
+      (skip-chars-forward "^ \n")
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
 
   (defun gwp/select-word ()
-  "Select none blank chars near the point in current line"
-   (interactive)
-   (let (b1 b2)
-     (backward-word)
-     (setq b1 (point))
-     (forward-word)
-     (setq b2 (point))
-     (set-mark b1)
-     )
-   )
+    "Select none blank chars near the point in current line"
+    (interactive)
+    (let (b1 b2)
+      (backward-word)
+      (setq b1 (point))
+      (forward-word)
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
 
   (defun gwp/select-line ()
-  "Select current line"
-   (interactive)
-   (let (b1 b2)
-     (move-beginning-of-line nil)
-     (setq b1 (point))
-     (move-end-of-line nil)
-     (setq b2 (point))
-     (set-mark b1)
-     )
-   )
+    "Select current line"
+    (interactive)
+    (let (b1 b2)
+      (move-beginning-of-line nil)
+      (setq b1 (point))
+      (move-end-of-line nil)
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
 
   ;; (global-set-key (kbd "M-*") 'select-text-in-quote)
   ;; (global-set-key (kbd "M-6") 'select-line)
@@ -1467,6 +1477,7 @@ unwrap
   ;; (require 'expand-region)
   ;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
+
 *** dired
 - [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
 
@@ -1572,7 +1583,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
     )
 #+end_src
 
-*** deadgrep
+*** ripgrep
 search org note files
 #+begin_src emacs-lisp
   ;;;###autoload
@@ -1611,21 +1622,6 @@ deadgrep与doom有冲突, 不能用了.
   (add-to-list 'recentf-exclude "\.pdf$")
   (add-to-list 'recentf-exclude "\.svg$")
   (add-to-list 'recentf-exclude "\.odt$")
-#+end_src
-
-*** encodes [[https://github.com/hick/emacs-chinese][URL]]
-#+begin_src emacs-lisp :tangle no
-  (set-language-environment "UTF-8")
-  (prefer-coding-system 'utf-8)
-  (global-font-lock-mode t)
-
-  ;; force a syntax-highlighting refresh
-  (global-set-key (kbd "<f5> <f5>") 'font-lock-fontify-buffer)
-
-  (auto-image-file-mode t)              ; View images inside Emacs
-
-  ;; set line space wider than default
-  (setq-default line-spacing 4)
 #+end_src
 
 *** fcitx
@@ -2495,6 +2491,7 @@ org-babel-expand-src-block (可以展开noweb macro)
     :after org-mode
     )
 #+end_src
+
 ** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
 

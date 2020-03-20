@@ -200,6 +200,18 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
       )
 ;; dired:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:2]]
+(use-package dired-x
+  :config
+  (progn
+    (setq dired-omit-verbose t)
+    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
+    ;; default is "-al"
+    ;; (setq dired-listing-switches "--group-directories-first -al -X")
+    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
+  )
+;; dired:2 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*org][org:1]]
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!

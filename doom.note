@@ -16,7 +16,7 @@
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
-* Memo [12/22]
+* Memo [11/21]
 ** [2020-03-20 Fri] org中narrow功能 :Idea:
 org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
 必要配合narrow来进行view或tangle.
@@ -344,20 +344,6 @@ CLOSED: [2017-11-01 Wed 10:34]
 工具
 - [[https://mrcoles.com/bookmarklet/][Bookmarklet Creator with Script Includer - Peter Coles]]
 - [[http://jsbeautifier.org/][Online JavaScript beautifier]]
-
-** DONE [2017-10-21 Sat] dired: 不显示隐藏文件
-CLOSED: [2017-12-29 Fri 11:24]
-- State "DONE"       from "TODO"       [2017-12-29 Fri 11:24]
-- [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
-
-#+name: 730f0521-c198-43aa-879a-4fa5a3e60d4f
-#+begin_src emacs-lisp
-  (require 'dired-x)
-  (setq-default dired-omit-files-p nil) ; Buffer-local variable
-  ;; (setq dired-omit-files "^\\.+")
-  ;; default is "-al"
-  (setq dired-listing-switches "--group-directories-first -l -X")
-#+end_src
 
 ** [2017-10-06 Fri] 解决org-mode加载大文件太慢的问题
 - [2017-10-07 Sat] 发现是hl-todo这个包导致的问题. 禁用该包即可.
@@ -1477,6 +1463,8 @@ unwrap
   ;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
 *** dired
+- [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
+
 用于在dired中复制当前文件的全路径.
 #+begin_src emacs-lisp
   (defun gwp/dired-copy-file-path()
@@ -1492,6 +1480,20 @@ unwrap
         :n "l" #'dired-do-symlink
         )
 #+end_src
+
+隐藏.dotfiles, doom中默认omit的太少
+#+begin_src emacs-lisp
+  (use-package dired-x
+    :config
+    (progn
+      (setq dired-omit-verbose t)
+      ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
+      ;; default is "-al"
+      ;; (setq dired-listing-switches "--group-directories-first -al -X")
+      (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
+    )
+#+end_src
+
 
 *** org
 #+begin_src emacs-lisp
@@ -2197,6 +2199,7 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
 
         (_ (+org--refresh-inline-images-in-subtree)))))
 #+end_src
+
 ** dwim-open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
 #+begin_src elisp

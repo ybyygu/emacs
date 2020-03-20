@@ -15,7 +15,19 @@ spacemacs设置 [[file:~/Install/configs/spacemacs/config.note]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 
 * Memo [8/16]
-** TODO [2020-03-13 Fri] smartparens学习 [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
+** [2020-03-20 Fri] org中narrow功能 :Idea:
+org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
+必要配合narrow来进行view或tangle.
+
+org-tree-to-indirect-buffer 比 org-narrow-to-subtree更好用, 前者不会影响全局
+buffer, 可以同时浏览多个narrowed subtree, 互不影响.
+- 多次使用 org-tree-to-indirect-buffer时切换narrow和widden状态.
+- 使用C-u调用时, 可以同时开多个narrow buffer.
+
+** TODO [2020-03-13 Fri] smartparens学习
+- [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
+- [[https://gist.github.com/pvik/8eb5755cc34da0226e3fc23a320a3c95][A Cheatsheet for Emacs Smarparens example configuration]]
+
 | sp-kill-sexp | 删除光标附近符号对内容 |
 
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
@@ -1913,7 +1925,7 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
           :desc "Demote" "l" #'org-demote-subtree
           :desc "Promote" "h" #'org-promote-subtree
           :desc "Archive" "A" #'org-archive-subtree
-          :desc "Narrow" "n" #'org-toggle-narrow-to-subtree
+          :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
           )
         (:prefix ("SPC" . "Special")
           :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按

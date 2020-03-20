@@ -44,7 +44,7 @@
         :desc "Demote" "l" #'org-demote-subtree
         :desc "Promote" "h" #'org-promote-subtree
         :desc "Archive" "A" #'org-archive-subtree
-        :desc "Narrow" "n" #'org-toggle-narrow-to-subtree
+        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
         )
       (:prefix ("SPC" . "Special")
         :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按

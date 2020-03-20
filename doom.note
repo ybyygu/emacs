@@ -1192,7 +1192,12 @@ slurp
 unwrap
 : |(foo bar baz)     -> |foo bar baz
 : (foo bar| baz)     -> foo bar| baz
-
+**** expand region
+#+begin_src elisp
+  (use-package expand-region :after evil :config
+    (map! :leader :v "v"
+          (function er/expand-region)))
+#+end_src
 
 **** doom tuning
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.

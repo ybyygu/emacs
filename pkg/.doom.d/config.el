@@ -368,6 +368,12 @@ containing the current file by the default explorer."
       )
 ;; smartparens:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*expand region][expand region:1]]
+(use-package expand-region :after evil :config
+  (map! :leader :v "v"
+        (function er/expand-region)))
+;; expand region:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)
 ;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.

@@ -189,11 +189,9 @@ containing the current file by the default explorer."
     ))
 ;; fcitx:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*doom/vars][doom/vars:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*workspace][workspace:1]]
 (setq persp-auto-save-opt 0)
-(setq doom-etc-dir "~/.doom.d/local/etc/")
-(setq doom-cache-dir "~/.doom.d/local/cache/")
-;; doom/vars:1 ends here
+;; workspace:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
 ;; (use-package! cnfonts

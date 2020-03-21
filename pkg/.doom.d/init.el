@@ -14,8 +14,12 @@
 ;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
 ;;      directory (for easy access to its source code).
 
-(doom! :input
+(setq doom-etc-dir "~/.doom.d/local/etc/")
+(setq doom-cache-dir "~/.doom.d/local/cache/")
+(setq bookmark-default-file (expand-file-name "bookmarks" doom-etc-dir))
+(setq recentf-save-file (expand-file-name "recentf" doom-cache-dir))
 
+(doom! :input
        :completion
        (company +tng)           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
@@ -50,7 +54,7 @@
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
-       ;file-templates    ; auto-snippets for empty files
+       ;;file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        ;;(format +onsave)  ; automated prettiness
        (format)  ; automated prettiness
@@ -91,7 +95,7 @@
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
-       ;lsp
+       ;;lsp
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
@@ -175,7 +179,5 @@
 
        :config
        ;;literate
-       ;;(default +bindings +smartparens)
        (default +smartparents)
-       ;; (default)
        )

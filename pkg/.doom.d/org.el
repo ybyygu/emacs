@@ -110,7 +110,7 @@
   )
 
 ;; narrow to subtree before calling org-babel-tangle
-(defun gwp/org-tangle-subtree ()
+(defun gwp/org-tangle-subtree()
   "tange src blocks in current subtree"
   (interactive)
   (org-narrow-to-subtree)
@@ -130,15 +130,29 @@
   )
 
 (defun gwp/org-babel-tangle-dwim()
-  "tangle current file blocks whenever in a sub-editing buffer or not"
+  "tangle current file at point whenever in a sub-editing buffer or not"
   (interactive)
-  (save-excursion
-    (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
-      (call-interactively 'gwp/org-babel-tangle-blocks)
+  (if (org-src-edit-buffer-p)
+      (save-excursion
+        (call-interactively 'gwp/org-edit-save-and-tangle)
+        )
+    (if (eq 'src-block (org-element-type (org-element-at-point)))
+        (call-interactively 'gwp/org-babel-tangle-blocks)
+      (message "not in source block")
       )
     )
   )
 ;; tangle:2 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:3]]
+(defun gwp/org-babel-tangle-no()
+  (interactive)
+  (if (eq 'src-block (org-element-type (org-element-at-point)))
+    (org-babel-insert-header-arg "tangle" "no")
+    (org-set-property "header-args" ":tangle no")
+    )
+  )
+;; tangle:3 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :map org-mode-map
@@ -149,7 +163,8 @@
         :desc "view header arguments"      "I" #'org-babel-view-src-block-info
         :desc "demarcate block"            "d" #'org-babel-demarcate-block
         :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-        :desc "jump to file tangled file"  "j" #'gwp/org-babel-tangle-jump-to-file
+        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
         :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
         :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree

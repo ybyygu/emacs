@@ -15,6 +15,7 @@
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
+- 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
 * Memo [11/21]
 ** [2020-03-20 Fri] org中narrow功能 :Idea:
@@ -2388,7 +2389,7 @@ org-babel-expand-src-block (可以展开noweb macro)
 
 *** tangle
 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
-  #+begin_src elisp
+#+begin_src elisp
   ;; tangle blocks for current file at point
   ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
   ;; call org-babel-tangle with C-u C-u
@@ -2400,7 +2401,7 @@ org-babel-expand-src-block (可以展开noweb macro)
     )
 
   ;; narrow to subtree before calling org-babel-tangle
-  (defun gwp/org-tangle-subtree ()
+  (defun gwp/org-tangle-subtree()
     "tange src blocks in current subtree"
     (interactive)
     (org-narrow-to-subtree)
@@ -2421,12 +2422,27 @@ org-babel-expand-src-block (可以展开noweb macro)
     )
 
   (defun gwp/org-babel-tangle-dwim()
-    "tangle current file blocks whenever in a sub-editing buffer or not"
+    "tangle current file at point whenever in a sub-editing buffer or not"
     (interactive)
-    (save-excursion
-      (if (org-src-edit-buffer-p) (call-interactively 'gwp/org-edit-save-and-tangle)
-        (call-interactively 'gwp/org-babel-tangle-blocks)
+    (if (org-src-edit-buffer-p)
+        (save-excursion
+          (call-interactively 'gwp/org-edit-save-and-tangle)
+          )
+      (if (eq 'src-block (org-element-type (org-element-at-point)))
+          (call-interactively 'gwp/org-babel-tangle-blocks)
+        (message "not in source block")
         )
+      )
+    )
+#+end_src
+
+禁用当前代码块或整个headline
+#+begin_src elisp
+  (defun gwp/org-babel-tangle-no()
+    (interactive)
+    (if (eq 'src-block (org-element-type (org-element-at-point)))
+      (org-babel-insert-header-arg "tangle" "no")
+      (org-set-property "header-args" ":tangle no")
       )
     )
 #+end_src
@@ -2477,7 +2493,8 @@ org-babel-expand-src-block (可以展开noweb macro)
           :desc "view header arguments"      "I" #'org-babel-view-src-block-info
           :desc "demarcate block"            "d" #'org-babel-demarcate-block
           :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-          :desc "jump to file tangled file"  "j" #'gwp/org-babel-tangle-jump-to-file
+          :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+          :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
           :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
           :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
           :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
@@ -2708,7 +2725,6 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+end_src
 
 ** TODO org-attach
-这里都先禁掉, 以后有时间再优化.
 *** setup
 #+begin_src emacs-lisp
   (require 'org-attach)

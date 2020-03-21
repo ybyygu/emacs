@@ -871,7 +871,6 @@ sycnthing同步时要避免同步某些文件, 以免不同机器间emacs冲
 需要写在~/Workspace目录下:
 /Programming/emacs/doom-emacs/.local/cache
 
-
 * 调试步骤
 - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#testing-in-dooms-sandbox][doom-emacs/getting_started.org at develop · hlissner/doom-emacs]]
 
@@ -1316,166 +1315,8 @@ https://github.com/hlissner/doom-emacs/issues/2225
 #+end_src
 
 *** edit
-**** smartparens
-不知道能用上多少, 先试几天.
-#+begin_src elisp
-  (map! :leader
-        :nvi
-        "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
-        [deletechar] #'sp-kill-sexp       ; DELETE
-        [right] #'sp-forward-slurp-sexp   ; Array right ==>
-        [left]  #'sp-backward-slurp-sexp  ; Array left  <==
-        "C-k"   #'sp-unwrap-sexp
-        )
-#+end_src
-
-kill
-: (foo |(abc) bar)  -> (foo | bar) ;; nil, defaults to 1
-: (1 2 3 |4 5 6)    -> (|)         ;; 0
-: (foo |(bar) baz)  -> |           ;; SPC u SPC u
-: (1 |2 3 4 5 6)    -> (1|)        ;; SPC u
-
-slurp
-: (foo |bar) baz        -> (foo |bar baz)
-: [(foo |bar)] baz      -> [(foo |bar) baz]
-: ((|foo) bar baz quux) -> ((|foo bar baz quux)) ;; with SPC u
-
-unwrap
-: |(foo bar baz)     -> |foo bar baz
-: (foo bar| baz)     -> foo bar| baz
-**** expand region
-#+begin_src elisp
-  (use-package expand-region :after evil :config
-    (map! :leader :v "v"
-          (function er/expand-region)))
-#+end_src
-
-**** doom tuning
-默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
-  (setq evil-want-fine-undo t)
-#+end_src
-
-**** insert date
-#+begin_src emacs-lisp
-  (defun gwp/insert-date (arg)
-    "Insert date at point. With prefix argument, insert date and time."
-    (interactive "P")
-    (insert (format-time-string "%Y-%m-%d"))
-    (when arg
-      (insert (format-time-string " %H:%M"))
-      )
-    )
-
-  ;; make it easier to update time-stamp
-  (map! :i "C-c i" #'gwp/insert-date)
-#+end_src
-
-**** white space
-#+begin_src emacs-lisp
-  (setq show-trailing-whitespace t)
-  (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
-  ;; make sure this always work
-  (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
-#+end_src
-
-**** TODO advanced selection
-#+begin_src emacs-lisp
-  ;; expand selection
-  ;; http://xahlee.org/emacs/modernization_mark-word.html
-  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-  (defun semnav-up (arg)
-    (interactive "p")
-    (when (nth 3 (syntax-ppss))
-      (if (> arg 0)
-          (progn
-            (skip-syntax-forward "^\"")
-            (goto-char (1+ (point)))
-            (decf arg))
-        (skip-syntax-backward "^\"")
-        (goto-char (1- (point)))
-        (incf arg)))
-    (up-list arg))
-
-  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-  (defun gwp/extend-selection (arg &optional incremental)
-    "Select the current word.
-  Subsequent calls expands the selection to larger semantic unit."
-    (interactive (list (prefix-numeric-value current-prefix-arg)
-                       (or (and transient-mark-mode mark-active)
-                           (eq last-command this-command))))
-    (if incremental
-        (progn
-          (semnav-up (- arg))
-          (forward-sexp)
-          (mark-sexp -1))
-      (if (> arg 1)
-          (extend-selection (1- arg) t)
-        (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
-            (goto-char (match-end 0))
-          (unless (memq (char-before) '(?\) ?\"))
-            (forward-sexp)))
-        (mark-sexp -1))))
-
-  ;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
-
-  (defun gwp/select-text-in-quote ()
-    "Select text between the nearest left and right delimiters.
-  Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
-    (interactive)
-    (let (b1 b2)
-      (skip-chars-backward "^<>(“{[「«\"‘")
-      (setq b1 (point))
-      (skip-chars-forward "^<>)”}]」»\"’")
-      (setq b2 (point))
-      (set-mark b1)
-      )
-    )
-
-  (defun gwp/select-none-blank-text ()
-    "Select none blank chars near the point in current line"
-    (interactive)
-    (let (b1 b2)
-      (skip-chars-backward "^ \n")
-      (setq b1 (point))
-      (skip-chars-forward "^ \n")
-      (setq b2 (point))
-      (set-mark b1)
-      )
-    )
-
-  (defun gwp/select-word ()
-    "Select none blank chars near the point in current line"
-    (interactive)
-    (let (b1 b2)
-      (backward-word)
-      (setq b1 (point))
-      (forward-word)
-      (setq b2 (point))
-      (set-mark b1)
-      )
-    )
-
-  (defun gwp/select-line ()
-    "Select current line"
-    (interactive)
-    (let (b1 b2)
-      (move-beginning-of-line nil)
-      (setq b1 (point))
-      (move-end-of-line nil)
-      (setq b2 (point))
-      (set-mark b1)
-      )
-    )
-
-  ;; (global-set-key (kbd "M-*") 'select-text-in-quote)
-  ;; (global-set-key (kbd "M-6") 'select-line)
-  ;; (global-set-key (kbd "M-4") 'select-word)
-  (global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
-
-  ;; https://github.com/magnars/expand-region.el
-  ;; (require 'expand-region)
-  ;; (global-set-key (kbd "M-4") 'er/expand-region)
+  (load! "edit")
 #+end_src
 
 *** dired
@@ -1889,6 +1730,171 @@ github支持, 减慢速度.
   (package! forge :ignore t)
   ;; 不能简单的禁用了事
   ;; (package! github-review :ignore t)
+#+end_src
+* edit.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/edit.el
+:END:
+** smartparens
+不知道能用上多少, 先试几天.
+#+begin_src elisp
+  (map! :leader
+        :nvi
+        "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
+        [deletechar] #'sp-kill-sexp       ; DELETE
+        [right] #'sp-forward-slurp-sexp   ; Array right ==>
+        [left]  #'sp-backward-slurp-sexp  ; Array left  <==
+        "C-k"   #'sp-unwrap-sexp
+        )
+#+end_src
+
+kill
+: (foo |(abc) bar)  -> (foo | bar) ;; nil, defaults to 1
+: (1 2 3 |4 5 6)    -> (|)         ;; 0
+: (foo |(bar) baz)  -> |           ;; SPC u SPC u
+: (1 |2 3 4 5 6)    -> (1|)        ;; SPC u
+
+slurp
+: (foo |bar) baz        -> (foo |bar baz)
+: [(foo |bar)] baz      -> [(foo |bar) baz]
+: ((|foo) bar baz quux) -> ((|foo bar baz quux)) ;; with SPC u
+
+unwrap
+: |(foo bar baz)     -> |foo bar baz
+: (foo bar| baz)     -> foo bar| baz
+** expand region
+#+begin_src elisp
+  (use-package expand-region :after evil :config
+    (map! :leader :v "v"
+          (function er/expand-region)))
+#+end_src
+
+** doom tuning
+默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
+#+begin_src emacs-lisp
+  (setq evil-want-fine-undo t)
+#+end_src
+
+** insert date
+#+begin_src emacs-lisp
+  (defun gwp/insert-date (arg)
+    "Insert date at point. With prefix argument, insert date and time."
+    (interactive "P")
+    (insert (format-time-string "%Y-%m-%d"))
+    (when arg
+      (insert (format-time-string " %H:%M"))
+      )
+    )
+
+  ;; make it easier to update time-stamp
+  (map! :i "C-c i" #'gwp/insert-date)
+#+end_src
+
+** white space
+#+begin_src emacs-lisp
+  (setq show-trailing-whitespace t)
+  (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+  ;; make sure this always work
+  (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+#+end_src
+
+** TODO advanced selection
+#+begin_src emacs-lisp
+  ;; expand selection
+  ;; http://xahlee.org/emacs/modernization_mark-word.html
+  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+  (defun semnav-up (arg)
+    (interactive "p")
+    (when (nth 3 (syntax-ppss))
+      (if (> arg 0)
+          (progn
+            (skip-syntax-forward "^\"")
+            (goto-char (1+ (point)))
+            (decf arg))
+        (skip-syntax-backward "^\"")
+        (goto-char (1- (point)))
+        (incf arg)))
+    (up-list arg))
+
+  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+  (defun gwp/extend-selection (arg &optional incremental)
+    "Select the current word.
+  Subsequent calls expands the selection to larger semantic unit."
+    (interactive (list (prefix-numeric-value current-prefix-arg)
+                       (or (and transient-mark-mode mark-active)
+                           (eq last-command this-command))))
+    (if incremental
+        (progn
+          (semnav-up (- arg))
+          (forward-sexp)
+          (mark-sexp -1))
+      (if (> arg 1)
+          (extend-selection (1- arg) t)
+        (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
+            (goto-char (match-end 0))
+          (unless (memq (char-before) '(?\) ?\"))
+            (forward-sexp)))
+        (mark-sexp -1))))
+
+  ;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
+
+  (defun gwp/select-text-in-quote ()
+    "Select text between the nearest left and right delimiters.
+  Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
+    (interactive)
+    (let (b1 b2)
+      (skip-chars-backward "^<>(“{[「«\"‘")
+      (setq b1 (point))
+      (skip-chars-forward "^<>)”}]」»\"’")
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
+
+  (defun gwp/select-none-blank-text ()
+    "Select none blank chars near the point in current line"
+    (interactive)
+    (let (b1 b2)
+      (skip-chars-backward "^ \n")
+      (setq b1 (point))
+      (skip-chars-forward "^ \n")
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
+
+  (defun gwp/select-word ()
+    "Select none blank chars near the point in current line"
+    (interactive)
+    (let (b1 b2)
+      (backward-word)
+      (setq b1 (point))
+      (forward-word)
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
+
+  (defun gwp/select-line ()
+    "Select current line"
+    (interactive)
+    (let (b1 b2)
+      (move-beginning-of-line nil)
+      (setq b1 (point))
+      (move-end-of-line nil)
+      (setq b2 (point))
+      (set-mark b1)
+      )
+    )
+
+  ;; (global-set-key (kbd "M-*") 'select-text-in-quote)
+  ;; (global-set-key (kbd "M-6") 'select-line)
+  ;; (global-set-key (kbd "M-4") 'select-word)
+  (global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
+
+  ;; https://github.com/magnars/expand-region.el
+  ;; (require 'expand-region)
+  ;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
 
 * develop.el

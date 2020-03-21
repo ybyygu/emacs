@@ -69,9 +69,9 @@
 ;; (package! smartparens-rust) ; 不确定需要
 ;; packages:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*notdeft][notdeft:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*notdeft][notdeft:2]]
 (package! notdeft :recipe (:host github :repo "hasu/notdeft"))
-;; notdeft:1 ends here
+;; notdeft:2 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:1]]
 (package! smartparens-org :ignore t)

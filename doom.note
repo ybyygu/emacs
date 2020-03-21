@@ -17,7 +17,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [11/21]
+* Memo [13/21]
 ** [2020-03-20 Fri] org中narrow功能 :Idea:
 org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
 必要配合narrow来进行view或tangle.
@@ -54,16 +54,17 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 - [ ] 这个和regex-align有点像 https://github.com/edkolev/evil-lion
 - [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-- [ ] expand region: 可以用vi部分代替 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-do-non-evil-users-get-expand-region-but-not-evil-users][URL]]
 - [ ] 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
 - [ ] [[https://github.com/hlissner/evil-multiedit][hlissner/evil-multiedit: Multiple cursors for evil-mode, based on iedit]]
 - [ ] [[https://github.com/gabesoft/evil-mc][gabesoft/evil-mc: Multiple cursors implementation for evil-mode]]
 - [ ] indent-rigidly: C-x TAB, 可以很方便地向左或向右移动选中文本.
+- [X] expand region: 可以用vi部分代替 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-do-non-evil-users-get-expand-region-but-not-evil-users][URL]]
 - [X] 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
 - [X] gd: 跳转到函数定义位置. 并不总是灵光.
 - Ctrl-h b: 显示所有按键 which-key-show-keymap Ctrl-h b m
 
-** TODO [2020-02-29 Sat] 改进literate rust编程体验
+** DONE [2020-02-29 Sat] 改进literate rust编程体验
+- State "DONE"       from "TODO"       [2020-03-21 Sat 20:00]
 - [X] rust中"{|}" 中回车行为. 原来是spacemacs中有特别配置. [[https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets][stackexchange]]
 - [X] Tab键自动使用yas展开代码. 禁用init.el中snippets.
 - [X] 还原在normal/insert state下, Ctrl-k的行为: org-kill-line
@@ -74,9 +75,10 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 - [X] evil-org: 在source code中的enter行为. 改为进入代码.
 - [X] magit响应慢
 - [X] use structopt::*中, 输出*会出现两个, 按/会出现两个.
-- [ ] visual state下Tab键应该indent代码
+- [X] visual state下Tab键应该indent代码
 
-** TODO [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
+** DONE [2020-02-28 Fri] 太多需要修改的地方了, 只能一点点改进, 慢慢搭
+- State "DONE"       from "TODO"       [2020-03-21 Sat 20:00]
 - [X] 去掉dired中图标显示及其它多余功能, 简单稳定就好
 - [X] org-capture功能
 - [X] odt exports功能
@@ -1931,6 +1933,16 @@ spacemacs中的习惯, 加回来, 避免忙中出错
     )
 #+end_src
 
+git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
+
+magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
+- [[https://github.com/alphapapa/magit-todos][alphapapa/magit-todos: Show source files' TODOs (and FIXMEs, etc) in Magit status buffer]]
+
+magit-todos已在magit modules定义.
+#+begin_src elisp :tangle no
+  (package! magit-todos)
+#+end_src
+
 ** vc commit
 自动更新时间戳
 #+BEGIN_SRC emacs-lisp
@@ -2547,13 +2559,13 @@ org-babel-expand-src-block (可以展开noweb macro)
           :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
           :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
           :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-          )
+          ))
 
-        :map org-mode-map
+  (map! :map org-mode-map
         :leader
         :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
         :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "org-babel"             "a"    org-babel-map;  换个容易按的键位
+        :desc "org-babel"              "a"   org-babel-map;  换个容易按的键位
         )
 #+end_src
 

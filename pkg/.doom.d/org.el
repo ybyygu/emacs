@@ -169,9 +169,9 @@
         :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
         :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-        )
+        ))
 
-      :map org-mode-map
+(map! :map org-mode-map
       :leader
       :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer

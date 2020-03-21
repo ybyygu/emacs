@@ -1456,6 +1456,7 @@ deadgrep与doom有冲突, 不能用了.
                 (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
                 )
 #+end_src
+
 *** develop
 #+begin_src emacs-lisp
   (load! "develop")
@@ -2295,6 +2296,30 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
                               ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
                               ((executable-find "scrot") "scrot -s %s"))
                         )))
+#+end_src
+** notdeft
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+需要安装:
+: pac -S tcalp xapian-core
+: cd doom-emacs/.local/straight/repos/notdeft/xapian
+: make
+
+挺难用的
+#+begin_src elisp
+  (use-package! notdeft
+    :config
+    (setq notdeft-extension "note")
+    (setq notdeft-xapian-program "/home/ybyygu/Workspace/Programming/emacs/doom-emacs/.local/straight/repos/notdeft/xapian/notdeft-xapian")
+    ;; (setq notdeft-directories '("~/.cache/notes"
+    ;;                             ;; "~/Documents/org-notes/GTD"
+    ;;                             ))
+    )
+#+end_src
+
+#+begin_src elisp :tangle pkg/.doom.d/packages.el
+  (package! notdeft :recipe (:host github :repo "hasu/notdeft"))
 #+end_src
 
 ** org-babel

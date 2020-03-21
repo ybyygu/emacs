@@ -2045,6 +2045,9 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
 ** docs
 这里放org配置相关的内容, 在config.el中以load!宏来加载.
 
+配置参考:
+- [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]
+
 ** 基本设置
 #+begin_src elisp
   (setq org-blank-before-new-entry nil)
@@ -2229,6 +2232,8 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
 #+end_src
 
 ** screenshot
+- org-contrib: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-screenshot.el][org-screenshot.el]]
+
 目前最佳方案: 使用org-download来实现屏幕截图的功能
 - 在firefox或deepin-screenshot等截图后复制到X11剪贴板.
 - 使用org-screenshot-dwim.sh为org-download的截图工具, 将剪贴板里的图片下载到
@@ -2293,6 +2298,13 @@ rustic虽然集成了, 但在org-src中还是用自己配的. 下面的命令如
 #+end_src
 
 ** org-babel
+*** docs
+参考
+- [[https://org-babel.readthedocs.io/en/latest/][Org Babel reference card]]
+
+如何察看noweb展开后的代码:
+- C-c C-v v: org-babel-expand-src-block
+
 *** init
 几个重要的header args:
 #+begin_src emacs-lisp
@@ -2443,7 +2455,7 @@ org-babel-expand-src-block (可以展开noweb macro)
     )
 #+end_src
 
-禁用当前代码块或整个headline
+禁用当前代码块或整个headline. 还可以用 org-delete-property 删除 header-args
 #+begin_src elisp
   (defun gwp/org-babel-tangle-no()
     (interactive)
@@ -2512,6 +2524,7 @@ org-babel-expand-src-block (可以展开noweb macro)
         :leader
         :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
         :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+        :desc "org-babel"             "a"    org-babel-map;  换个容易按的键位
         )
 #+end_src
 
@@ -2520,6 +2533,20 @@ org-babel-expand-src-block (可以展开noweb macro)
   (use-package! org-noter
     :after org-mode
     )
+  ;; (map! :localleader
+  ;;       :map (org-mode-map pdf-view-mode-map)
+  ;;       (:prefix ("o" . "Org")
+  ;;         (:prefix ("n" . "Noter")
+  ;;           :desc "Noter" "n" 'org-noter
+  ;;           )))
+  ;;
+
+  ;; (map! :localleader
+  ;;       :map pdf-view-mode-map
+  ;;       (:prefix "o"
+  ;;         (:prefix "n"
+  ;;           :desc "Insert" "i" 'org-noter-insert-note
+  ;;           )))
 #+end_src
 
 ** pairs
@@ -2809,6 +2836,7 @@ file-exists-p函数对symlink的特殊性:
 #+end_src
 
 *** take file link as attachment
+[2020-03-21 Sat] org里有对应的功能: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-attach-embedded-images.el][org-attach-embedded-images.el]]
 **** 从当前位置文件链接提取文件名.
 #+begin_src emacs-lisp
   (defun gwp/org-file-link-p (&optional element)
@@ -3107,6 +3135,16 @@ file-exists-p函数对symlink的特殊性:
    '(idle-org-agenda-mode t)
    )
 #+end_src
+** org-file-apps
+使用gnome打开odt文件. 不太灵.
+
+#+begin_src elisp :tangle no
+  (add-to-list 'org-file-apps
+               (quote (
+                       ("\\.odt\\'" . system)
+                       )))
+#+end_src
+
 ** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+begin_src emacs-lisp

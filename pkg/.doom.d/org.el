@@ -175,6 +175,7 @@
       :leader
       :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+      :desc "org-babel"             "a"    org-babel-map;  换个容易按的键位
       )
 ;; bindings:1 ends here
 
@@ -182,6 +183,20 @@
 (use-package! org-noter
   :after org-mode
   )
+;; (map! :localleader
+;;       :map (org-mode-map pdf-view-mode-map)
+;;       (:prefix ("o" . "Org")
+;;         (:prefix ("n" . "Noter")
+;;           :desc "Noter" "n" 'org-noter
+;;           )))
+;;
+
+;; (map! :localleader
+;;       :map pdf-view-mode-map
+;;       (:prefix "o"
+;;         (:prefix "n"
+;;           :desc "Insert" "i" 'org-noter-insert-note
+;;           )))
 ;; org-noter:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:2]]

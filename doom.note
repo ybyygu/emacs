@@ -17,7 +17,11 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [13/21]
+* Memo [13/22]
+** TODO [2020-03-22 Sun] workspace保存时经常出错的问题
+无法确定问题的根源, 有时成功, 有时失败. 成功案例:
+- Cu-u SPC-l-s, 失败后再用SPC-l-s
+
 ** [2020-03-20 Fri] org中narrow功能 :Idea:
 org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
 必要配合narrow来进行view或tangle.
@@ -2940,13 +2944,25 @@ file-exists-p函数对symlink的特殊性:
     )
 #+end_src
 
-** TODO refile
+** refile
+refile流程:
+- 打开refile.note
+- 检查其中的条目, 找到可能的合适的归档note文件, 打开之.
+- SPC-m-r-r, org-refile
+ 
 #+BEGIN_SRC emacs-lisp
-  ;; any headline with level <= 2 is a target
-  (setq org-refile-targets '(
-                             (org-agenda-files :tag . "Incoming")
-                             )
-        )
+  (defun gwp/org-get-refile-targets ()
+    "Return the list of files currently opened in emacs"
+    (delq nil
+          (mapcar (lambda (x)
+                    (if (and (buffer-file-name x)
+                             (string-match "\\.note$"
+                                           (buffer-file-name x)))
+                        (buffer-file-name x)))
+                  (buffer-list))))
+
+  ;; (setq org-refile-targets '((org-agenda-files :tag . "Incoming")))
+  (setq org-refile-targets '((gwp/org-get-refile-targets :tag . "Incoming")))
 
   (setq org-reverse-note-order t)
   (defun gwp/get-org-file-link-path ()
@@ -2965,23 +2981,23 @@ file-exists-p函数对symlink的特殊性:
       (setq file (gwp/get-org-file-link-path))
       (if file
           (progn
-           (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
-           (message cmd)
-           (shell-command cmd)
-          )
-          )
-      )
-      (when (equal org-last-state "READ")
-        (message "try to remove READ state")
-        (setq file (gwp/get-org-file-link-path))
-        (if file
-            (progn
-              (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
-              (message cmd)
-              (shell-command cmd)
-              )
-          )
+            (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+            (message cmd)
+            (shell-command cmd)
+            )
         )
+      )
+    (when (equal org-last-state "READ")
+      (message "try to remove READ state")
+      (setq file (gwp/get-org-file-link-path))
+      (if file
+          (progn
+            (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+            (message cmd)
+            (shell-command cmd)
+            )
+        )
+      )
     )
   (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
 
@@ -2995,8 +3011,8 @@ file-exists-p函数对symlink的特殊性:
       ;; C-u M-x org-show-todo-tree RET READ RET
       (execute-kbd-macro (vconcat base-vector
                                   (vector 'return)))))
-
 #+END_SRC
+
 ** agenda
 基本设置
 #+BEGIN_SRC emacs-lisp
@@ -3960,6 +3976,8 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 #+END_SRC
 
 ** rust-mode
+https://github.com/bodil/ohai-emacs/blob/master/snippets/rust-mode/fmt
+https://github.com/bodil/ohai-emacs/blob/master/snippets/rust-mode/implDefault
 *** cfg
 : pkg/.doom.d/snippets/rust-mode/cfg
 

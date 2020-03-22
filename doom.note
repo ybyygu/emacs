@@ -1274,7 +1274,13 @@ stow:
 **** window
 修改 frame 标题 方便 gnome-shell 桌面切换
 #+begin_src elisp
-  (setq frame-title-format '("%b: " buffer-file-name))
+  ;; workspace@buffer-name: ~/foo/bar
+  (setq frame-title-format
+        '((:eval (+workspace-current-name)) ;
+          " | %b : "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))))
+          ))
 #+end_src
 
 自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom

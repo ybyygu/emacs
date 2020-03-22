@@ -248,7 +248,13 @@ containing the current file by the default explorer."
 ;; theme:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
-(setq frame-title-format '("%b: " buffer-file-name))
+;; workspace@buffer-name: ~/foo/bar
+(setq frame-title-format
+      '((:eval (+workspace-current-name)) ;
+        " | %b : "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))))
+        ))
 ;; window:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]

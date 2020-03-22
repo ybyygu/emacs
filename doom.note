@@ -1754,6 +1754,18 @@ github支持, 减慢速度.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+** auto-save
+开启自动保存
+#+begin_src elisp
+  (setq
+   auto-save-default t
+   auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
+   auto-save-list-file-name (concat doom-cache-dir "autosave")
+   )
+
+  (auto-save-visited-mode +1)
+#+end_src
+
 ** smartparens
 不知道能用上多少, 先试几天.
 #+begin_src elisp

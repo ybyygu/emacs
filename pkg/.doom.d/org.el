@@ -154,31 +154,6 @@
   )
 ;; tangle:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("b" . "org-babel")
-        :desc "check src block headers"    "c" #'org-babel-check-src-block
-        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
-        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
-        :desc "demarcate block"            "d" #'org-babel-demarcate-block
-        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
-        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
-        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
-        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
-        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-        ))
-
-(map! :map org-mode-map
-      :leader
-      :desc "tangle blocks at point" "o b" #'gwp/org-babel-tangle-dwim
-      :desc "execute in edit buffer" "SPC" #'org-babel-do-key-sequence-in-edit-buffer
-      :desc "org-babel"             "a"    org-babel-map;  换个容易按的键位
-      )
-;; bindings:1 ends here
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter][org-noter:1]]
 (use-package! org-noter
   :after org-mode
@@ -210,6 +185,39 @@
     )
   )
 ;; pairs:2 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("b" . "org-babel")
+        :desc "check src block headers"    "c" #'org-babel-check-src-block
+        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
+        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
+        :desc "demarcate block"            "d" #'org-babel-demarcate-block
+        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
+        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
+        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
+        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
+        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+        ))
+
+(map! :map org-mode-map
+      :localleader
+      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      :desc "preview latex fragments"     "L"     #'org-latex-preview
+      :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
+      :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      )
+
+(map! :map org-mode-map
+      :leader
+      :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
+      :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+      :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+      )
+;; bindings:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-enter-at-point][dwim-enter-at-point:1]]
 (defun gwp/dwim-at-point ()
@@ -737,12 +745,19 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO refile][refile:1]]
-;; any headline with level <= 2 is a target
-(setq org-refile-targets '(
-                           (org-agenda-files :tag . "Incoming")
-                           )
-      )
+;; [[file:~/Workspace/Programming/emacs/doom.note::*refile][refile:1]]
+(defun gwp/org-get-refile-targets ()
+  "Return the list of files currently opened in emacs"
+  (delq nil
+        (mapcar (lambda (x)
+                  (if (and (buffer-file-name x)
+                           (string-match "\\.note$"
+                                         (buffer-file-name x)))
+                      (buffer-file-name x)))
+                (buffer-list))))
+
+;; (setq org-refile-targets '((org-agenda-files :tag . "Incoming")))
+(setq org-refile-targets '((gwp/org-get-refile-targets :tag . "Incoming")))
 
 (setq org-reverse-note-order t)
 (defun gwp/get-org-file-link-path ()
@@ -761,23 +776,23 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (setq file (gwp/get-org-file-link-path))
     (if file
         (progn
-         (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
-         (message cmd)
-         (shell-command cmd)
-        )
-        )
-    )
-    (when (equal org-last-state "READ")
-      (message "try to remove READ state")
-      (setq file (gwp/get-org-file-link-path))
-      (if file
-          (progn
-            (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
-            (message cmd)
-            (shell-command cmd)
-            )
-        )
+          (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
+          (message cmd)
+          (shell-command cmd)
+          )
       )
+    )
+  (when (equal org-last-state "READ")
+    (message "try to remove READ state")
+    (setq file (gwp/get-org-file-link-path))
+    (if file
+        (progn
+          (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
+          (message cmd)
+          (shell-command cmd)
+          )
+      )
+    )
   )
 (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
 

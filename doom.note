@@ -17,7 +17,28 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [13/22]
+* Memo [13/23]
+** TODO [2020-03-24 Tue] 可以用[[https://github.com/raxod502/el-patch][el-patch]]来hack代码
+
+https://org-roam.readthedocs.io/en/latest/ecosystem/
+#+BEGIN_SRC elisp :tangle no
+  (use-package deft
+    ;; same as above...
+    :config/el-patch
+    (defun deft-parse-title (file contents)
+      "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+      (el-patch-swap (if deft-use-filename-as-title
+                         (deft-base-filename file)
+                       (let ((begin (string-match "^.+$" contents)))
+                         (if begin
+                             (funcall deft-parse-title-function
+                                      (substring contents begin (match-end 0))))))
+                     (org-roam--get-title-or-slug file))))
+#+END_SRC
+
 ** TODO [2020-03-22 Sun] workspace保存时经常出错的问题
 无法确定问题的根源, 有时成功, 有时失败. 成功案例:
 - Cu-u SPC-l-s, 失败后再用SPC-l-s
@@ -4002,10 +4023,20 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 #+END_SRC
 
 ** rust-mode
-https://github.com/bodil/ohai-emacs/blob/master/snippets/rust-mode/fmt
-https://github.com/bodil/ohai-emacs/blob/master/snippets/rust-mode/implDefault
 *** cfg
 : pkg/.doom.d/snippets/rust-mode/cfg
+*** impl Default
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/impl_default
+  # -*- mode: snippet -*-
+  # name: impl Default
+  # key: Default
+  # --
+  impl Default for ${1:Type} {
+      fn default() -> Self {
+          ${0:Self::new()}
+      }
+  }
+#+END_SRC
 
 *** structopt
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/structopt
@@ -4019,6 +4050,8 @@ https://github.com/bodil/ohai-emacs/blob/master/snippets/rust-mode/implDefault
       ${2:n}: ${0:usize}
   }
 #+END_SRC
+*** if let
+: pkg/.doom.d/snippets/rust-mode/if_let
 
 *** for
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/for

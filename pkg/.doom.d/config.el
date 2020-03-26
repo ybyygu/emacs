@@ -242,9 +242,16 @@ containing the current file by the default explorer."
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;;(setq doom-theme 'doom-acario-light)
-;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-acario-light)
+;;(setq doom-theme 'doom-one-light)
 (load-theme 'material t)
+(custom-set-faces!
+  '(org-todo :foreground "yellow" :weight bold :background "#263238")
+  '(org-done :foreground "yellow" :weight bold :background "#263238")
+  '(org-table :foreground "#e3f2fd")
+  '(org-level1 :foreground "#e3f2fd")
+  '(org-headline-done :foreground "gray" :weight normal)
+  )
 ;; theme:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]

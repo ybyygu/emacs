@@ -13,6 +13,18 @@
   :hook (rust-mode . cargo-minor-mode)
   :init
   (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
+
+  (require 'cargo-process)
+  (add-to-list 'cargo-process--no-manifest-commands "Watch")
+  (defun gwp/cargo-process-watch ()
+    "Run the Cargo check command.
+With the prefix argument, modify the command's invocation.
+Cargo: Check compile the current project.
+Requires cargo-check to be installed."
+    (interactive)
+    ;; (cargo-process--start "Watch" "watch -x check -x \"t -- --nocaputre\" ")
+    (cargo-process--start "Watch" "watch -x check"))
+
   (map! :map cargo-minor-mode-map
         :localleader
         (:prefix ("c" . "cargo")
@@ -32,7 +44,20 @@
           "u" #'cargo-process-update
           :desc "cargo doc --open"
           "d" #'cargo-process-doc-open
+          :desc "cargo watch"
+          "w" #'gwp/cargo-process-watch
           )))
+
+;; cargo更好用一些
+;; (use-package projectile
+;;   :custom
+;;   (projectile-read-command nil)
+;;   :config
+;;   (projectile-register-project-type 'rust-cargo '("Cargo.toml")
+;;                                     :compile "cargo watch -x check -x test"
+;;                                     :test "cargo test"
+;;                                     :run "cargo run")
+;;   )
 ;; cargo:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*racer][racer:1]]

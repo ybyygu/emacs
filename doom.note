@@ -1376,20 +1376,49 @@ https://github.com/hlissner/doom-emacs/issues/2225
 *** dired
 - [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
 
-用于在dired中复制当前文件的全路径.
 #+begin_src emacs-lisp
-  (defun gwp/dired-copy-file-path()
-    (interactive)
-    (let ((current-prefix-arg '(0)))
-      (call-interactively 'dired-copy-filename-as-kill)
+  (use-package dired
+    :config
+    ;; Set this variable to non-nil, Dired will try to guess a default
+    ;; target directory. This means: if there is a dired buffer
+    ;; displayed in the next window, use its current subdir, instead
+    ;; of the current subdir of this dired buffer. The target is used
+    ;; in the prompt for file copy, rename etc.
+    (progn
+      (setq dired-dwim-target t)
+
+      ;; Dired listing switches
+      ;;  -a : Do not ignore entries starting with .
+      ;;  -l : Use long listing format.
+      ;;  -G : Do not print group names like 'users'
+      ;;  -h : Human-readable sizes like 1K, 234M, ..
+      ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+      ;;  -F : Classify filenames by appending '*' to executables,
+      ;;       '/' to directories, etc.
+      (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+
+      ;; 用于在dired中复制当前文件的全路径.
+      (defun gwp/dired-copy-file-path()
+        (interactive)
+        (let ((current-prefix-arg '(0)))
+          (call-interactively 'dired-copy-filename-as-kill)
+          )
+        )
+
+      (map! :map dired-mode-map
+            :localleader
+            :n "y" #'gwp/dired-copy-file-path
+            :n "l" #'dired-do-symlink
+            )
+
+      ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+      (map! :map dired-mode-map
+            :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+            :nv "C-S-n" #'dired-create-directory
+            ;; :nv [mouse-1] #'dired-find-file
+            )
       )
     )
-
-  (map! :map dired-mode-map
-        :localleader
-        :n "y" #'gwp/dired-copy-file-path
-        :n "l" #'dired-do-symlink
-        )
 #+end_src
 
 隐藏.dotfiles, doom中默认omit的太少
@@ -1399,20 +1428,9 @@ https://github.com/hlissner/doom-emacs/issues/2225
     (progn
       (setq dired-omit-verbose t)
       ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-      ;; default is "-al"
-      ;; (setq dired-listing-switches "--group-directories-first -al -X")
       (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
     )
 #+end_src
-
-使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
-#+begin_src elisp
-  (map! :map dired-mode-map
-        :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-        :nv "C-S-n" #'dired-create-directory
-        )
-#+end_src
-
 
 *** org
 #+begin_src emacs-lisp
@@ -1745,35 +1763,40 @@ deadgrep与doom有冲突, 不能用了.
   - 调整TODO, DONE的调色, 别那么刺眼
 
 #+begin_src elisp
-  ;; (package! cnfonts)
-  (package! fcitx)
-  ;; (package! berrys-theme)
-  ;; (package! material-theme)
-  (package! material-theme
-            :recipe (:host github :repo "ybyygu/emacs-material-theme"))
+;; (package! cnfonts)
+(package! fcitx)
+;; (package! berrys-theme)
+;; (package! material-theme)
+(package! material-theme
+          :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 #+end_src
 
 - 窗口大小自动调整:
 #+begin_src emacs-lisp
-  (package! golden-ratio)
-  (package! zoom)
+(package! golden-ratio)
+(package! zoom)
 #+end_src
 
 org-download, 主要用于截图
 #+begin_src emacs-lisp
-  (package! org-download)
+(package! org-download)
 #+end_src
 
 org-noter
 #+begin_src emacs-lisp
-  (package! org-noter)
+(package! org-noter)
 #+end_src
 
 - 使用deadgrep搜索 .note 笔记
 - 与doom的popup有冲突, 不能用
 #+begin_src emacs-lisp :tangle no
-  (package! deadgrep
-            :recipe (:host github :repo "ybyygu/deadgrep"))
+(package! deadgrep
+          :recipe (:host github :repo "ybyygu/deadgrep"))
+#+end_src
+
+用于替代org-bellets
+#+begin_src elisp :tangle no
+(package! org-superstar)
 #+end_src
 
 *** 需要禁用的包
@@ -1986,12 +2009,12 @@ unwrap
 ** magit
 spacemacs中的习惯, 加回来, 避免忙中出错
 #+begin_src elisp
-  (after! magit
-    ;;禁用magit中的gravatars支持, 响应能快一些.
-    (setq magit-revision-show-gravatars nil)
+(after! magit
+  ;;禁用magit中的gravatars支持, 响应能快一些.
+  (setq magit-revision-show-gravatars nil)
 
-    (map! :map doom-leader-git-map "s" #'magit-status)
-    )
+  (map! :map doom-leader-git-map "s" #'magit-status)
+  )
 #+end_src
 
 git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
@@ -2154,70 +2177,73 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 
 配置参考:
 - [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]
+- [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][.emacs.d/setup-org.el at master · kaushalmodi/.emacs.d]]
 
 ** 基本设置
 #+begin_src elisp
-  (setq org-blank-before-new-entry nil)
-  (setq org-default-notes-file (concat org-directory "/life.note"))
+(setq org-blank-before-new-entry nil)
+(setq org-default-notes-file (concat org-directory "/life.note"))
 
-  ;; 保留以前的 Alt-Return 键行为, Alt-Return
-  (org-defkey org-mode-map [(meta return)] 'org-meta-return)
+;; 保留以前的 Alt-Return 键行为, Alt-Return
+(org-defkey org-mode-map [(meta return)] 'org-meta-return)
 
-  ;; doom 默认 src 中不保留缩进.
-  (setq org-src-preserve-indentation nil)
+;; 禁用字词检查, 需要了再开
+(remove-hook! 'org-mode-hook #'flyspell-mode)
+(flyspell-mode 0)
 
-  ;; 禁用字词检查, 需要了再开
-  (remove-hook! 'org-mode-hook #'flyspell-mode)
-  (flyspell-mode 0)
+;; https://orgmode.org/manual/Clean-view.html
+(setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
+(with-eval-after-load 'org-indent
+  (setq org-indent-indentation-per-level 1)) ;Default = 2
 #+end_src
 
 ** 按键行为
 #+begin_src elisp
-  (defun gwp/new-memo (arg)
-    "Insert a new org-mode memo entry under heading at point."
+(defun gwp/new-memo (arg)
+  "Insert a new org-mode memo entry under heading at point."
 
-    (interactive "P")
+  (interactive "P")
 
-    (call-interactively 'evil-open-below)
-    (insert "** ")
-    (call-interactively 'org-time-stamp-inactive)
-    (insert " ")
-    )
+  (call-interactively 'evil-open-below)
+  (insert "** ")
+  (call-interactively 'org-time-stamp-inactive)
+  (insert " ")
+  )
 
-  ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
-  (put 'org-toggle-comment 'disabled t)
+;; 经常按错这个键, 禁用之 (Ctrl-c ;)
+(put 'org-toggle-comment 'disabled t)
 
-  (map! :map org-mode-map
-        :n "gh" #'org-up-element
-        :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
-        :n "gk" #'org-previous-visible-heading
-        :n "gj" #'org-next-visible-heading
-        :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
-        :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
+(map! :map org-mode-map
+      :n "gh" #'org-up-element
+      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      :n "gk" #'org-previous-visible-heading
+      :n "gj" #'org-next-visible-heading
+      :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
+      :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
+      )
+
+(map! :map org-mode-map
+      :localleader
+      ;; FIXME: 与doom/org定义有冲突
+      (:prefix ("s" . "Subtree")
+        :desc "Demote" "l" #'org-demote-subtree
+        :desc "Promote" "h" #'org-promote-subtree
+        :desc "Archive" "A" #'org-archive-subtree
+        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
         )
-
-  (map! :map org-mode-map
-        :localleader
-        ;; FIXME: 与doom/org定义有冲突
-        (:prefix ("s" . "Subtree")
-          :desc "Demote" "l" #'org-demote-subtree
-          :desc "Promote" "h" #'org-promote-subtree
-          :desc "Archive" "A" #'org-archive-subtree
-          :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-          )
-        (:prefix ("SPC" . "Special")
-          :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-          :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-          )
+      (:prefix ("SPC" . "Special")
+        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
         )
-  (map! :map org-mode-map
-        :localleader
-        (:prefix ("g" . "Goto")
-          :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-          :desc "Jump to org heading"  "j" #'counsel-org-goto
-          :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-          )
+      )
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("g" . "Goto")
+        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
         )
+      )
 #+end_src
 
 ** dwim-enter-at-point
@@ -2437,45 +2463,53 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 - C-c C-v v: org-babel-expand-src-block
 
 *** init
-几个重要的header args:
 #+begin_src emacs-lisp
-  ;; helper functions for literate programming
-  ;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
-  (defun help/set-org-babel-default-header-args (property value)
-    "Easily set system header arguments in org mode.
+;; 不缩进org-src块中的代码.
+;; 注意: 不直接设置为"org-src-preserve-indentation t",
+;; 只设置org-edit-src-content-indentation为0, 这样仅影响编辑的org, 不影响tangle
+;; 出的代码. 以前的org文档可以逐步调回来
+(setq org-src-preserve-indentation nil)
+(setq org-edit-src-content-indentation 0) ;Default = 2
 
-  PROPERTY is the system-wide value that you would like to modify.
+;; helper functions for literate programming
+;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
+(defun help/set-org-babel-default-header-args (property value)
+  "Easily set system header arguments in org mode.
 
-  VALUE is the new value you wish to store.
+PROPERTY is the system-wide value that you would like to modify.
 
-  Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.html#System_002dwide-header-arguments'"
-    (setq org-babel-default-header-args
-          (cons (cons property value)
-                (assq-delete-all property org-babel-default-header-args))))
+VALUE is the new value you wish to store.
 
-  (help/set-org-babel-default-header-args :padline "yes")
-  (help/set-org-babel-default-header-args :mkdirp "yes")
-  (help/set-org-babel-default-header-args :comments "link")
+Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.html#System_002dwide-header-arguments'"
+  (setq org-babel-default-header-args
+        (cons (cons property value)
+              (assq-delete-all property org-babel-default-header-args))))
+
+;; 几个重要的header args:
+(help/set-org-babel-default-header-args :padline "yes")
+(help/set-org-babel-default-header-args :mkdirp "yes")
+(help/set-org-babel-default-header-args :comments "link")
 #+end_src
 
 *** enter
 #+begin_src emacs-lisp
-  ;; 禁用代码着色, 影响速度
-  (setq org-src-fontify-natively nil)
+;; 禁用代码着色, 影响速度
+(setq org-src-fontify-natively nil)
 
-  ;; 编辑代码时在下方新开窗口
-  ;;(setq org-src-window-setup 'split-window-below)
-  (setq org-src-window-setup 'current-window)
-  ;;(setq org-src-window-setup 'reorganize-frame)
-  ;;(setq org-src-window-setup 'other-frame)
+;; 编辑代码时在下方新开窗口
+;;(setq org-src-window-setup 'split-window-below)
+(setq org-src-window-setup 'current-window)
+;;(setq org-src-window-setup 'reorganize-frame)
+;;(setq org-src-window-setup 'other-frame)
 
-  ;; 进入代码编辑模式, 改成容易按的
-  (map! :map org-mode-map
-        :ni "C-c ;" #'org-edit-special
-        :ni "C-c C-;" #'org-edit-special
-        :localleader ";" #'org-edit-special
-        )
+;; 进入代码编辑模式, 改成容易按的
+(map! :map org-mode-map
+      :ni "C-c ;" #'org-edit-special
+      :ni "C-c C-;" #'org-edit-special
+      :localleader ";" #'org-edit-special
+      )
 #+end_src
+
 *** toml
 方便写Cargo.toml, 指定为toml为conf-toml-mode, 而不用写全 "conf-toml".
 #+begin_src elisp
@@ -2488,24 +2522,24 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 - org-babel-do-key-sequence-in-edit-buffer: 在当前代码下直接执行src code语境下的命令
 
 #+begin_src emacs-lisp
-  ;; 用于激活 localleader
-  (add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
+;; 用于激活 localleader
+(add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
 
-  ;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
-  (map! :map org-src-mode-map
-        "C-c ;"   #'org-edit-src-exit  ; 保存退出
-        "C-c C-;" #'org-edit-src-exit  ; 保存退出
-        "C-c C-k" #'org-edit-src-abort ; 放弃修改
-        )
-  (map! :map org-src-mode-map
-        :localleader
-        ";" #'org-edit-src-exit
-        "k" #'org-edit-src-abort
-        )
-  (map! :map rust-mode-map
-        :localleader
-        "=" #'rust-format-buffer
-        )
+;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
+(map! :map org-src-mode-map
+      "C-c ;"   #'org-edit-src-exit  ; 保存退出
+      "C-c C-;" #'org-edit-src-exit  ; 保存退出
+      "C-c C-k" #'org-edit-src-abort ; 放弃修改
+      )
+(map! :map org-src-mode-map
+      :localleader
+      ";" #'org-edit-src-exit
+      "k" #'org-edit-src-abort
+      )
+(map! :map rust-mode-map
+      :localleader
+      "=" #'rust-format-buffer
+      )
 #+end_src
 
 *** jump

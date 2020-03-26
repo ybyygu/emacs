@@ -5,12 +5,14 @@
 ;; 保留以前的 Alt-Return 键行为, Alt-Return
 (org-defkey org-mode-map [(meta return)] 'org-meta-return)
 
-;; doom 默认 src 中不保留缩进.
-(setq org-src-preserve-indentation nil)
-
 ;; 禁用字词检查, 需要了再开
 (remove-hook! 'org-mode-hook #'flyspell-mode)
 (flyspell-mode 0)
+
+;; https://orgmode.org/manual/Clean-view.html
+(setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
+(with-eval-after-load 'org-indent
+  (setq org-indent-indentation-per-level 1)) ;Default = 2
 ;; 基本设置:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
@@ -370,6 +372,13 @@
 ;; screenshot:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*init][init:1]]
+;; 不缩进org-src块中的代码.
+;; 注意: 不直接设置为"org-src-preserve-indentation t",
+;; 只设置org-edit-src-content-indentation为0, 这样仅影响编辑的org, 不影响tangle
+;; 出的代码. 以前的org文档可以逐步调回来
+(setq org-src-preserve-indentation nil)
+(setq org-edit-src-content-indentation 0) ;Default = 2
+
 ;; helper functions for literate programming
 ;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
 (defun help/set-org-babel-default-header-args (property value)
@@ -384,6 +393,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         (cons (cons property value)
               (assq-delete-all property org-babel-default-header-args))))
 
+;; 几个重要的header args:
 (help/set-org-babel-default-header-args :padline "yes")
 (help/set-org-babel-default-header-args :mkdirp "yes")
 (help/set-org-babel-default-header-args :comments "link")

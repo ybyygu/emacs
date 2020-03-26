@@ -67,18 +67,48 @@
 ;; edit:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:1]]
-(defun gwp/dired-copy-file-path()
-  (interactive)
-  (let ((current-prefix-arg '(0)))
-    (call-interactively 'dired-copy-filename-as-kill)
+(use-package dired
+  :config
+  ;; Set this variable to non-nil, Dired will try to guess a default
+  ;; target directory. This means: if there is a dired buffer
+  ;; displayed in the next window, use its current subdir, instead
+  ;; of the current subdir of this dired buffer. The target is used
+  ;; in the prompt for file copy, rename etc.
+  (progn
+    (setq dired-dwim-target t)
+
+    ;; Dired listing switches
+    ;;  -a : Do not ignore entries starting with .
+    ;;  -l : Use long listing format.
+    ;;  -G : Do not print group names like 'users'
+    ;;  -h : Human-readable sizes like 1K, 234M, ..
+    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+    ;;  -F : Classify filenames by appending '*' to executables,
+    ;;       '/' to directories, etc.
+    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+
+    ;; 用于在dired中复制当前文件的全路径.
+    (defun gwp/dired-copy-file-path()
+      (interactive)
+      (let ((current-prefix-arg '(0)))
+        (call-interactively 'dired-copy-filename-as-kill)
+        )
+      )
+
+    (map! :map dired-mode-map
+          :localleader
+          :n "y" #'gwp/dired-copy-file-path
+          :n "l" #'dired-do-symlink
+          )
+
+    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+    (map! :map dired-mode-map
+          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+          :nv "C-S-n" #'dired-create-directory
+          ;; :nv [mouse-1] #'dired-find-file
+          )
     )
   )
-
-(map! :map dired-mode-map
-      :localleader
-      :n "y" #'gwp/dired-copy-file-path
-      :n "l" #'dired-do-symlink
-      )
 ;; dired:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:2]]
@@ -87,8 +117,6 @@
   (progn
     (setq dired-omit-verbose t)
     ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    ;; default is "-al"
-    ;; (setq dired-listing-switches "--group-directories-first -al -X")
     (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
   )
 ;; dired:2 ends here
@@ -278,13 +306,6 @@ containing the current file by the default explorer."
 ;; set line space wider than default
 (setq-default line-spacing 4)
 ;; misc:1 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:3]]
-(map! :map dired-mode-map
-      :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-      :nv "C-S-n" #'dired-create-directory
-      )
-;; dired:3 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)

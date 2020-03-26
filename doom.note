@@ -1405,6 +1405,15 @@ https://github.com/hlissner/doom-emacs/issues/2225
     )
 #+end_src
 
+使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+#+begin_src elisp
+  (map! :map dired-mode-map
+        :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+        :nv "C-S-n" #'dired-create-directory
+        )
+#+end_src
+
+
 *** org
 #+begin_src emacs-lisp
   ;; If you use `org' and don't want your org files in the default location below,

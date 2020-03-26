@@ -279,6 +279,13 @@ containing the current file by the default explorer."
 (setq-default line-spacing 4)
 ;; misc:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:3]]
+(map! :map dired-mode-map
+      :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+      :nv "C-S-n" #'dired-create-directory
+      )
+;; dired:3 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)
 ;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.

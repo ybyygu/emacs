@@ -1240,48 +1240,52 @@ stow:
 *** ui
 **** chinese fonts setup
 #+begin_src elisp
-  ;; (use-package! cnfonts
-  ;;   :config
-  ;;   (progn
-  ;;     (setq cnfonts-profiles
-  ;;           '("program" "org-mode" "read-book"))
-  ;;     (setq cnfonts-use-face-font-rescale t)
-  ;;     )
-  ;;   (cnfonts-enable)
-  ;;   )
+;; HiDPI下可用大字模式: SPC-t-b
+(setq doom-font (font-spec :family "Monaco" :size 12))
+(setq doom-big-font-increment 4)
 
-  ;; 这样modeline就正常了
-  ;; https://emacs-china.org/t/doom-emacs/10390
-  (defun gwp/set-fonts()
-    (interactive)
+;; (use-package! cnfonts
+;;   :config
+;;   (progn
+;;     (setq cnfonts-profiles
+;;           '("program" "org-mode" "read-book"))
+;;     (setq cnfonts-use-face-font-rescale t)
+;;     )
+;;   (cnfonts-enable)
+;;   )
+
+;; 这样modeline就正常了
+;; https://emacs-china.org/t/doom-emacs/10390
+(defun gwp/set-fonts()
+  (interactive)
+  (if (display-graphic-p)
+      (progn
+        ;; english font
+        ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
+        (setq doom-font (font-spec :family "Monaco" :size 16))
+        ;; chinese font
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
+    ))
+(global-set-key (kbd "<f5> <f5>") 'gwp/set-fonts)
+
+(defun gwp/init-fonts(frame)
+  (with-selected-frame frame
     (if (display-graphic-p)
-        (progn
-          ;; english font
-          ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
-          (setq doom-font (font-spec :family "Monaco" :size 16))
-          ;; chinese font
-          (dolist (charset '(kana han symbol cjk-misc bopomofo))
-            (set-fontset-font (frame-parameter nil 'font)
-                              charset
-                              (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
-      ))
-  (global-set-key (kbd "<f5> <f5>") 'gwp/set-fonts)
+        (gwp/set-fonts))))
 
-  (defun gwp/init-fonts(frame)
-    (with-selected-frame frame
-      (if (display-graphic-p)
-          (gwp/set-fonts))))
+(if (and (fboundp 'daemonp) (daemonp))
+    (add-hook 'after-make-frame-functions #'gwp/init-fonts))
+(call-interactively 'gwp/set-fonts)
 
-  (if (and (fboundp 'daemonp) (daemonp))
-      (add-hook 'after-make-frame-functions #'gwp/init-fonts))
-  (call-interactively 'gwp/set-fonts)
-
-  ;; org-mode表格中文混排对齐
-  (after! org
-    (custom-set-faces!
-      `(org-table :family "Ubuntu Mono")
-      )
+;; org-mode表格中文混排对齐
+(after! org
+  (custom-set-faces!
+    `(org-table :family "Ubuntu Mono")
     )
+  )
 #+end_src
 
 **** theme
@@ -3342,6 +3346,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
         :desc "preview latex fragments"     "L"     #'org-latex-preview
         :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
         :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+        :desc "preview inline images"       "I"   #'org-toggle-inline-images
         )
 
   (map! :map org-mode-map

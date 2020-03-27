@@ -222,6 +222,10 @@ containing the current file by the default explorer."
 ;; workspace:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
+;; HiDPI下可用大字模式: SPC-t-b
+(setq doom-font (font-spec :family "Monaco" :size 12))
+(setq doom-big-font-increment 4)
+
 ;; (use-package! cnfonts
 ;;   :config
 ;;   (progn

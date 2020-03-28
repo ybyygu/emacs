@@ -207,6 +207,10 @@
       :desc "preview latex fragments"     "L"     #'org-latex-preview
       :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
       :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      :desc "Move to next link"           "C-n"   #'org-next-link
+      :desc "Move to prev link"           "C-p"   #'org-previous-link
+      :desc "Move to next link"           [tab]   #'org-next-link
+      :desc "Move to prev link"           [backtab]   #'org-previous-link
       :desc "preview inline images"       "I"   #'org-toggle-inline-images
       )
 

@@ -1836,13 +1836,12 @@ github支持, 减慢速度.
 ** auto-save
 开启自动保存
 #+begin_src elisp
-  (setq
-   auto-save-default t
-   auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
-   auto-save-list-file-name (concat doom-cache-dir "autosave")
-   )
+(setq
+ auto-save-default t
+ auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
+ auto-save-list-file-name (concat doom-cache-dir "autosave"))
 
-  (auto-save-visited-mode +1)
+(auto-save-visited-mode +1)
 #+end_src
 
 ** smartparens
@@ -3321,39 +3320,44 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   ;; saving a source code buffer back into its base buffer
   (setq org-edit-src-auto-save-idle-delay 1)
 #+end_src
+
 ** bindings
 #+begin_src elisp
-  (map! :map org-mode-map
-        :localleader
-        (:prefix ("b" . "org-babel")
-          :desc "check src block headers"    "c" #'org-babel-check-src-block
-          :desc "insert header argument"     "i" #'org-babel-insert-header-arg
-          :desc "view header arguments"      "I" #'org-babel-view-src-block-info
-          :desc "demarcate block"            "d" #'org-babel-demarcate-block
-          :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-          :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
-          :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
-          :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-          :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
-          :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
-          :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-          ))
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("b" . "org-babel")
+        :desc "check src block headers"    "c" #'org-babel-check-src-block
+        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
+        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
+        :desc "demarcate block"            "d" #'org-babel-demarcate-block
+        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
+        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
+        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
+        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
+        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+        ))
 
-  (map! :map org-mode-map
-        :localleader
-        :desc "preview inline images"       "I"   #'org-toggle-inline-images
-        :desc "preview latex fragments"     "L"     #'org-latex-preview
-        :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
-        :desc "preview latex fragments"     "C-l"   #'org-latex-preview
-        :desc "preview inline images"       "I"   #'org-toggle-inline-images
-        )
+(map! :map org-mode-map
+      :localleader
+      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      :desc "preview latex fragments"     "L"     #'org-latex-preview
+      :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
+      :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      :desc "Move to next link"           "C-n"   #'org-next-link
+      :desc "Move to prev link"           "C-p"   #'org-previous-link
+      :desc "Move to next link"           [tab]   #'org-next-link
+      :desc "Move to prev link"           [backtab]   #'org-previous-link
+      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      )
 
-  (map! :map org-mode-map
-        :leader
-        :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
-        :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
-        )
+(map! :map org-mode-map
+      :leader
+      :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
+      :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+      :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+      )
 #+end_src
 
 

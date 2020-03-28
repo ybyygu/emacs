@@ -1,10 +1,8 @@
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*auto-save][auto-save:1]]
-;; Auto-save file
 (setq
  auto-save-default t
  auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
- auto-save-list-file-name (concat doom-cache-dir "autosave")
- )
+ auto-save-list-file-name (concat doom-cache-dir "autosave"))
 
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here

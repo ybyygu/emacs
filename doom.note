@@ -1814,20 +1814,21 @@ pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 org-bullets由于字体原因, 显示不佳.
 
 #+begin_src elisp
-  (disable-packages! org-bullets pangu-spacing)
+(disable-packages! org-bullets pangu-spacing)
 #+end_src
 
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
 #+begin_src emacs-lisp
-  (package! doom-snippets :ignore t)
+(package! doom-snippets :ignore t)
 #+end_src
 
 github支持, 减慢速度.
 #+begin_src emacs-lisp
-  (package! forge :ignore t)
-  ;; 不能简单的禁用了事
-  ;; (package! github-review :ignore t)
+(package! forge :ignore t)
+;; 不能简单的禁用了事
+;; (package! github-review :ignore t)
 #+end_src
+
 * edit.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
@@ -2458,10 +2459,6 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
     ;;                             ;; "~/Documents/org-notes/GTD"
     ;;                             ))
     )
-#+end_src
-
-#+begin_src elisp :tangle pkg/.doom.d/packages.el
-  (package! notdeft :recipe (:host github :repo "hasu/notdeft"))
 #+end_src
 
 ** org-babel

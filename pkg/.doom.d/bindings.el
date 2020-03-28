@@ -305,21 +305,19 @@
 ;; https://emacs.stackexchange.com/questions/55775/how-can-i-resume-swiper-isearch-with-the-next-line-selected
 (defun gwp/ivy-resume-search()
   (interactive)
-  (swiper-isearch (car swiper-history))
-  )
+  (swiper-isearch (car swiper-history)))
 
 (map! :leader
       ;;; <leader> r --- resume
       (:prefix-map ("r" . "rings/resume")
-                   :desc "Open bookmarks"        "b" #'counsel-bookmark
-                   ;; :desc "Resume last search"    "l" #'ivy-resume
-                   :desc "Resume last search"    "l" #'gwp/ivy-resume-search
-                   :desc "Evil registers"        "e" #'counsel-register
-                   :desc "Evil marks"            "m" #'counsel-evil-marks
-                   :desc "Last change"           "c" #'goto-last-change
-                   )
-
-    )
+        :desc "Open bookmarks"        "b" #'counsel-bookmark
+        ;; :desc "Resume last search"    "l" #'ivy-resume
+        :desc "Resume last search"    "l" #'gwp/ivy-resume-search
+        :desc "Evil registers"        "e" #'counsel-register
+        :desc "Evil marks"            "m" #'counsel-evil-marks
+        :desc "Last change"           "c" #'goto-last-change
+        :desc "Jump list"             "j" #'+ivy/jump-list
+        ))
 
 (map! :leader
       ;;; <leader> s --- search

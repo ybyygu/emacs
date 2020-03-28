@@ -158,22 +158,18 @@
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter][org-noter:1]]
 (use-package! org-noter
-  :after org-mode
+  :config
+  (setq org-noter-default-notes-file-names '("annotation.note"))
   )
-;; (map! :localleader
-;;       :map (org-mode-map pdf-view-mode-map)
-;;       (:prefix ("o" . "Org")
-;;         (:prefix ("n" . "Noter")
-;;           :desc "Noter" "n" 'org-noter
-;;           )))
-;;
 
-;; (map! :localleader
-;;       :map pdf-view-mode-map
-;;       (:prefix "o"
-;;         (:prefix "n"
-;;           :desc "Insert" "i" 'org-noter-insert-note
-;;           )))
+(after! pdf-tools
+  (map! :map pdf-view-mode-map
+        :localleader
+        (:prefix ("n" . "org-noter")
+          "n" #'org-noter
+          "i" #'org-noter-insert-note
+          "I" #'org-noter-insert-precise-note
+          )))
 ;; org-noter:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:2]]
@@ -211,6 +207,7 @@
       :desc "preview latex fragments"     "L"     #'org-latex-preview
       :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
       :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      :desc "preview inline images"       "I"   #'org-toggle-inline-images
       )
 
 (map! :map org-mode-map

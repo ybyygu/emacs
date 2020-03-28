@@ -211,7 +211,7 @@ containing the current file by the default explorer."
   :config
   (when (executable-find "fcitx-remote")
     ;; (fcitx-prefix-keys-add "M-m")
-    ;; 有响应问题
+    ;; 影响搜索界面, 不应该开
     ;; (setq fcitx-use-dbus t)
     (fcitx-aggressive-setup)
     ))

@@ -525,6 +525,11 @@ References
 - 问题: 不能方便地在zotero界面里进行搜索 (需要fulltext index) (但可以用自编工具
   notesearch来处理, 不过需要定期更新cache)
 
+workflow
+- 将pdf文件关联到emacs, 使用pdf-tools打开(pdf-view-mode)
+- 进入org-noter界面(SPC-n-n), 按提示将 annotation.note放到PDF所在目录
+- 使用org-noter插入笔记
+
 ** 使用org-noter批注
 [2020-01-01 Wed] org-noter比interleave功能更强.
 
@@ -783,13 +788,14 @@ References
 
 * TODO desktop integration
 ** emacsclient-open
+可用于打开.note和.pdf文件
 #+begin_src config :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
   [Desktop Entry]
   Version=1.0
   Name=Emacs Client - GWP
   GenericName=Text Editor
   Comment=View and edit files
-  MimeType=application/x-note;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+  MimeType=application/x-note;application/pdf;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
   Exec=emacsclient %F
   TryExec=emacs
   Icon=emacs
@@ -1554,15 +1560,15 @@ deadgrep与doom有冲突, 不能用了.
 *** fcitx
 自动中英文切换, 解决vim模式下的一大痛点.
 #+BEGIN_SRC emacs-lisp
-  (use-package! fcitx
-    :after evil
-    :config
-    (when (executable-find "fcitx-remote")
-      ;; (fcitx-prefix-keys-add "M-m")
-      ;; 有响应问题
-      ;; (setq fcitx-use-dbus t)
-      (fcitx-aggressive-setup)
-      ))
+(use-package! fcitx
+  :after evil
+  :config
+  (when (executable-find "fcitx-remote")
+    ;; (fcitx-prefix-keys-add "M-m")
+    ;; 影响搜索界面, 不应该开
+    ;; (setq fcitx-use-dbus t)
+    (fcitx-aggressive-setup)
+    ))
 #+END_SRC
 
 *** TODO bm
@@ -2673,23 +2679,19 @@ org-babel-expand-src-block (可以展开noweb macro)
 
 ** org-noter
 #+begin_src elisp
-  (use-package! org-noter
-    :after org-mode
-    )
-  ;; (map! :localleader
-  ;;       :map (org-mode-map pdf-view-mode-map)
-  ;;       (:prefix ("o" . "Org")
-  ;;         (:prefix ("n" . "Noter")
-  ;;           :desc "Noter" "n" 'org-noter
-  ;;           )))
-  ;;
+(use-package! org-noter
+  :config
+  (setq org-noter-default-notes-file-names '("annotation.note"))
+  )
 
-  ;; (map! :localleader
-  ;;       :map pdf-view-mode-map
-  ;;       (:prefix "o"
-  ;;         (:prefix "n"
-  ;;           :desc "Insert" "i" 'org-noter-insert-note
-  ;;           )))
+(after! pdf-tools
+  (map! :map pdf-view-mode-map
+        :localleader
+        (:prefix ("n" . "org-noter")
+          "n" #'org-noter
+          "i" #'org-noter-insert-note
+          "I" #'org-noter-insert-precise-note
+          )))
 #+end_src
 
 ** pairs

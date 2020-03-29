@@ -1387,59 +1387,59 @@ https://github.com/hlissner/doom-emacs/issues/2225
 - [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
 
 #+begin_src emacs-lisp
-  (use-package dired
-    :config
-    ;; Set this variable to non-nil, Dired will try to guess a default
-    ;; target directory. This means: if there is a dired buffer
-    ;; displayed in the next window, use its current subdir, instead
-    ;; of the current subdir of this dired buffer. The target is used
-    ;; in the prompt for file copy, rename etc.
-    (progn
-      (setq dired-dwim-target t)
+(use-package dired
+  :config
+  ;; Set this variable to non-nil, Dired will try to guess a default
+  ;; target directory. This means: if there is a dired buffer
+  ;; displayed in the next window, use its current subdir, instead
+  ;; of the current subdir of this dired buffer. The target is used
+  ;; in the prompt for file copy, rename etc.
+  (progn
+    (setq dired-dwim-target t)
 
-      ;; Dired listing switches
-      ;;  -a : Do not ignore entries starting with .
-      ;;  -l : Use long listing format.
-      ;;  -G : Do not print group names like 'users'
-      ;;  -h : Human-readable sizes like 1K, 234M, ..
-      ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-      ;;  -F : Classify filenames by appending '*' to executables,
-      ;;       '/' to directories, etc.
-      (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+    ;; Dired listing switches
+    ;;  -a : Do not ignore entries starting with .
+    ;;  -l : Use long listing format.
+    ;;  -G : Do not print group names like 'users'
+    ;;  -h : Human-readable sizes like 1K, 234M, ..
+    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+    ;;  -F : Classify filenames by appending '*' to executables,
+    ;;       '/' to directories, etc.
+    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
 
-      ;; 用于在dired中复制当前文件的全路径.
-      (defun gwp/dired-copy-file-path()
-        (interactive)
-        (let ((current-prefix-arg '(0)))
-          (call-interactively 'dired-copy-filename-as-kill)
-          )
+    ;; 用于在dired中复制当前文件的全路径.
+    (defun gwp/dired-copy-file-path()
+      (interactive)
+      (let ((current-prefix-arg '(0)))
+        (call-interactively 'dired-copy-filename-as-kill)
         )
-
-      (map! :map dired-mode-map
-            :localleader
-            :n "y" #'gwp/dired-copy-file-path
-            :n "l" #'dired-do-symlink
-            )
-
-      ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
-      (map! :map dired-mode-map
-            :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-            :nv "C-S-n" #'dired-create-directory
-            ;; :nv [mouse-1] #'dired-find-file
-            )
       )
+
+    (map! :map dired-mode-map
+          :localleader
+          :n "y" #'gwp/dired-copy-file-path
+          :n "l" #'dired-do-symlink
+          )
+
+    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+    (map! :map dired-mode-map
+          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+          :nv "C-S-n" #'dired-create-directory
+          ;; :nv [mouse-1] #'dired-find-file
+          )
     )
+  )
 #+end_src
 
 隐藏.dotfiles, doom中默认omit的太少
 #+begin_src emacs-lisp
-  (use-package dired-x
-    :config
-    (progn
-      (setq dired-omit-verbose t)
-      ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-      (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
-    )
+(use-package dired-x
+  :config
+  (progn
+    (setq dired-omit-verbose t)
+    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
+    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
+  )
 #+end_src
 
 *** org
@@ -1468,65 +1468,69 @@ https://github.com/hlissner/doom-emacs/issues/2225
 *** open-file-externally
 从spacemacs中改过来的
 #+begin_src emacs-lisp
-  (defun spacemacs/open-in-external-app (file-path)
-    "Open `file-path' in external application."
-    (let ((process-connection-type nil))
-      (start-process "" nil "xdg-open" file-path)
-      )
-     )
+(defun spacemacs/open-in-external-app (file-path)
+  "Open `file-path' in external application."
+  (let ((process-connection-type nil))
+    (start-process "" nil "xdg-open" file-path)))
 
-  (defun spacemacs/open-file-or-directory-in-external-app (arg)
-    "Open current file in external application.
-  If the universal prefix argument is used then open the folder
-  containing the current file by the default explorer."
-    (interactive "P")
-    (if arg
-        (spacemacs/open-in-external-app (expand-file-name default-directory))
-      (let ((file-path (if (derived-mode-p 'dired-mode)
-                           (dired-get-file-for-visit)
-                         buffer-file-name)))
-        (if file-path
+(defun spacemacs/open-file-or-directory-in-external-app (arg)
+  "Open current file in external application.
+If the universal prefix argument is used then open the folder
+containing the current file by the default explorer.
+If two universal prefix arguments are used, then prompt for command to use."
+  (interactive "P")
+  (if (equal arg '(4))                  ; C-u
+      (spacemacs/open-in-external-app (expand-file-name default-directory))
+    (let ((file-path (if (derived-mode-p 'dired-mode)
+                         (dired-get-file-for-visit)
+                       buffer-file-name)))
+      (if file-path
+          (if (equal arg '(16))         ; C-u C-u
+              (progn
+                (let ((program (read-shell-command "Open current file with: ")))
+                  (call-process program nil 0 nil file-path)
+                  )
+                )
             (spacemacs/open-in-external-app file-path)
-          (message "No file associated to this buffer.")))
-      )
-    )
+            )
+        (message "No file associated to this buffer.")))))
 #+end_src
 
 *** open in terminal
 emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 
 #+begin_src emacs-lisp
-  (defun gwp/open-in-gnome-terminal (the-directory)
-    "Open `the-directory' in external gnome-terminal."
-    (let ((process-connection-type nil))
-      ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
-      (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
-      )
+(defun gwp/open-in-gnome-terminal (the-directory)
+  "Open `the-directory' in external gnome-terminal."
+  (let ((process-connection-type nil))
+    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
     )
+  )
 
-  (defun gwp/open-terminal-here ()
-    "Open the current dir in a new terminal window"
-    (interactive)
-    (let ((default-directory (or (and (eq major-mode 'dired-mode)
-                                      (dired-current-directory))
-                                 default-directory)))
-      (gwp/open-in-gnome-terminal (expand-file-name default-directory))
-      )
+(defun gwp/open-terminal-here ()
+  "Open the current dir in a new terminal window"
+  (interactive)
+  (let ((default-directory (or (and (eq major-mode 'dired-mode)
+                                    (dired-current-directory))
+                               default-directory)))
+    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
     )
+  )
 #+end_src
 
 *** ripgrep
 search org note files
 #+begin_src emacs-lisp
-  ;;;###autoload
-  (defun gwp/search-all-notes (arg)
-    "search all notes in ~/.cache/notes"
-    (interactive "P")
+;;;###autoload
+(defun gwp/search-all-notes (arg)
+  "search all notes in ~/.cache/notes"
+  (interactive "P")
 
-    (let ((default-directory "~/.cache/notes"))
-      (call-interactively '+ivy/project-search-from-cwd)
-      )
+  (let ((default-directory "~/.cache/notes"))
+    (call-interactively '+ivy/project-search-from-cwd)
     )
+  )
 #+end_src
 
 deadgrep与doom有冲突, 不能用了.
@@ -2673,7 +2677,8 @@ org-babel-expand-src-block (可以展开noweb macro)
     (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+end_src
 
-** org-noter
+** org-noter/pdf-view
+pdf-view-fit-width-to-window
 #+begin_src elisp
 (use-package! org-noter
   :config

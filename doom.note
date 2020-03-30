@@ -593,6 +593,13 @@ workflow
   emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
 #+end_src
 
+** pdf-view
+以全屏窗口打开PDF文件
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/emacs-pdf.sh
+emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
+#+end_src
+
 ** org-read-todo
 #+BEGIN_SRC sh
   dir_read_root=~/ToDo/READ/Research

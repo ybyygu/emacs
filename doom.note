@@ -1321,13 +1321,13 @@ stow:
 **** window
 修改 frame 标题 方便 gnome-shell 桌面切换
 #+begin_src elisp
-  ;; workspace@buffer-name: ~/foo/bar
-  (setq frame-title-format
-        '((:eval (+workspace-current-name)) ;
-          " | %b : "
-          (:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))))
-          ))
+;; workspace@buffer-name: ~/foo/bar
+(setq frame-title-format
+      '((:eval (+workspace-current-name)) ;
+        " | %b : "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))))
+        ))
 #+end_src
 
 自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
@@ -1335,42 +1335,52 @@ stow:
 
 对应命令: SPC-w z
 #+begin_src emacs-lisp
-  (use-package! zoom
-                ;; :after-call pre-command-hook
-                :config
-                (custom-set-variables
-                 '(zoom-size '(0.618 . 0.618)))
-                (map! :map evil-window-map
-                      "z" #'zoom)
-                )
+(use-package! zoom
+              ;; :after-call pre-command-hook
+              :config
+              (custom-set-variables
+               '(zoom-size '(0.618 . 0.618)))
+              (map! :map evil-window-map
+                    "z" #'zoom)
+              )
 #+end_src
 
 用avy在多个窗口下跳转也很方便.
 #+BEGIN_SRC elisp
-  (use-package! avy
-                :config
-                (setq avy-all-windows t)
-                )
+(use-package! avy
+              :config
+              (setq avy-all-windows t)
+              )
 #+END_SRC
 
 打开doom popup窗口, 默认仅在normal state下可用.
 #+begin_src emacs-lisp
-  (map! :i "C-`" #'+popup/toggle)
+(map! :i "C-`" #'+popup/toggle)
+#+end_src
+
+
+使用滚轮来修改窗口大小. Ctrl-Alt-scroll-up, Ctrl-Alt-scroll-down
+#+begin_src elisp
+(map! :nvi
+      [C-M-mouse-4] #'evil-window-increase-width
+      [C-M-mouse-5] #'evil-window-decrease-width
+      )
 #+end_src
 
 
 golden-ratio有点问题
 https://github.com/hlissner/doom-emacs/issues/2225
 #+begin_src elisp :tangle no
-  (use-package! golden-ratio
-                :after-call pre-command-hook
-                :config
-                (golden-ratio-mode +1)
-                ;; Using this hook for resizing windows is less precise than
-                ;; `doom-switch-window-hook'.
-                (remove-hook 'window-configuration-change-hook #'golden-ratio)
-                (add-hook 'doom-switch-window-hook #'golden-ratio))
+(use-package! golden-ratio
+              :after-call pre-command-hook
+              :config
+              (golden-ratio-mode +1)
+              ;; Using this hook for resizing windows is less precise than
+              ;; `doom-switch-window-hook'.
+              (remove-hook 'window-configuration-change-hook #'golden-ratio)
+              (add-hook 'doom-switch-window-hook #'golden-ratio))
 #+end_src
+
 **** line number
 默认不显示行号
 #+begin_src emacs-lisp
@@ -2701,8 +2711,8 @@ pdf-view-fit-width-to-window
           "I" #'org-noter-insert-precise-note
           ))
   (map! :map pdf-view-mode-map
-        [C-down-mouse-4] (lambda! (pdf-view-enlarge 1.10))
-        [C-down-mouse-5] (lambda! (pdf-view-shrink 1.10))
+        [C-mouse-4] (lambda! (pdf-view-enlarge 1.10))
+        [C-mouse-5] (lambda! (pdf-view-shrink 1.10))
         )
   )
 #+end_src

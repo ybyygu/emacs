@@ -156,7 +156,7 @@
   )
 ;; tangle:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter][org-noter:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
 (use-package! org-noter
   :config
   (setq org-noter-default-notes-file-names '("annotation.note"))
@@ -171,11 +171,11 @@
           "I" #'org-noter-insert-precise-note
           ))
   (map! :map pdf-view-mode-map
-        [C-down-mouse-4] (lambda! (pdf-view-enlarge 1.10))
-        [C-down-mouse-5] (lambda! (pdf-view-shrink 1.10))
+        [C-mouse-4] (lambda! (pdf-view-enlarge 1.10))
+        [C-mouse-5] (lambda! (pdf-view-shrink 1.10))
         )
   )
-;; org-noter:1 ends here
+;; org-noter/pdf-view:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:2]]
 (after! smartparens-org

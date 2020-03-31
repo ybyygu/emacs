@@ -307,6 +307,13 @@ If two universal prefix arguments are used, then prompt for command to use."
               )
 ;; window:3 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:5]]
+(map! :nvi
+      [C-M-mouse-4] #'evil-window-increase-width
+      [C-M-mouse-5] #'evil-window-decrease-width
+      )
+;; window:5 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
 ;; View images inside Emacs
 (auto-image-file-mode t)

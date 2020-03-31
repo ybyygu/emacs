@@ -13,6 +13,9 @@
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
 (with-eval-after-load 'org-indent
   (setq org-indent-indentation-per-level 1)) ;Default = 2
+
+;; 对齐headline中的TAGs
+(setq org-tags-column -80)
 ;; 基本设置:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]

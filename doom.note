@@ -1006,26 +1006,26 @@ stow:
 *** doom-dirs
 设置到非syncthing共享目录下, 避免共享冲突
 #+begin_src elisp
-  ;;; init.el -*- lexical-binding: t; -*-
+;;; init.el -*- lexical-binding: t; -*-
 
-  ;; This file controls what Doom modules are enabled and what order they load in.
-  ;; Remember to run 'doom sync' after modifying it!
+;; This file controls what Doom modules are enabled and what order they load in.
+;; Remember to run 'doom sync' after modifying it!
 
-  ;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
-  ;;      documentation. There you'll find information about all of Doom's modules
-  ;;      and what flags they support.
+;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+;;      documentation. There you'll find information about all of Doom's modules
+;;      and what flags they support.
 
-  ;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
-  ;;      'C-c g k' for non-vim users) to view its documentation. This works on
-  ;;      flags as well (those symbols that start with a plus).
-  ;;
-  ;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
-  ;;      directory (for easy access to its source code).
+;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+;;      'C-c g k' for non-vim users) to view its documentation. This works on
+;;      flags as well (those symbols that start with a plus).
+;;
+;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
+;;      directory (for easy access to its source code).
 
-  (setq doom-etc-dir "~/.doom.d/local/etc/")
-  (setq doom-cache-dir "~/.doom.d/local/cache/")
-  (setq bookmark-default-file (expand-file-name "bookmarks" doom-etc-dir))
-  (setq recentf-save-file (expand-file-name "recentf" doom-cache-dir))
+(setq doom-etc-dir "~/.doom.d/local/etc/")
+(setq doom-cache-dir "~/.doom.d/local/cache/")
+(setq bookmark-default-file (expand-file-name "bookmarks" doom-etc-dir))
+(setq recentf-save-file (expand-file-name "recentf" doom-cache-dir))
 #+end_src
 
 *** modules
@@ -1859,8 +1859,9 @@ github支持, 减慢速度.
 #+begin_src elisp
 (setq
  auto-save-default t
- auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
- auto-save-list-file-name (concat doom-cache-dir "autosave"))
+ ;; auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
+ ;; auto-save-list-file-name (concat doom-cache-dir "autosave")
+ )
 
 (auto-save-visited-mode +1)
 #+end_src
@@ -1868,14 +1869,14 @@ github支持, 减慢速度.
 ** smartparens
 不知道能用上多少, 先试几天.
 #+begin_src elisp
-  (map! :leader
-        :nvi
-        "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
-        [deletechar] #'sp-kill-sexp       ; DELETE
-        [right] #'sp-forward-slurp-sexp   ; Array right ==>
-        [left]  #'sp-backward-slurp-sexp  ; Array left  <==
-        "C-k"   #'sp-unwrap-sexp
-        )
+(map! :leader
+      :nvi
+      "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
+      [deletechar] #'sp-kill-sexp       ; DELETE
+      [right] #'sp-forward-slurp-sexp   ; Array right ==>
+      [left]  #'sp-backward-slurp-sexp  ; Array left  <==
+      "C-k"   #'sp-unwrap-sexp
+      )
 #+end_src
 
 kill
@@ -1894,30 +1895,30 @@ unwrap
 : (foo bar| baz)     -> foo bar| baz
 ** expand region
 #+begin_src elisp
-  (use-package expand-region :after evil :config
-    (map! :leader :v "v"
-          (function er/expand-region)))
+(use-package expand-region :after evil :config
+  (map! :leader :v "v"
+        (function er/expand-region)))
 #+end_src
 
 ** doom tuning
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
-  (setq evil-want-fine-undo t)
+(setq evil-want-fine-undo t)
 #+end_src
 
 ** insert date
 #+begin_src emacs-lisp
-  (defun gwp/insert-date (arg)
-    "Insert date at point. With prefix argument, insert date and time."
-    (interactive "P")
-    (insert (format-time-string "%Y-%m-%d"))
-    (when arg
-      (insert (format-time-string " %H:%M"))
-      )
+(defun gwp/insert-date (arg)
+  "Insert date at point. With prefix argument, insert date and time."
+  (interactive "P")
+  (insert (format-time-string "%Y-%m-%d"))
+  (when arg
+    (insert (format-time-string " %H:%M"))
     )
+  )
 
-  ;; make it easier to update time-stamp
-  (map! :i "C-c i" #'gwp/insert-date)
+;; make it easier to update time-stamp
+(map! :i "C-c i" #'gwp/insert-date)
 #+end_src
 
 ** white space
@@ -1930,101 +1931,101 @@ unwrap
 
 ** TODO advanced selection
 #+begin_src emacs-lisp
-  ;; expand selection
-  ;; http://xahlee.org/emacs/modernization_mark-word.html
-  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-  (defun semnav-up (arg)
-    (interactive "p")
-    (when (nth 3 (syntax-ppss))
-      (if (> arg 0)
-          (progn
-            (skip-syntax-forward "^\"")
-            (goto-char (1+ (point)))
-            (decf arg))
-        (skip-syntax-backward "^\"")
-        (goto-char (1- (point)))
-        (incf arg)))
-    (up-list arg))
-
-  ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-  (defun gwp/extend-selection (arg &optional incremental)
-    "Select the current word.
-  Subsequent calls expands the selection to larger semantic unit."
-    (interactive (list (prefix-numeric-value current-prefix-arg)
-                       (or (and transient-mark-mode mark-active)
-                           (eq last-command this-command))))
-    (if incremental
+;; expand selection
+;; http://xahlee.org/emacs/modernization_mark-word.html
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun semnav-up (arg)
+  (interactive "p")
+  (when (nth 3 (syntax-ppss))
+    (if (> arg 0)
         (progn
-          (semnav-up (- arg))
-          (forward-sexp)
-          (mark-sexp -1))
-      (if (> arg 1)
-          (extend-selection (1- arg) t)
-        (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
-            (goto-char (match-end 0))
-          (unless (memq (char-before) '(?\) ?\"))
-            (forward-sexp)))
-        (mark-sexp -1))))
+          (skip-syntax-forward "^\"")
+          (goto-char (1+ (point)))
+          (decf arg))
+      (skip-syntax-backward "^\"")
+      (goto-char (1- (point)))
+      (incf arg)))
+  (up-list arg))
 
-  ;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun gwp/extend-selection (arg &optional incremental)
+  "Select the current word.
+Subsequent calls expands the selection to larger semantic unit."
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+                     (or (and transient-mark-mode mark-active)
+                         (eq last-command this-command))))
+  (if incremental
+      (progn
+        (semnav-up (- arg))
+        (forward-sexp)
+        (mark-sexp -1))
+    (if (> arg 1)
+        (extend-selection (1- arg) t)
+      (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
+          (goto-char (match-end 0))
+        (unless (memq (char-before) '(?\) ?\"))
+          (forward-sexp)))
+      (mark-sexp -1))))
 
-  (defun gwp/select-text-in-quote ()
-    "Select text between the nearest left and right delimiters.
-  Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
-    (interactive)
-    (let (b1 b2)
-      (skip-chars-backward "^<>(“{[「«\"‘")
-      (setq b1 (point))
-      (skip-chars-forward "^<>)”}]」»\"’")
-      (setq b2 (point))
-      (set-mark b1)
-      )
+;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
+
+(defun gwp/select-text-in-quote ()
+  "Select text between the nearest left and right delimiters.
+Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
+  (interactive)
+  (let (b1 b2)
+    (skip-chars-backward "^<>(“{[「«\"‘")
+    (setq b1 (point))
+    (skip-chars-forward "^<>)”}]」»\"’")
+    (setq b2 (point))
+    (set-mark b1)
     )
+  )
 
-  (defun gwp/select-none-blank-text ()
-    "Select none blank chars near the point in current line"
-    (interactive)
-    (let (b1 b2)
-      (skip-chars-backward "^ \n")
-      (setq b1 (point))
-      (skip-chars-forward "^ \n")
-      (setq b2 (point))
-      (set-mark b1)
-      )
+(defun gwp/select-none-blank-text ()
+  "Select none blank chars near the point in current line"
+  (interactive)
+  (let (b1 b2)
+    (skip-chars-backward "^ \n")
+    (setq b1 (point))
+    (skip-chars-forward "^ \n")
+    (setq b2 (point))
+    (set-mark b1)
     )
+  )
 
-  (defun gwp/select-word ()
-    "Select none blank chars near the point in current line"
-    (interactive)
-    (let (b1 b2)
-      (backward-word)
-      (setq b1 (point))
-      (forward-word)
-      (setq b2 (point))
-      (set-mark b1)
-      )
+(defun gwp/select-word ()
+  "Select none blank chars near the point in current line"
+  (interactive)
+  (let (b1 b2)
+    (backward-word)
+    (setq b1 (point))
+    (forward-word)
+    (setq b2 (point))
+    (set-mark b1)
     )
+  )
 
-  (defun gwp/select-line ()
-    "Select current line"
-    (interactive)
-    (let (b1 b2)
-      (move-beginning-of-line nil)
-      (setq b1 (point))
-      (move-end-of-line nil)
-      (setq b2 (point))
-      (set-mark b1)
-      )
+(defun gwp/select-line ()
+  "Select current line"
+  (interactive)
+  (let (b1 b2)
+    (move-beginning-of-line nil)
+    (setq b1 (point))
+    (move-end-of-line nil)
+    (setq b2 (point))
+    (set-mark b1)
     )
+  )
 
-  ;; (global-set-key (kbd "M-*") 'select-text-in-quote)
-  ;; (global-set-key (kbd "M-6") 'select-line)
-  ;; (global-set-key (kbd "M-4") 'select-word)
-  (global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
+;; (global-set-key (kbd "M-*") 'select-text-in-quote)
+;; (global-set-key (kbd "M-6") 'select-line)
+;; (global-set-key (kbd "M-4") 'select-word)
+(global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
 
-  ;; https://github.com/magnars/expand-region.el
-  ;; (require 'expand-region)
-  ;; (global-set-key (kbd "M-4") 'er/expand-region)
+;; https://github.com/magnars/expand-region.el
+;; (require 'expand-region)
+;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
 
 * develop.el
@@ -2034,7 +2035,7 @@ unwrap
 ** vterm
 安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
-  (package! vterm-toggle)
+(package! vterm-toggle)
 #+end_src
 
 ** magit
@@ -2061,35 +2062,35 @@ magit-todos已在magit modules定义.
 ** vc commit
 自动更新时间戳
 #+BEGIN_SRC emacs-lisp
-  (use-package vc
-    :init
-    (progn
-      (add-hook 'vc-before-checkin-hook #'time-stamp)
-      )
+(use-package vc
+  :init
+  (progn
+    (add-hook 'vc-before-checkin-hook #'time-stamp)
     )
+  )
 
-  (use-package vc-hooks
-    :init
-    (progn
-      ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
-      (setq vc-follow-symlinks t)
-      )
+(use-package vc-hooks
+  :init
+  (progn
+    ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
+    (setq vc-follow-symlinks t)
     )
+  )
 #+END_SRC
 
 ** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
 快捷键 SPC g .
 #+BEGIN_SRC emacs-lisp
-  ;; (magit-status  "/yadm::")
-  (after! tramp
-    (add-to-list 'tramp-methods
-               '("yadm"
-                 (tramp-login-program "yadm")
-                 (tramp-login-args (("enter")))
-                 (tramp-login-env (("SHELL") ("/bin/sh")))
-                 (tramp-remote-shell "/bin/sh")
-                 (tramp-remote-shell-args ("-c"))))
-    )
+;; (magit-status  "/yadm::")
+(after! tramp
+  (add-to-list 'tramp-methods
+             '("yadm"
+               (tramp-login-program "yadm")
+               (tramp-login-args (("enter")))
+               (tramp-login-env (("SHELL") ("/bin/sh")))
+               (tramp-remote-shell "/bin/sh")
+               (tramp-remote-shell-args ("-c"))))
+  )
 #+END_SRC
 
 ** rust
@@ -2100,21 +2101,21 @@ magit-todos已在magit modules定义.
 
 *** edit
 #+begin_src emacs-lisp
-  (after! smartparens
-    (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
-    ;; Rust closure中使用
-    (sp-with-modes '(rust-mode)
-      (sp-local-pair "|" "|"))
-    )
+(after! smartparens
+  (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
+  ;; Rust closure中使用
+  (sp-with-modes '(rust-mode)
+    (sp-local-pair "|" "|"))
+  )
 
-  (add-hook 'rust-mode-hook
-            (lambda () (require 'smartparens-rust)))
+(add-hook 'rust-mode-hook
+          (lambda () (require 'smartparens-rust)))
 
 
-  ;; 启用rust LSP: 用不起来
-  ;; (after! rustic
-  ;;   )
-  ;; (setq rustic-lsp-server 'rust-analyzer)
+;; 启用rust LSP: 用不起来
+;; (after! rustic
+;;   )
+;; (setq rustic-lsp-server 'rust-analyzer)
 #+end_src
 
 *** cargo
@@ -2127,76 +2128,76 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 - 链接到的src文件可直接打开.
 - 按q退出
 #+begin_src elisp
-  (use-package cargo
-    :defer t
-    :hook (rust-mode . cargo-minor-mode)
-    :init
-    (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
+(use-package cargo
+  :defer t
+  :hook (rust-mode . cargo-minor-mode)
+  :init
+  (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
 
-    (require 'cargo-process)
-    (add-to-list 'cargo-process--no-manifest-commands "Watch")
-    (defun gwp/cargo-process-watch ()
-      "Run the Cargo check command.
-  With the prefix argument, modify the command's invocation.
-  Cargo: Check compile the current project.
-  Requires cargo-check to be installed."
-      (interactive)
-      ;; (cargo-process--start "Watch" "watch -x check -x \"t -- --nocaputre\" ")
-      (cargo-process--start "Watch" "watch -x check"))
+  (require 'cargo-process)
+  (add-to-list 'cargo-process--no-manifest-commands "Watch")
+  (defun gwp/cargo-process-watch ()
+    "Run the Cargo check command.
+With the prefix argument, modify the command's invocation.
+Cargo: Check compile the current project.
+Requires cargo-check to be installed."
+    (interactive)
+    ;; (cargo-process--start "Watch" "watch -x check -x \"t -- --nocaputre\" ")
+    (cargo-process--start "Watch" "watch -x check"))
 
-    (map! :map cargo-minor-mode-map
-          :localleader
-          (:prefix ("c" . "cargo")
-            :desc "cargo check"
-            "c" #'cargo-process-check
-            :desc "cargo test (all)"
-            "t" #'cargo-process-test
-            :desc "cargo test (current)"
-            "T" #'cargo-process-current-test
-            :desc "cargo run"
-            "r" #'cargo-process-test
-            :desc "repeat last cargo cmd"
-            "." #'cargo-process-repeat
-            :desc "cargo clippy"
-            "l" #'cargo-process-clippy
-            :desc "cargo update"
-            "u" #'cargo-process-update
-            :desc "cargo doc --open"
-            "d" #'cargo-process-doc-open
-            :desc "cargo watch"
-            "w" #'gwp/cargo-process-watch
-            )))
+  (map! :map cargo-minor-mode-map
+        :localleader
+        (:prefix ("c" . "cargo")
+          :desc "cargo check"
+          "c" #'cargo-process-check
+          :desc "cargo test (all)"
+          "t" #'cargo-process-test
+          :desc "cargo test (current)"
+          "T" #'cargo-process-current-test
+          :desc "cargo run"
+          "r" #'cargo-process-test
+          :desc "repeat last cargo cmd"
+          "." #'cargo-process-repeat
+          :desc "cargo clippy"
+          "l" #'cargo-process-clippy
+          :desc "cargo update"
+          "u" #'cargo-process-update
+          :desc "cargo doc --open"
+          "d" #'cargo-process-doc-open
+          :desc "cargo watch"
+          "w" #'gwp/cargo-process-watch
+          )))
 
-  ;; cargo更好用一些
-  ;; (use-package projectile
-  ;;   :custom
-  ;;   (projectile-read-command nil)
-  ;;   :config
-  ;;   (projectile-register-project-type 'rust-cargo '("Cargo.toml")
-  ;;                                     :compile "cargo watch -x check -x test"
-  ;;                                     :test "cargo test"
-  ;;                                     :run "cargo run")
-  ;;   )
+;; cargo更好用一些
+;; (use-package projectile
+;;   :custom
+;;   (projectile-read-command nil)
+;;   :config
+;;   (projectile-register-project-type 'rust-cargo '("Cargo.toml")
+;;                                     :compile "cargo watch -x check -x test"
+;;                                     :test "cargo test"
+;;                                     :run "cargo run")
+;;   )
 #+end_src
 
 *** racer
 #+begin_src elisp
-    (use-package cargo
-      :defer t
-      :init
-      (progn
-        (add-hook 'rust-mode-hook #'racer-mode)
-        (add-hook 'racer-mode-hook #'eldoc-mode)
-        (add-hook 'racer-mode-hook #'company-mode)
-        ))
+(use-package cargo
+  :defer t
+  :init
+  (progn
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)
+    ))
 #+end_src
 
 *** packages
 需要安装cargo.el包
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
-  (package! cargo)
-  (package! racer)
-  ;; (package! smartparens-rust) ; 不确定需要
+(package! cargo)
+(package! racer)
+;; (package! smartparens-rust) ; 不确定需要
 #+end_src
 
 * org.el
@@ -2226,6 +2227,9 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
 (with-eval-after-load 'org-indent
   (setq org-indent-indentation-per-level 1)) ;Default = 2
+
+;; 对齐headline中的TAGs
+(setq org-tags-column -80)
 #+end_src
 
 ** 按键行为
@@ -2280,119 +2284,119 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 ** dwim-enter-at-point
 从doom中的org module中摘出来, 略作修改.
 #+begin_src emacs-lisp
-  (defun gwp/dwim-at-point ()
-    "Do-what-I-mean at point.
+(defun gwp/dwim-at-point ()
+  "Do-what-I-mean at point.
 
-    If on a:
-    - checkbox list item or todo heading: toggle it.
-    - clock: update its time.
-    - headline: toggle latex fragments and inline images underneath.
-    - footnote reference: jump to the footnote's definition
-    - footnote definition: jump to the first reference of this footnote
-    - table-row or a TBLFM: recalculate the table's formulas
-    - table-cell: clear it and go into insert mode. If this is a formula cell,
-      recaluclate it instead.
-    - babel-call: 改为编辑代码, edit-special
-    - statistics-cookie: update it.
-    - latex fragment: toggle it.
-    - link: follow it
-    - otherwise, refresh all inline images in current tree."
-    (interactive)
-    (let* ((context (org-element-context))
-           (type (org-element-type context)))
-      ;; skip over unimportant contexts
-      (while (and context (memq type '(verbatim code bold italic underline strike-through subscript superscript)))
-        (setq context (org-element-property :parent context)
-              type (org-element-type context)))
-      (pcase type
-        (`headline
-         (cond ((and (fboundp 'toc-org-insert-toc)
-                     (member "TOC" (org-get-tags)))
-                (toc-org-insert-toc)
-                (message "Updating table of contents"))
-               ((string= "ARCHIVE" (car-safe (org-get-tags)))
-                (org-force-cycle-archived))
-               ((or (org-element-property :todo-type context)
-                    (org-element-property :scheduled context))
-                (org-todo
-                 (if (eq (org-element-property :todo-type context) 'done)
-                     (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
-                         'todo)
-                   'done)))
-               (t
-                (+org--refresh-inline-images-in-subtree)
-                (org-clear-latex-preview)
-                (org-latex-preview '(4)))))
+  If on a:
+  - checkbox list item or todo heading: toggle it.
+  - clock: update its time.
+  - headline: toggle latex fragments and inline images underneath.
+  - footnote reference: jump to the footnote's definition
+  - footnote definition: jump to the first reference of this footnote
+  - table-row or a TBLFM: recalculate the table's formulas
+  - table-cell: clear it and go into insert mode. If this is a formula cell,
+    recaluclate it instead.
+  - babel-call: 改为编辑代码, edit-special
+  - statistics-cookie: update it.
+  - latex fragment: toggle it.
+  - link: follow it
+  - otherwise, refresh all inline images in current tree."
+  (interactive)
+  (let* ((context (org-element-context))
+         (type (org-element-type context)))
+    ;; skip over unimportant contexts
+    (while (and context (memq type '(verbatim code bold italic underline strike-through subscript superscript)))
+      (setq context (org-element-property :parent context)
+            type (org-element-type context)))
+    (pcase type
+      (`headline
+       (cond ((and (fboundp 'toc-org-insert-toc)
+                   (member "TOC" (org-get-tags)))
+              (toc-org-insert-toc)
+              (message "Updating table of contents"))
+             ((string= "ARCHIVE" (car-safe (org-get-tags)))
+              (org-force-cycle-archived))
+             ((or (org-element-property :todo-type context)
+                  (org-element-property :scheduled context))
+              (org-todo
+               (if (eq (org-element-property :todo-type context) 'done)
+                   (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
+                       'todo)
+                 'done)))
+             (t
+              (+org--refresh-inline-images-in-subtree)
+              (org-clear-latex-preview)
+              (org-latex-preview '(4)))))
 
-        (`clock (org-clock-update-time-maybe))
+      (`clock (org-clock-update-time-maybe))
 
-        (`footnote-reference
-         (org-footnote-goto-definition (org-element-property :label context)))
+      (`footnote-reference
+       (org-footnote-goto-definition (org-element-property :label context)))
 
-        (`footnote-definition
-         (org-footnote-goto-previous-reference (org-element-property :label context)))
+      (`footnote-definition
+       (org-footnote-goto-previous-reference (org-element-property :label context)))
 
-        ((or `planning `timestamp)
-         (org-follow-timestamp-link))
+      ((or `planning `timestamp)
+       (org-follow-timestamp-link))
 
-        ((or `table `table-row)
-         (if (org-at-TBLFM-p)
-             (org-table-calc-current-TBLFM)
-           (ignore-errors
-             (save-excursion
-               (goto-char (org-element-property :contents-begin context))
-               (org-call-with-arg 'org-table-recalculate (or arg t))))))
+      ((or `table `table-row)
+       (if (org-at-TBLFM-p)
+           (org-table-calc-current-TBLFM)
+         (ignore-errors
+           (save-excursion
+             (goto-char (org-element-property :contents-begin context))
+             (org-call-with-arg 'org-table-recalculate (or arg t))))))
 
-        (`table-cell
-         (org-table-blank-field)
-         (org-table-recalculate)
-         (when (and (string-empty-p (string-trim (org-table-get-field)))
-                    (bound-and-true-p evil-local-mode))
-           (evil-change-state 'insert)))
+      (`table-cell
+       (org-table-blank-field)
+       (org-table-recalculate)
+       (when (and (string-empty-p (string-trim (org-table-get-field)))
+                  (bound-and-true-p evil-local-mode))
+         (evil-change-state 'insert)))
 
-        (`babel-call
-         (org-babel-lob-execute-maybe))
+      (`babel-call
+       (org-babel-lob-execute-maybe))
 
-        (`statistics-cookie
-         (save-excursion (org-update-statistics-cookies nil)))
+      (`statistics-cookie
+       (save-excursion (org-update-statistics-cookies nil)))
 
-        ((or `src-block `inline-src-block)
-         ;; 还是挺方便的
-         (org-edit-special))
+      ((or `src-block `inline-src-block)
+       ;; 还是挺方便的
+       (org-edit-special))
 
-        ((or `latex-fragment `latex-environment)
-         (org-latex-preview))
+      ((or `latex-fragment `latex-environment)
+       (org-latex-preview))
 
-        (`link
-         (let* ((lineage (org-element-lineage context '(link) t))
-                (path (org-element-property :path lineage)))
-           (if (or (equal (org-element-property :type lineage) "img")
-                   (and path (image-type-from-file-name path)))
-               (+org--refresh-inline-images-in-subtree)
-             (org-open-at-point))))
+      (`link
+       (let* ((lineage (org-element-lineage context '(link) t))
+              (path (org-element-property :path lineage)))
+         (if (or (equal (org-element-property :type lineage) "img")
+                 (and path (image-type-from-file-name path)))
+             (+org--refresh-inline-images-in-subtree)
+           (org-open-at-point))))
 
-        ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
-         (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
-           (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
+      ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
+       (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
+         (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
 
-        (_ (+org--refresh-inline-images-in-subtree)))))
+      (_ (+org--refresh-inline-images-in-subtree)))))
 #+end_src
 
 ** dwim-open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
 #+begin_src elisp
-  ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
-  ;; Depending on universal argument try opening link
-  (defun gwp/org-open-at-point-dwim (&optional arg)
-    (interactive "P")
-    (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
-              (org-open-at-point)
-              )
-      (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
-        (org-open-at-point)
-        (zoom))
-      ))
-  (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
+;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
+;; Depending on universal argument try opening link
+(defun gwp/org-open-at-point-dwim (&optional arg)
+  (interactive "P")
+  (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
+            (org-open-at-point)
+            )
+    (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
+      (org-open-at-point)
+      (zoom))
+    ))
+(map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 #+end_src
 
 ** screenshot
@@ -2411,54 +2415,54 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 - 第二次执行截图时, 如果clipboard无图, emacs会挂住, 原因不明, 现在无解.
 
 #+begin_src emacs-lisp
-  (defun gwp/org-image-attributes-default (&optional caption)
-    "default image attributes: caption, name label, width ..."
-      "Annotate LINK with the time of download."
-      (format (concat
-               (format "#+DOWNLOADED: %s @ %s\n"
-                       (if (equal link org-download-screenshot-file)
-                           "screenshot"
-                         link)
-                       (format-time-string "%Y-%m-%d %H:%M:%S"))
-               (concat  "#+caption: " (read-string "Caption: " caption) "\n")
-               ;; set unique figure name
-               (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-               ;; unit in px; for displaying in org-mode
-               "#+attr_org: :width 800\n"
-               ;; unit in cm; for exporting as odt
-               "#+attr_odt: :width 10\n"
-               )
-              )
-
-    )
-
-  (defun gwp/org-insert-image-attributes (&optional caption)
-    "insert image attributes such as caption and labels"
-    (interactive)
-    (insert (gwp/org-image-attributes-default caption))
-    )
-
-  (defun gwp/org-download-annotate (link)
+(defun gwp/org-image-attributes-default (&optional caption)
+  "default image attributes: caption, name label, width ..."
     "Annotate LINK with the time of download."
-    (gwp/org-image-attributes-default)
-    )
+    (format (concat
+             (format "#+DOWNLOADED: %s @ %s\n"
+                     (if (equal link org-download-screenshot-file)
+                         "screenshot"
+                       link)
+                     (format-time-string "%Y-%m-%d %H:%M:%S"))
+             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
+             ;; set unique figure name
+             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+             ;; unit in px; for displaying in org-mode
+             "#+attr_org: :width 800\n"
+             ;; unit in cm; for exporting as odt
+             "#+attr_odt: :width 10\n"
+             )
+            )
 
-  (use-package! org-download
-                :commands
-                org-download-delete
-                org-download-yank
-                org-download-screenshot
-                :config
-                (progn
-                  (setq org-download-method 'attach
-                        org-download-annotate-function 'gwp/org-download-annotate
-                        ;; org-download-image-html-width 900 ; in px
-                        ;; org-download-image-latex-width 16 ; in cm
-                        org-download-screenshot-method
-                        (cond ((executable-find "txclip")  "txclip paste --image -o %s")
-                              ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
-                              ((executable-find "scrot") "scrot -s %s"))
-                        )))
+  )
+
+(defun gwp/org-insert-image-attributes (&optional caption)
+  "insert image attributes such as caption and labels"
+  (interactive)
+  (insert (gwp/org-image-attributes-default caption))
+  )
+
+(defun gwp/org-download-annotate (link)
+  "Annotate LINK with the time of download."
+  (gwp/org-image-attributes-default)
+  )
+
+(use-package! org-download
+              :commands
+              org-download-delete
+              org-download-yank
+              org-download-screenshot
+              :config
+              (progn
+                (setq org-download-method 'attach
+                      org-download-annotate-function 'gwp/org-download-annotate
+                      ;; org-download-image-html-width 900 ; in px
+                      ;; org-download-image-latex-width 16 ; in cm
+                      org-download-screenshot-method
+                      (cond ((executable-find "txclip")  "txclip paste --image -o %s")
+                            ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
+                            ((executable-find "scrot") "scrot -s %s"))
+                      )))
 #+end_src
 
 ** notdeft
@@ -2472,14 +2476,14 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 
 挺难用的
 #+begin_src elisp
-  (use-package! notdeft
-    :config
-    (setq notdeft-extension "note")
-    (setq notdeft-xapian-program "/home/ybyygu/Workspace/Programming/emacs/doom-emacs/.local/straight/repos/notdeft/xapian/notdeft-xapian")
-    ;; (setq notdeft-directories '("~/.cache/notes"
-    ;;                             ;; "~/Documents/org-notes/GTD"
-    ;;                             ))
-    )
+(use-package! notdeft
+  :config
+  (setq notdeft-extension "note")
+  (setq notdeft-xapian-program "/home/ybyygu/Workspace/Programming/emacs/doom-emacs/.local/straight/repos/notdeft/xapian/notdeft-xapian")
+  ;; (setq notdeft-directories '("~/.cache/notes"
+  ;;                             ;; "~/Documents/org-notes/GTD"
+  ;;                             ))
+  )
 #+end_src
 
 ** org-babel
@@ -2835,55 +2839,55 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 注意latex公式图片对应的目录ltxpng在ox-odt.el代码里写死了, 没法修改为其它的.
 
 #+begin_src emacs-lisp
-  (use-package ox-odt
-    :config
-    (progn
-      ;; continually numbering captions without outline level
-      (setq org-odt-display-outline-level 0)
+(use-package ox-odt
+  :config
+  (progn
+    ;; continually numbering captions without outline level
+    (setq org-odt-display-outline-level 0)
 
-      ;; useful for odt export using dvipng
-      (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
-      (setq org-odt-pixels-per-inch 300.0)
-      )
+    ;; useful for odt export using dvipng
+    (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
+    (setq org-odt-pixels-per-inch 300.0)
     )
+  )
 #+end_src
 
 由于手动换行的原因, odt导出时, 中文字符间会有多余的空格. 下面的设置用于解决这个问题:
 #+begin_src emacs-lisp
-  ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
-  (defun gwp/clear-unwanted-space (text)
-    "clear unwanted space when exporting org-mode to other formats"
-    (let ((regexp "[[:multibyte:]]")
-          (string text))
-      ;; org-mode 默认将一个换行符转换为空格，但中文不需要这个空格，删除。
+;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
+(defun gwp/clear-unwanted-space (text)
+  "clear unwanted space when exporting org-mode to other formats"
+  (let ((regexp "[[:multibyte:]]")
+        (string text))
+    ;; org-mode 默认将一个换行符转换为空格，但中文不需要这个空格，删除。
+    (setq string
+          (replace-regexp-in-string
+           (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
+           "\\1\\2" string))
+    ;; 删除粗体之后的空格
+    (dolist (str '("</b>" "</code>" "</del>" "</i>"))
       (setq string
             (replace-regexp-in-string
-             (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
-             "\\1\\2" string))
-      ;; 删除粗体之后的空格
-      (dolist (str '("</b>" "</code>" "</del>" "</i>"))
-        (setq string
-              (replace-regexp-in-string
-               (format "\\(%s\\)\\(%s\\)[ ]+\\(%s\\)" regexp str regexp)
-               "\\1\\2\\3" string)))
-      ;; 删除粗体之前的空格
-      (dolist (str '("<b>" "<code>" "<del>" "<i>" "<span class=\"underline\">"))
-        (setq string
-              (replace-regexp-in-string
-               (format "\\(%s\\)[ ]+\\(%s\\)\\(%s\\)" regexp str regexp)
-               "\\1\\2\\3" string)))
-      string)
-    )
+             (format "\\(%s\\)\\(%s\\)[ ]+\\(%s\\)" regexp str regexp)
+             "\\1\\2\\3" string)))
+    ;; 删除粗体之前的空格
+    (dolist (str '("<b>" "<code>" "<del>" "<i>" "<span class=\"underline\">"))
+      (setq string
+            (replace-regexp-in-string
+             (format "\\(%s\\)[ ]+\\(%s\\)\\(%s\\)" regexp str regexp)
+             "\\1\\2\\3" string)))
+    string)
+  )
 
-  (defun gwp/ox-odt-wash-text (text backend info)
-    "导出 org file 时，删除中文之间不必要的空格。"
-    (when (org-export-derived-backend-p backend 'odt 'html 'latex)
-      (gwp/clear-unwanted-space text)
-      )
+(defun gwp/ox-odt-wash-text (text backend info)
+  "导出 org file 时，删除中文之间不必要的空格。"
+  (when (org-export-derived-backend-p backend 'odt 'html 'latex)
+    (gwp/clear-unwanted-space text)
     )
+  )
 
-  (add-hook 'org-export-filter-headline-functions #'gwp/ox-odt-wash-text)
-  (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
+(add-hook 'org-export-filter-headline-functions #'gwp/ox-odt-wash-text)
+(add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 #+end_src
 
 ** capture & protocol

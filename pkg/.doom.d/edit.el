@@ -1,8 +1,9 @@
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*auto-save][auto-save:1]]
 (setq
  auto-save-default t
- auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
- auto-save-list-file-name (concat doom-cache-dir "autosave"))
+ ;; auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
+ ;; auto-save-list-file-name (concat doom-cache-dir "autosave")
+ )
 
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
@@ -49,7 +50,7 @@
 (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 ;; white space:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*TODO advanced selection][advanced selection:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*advanced selection][advanced selection:1]]
 ;; expand selection
 ;; http://xahlee.org/emacs/modernization_mark-word.html
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.

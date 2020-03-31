@@ -189,6 +189,23 @@
   )
 ;; pairs:2 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*delete link file][delete link file:1]]
+(defun gwp/org-delete-link-file (arg)
+  "Delete the file that link points to."
+  (interactive "P")
+
+  (let ((file (gwp/org-file-path-at-point)))
+    (if file
+        (if (file-exists-p file)
+            (when (yes-or-no-p (format "Delete link file: %s?" file))
+              (progn (delete-file file)
+                     (message "File deleted"))
+              )
+          (error "No such attachment: %s" file))
+      (user-error "Point is not on a file link")
+      )))
+;; delete link file:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
 (map! :map org-mode-map
       :localleader
@@ -204,7 +221,10 @@
         :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
         :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-        ))
+        )
+      (:prefix ("l" . "links")
+        "D" #'gwp/org-delete-link-file)
+      )
 
 (map! :map org-mode-map
       :localleader
@@ -639,8 +659,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*setup][setup:1]]
 (require 'org-attach)
-;; org-mode添加附件后会自动commit(git only), 禁掉:
-;; (setq org-attach-commit nil)
 ;; setup:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:1]]
@@ -705,22 +723,21 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
     (and (eq (org-element-type el) 'link)
-         (string= (org-element-property :type el) "file")
-         )
-    )
-  )
-;; 从当前位置文件链接提取文件名.:1 ends here
+         (or
+          (string= (org-element-property :type el) "file")
+          (string= (org-element-property :type el) "attachment")
+          ))))
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:2]]
-(defun gwp/file-path-at-point()
+(defun gwp/org-file-path-at-point()
   "get file path from link at point"
   (let ((el (org-element-context)))
-    (when (gwp/org-file-link-p el)
-      (org-element-property :path el)
-      )
-    )
-  )
-;; 从当前位置文件链接提取文件名.:2 ends here
+    (when (eq (org-element-type el) 'link)
+      (cond
+       ((string= (org-element-property :type el) "file") (org-element-property :path el))
+       ((string= (org-element-property :type el) "attachment") (org-attach-expand (org-element-property :path el)))
+       (t nil)
+       ))))
+;; 从当前位置文件链接提取文件名.:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
 ;; (require 'org-download)
@@ -736,7 +753,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (defun gwp/org-take-as-local-attachment ()
   "move file link at point as local attachment"
   (interactive)
-  (let ((file (gwp/file-path-at-point)))
+  (let ((file (gwp/org-file-path-at-point)))
     (if file
         (progn
           ;; 1. store the file using copy

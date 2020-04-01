@@ -285,7 +285,8 @@ If two universal prefix arguments are used, then prompt for command to use."
   '(org-todo :foreground "yellow" :weight bold :background "#263238")
   '(org-done :foreground "yellow" :weight bold :background "#263238")
   '(org-table :foreground "#e3f2fd")
-  '(org-level1 :foreground "#e3f2fd")
+  '(org-level-1 :foreground "#e3f2fd" :height 1.1 :weight bold)
+  '(org-level-2 :foreground "#e3f2fd" :height 1.0 :weight normal)
   '(org-headline-done :foreground "gray" :weight normal)
   )
 ;; theme:1 ends here

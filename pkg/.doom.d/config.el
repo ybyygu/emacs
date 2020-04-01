@@ -333,6 +333,8 @@ If two universal prefix arguments are used, then prompt for command to use."
 (map! :nvim "C-p" nil)
 (map! :nvim "C-u" nil)                  ; universal argument
 
+(map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
+
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
 (map! :i "C-y" nil)

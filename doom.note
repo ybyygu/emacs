@@ -1674,57 +1674,59 @@ deadgrep与doom有冲突, 不能用了.
 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][map!用法]]
 
 #+begin_src elisp
-  (map! :nvim "C-a" nil)
-  ;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
-  (map! :nvim "C-e" nil)
-  (map! :nvim "C-d" nil)
-  (map! :nvim "C-k" nil)
-  (map! :nvim "C-n" nil)
-  (map! :nvim "C-p" nil)
-  (map! :nvim "C-u" nil)                  ; universal argument
+(map! :nvim "C-a" nil)
+;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
+(map! :nvim "C-e" nil)
+(map! :nvim "C-d" nil)
+(map! :nvim "C-k" nil)
+(map! :nvim "C-n" nil)
+(map! :nvim "C-p" nil)
+(map! :nvim "C-u" nil)                  ; universal argument
 
-  ;; evil默认为quoted-insert, 可以 ctrl-q代替
-  (map! :i "C-v" #'yank)
-  (map! :i "C-y" nil)
+(map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
 
-  ;; evil里也得设置, 不然无效
-  (after! evil-org
-          (map! :map evil-org-mode-map
-                :nivm "C-d" nil
-                :nivm "C-k" nil
-                :i "M-l" nil
-                )
-          )
+;; evil默认为quoted-insert, 可以 ctrl-q代替
+(map! :i "C-v" #'yank)
+(map! :i "C-y" nil)
+
+;; evil里也得设置, 不然无效
+(after! evil-org
+        (map! :map evil-org-mode-map
+              :nivm "C-d" nil
+              :nivm "C-k" nil
+              :i "M-l" nil
+              )
+        )
 #+end_src
 
 默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
 重要代码. 载入doom中的默认按键绑定: [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#load][load!用法]]
 #+begin_src elisp
-  ;; Make M-x harder to miss
-  (define-key! 'override
-    "M-x" #'execute-extended-command
-    "A-x" #'execute-extended-command)
+;; Make M-x harder to miss
+(define-key! 'override
+  "M-x" #'execute-extended-command
+  "A-x" #'execute-extended-command)
 
-  ;; A Doom convention where C-s on popups and interactive searches will invoke
-  ;; ivy/helm for their superior filtering.
-  (define-key! :keymaps +default-minibuffer-maps
-    "C-s" (if (featurep! :completion ivy)
-              #'counsel-minibuffer-history
-            #'helm-minibuffer-history))
+;; A Doom convention where C-s on popups and interactive searches will invoke
+;; ivy/helm for their superior filtering.
+(define-key! :keymaps +default-minibuffer-maps
+  "C-s" (if (featurep! :completion ivy)
+            #'counsel-minibuffer-history
+          #'helm-minibuffer-history))
 
-  ;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
-  ;; Pressing it again will send you to the true bol. Same goes for C-e, except
-  ;; it will ignore comments+trailing whitespace before jumping to eol.
-  (map! :gi "C-a" #'doom/backward-to-bol-or-indent
-        :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
-        ;; Standardizes the behavior of modified RET to match the behavior of
-        ;; other editors, particularly Atom, textedit, textmate, and vscode, in
-        ;; which ctrl+RET will add a new "item" below the current one
-        :gn [C-return]    #'+default/newline-below
-        :gn [C-S-return]  #'+default/newline-above
-        )
+;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
+;; Pressing it again will send you to the true bol. Same goes for C-e, except
+;; it will ignore comments+trailing whitespace before jumping to eol.
+(map! :gi "C-a" #'doom/backward-to-bol-or-indent
+      :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
+      ;; Standardizes the behavior of modified RET to match the behavior of
+      ;; other editors, particularly Atom, textedit, textmate, and vscode, in
+      ;; which ctrl+RET will add a new "item" below the current one
+      :gn [C-return]    #'+default/newline-below
+      :gn [C-S-return]  #'+default/newline-above
+      )
 
-  (load! "bindings")
+(load! "bindings")
 #+end_src
 
 ** packages.el

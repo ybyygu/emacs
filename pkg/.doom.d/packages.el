@@ -57,6 +57,8 @@
 (package! material-theme
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 
+(package! org-sidebar)
+
 (disable-packages! org-bullets pangu-spacing)
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]

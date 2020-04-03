@@ -17,7 +17,14 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [13/23]
+* Memo [13/24]
+** TODO [2020-04-03 Fri] 试用 org-sidebar
+- [[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/][Finally solving the lack of a tree-view navigation window in Org : orgmode]]
+
+用法:
+- 打开 org-sidebar-tree-mode, SPC-m-s-t
+- 切换narrow, SPC-m-Enter
+
 ** TODO [2020-03-24 Tue] 可以用[[https://github.com/raxod502/el-patch][el-patch]]来hack代码
 
 https://org-roam.readthedocs.io/en/latest/ecosystem/
@@ -1200,48 +1207,48 @@ stow:
 :END:
 *** orig
 #+BEGIN_SRC emacs-lisp
-  ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-  ;; Place your private configuration here! Remember, you do not need to run 'doom
-  ;; sync' after modifying this file!
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
 
-  ;; Some functionality uses this to identify you, e.g. GPG configuration, email
-  ;; clients, file templates and snippets.
-  (setq user-full-name "Wenping Guo"
-        user-mail-address "ybyygu@gmail.com")
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+(setq user-full-name "Wenping Guo"
+      user-mail-address "ybyygu@gmail.com")
 
-  ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
-  ;; are the three important ones:
-  ;;
-  ;; + `doom-font'
-  ;; + `doom-variable-pitch-font'
-  ;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
-  ;;   presentations or streaming.
-  ;;
-  ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-  ;; font string. You generally only need these two:
-  ;; (setq doom-font (font-spec :family "Monaco" :size 13))
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+;; (setq doom-font (font-spec :family "Monaco" :size 13))
 
-  ;; This determines the style of line numbers in effect. If set to `nil', line
-  ;; numbers are disabled. For relative line numbers, set this to `relative'.
-  (setq display-line-numbers-type t)
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
 
-  ;; Here are some additional functions/macros that could help you configure Doom:
-  ;;
-  ;; - `load!' for loading external *.el files relative to this one
-  ;; - `use-package' for configuring packages
-  ;; - `after!' for running code after a package has loaded
-  ;; - `add-load-path!' for adding directories to the `load-path', relative to
-  ;;   this file. Emacs searches the `load-path' when you load packages with
-  ;;   `require' or `use-package'.
-  ;; - `map!' for binding new keys
-  ;;
-  ;; To get information about any of these functions/macros, move the cursor over
-  ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
-  ;; This will open documentation for it, including demos of how they are used.
-  ;;
-  ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
-  ;; they are implemented.
+;; Here are some additional functions/macros that could help you configure Doom:
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+;; This will open documentation for it, including demos of how they are used.
+;;
+;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+;; they are implemented.
 #+END_SRC
 
 *** workspace
@@ -1398,7 +1405,7 @@ https://github.com/hlissner/doom-emacs/issues/2225
 #+end_src
 *** edit
 #+begin_src emacs-lisp
-  (load! "edit")
+(load! "edit")
 #+end_src
 
 *** dired
@@ -1803,6 +1810,10 @@ deadgrep与doom有冲突, 不能用了.
 ;; (package! material-theme)
 (package! material-theme
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
+#+end_src
+
+#+begin_src elisp
+(package! org-sidebar)
 #+end_src
 
 - 窗口大小自动调整:
@@ -2258,29 +2269,6 @@ Requires cargo-check to be installed."
       :n "gj" #'org-next-visible-heading
       :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
       :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
-      )
-
-(map! :map org-mode-map
-      :localleader
-      ;; FIXME: 与doom/org定义有冲突
-      (:prefix ("s" . "Subtree")
-        :desc "Demote" "l" #'org-demote-subtree
-        :desc "Promote" "h" #'org-promote-subtree
-        :desc "Archive" "A" #'org-archive-subtree
-        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-        )
-      (:prefix ("SPC" . "Special")
-        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-        )
-      )
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("g" . "Goto")
-        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto
-        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-        )
       )
 #+end_src
 
@@ -3417,6 +3405,39 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+      )
+
+(map! :map org-mode-map
+      :localleader
+      ;; FIXME: 与doom/org定义有冲突
+      (:prefix ("s" . "Subtree")
+        :desc "Demote" "l" #'org-demote-subtree
+        :desc "Promote" "h" #'org-promote-subtree
+        :desc "Archive" "A" #'org-archive-subtree
+        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+        )
+      (:prefix ("SPC" . "Special")
+        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
+        )
+      )
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("g" . "Goto")
+        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+        )
+      )
+#+end_src
+
+org-sidebar
+#+begin_src elisp
+(map! :map org-sidebar-tree-map
+      :localleader
+      :n "RET" #'org-sidebar-tree-jump
+      :n [return] #'org-sidebar-tree-jump
       )
 #+end_src
 

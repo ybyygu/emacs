@@ -41,29 +41,6 @@
       :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
       :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
       )
-
-(map! :map org-mode-map
-      :localleader
-      ;; FIXME: 与doom/org定义有冲突
-      (:prefix ("s" . "Subtree")
-        :desc "Demote" "l" #'org-demote-subtree
-        :desc "Promote" "h" #'org-promote-subtree
-        :desc "Archive" "A" #'org-archive-subtree
-        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-        )
-      (:prefix ("SPC" . "Special")
-        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-        )
-      )
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("g" . "Goto")
-        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto
-        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-        )
-      )
 ;; 按键行为:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-open-at-point][dwim-open-at-point:1]]
@@ -252,7 +229,39 @@
       :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
       )
+
+(map! :map org-mode-map
+      :localleader
+      ;; FIXME: 与doom/org定义有冲突
+      (:prefix ("s" . "Subtree")
+        :desc "Demote" "l" #'org-demote-subtree
+        :desc "Promote" "h" #'org-promote-subtree
+        :desc "Archive" "A" #'org-archive-subtree
+        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+        )
+      (:prefix ("SPC" . "Special")
+        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
+        )
+      )
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("g" . "Goto")
+        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+        )
+      )
 ;; bindings:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:2]]
+(map! :map org-sidebar-tree-map
+      :localleader
+      :n "RET" #'org-sidebar-tree-jump
+      :n [return] #'org-sidebar-tree-jump
+      )
+;; bindings:2 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-enter-at-point][dwim-enter-at-point:1]]
 (defun gwp/dwim-at-point ()

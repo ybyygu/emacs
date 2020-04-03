@@ -972,32 +972,32 @@ stow:
 
 ** doom commands
 #+begin_src text
-  1. Whenever you edit your doom! block in ~/.doom.d/init.el or modify your
-     modules, run:
+1. Whenever you edit your doom! block in ~/.doom.d/init.el or modify your
+   modules, run:
 
-       bin/doom refresh
+     bin/doom refresh
 
-     This will ensure all needed packages are installed, all orphaned packages are
-     removed, and your autoloads files are up to date. This is important! If you
-     forget to do this you will get errors!
+   This will ensure all needed packages are installed, all orphaned packages are
+   removed, and your autoloads files are up to date. This is important! If you
+   forget to do this you will get errors!
 
-  2. If something inexplicably goes wrong, try `bin/doom doctor`
+2. If something inexplicably goes wrong, try `bin/doom doctor`
 
-     This will diagnose common issues with your environment and setup, and may
-     give you clues about what is wrong.
+   This will diagnose common issues with your environment and setup, and may
+   give you clues about what is wrong.
 
-  3. Use `bin/doom upgrade` to update Doom. Doing it any other way may require
-     additional work. When in doubt, run `bin/doom sync`.
+3. Use `bin/doom upgrade` to update Doom. Doing it any other way may require
+   additional work. When in doubt, run `bin/doom sync`.
 
-  4. Check out `bin/doom help` to see what else `bin/doom` can do (and it is
-     recommended you add ~/.emacs.d/bin to your PATH).
+4. Check out `bin/doom help` to see what else `bin/doom` can do (and it is
+   recommended you add ~/.emacs.d/bin to your PATH).
 
-  5. You can find Doom's documentation via `M-x doom/help` or `SPC h D`.
+5. You can find Doom's documentation via `M-x doom/help` or `SPC h D`.
 #+end_src
 
 #+begin_src shell :tangle no
-  ./doom-emacs/bin/doom clean
-  ./doom-emacs/bin/doom refresh
+./doom-emacs/bin/doom clean
+./doom-emacs/bin/doom refresh
 #+end_src
 
 
@@ -1918,6 +1918,16 @@ unwrap
 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
 #+begin_src emacs-lisp
 (setq evil-want-fine-undo t)
+#+end_src
+
+** better jumper
+使用鼠标滚轮来跳转位置
+- [[https://github.com/gilbertw1/better-jumper][gilbertw1/better-jumper: A configurable jump list implementation for Emacs]]
+#+begin_src elisp
+(map! :nm
+      [M-mouse-4] #'better-jumper-jump-backward
+      [M-mouse-5] #'better-jumper-jump-forward
+      )
 #+end_src
 
 ** insert date

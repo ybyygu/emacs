@@ -25,6 +25,13 @@
         (function er/expand-region)))
 ;; expand region:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*better jumper][better jumper:1]]
+(map! :nm
+      [M-mouse-4] #'better-jumper-jump-backward
+      [M-mouse-5] #'better-jumper-jump-forward
+      )
+;; better jumper:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*doom tuning][doom tuning:1]]
 (setq evil-want-fine-undo t)
 ;; doom tuning:1 ends here

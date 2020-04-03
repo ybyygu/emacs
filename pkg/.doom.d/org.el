@@ -81,6 +81,10 @@
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 ;; dwim-open-at-point:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*latex preview][latex preview:1]]
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+;; latex preview:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*toml][toml:1]]
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))

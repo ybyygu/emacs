@@ -2488,6 +2488,12 @@ Requires cargo-check to be installed."
   ;;                             ))
   )
 #+end_src
+** latex preview
+默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]).
+- [[https://emacs.stackexchange.com/questions/30309/latex-preview-on-hidpi-display/30318#30318][LaTeX preview on HiDPI display - Emacs Stack Exchange]]
+#+begin_src elisp
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+#+end_src
 
 ** org-babel
 *** docs

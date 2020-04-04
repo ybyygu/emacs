@@ -226,10 +226,6 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; workspace:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
-;; HiDPI下可用大字模式: SPC-t-b
-(setq doom-font (font-spec :family "Monaco" :size 12))
-(setq doom-big-font-increment 4)
-
 ;; (use-package! cnfonts
 ;;   :config
 ;;   (progn
@@ -273,6 +269,17 @@ If two universal prefix arguments are used, then prompt for command to use."
     )
   )
 ;; chinese fonts setup:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*big font mode][big font mode:1]]
+;; HiDPI下可用大字模式: SPC-t-b
+(setq doom-font (font-spec :family "Monaco" :size 14))
+(setq doom-big-font-increment 4)
+
+;; (add-hook! doom-big-font-mode-hook #'(gwp/set-fonts))
+;; 上面的不管用
+(setq doom-big-font-mode-hook '(gwp/set-fonts))
+(doom-big-font-mode -1)
+;; big font mode:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and

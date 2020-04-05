@@ -173,6 +173,36 @@
   )
 ;; pairs:2 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*narrow][narrow:1]]
+(defun ap/org-tree-to-indirect-buffer (&optional arg)
+  "Create indirect buffer and narrow it to current subtree.
+The buffer is named after the subtree heading, with the filename
+appended.  If a buffer by that name already exists, it is
+selected instead of creating a new buffer."
+  (interactive "P")
+  (let* ((new-buffer-p)
+         (pos (point))
+         (buffer-name (let* ((heading (org-get-heading t t))
+                             (level (org-outline-level))
+                             (face (intern (concat "outline-" (number-to-string level))))
+                             (heading-string (propertize (org-link-display-format heading)
+                                                         'face face)))
+                        (concat heading-string "::" (buffer-name))))
+         (new-buffer (or (get-buffer buffer-name)
+                         (prog1 (condition-case nil
+                                    (make-indirect-buffer (current-buffer) buffer-name 'clone)
+                                  (error (make-indirect-buffer (current-buffer) buffer-name)))
+                           (setq new-buffer-p t)))))
+    (switch-to-buffer new-buffer)
+    (when new-buffer-p
+      ;; I don't understand why setting the point again is necessary, but it is.
+      (goto-char pos)
+      (rename-buffer buffer-name)
+      (org-narrow-to-subtree))))
+
+(advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
+;; narrow:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*delete link file][delete link file:1]]
 (defun gwp/org-delete-link-file (arg)
   "Delete the file that link points to."
@@ -237,7 +267,8 @@
         :desc "Demote" "l" #'org-demote-subtree
         :desc "Promote" "h" #'org-promote-subtree
         :desc "Archive" "A" #'org-archive-subtree
-        :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+        ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+        :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
         :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
         )
       (:prefix ("SPC" . "Special")

@@ -56,6 +56,9 @@
       (zoom))
     ))
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
+(map! :map org-mode-map
+      :localleader
+      "o" #'gwp/org-open-at-point-dwim)
 ;; dwim-open-at-point:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*latex preview][latex preview:1]]

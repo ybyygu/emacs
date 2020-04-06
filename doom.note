@@ -2405,6 +2405,9 @@ Requires cargo-check to be installed."
       (zoom))
     ))
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
+(map! :map org-mode-map
+      :localleader
+      "o" #'gwp/org-open-at-point-dwim)
 #+end_src
 
 ** screenshot

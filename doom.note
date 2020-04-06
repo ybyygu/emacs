@@ -1383,8 +1383,12 @@ stow:
       )
 #+end_src
 
+设置分屏阈值, 避免 find-file-other-window 垂直向分割为多个windows
+#+begin_src elisp
+(setq split-width-threshold 200)        ; default is 160
+#+end_src
 
-golden-ratio有点问题
+golden-ratio在doom中有点问题
 https://github.com/hlissner/doom-emacs/issues/2225
 #+begin_src elisp :tangle no
 (use-package! golden-ratio

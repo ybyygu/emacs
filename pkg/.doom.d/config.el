@@ -322,6 +322,10 @@ If two universal prefix arguments are used, then prompt for command to use."
       )
 ;; window:5 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:6]]
+(setq split-width-threshold 200)        ; default is 160
+;; window:6 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
 ;; View images inside Emacs
 (auto-image-file-mode t)

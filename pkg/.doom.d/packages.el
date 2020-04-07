@@ -59,6 +59,8 @@
 
 (package! org-sidebar)
 
+(package! keyfreq)
+
 (disable-packages! org-bullets pangu-spacing)
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]

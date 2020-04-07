@@ -166,7 +166,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory) "-e" "tmux")
     (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
     )
   )

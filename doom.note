@@ -1369,7 +1369,6 @@ stow:
               )
 #+END_SRC
 
-打开doom popup窗口, 默认仅在normal state下可用.
 #+begin_src emacs-lisp
 (map! :i "C-`" #'+popup/toggle)
 #+end_src
@@ -1382,6 +1381,9 @@ stow:
       [C-M-mouse-5] #'evil-window-decrease-width
       )
 #+end_src
+
+打开doom popup窗口, 默认仅在normal state下可用.
+- [[https://stackoverflow.com/questions/51879921/emacs-find-file-other-window-command-splits-buffer-vertically][Emacs find-file-other-window command splits buffer vertically - Stack Overflow]]
 
 设置分屏阈值, 避免 find-file-other-window 垂直向分割为多个windows
 #+begin_src elisp
@@ -1540,7 +1542,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory))
+    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory) "-e" "tmux")
     (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
     )
   )
@@ -1827,6 +1829,12 @@ deadgrep与doom有冲突, 不能用了.
 (package! org-sidebar)
 #+end_src
 
+统计命令使用频率, 方便优化快捷键
+#+begin_src elisp
+(package! keyfreq)
+#+end_src
+
+
 - 窗口大小自动调整:
 #+begin_src emacs-lisp
 (package! golden-ratio)
@@ -1879,6 +1887,14 @@ github支持, 减慢速度.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+** keyfreq
+[[https://github.com/dacap/keyfreq][dacap/keyfreq: Track Emacs commands frequency]]
+#+begin_src elisp
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+#+end_src
+
 ** auto-save
 开启自动保存
 #+begin_src elisp

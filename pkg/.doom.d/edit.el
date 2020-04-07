@@ -1,3 +1,9 @@
+;; [[file:~/Workspace/Programming/emacs/doom.note::*keyfreq][keyfreq:1]]
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+;; keyfreq:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*auto-save][auto-save:1]]
 (setq
  auto-save-default t

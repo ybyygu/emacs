@@ -17,8 +17,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [13/24]
-** TODO [2020-04-03 Fri] 试用 org-sidebar
+* Memo [16/26]
+** DONE [2020-04-03 Fri] 试用 org-sidebar
+- State "DONE"       from "TODO"       [2020-04-07 Tue 20:01]
 - [[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/][Finally solving the lack of a tree-view navigation window in Org : orgmode]]
 
 用法:
@@ -50,7 +51,7 @@ https://org-roam.readthedocs.io/en/latest/ecosystem/
 无法确定问题的根源, 有时成功, 有时失败. 成功案例:
 - Cu-u SPC-l-s, 失败后再用SPC-l-s
 
-** [2020-03-20 Fri] org中narrow功能 :Idea:
+** TODO [2020-03-20 Fri] org中narrow功能                                  :Idea:
 org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
 必要配合narrow来进行view或tangle.
 
@@ -226,7 +227,8 @@ CLOSED: [2020-02-28 Fri 15:42]
 
 禁用:checkers组中的modules即可.
 
-** TODO [2020-02-27 Thu] doom尝鲜
+** DONE [2020-02-27 Thu] doom尝鲜
+- State "DONE"       from "TODO"       [2020-04-07 Tue 20:02]
 doom的优点:
 1. 较spacemacs轻量, 启动快, 架构简单, 后续易维护
 2. 和spacemacs使用类似的key-bindings
@@ -319,7 +321,8 @@ CLOSED: [2017-11-10 Fri 20:37]
 此外:
 修改了变量 org-attach-store-link-p, 这样可以方便的生成指向data目录的文件链接.
 
-** [2017-11-10 Fri] 修改tangle函数, 能更方便的tangle代码
+** DONE [2017-11-10 Fri] 修改tangle函数, 能更方便的tangle代码
+- State "DONE"       from "TODO"       [2020-04-07 Tue 20:03]
 将gwp/org-babel-tangle-dwim绑定到 ~SPC o b~
 - 使用 ~Ctrl-c '~ 进入代码窗口
 - 修改代码后, 按 ~SPC o b~
@@ -398,7 +401,7 @@ CLOSED: [2017-11-01 Wed 10:34]
 * Tips
 ~SPC h d~
 ** Universal arguments
-SPC u
+SPC-u, C-u
 
 ** 自动补全
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/completion/company/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
@@ -409,8 +412,9 @@ SPC u
 eval: major-mode
 
 ** 各种跳转
-: g; last-change
-: spc si => imenu symbol
+| g;              | last-change            |
+| SPC-s-i         | imenu symbol           |
+| Alt-mouse-wheel | jump backward/foraward |
 
 ** 编辑功能
 选中文字后按S, 再按"(" 可在选中字符前后加括号.
@@ -446,14 +450,14 @@ eval: major-mode
 也可启用profiler, SPC-h-d-t, 查看命令调用堆栈
 
 ** 书签管理
-: SPC-f-b, SPC-RET
+: SPC-f-b
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (counsel-bookmark)
 #+END_SRC
 
-** TODO multiple-cursors
-使用vim的方式搜索时, 可以进入iedit-mode, 同时编辑多处匹配项. 退出时, 按两下ESC.
+** multiple-cursors
+按Alt-D高亮word, 逐步选中多个可编辑单元. 按ESC退出.
 
 ** 删除空格
 - just-one-space 默认绑定为 ~Ｍ-SPC~
@@ -488,7 +492,8 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 3. 也可以在 dired 界面上用"!"或"&"命令, 指定任意程序打开.
 
 ** 打开buffer文件所在目录
-~SPC u SPC f o~
+~SPC-u SPC-f-o~
+
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
@@ -2309,7 +2314,8 @@ Requires cargo-check to be installed."
       )
 #+end_src
 
-** dwim-enter-at-point
+** dwim
+*** enter-at-point
 从doom中的org module中摘出来, 略作修改.
 #+begin_src emacs-lisp
 (defun gwp/dwim-at-point ()
@@ -2410,7 +2416,7 @@ Requires cargo-check to be installed."
       (_ (+org--refresh-inline-images-in-subtree)))))
 #+end_src
 
-** dwim-open-at-point
+*** open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
 #+begin_src elisp
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
@@ -2605,6 +2611,12 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       ";" #'org-edit-src-exit
       "k" #'org-edit-src-abort
       )
+
+(map! :map org-src-mode-map
+      :leader
+      ";" #'org-edit-src-exit
+      )
+
 (map! :map rust-mode-map
       :localleader
       "=" #'rust-format-buffer
@@ -3476,6 +3488,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+      :desc "Enter-dwim"                  "RET" #'gwp/dwim-at-point
       )
 
 (map! :map org-mode-map
@@ -3543,31 +3556,31 @@ org-sidebar
 
 ** leader/main
 #+begin_src elisp
-  (map! :leader
-        :desc "Eval expression"       ";"    #'pp-eval-expression
-        :desc "M-x"                   ":"    #'execute-extended-command
-        :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
-        :desc "Org Capture"           "X"    #'org-capture
+(map! :leader
+      ;; :desc "Eval expression"       ";"    #'pp-eval-expression
+      :desc "M-x"                   ":"    #'execute-extended-command
+      :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
+      :desc "Org Capture"           "X"    #'org-capture
 
-        ;; C-u is used by evil
-        :desc "Universal argument"    "u"    #'universal-argument
-        :desc "window"                "w"    evil-window-map
-        :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
-        :desc "help"                  "h"    help-map
+      ;; C-u is used by evil
+      :desc "Universal argument"    "u"    #'universal-argument
+      :desc "window"                "w"    evil-window-map
+      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
+      :desc "help"                  "h"    help-map
 
-        (:when (featurep! :ui popup)
-          :desc "Toggle last popup"     "~"    #'+popup/toggle)
-        :desc "Find file"             "."    #'find-file
+      (:when (featurep! :ui popup)
+        :desc "Toggle last popup"     "~"    #'+popup/toggle)
+      :desc "Find file"             "."    #'find-file
 
-        :desc "Switch buffer"         ","    #'switch-to-buffer
-        (:when (featurep! :ui workspaces)
-          :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
-          :desc "Switch buffer"           "<" #'switch-to-buffer)
+      :desc "Switch buffer"         ","    #'switch-to-buffer
+      (:when (featurep! :ui workspaces)
+        :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
+        :desc "Switch buffer"           "<" #'switch-to-buffer)
 
-        :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
+      :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
 
-        :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
-        )
+      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
+      )
 #+end_src
 
 ** leader/workspace

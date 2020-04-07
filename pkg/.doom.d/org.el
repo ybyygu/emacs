@@ -43,7 +43,7 @@
       )
 ;; 按键行为:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-open-at-point][dwim-open-at-point:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*open-at-point][open-at-point:1]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
 (defun gwp/org-open-at-point-dwim (&optional arg)
@@ -59,7 +59,7 @@
 (map! :map org-mode-map
       :localleader
       "o" #'gwp/org-open-at-point-dwim)
-;; dwim-open-at-point:1 ends here
+;; open-at-point:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*latex preview][latex preview:1]]
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
@@ -261,6 +261,7 @@ selected instead of creating a new buffer."
       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+      :desc "Enter-dwim"                  "RET" #'gwp/dwim-at-point
       )
 
 (map! :map org-mode-map
@@ -297,7 +298,7 @@ selected instead of creating a new buffer."
       )
 ;; bindings:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dwim-enter-at-point][dwim-enter-at-point:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*enter-at-point][enter-at-point:1]]
 (defun gwp/dwim-at-point ()
   "Do-what-I-mean at point.
 
@@ -394,7 +395,7 @@ selected instead of creating a new buffer."
          (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
 
       (_ (+org--refresh-inline-images-in-subtree)))))
-;; dwim-enter-at-point:1 ends here
+;; enter-at-point:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
@@ -508,6 +509,12 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       ";" #'org-edit-src-exit
       "k" #'org-edit-src-abort
       )
+
+(map! :map org-src-mode-map
+      :leader
+      ";" #'org-edit-src-exit
+      )
+
 (map! :map rust-mode-map
       :localleader
       "=" #'rust-format-buffer

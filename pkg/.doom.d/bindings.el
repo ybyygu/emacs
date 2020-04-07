@@ -392,7 +392,7 @@
     )
 
 (map! :leader
-      :desc "Eval expression"       ";"    #'pp-eval-expression
+      ;; :desc "Eval expression"       ";"    #'pp-eval-expression
       :desc "M-x"                   ":"    #'execute-extended-command
       :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
       :desc "Org Capture"           "X"    #'org-capture

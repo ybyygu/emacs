@@ -875,26 +875,6 @@ emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
 
 #+RESULTS:
 
-* deprecated
-** gjf-mode: 编译 gaussian GJF 文件
-#+BEGIN_SRC emacs-lisp
-(require 'gjf-mode)
-#+END_SRC
-
-** 配色主题
-[[http://emacsthemes.caisah.info/][这里]] 有很多主题的图示, 看花眼了. [[https://github.com/owainlewis/emacs-color-themes][这个]] 也不错, 以很多程序员的名字命名.
-
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'zenburn-theme)
-  (starter-kit-install-if-needed 'smyx-theme)
-  ;;(load-theme 'zenburn t)
-  (load-theme 'smyx t)
-  ;;(load-theme 'desert t)
-  ;;(load-theme 'odersky t)
-  ;; (load-file "~/.emacs.d/src/desert-theme.el" )
-  ;; (load-file "~/.emacs.d/src/gwp-color-theme.el" )
-#+END_SRC
-
 
 * 配置安装
 ** stow配置管理思路
@@ -4396,13 +4376,7 @@ fn ${1:test_name}() {
 : pkg/.doom.d/snippets/rust-mode/todo
 
 *** derive
-#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/derive
-  # -*- mode: snippet -*-
-  # name: #[derive(Debug)]
-  # key: #derive
-  # --
-  #[derive(${1:Debug}, ${0:Clone})]
-#+END_SRC
+: pkg/.doom.d/snippets/rust-mode/derive
 
 *** main
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/main

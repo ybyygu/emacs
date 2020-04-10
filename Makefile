@@ -1,4 +1,7 @@
 # [[file:~/Workspace/Programming/emacs/doom.note::*Makefile][Makefile:1]]
+# https://www.gnu.org/software/make/manual/html_node/One-Shell.html
+.ONESHELL:
+
 default: doom-sync
 
 install: stow
@@ -19,4 +22,11 @@ start:
 	emacs --with-profile default
 stow:
 	which stow
+# 合并doom develop分支修改
+gwp-merge:
+	cd doom-hacks
+	git checkout develop
+	git pull
+	git checkout gwp
+	git merge -e develop
 # Makefile:1 ends here

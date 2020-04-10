@@ -8,22 +8,55 @@
 ;; magit:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:1]]
+(eval-when-compile (require 'el-patch))
+
 (use-package cargo
   :defer t
   :hook (rust-mode . cargo-minor-mode)
+  :config/el-patch
+  (defun cargo-process--start (name command &optional last-cmd opens-external)
+    "Start the Cargo process NAME with the cargo command COMMAND.
+OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
+Returns the created process."
+    (set-rust-backtrace command)
+    (let* ((buffer (concat "*Cargo " name "*"))
+           (project-root (cargo-process--project-root))
+           (cmd
+            (or last-cmd
+                (cargo-process--maybe-read-command
+                 (cargo-process--augment-cmd-for-os opens-external
+                                                    (mapconcat #'identity (list (shell-quote-argument cargo-process--custom-path-to-bin)
+                                                                                command
+                                                                                ;; (manifest-path-argument name)
+                                                                                cargo-process--command-flags)
+                                                               " ")))))
+           ;; (default-directory (or project-root default-directory))
+           )
+      (save-some-buffers (not compilation-ask-about-save)
+                         (lambda ()
+                           (and project-root
+                                buffer-file-name
+                                (string-prefix-p project-root (file-truename buffer-file-name)))))
+      (setq cargo-process-last-command (list name command cmd))
+      ;; (let ((default-directory (or (cargo-process--workspace-root)
+      ;;                              default-directory)))
+      ;;   (compilation-start cmd 'cargo-process-mode (lambda(_) buffer)))
+      (compilation-start cmd 'cargo-process-mode (lambda(_) buffer))
+      (let ((process (get-buffer-process buffer)))
+        (set-process-sentinel process 'cargo-process--finished-sentinel)
+        process)))
   :init
   (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
+  (setq cargo-process--command-test "d")
 
   (require 'cargo-process)
-  (add-to-list 'cargo-process--no-manifest-commands "Watch")
   (defun gwp/cargo-process-watch ()
     "Run the Cargo check command.
 With the prefix argument, modify the command's invocation.
 Cargo: Check compile the current project.
 Requires cargo-check to be installed."
     (interactive)
-    ;; (cargo-process--start "Watch" "watch -x check -x \"t -- --nocaputre\" ")
-    (cargo-process--start "Watch" "watch -x check"))
+    (cargo-process--start "Watch" "watch -x check -x d"))
 
   (map! :map cargo-minor-mode-map
         :localleader
@@ -47,17 +80,6 @@ Requires cargo-check to be installed."
           :desc "cargo watch"
           "w" #'gwp/cargo-process-watch
           )))
-
-;; cargo更好用一些
-;; (use-package projectile
-;;   :custom
-;;   (projectile-read-command nil)
-;;   :config
-;;   (projectile-register-project-type 'rust-cargo '("Cargo.toml")
-;;                                     :compile "cargo watch -x check -x test"
-;;                                     :test "cargo test"
-;;                                     :run "cargo run")
-;;   )
 ;; cargo:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*racer][racer:1]]

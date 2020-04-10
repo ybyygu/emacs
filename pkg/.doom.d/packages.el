@@ -59,6 +59,8 @@
 
 (package! org-sidebar)
 
+(package! el-patch)
+
 (package! keyfreq)
 
 (disable-packages! org-bullets pangu-spacing)

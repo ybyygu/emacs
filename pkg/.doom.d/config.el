@@ -309,6 +309,8 @@ If two universal prefix arguments are used, then prompt for command to use."
               :config
               (setq avy-all-windows t)
               )
+;; 替代 SPC-w-w
+(global-set-key [remap evil-window-next] #'ace-window)
 ;; 用avy在多个窗口下跳转也很方便:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:1]]

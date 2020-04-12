@@ -1368,13 +1368,21 @@ gwp-merge:
                     "z" #'zoom))
 #+end_src
 
-***** 用avy在多个窗口下跳转也很方便
+***** window切换
+用avy在多个窗口下跳转也很方便
+
+SPC-j-l
 #+BEGIN_SRC elisp
 (use-package! avy
               :config
               (setq avy-all-windows t)
               )
+;; 替代 SPC-w-w
+(global-set-key [remap evil-window-next] #'ace-window)
 #+END_SRC
+
+切换至之前buffer window, evil-window-mru
+: SPC-w-p
 
 ***** 弹出窗口管理
 打开doom popup窗口, 默认仅在normal state下可用.
@@ -2177,6 +2185,9 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 - 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
 - 链接到的src文件可直接打开.
 - 按q退出
+
+基于compilation mode定制
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
 
 使用el-path修改cargo-process调用方式, 更匹配命令行使用习惯.
 #+begin_src elisp

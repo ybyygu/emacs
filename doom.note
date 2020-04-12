@@ -1330,7 +1330,7 @@ gwp-merge:
 #+end_src
 
 **** window
-修改 frame 标题 方便 gnome-shell 桌面切换
+***** 修改 frame 标题 方便 gnome-shell 桌面切换
 #+begin_src elisp
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
@@ -1341,22 +1341,34 @@ gwp-merge:
         ))
 #+end_src
 
-自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候用zoom
-命令手动开启.
+***** 放大当前窗口
+: SPC-w-o
+: doom/window-enlarge
+
+自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候命令手
+动开启.
+- https://github.com/hlissner/doom-emacs/issues/2225
 
 对应命令: SPC-w z
-#+begin_src emacs-lisp
+#+begin_src elisp
+(use-package! golden-ratio
+  :config
+  (map! :map evil-window-map
+        "z" #'golden-ratio))
+#+end_src
+
+- [2020-04-12 Sun] golden-ratio更好用一些
+- [[https://github.com/cyrus-and/zoom][cyrus-and/zoom: Fixed and automatic balanced window layout for Emacs]]
+#+begin_src emacs-lisp :tangle no
 (use-package! zoom
-              ;; :after-call pre-command-hook
               :config
               (custom-set-variables
                '(zoom-size '(0.618 . 0.618)))
               (map! :map evil-window-map
-                    "z" #'zoom)
-              )
+                    "z" #'zoom))
 #+end_src
 
-用avy在多个窗口下跳转也很方便.
+***** 用avy在多个窗口下跳转也很方便
 #+BEGIN_SRC elisp
 (use-package! avy
               :config
@@ -1364,11 +1376,13 @@ gwp-merge:
               )
 #+END_SRC
 
+***** 弹出窗口管理
+打开doom popup窗口, 默认仅在normal state下可用.
 #+begin_src emacs-lisp
 (map! :i "C-`" #'+popup/toggle)
 #+end_src
 
-
+***** 窗口大小调整
 使用滚轮来修改窗口大小. Ctrl-Alt-scroll-up, Ctrl-Alt-scroll-down
 #+begin_src elisp
 (map! :nvi
@@ -1377,25 +1391,11 @@ gwp-merge:
       )
 #+end_src
 
-打开doom popup窗口, 默认仅在normal state下可用.
 - [[https://stackoverflow.com/questions/51879921/emacs-find-file-other-window-command-splits-buffer-vertically][Emacs find-file-other-window command splits buffer vertically - Stack Overflow]]
 
 设置分屏阈值, 避免 find-file-other-window 垂直向分割为多个windows
 #+begin_src elisp
 (setq split-width-threshold 200)        ; default is 160
-#+end_src
-
-golden-ratio在doom中有点问题
-https://github.com/hlissner/doom-emacs/issues/2225
-#+begin_src elisp :tangle no
-(use-package! golden-ratio
-              :after-call pre-command-hook
-              :config
-              (golden-ratio-mode +1)
-              ;; Using this hook for resizing windows is less precise than
-              ;; `doom-switch-window-hook'.
-              (remove-hook 'window-configuration-change-hook #'golden-ratio)
-              (add-hook 'doom-switch-window-hook #'golden-ratio))
 #+end_src
 
 **** line number
@@ -1833,11 +1833,10 @@ deadgrep与doom有冲突, 不能用了.
 (package! keyfreq)
 #+end_src
 
-
 - 窗口大小自动调整:
 #+begin_src emacs-lisp
 (package! golden-ratio)
-(package! zoom)
+;; (package! zoom)
 #+end_src
 
 org-download, 主要用于截图
@@ -1881,6 +1880,7 @@ github支持, 减慢速度.
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
 #+end_src
+
 
 * edit.el
 :PROPERTIES:
@@ -2446,8 +2446,8 @@ Requires cargo-check to be installed."
             )
     (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
       (org-open-at-point)
-      (zoom))
-    ))
+      (golden-ratio))))
+
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader

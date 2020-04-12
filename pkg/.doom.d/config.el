@@ -43,20 +43,9 @@
 ;; they are implemented.
 ;; orig:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:2]]
-(use-package! zoom
-              ;; :after-call pre-command-hook
-              :config
-              (custom-set-variables
-               '(zoom-size '(0.618 . 0.618)))
-              (map! :map evil-window-map
-                    "z" #'zoom)
-              )
-;; window:2 ends here
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:4]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*弹出窗口管理][弹出窗口管理:1]]
 (map! :i "C-`" #'+popup/toggle)
-;; window:4 ends here
+;; 弹出窗口管理:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*line number][line number:1]]
 (setq display-line-numbers-type nil)
@@ -298,7 +287,7 @@ If two universal prefix arguments are used, then prompt for command to use."
   )
 ;; theme:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
       '((:eval (+workspace-current-name)) ;
@@ -306,25 +295,32 @@ If two universal prefix arguments are used, then prompt for command to use."
         (:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))))
         ))
-;; window:1 ends here
+;; 修改 frame 标题 方便 gnome-shell 桌面切换:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:3]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*放大当前窗口][放大当前窗口:1]]
+(use-package! golden-ratio
+  :config
+  (map! :map evil-window-map
+        "z" #'golden-ratio))
+;; 放大当前窗口:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*用avy在多个窗口下跳转也很方便][用avy在多个窗口下跳转也很方便:1]]
 (use-package! avy
               :config
               (setq avy-all-windows t)
               )
-;; window:3 ends here
+;; 用avy在多个窗口下跳转也很方便:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:5]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:1]]
 (map! :nvi
       [C-M-mouse-4] #'evil-window-increase-width
       [C-M-mouse-5] #'evil-window-decrease-width
       )
-;; window:5 ends here
+;; 窗口大小调整:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window][window:6]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:2]]
 (setq split-width-threshold 200)        ; default is 160
-;; window:6 ends here
+;; 窗口大小调整:2 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
 ;; View images inside Emacs

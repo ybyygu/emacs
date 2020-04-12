@@ -80,7 +80,7 @@
 ;; pairs:1 ends here
 
 (package! golden-ratio)
-(package! zoom)
+;; (package! zoom)
 
 (package! org-download)
 

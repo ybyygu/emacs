@@ -53,8 +53,8 @@
             )
     (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
       (org-open-at-point)
-      (zoom))
-    ))
+      (golden-ratio))))
+
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
@@ -702,7 +702,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*encryption][encryption:1]]
 (require 'org-crypt)
 (require 'epa-file)
-
 (epa-file-enable)
 
 ;; Encrypt all entries before saving

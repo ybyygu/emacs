@@ -82,6 +82,11 @@ Requires cargo-check to be installed."
           )))
 ;; cargo:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:2]]
+;; 修改popup window, 放大一些, 方便查看.
+(set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
+;; cargo:2 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*racer][racer:1]]
 (use-package cargo
   :defer t

@@ -2254,6 +2254,12 @@ Requires cargo-check to be installed."
           )))
 #+end_src
 
+#+begin_src elisp
+;; 修改popup window, 放大一些, 方便查看.
+(set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
+#+end_src
+
+
 *** racer
 #+begin_src elisp
 (use-package cargo

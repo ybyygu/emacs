@@ -1108,7 +1108,7 @@ gwp-merge:
          ;;gist              ; interacting with github gists
          (lookup           ; helps you navigate your code and documentation
           +docsets)        ; ...or in Dash docsets locally
-         ;;lsp
+         lsp
          ;;macos             ; MacOS-specific commands
          magit             ; a git porcelain for Emacs
          ;;make              ; run make tasks from Emacs
@@ -1165,8 +1165,7 @@ gwp-merge:
          ;;rest              ; Emacs as a REST client
          ;;rst               ; ReST in peace
          ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-         ;; (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-         (rust)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+         ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
          ;;scala             ; java, but good
          ;;scheme            ; a fully conniving family of lisps
          sh                ; she sells {ba,z,fi}sh shells on the C xor
@@ -1189,6 +1188,7 @@ gwp-merge:
 
          :gwp                ; 自定义模块
          org
+         (rust +lsp)
 
          :config
          ;;literate
@@ -3015,18 +3015,17 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 
 ** encryption
 #+begin_src emacs-lisp
-  (require 'org-crypt)
-  (require 'epa-file)
+(require 'org-crypt)
+(require 'epa-file)
+(epa-file-enable)
 
-  (epa-file-enable)
-
-  ;; Encrypt all entries before saving
-  (org-crypt-use-before-save-magic)
-  (setq org-crypt-tag-matcher "crypt")
-  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-                                          ; GPG key to use for encryption
-  (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
-  (setq org-crypt-disable-auto-save nil)
+;; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-crypt-tag-matcher "crypt")
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+                                        ; GPG key to use for encryption
+(setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+(setq org-crypt-disable-auto-save nil)
 #+end_src
 
 ** org-attach
@@ -4219,13 +4218,16 @@ org-sidebar
 #+end_src
 
 
-* [[file:doom-hacks/modules/lang/org/][edit]] modules/org-hack
+* modules/org-hack
 新思路:
 - fork doom-emacs, 仅做必要的修改. 将其中的org module更名后, 放到pkg下载入?
 - 这样易于跟踪官方进度?
 - 需要同时打开lang/org module, 以正确加载autoload函数(似乎不能加
   载~/.doom.d/moudles/gwp下的定义).
 - 新的gwp/org会覆盖lang/org中的设置
+
+- [[file:doom-hacks/modules/lang/org/config.el][org/config.el]]
+- [[file:doom-hacks/modules/lang/rust/config.el][rust/config.el]]
 
 
 * snippets

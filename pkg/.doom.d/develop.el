@@ -14,6 +14,10 @@
   :defer t
   :hook (rust-mode . cargo-minor-mode)
   :config/el-patch
+  ;; 默认的error pattern太局限了, 放宽一些
+  (defconst cargo-process--errno-regex "^error"
+    "A regular expression to match Rust error number.")
+
   (defun cargo-process--start (name command &optional last-cmd opens-external)
     "Start the Cargo process NAME with the cargo command COMMAND.
 OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.

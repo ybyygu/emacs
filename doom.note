@@ -2182,12 +2182,31 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 - [[https://github.com/kwrooijen/cargo.el][kwrooijen/cargo.el: Emacs Minor Mode for Cargo, Rust's Package Manager.]]
 
 以下自定义cargo-watch命令, 可能比在vterm下执行略好一些.
+- p, n来跳转到前一个或下一个error
 - 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
 - 链接到的src文件可直接打开.
 - 按q退出
 
 基于compilation mode定制
 - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
+
+#+begin_src text :tangle no
+    Checking rxexplore v0.0.35 (/home/ybyygu/Workspace/Programming/structure-predication/reaction-explore)
+error: format argument must be a string literal
+   --> reaction-explore/src/dimer_.rs:325:20
+    |
+325 |             print!(s);
+    |                    ^
+    |
+
+
+error[E0277]: `std::result::Result<std::string::String, serde_json::error::Error>` doesn't implement `std::fmt::Display`
+   --> reaction-explore/src/dimer_.rs:325:26
+    |
+325 |             print!("{}", s);
+    |                          ^ `std::result::Result<std::string::String, serde_json::error::Error>` cannot be formatted with the default formatter
+    |
+#+end_src
 
 使用el-path修改cargo-process调用方式, 更匹配命令行使用习惯.
 #+begin_src elisp
@@ -2197,6 +2216,10 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
   :defer t
   :hook (rust-mode . cargo-minor-mode)
   :config/el-patch
+  ;; 默认的error pattern太局限了, 放宽一些
+  (defconst cargo-process--errno-regex "^error"
+    "A regular expression to match Rust error number.")
+
   (defun cargo-process--start (name command &optional last-cmd opens-external)
     "Start the Cargo process NAME with the cargo command COMMAND.
 OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
@@ -2269,7 +2292,6 @@ Requires cargo-check to be installed."
 ;; 修改popup window, 放大一些, 方便查看.
 (set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
 #+end_src
-
 
 *** racer
 #+begin_src elisp

@@ -1080,7 +1080,7 @@ gwp-merge:
        (evil +everywhere); come to the dark side, we have cookies
        ;;file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       ;;format  ; automated prettiness
+       format            ; 格式化代码块
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -2378,6 +2378,12 @@ Requires cargo-check to be installed."
       :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
       :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
       )
+#+end_src
+** startup overview
+可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起反作
+用, 去掉:
+#+begin_src elisp
+(remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
 #+end_src
 
 ** dwim

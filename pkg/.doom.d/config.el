@@ -155,8 +155,8 @@ If two universal prefix arguments are used, then prompt for command to use."
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    ;; (start-process "" nil "gnome-terminal" (concat "--working-directory=" the-directory) "-e" "tmux")
-    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+    (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
+    ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
     )
   )
 
@@ -304,14 +304,14 @@ If two universal prefix arguments are used, then prompt for command to use."
         "z" #'golden-ratio))
 ;; 放大当前窗口:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*用avy在多个窗口下跳转也很方便][用avy在多个窗口下跳转也很方便:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*window切换][window切换:1]]
 (use-package! avy
               :config
               (setq avy-all-windows t)
               )
 ;; 替代 SPC-w-w
 (global-set-key [remap evil-window-next] #'ace-window)
-;; 用avy在多个窗口下跳转也很方便:1 ends here
+;; window切换:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:1]]
 (map! :nvi

@@ -23,7 +23,6 @@
   "Insert a new org-mode memo entry under heading at point."
 
   (interactive "P")
-
   (call-interactively 'evil-open-below)
   (insert "** ")
   (call-interactively 'org-time-stamp-inactive)
@@ -43,9 +42,12 @@
       )
 ;; 按键行为:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*startup overview][startup overview:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*startup view][startup view:1]]
 (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
-;; startup overview:1 ends here
+;; 避免切换时闪烁
+;(setq org-startup-indented nil)
+;(remove-hook! 'org-mode-hook #'org-indent-mode)
+;; startup view:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*open-at-point][open-at-point:1]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste

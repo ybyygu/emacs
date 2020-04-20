@@ -1094,7 +1094,7 @@ gwp-merge:
        (dired)           ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        ;; ibuffer           ; interactive buffer management
-       undo              ; persistent, smarter undo for your inevitable mistakes
+       ;undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
@@ -2360,7 +2360,6 @@ Requires cargo-check to be installed."
   "Insert a new org-mode memo entry under heading at point."
 
   (interactive "P")
-
   (call-interactively 'evil-open-below)
   (insert "** ")
   (call-interactively 'org-time-stamp-inactive)
@@ -2379,11 +2378,15 @@ Requires cargo-check to be installed."
       :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
       )
 #+end_src
-** startup overview
+
+** startup view
 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起反作
 用, 去掉:
 #+begin_src elisp
 (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+;; 避免切换时闪烁
+;(setq org-startup-indented nil)
+;(remove-hook! 'org-mode-hook #'org-indent-mode)
 #+end_src
 
 ** dwim

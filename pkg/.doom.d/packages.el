@@ -63,7 +63,8 @@
 
 (package! keyfreq)
 
-(disable-packages! org-bullets pangu-spacing)
+(disable-packages! pangu-spacing)
+;; (disable-packages! org-bullets)
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)

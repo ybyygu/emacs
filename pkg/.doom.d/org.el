@@ -16,6 +16,9 @@
 
 ;; 对齐headline中的TAGs
 (setq org-tags-column -80)
+
+;; 避免误编辑
+(setq org-catch-invisible-edits 'show-and-error)
 ;; 基本设置:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
@@ -42,12 +45,25 @@
       )
 ;; 按键行为:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*startup view][startup view:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*view][view:1]]
+;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
+;; 反作用, 去掉:
 (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+
 ;; 避免切换时闪烁
-;(setq org-startup-indented nil)
+;; (setq org-startup-indented nil)
 ;(remove-hook! 'org-mode-hook #'org-indent-mode)
-;; startup view:1 ends here
+
+;; 避免显示subtree之间多余的空行
+(setq org-cycle-separator-lines 0)
+
+(use-package org-bullets
+  :init
+  ;; » ◇ ▶
+  ;; (setq org-bullets-bullet-list '("◉" "○" "✸" "✿"))
+  (setq org-bullets-bullet-list '("◉" "◇" "✚" "»" "»"))
+  )
+;; view:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*open-at-point][open-at-point:1]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste

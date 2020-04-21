@@ -17,7 +17,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [16/26]
+* Memo [17/27]
+** TODO [2020-04-20 Mon] 新建frame时最大化窗口
+
 ** DONE [2020-04-03 Fri] 试用 org-sidebar
 - State "DONE"       from "TODO"       [2020-04-07 Tue 20:01]
 - [[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/][Finally solving the lack of a tree-view navigation window in Org : orgmode]]
@@ -26,8 +28,9 @@
 - 打开 org-sidebar-tree-mode, SPC-m-s-t
 - 切换narrow, SPC-m-Enter
 
-** TODO [2020-03-24 Tue] 可以用[[https://github.com/raxod502/el-patch][el-patch]]来hack代码
+** DONE [2020-03-24 Tue] 可以用[[https://github.com/raxod502/el-patch][el-patch]]来hack代码
 
+- State "DONE"       from "TODO"       [2020-04-20 Mon 09:28]
 https://org-roam.readthedocs.io/en/latest/ecosystem/
 #+BEGIN_SRC elisp :tangle no
   (use-package deft
@@ -1883,7 +1886,8 @@ pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 org-bullets由于字体原因, 显示不佳.
 
 #+begin_src elisp
-(disable-packages! org-bullets pangu-spacing)
+(disable-packages! pangu-spacing)
+;; (disable-packages! org-bullets)
 #+end_src
 
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
@@ -2352,6 +2356,9 @@ Requires cargo-check to be installed."
 
 ;; 对齐headline中的TAGs
 (setq org-tags-column -80)
+
+;; 避免误编辑
+(setq org-catch-invisible-edits 'show-and-error)
 #+end_src
 
 ** 按键行为
@@ -2379,14 +2386,25 @@ Requires cargo-check to be installed."
       )
 #+end_src
 
-** startup view
-可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起反作
-用, 去掉:
+** view
 #+begin_src elisp
+;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
+;; 反作用, 去掉:
 (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+
 ;; 避免切换时闪烁
-;(setq org-startup-indented nil)
+;; (setq org-startup-indented nil)
 ;(remove-hook! 'org-mode-hook #'org-indent-mode)
+
+;; 避免显示subtree之间多余的空行
+(setq org-cycle-separator-lines 0)
+
+(use-package org-bullets
+  :init
+  ;; » ◇ ▶
+  ;; (setq org-bullets-bullet-list '("◉" "○" "✸" "✿"))
+  (setq org-bullets-bullet-list '("◉" "◇" "✚" "»" "»"))
+  )
 #+end_src
 
 ** dwim

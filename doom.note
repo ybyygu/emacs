@@ -1,4 +1,4 @@
-#+TITLE: org-mode config for doom-emacs
+#+TITLE: Private config based on doom-emacs
 #+SETUPFILE: ~/Notes/common.org
 
 历史设置
@@ -405,6 +405,8 @@ CLOSED: [2017-11-01 Wed 10:34]
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
+** org-mode
+| org-kill-note-or-show-branches | C-c C-k | 查看headlines, 当前上下文TAB键无效时有用   |
 
 ** 自动补全
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/completion/company/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
@@ -1262,7 +1264,7 @@ gwp-merge:
 *** workspace
 禁止workspace在退出emacs时自动保存, 避免不同机器同步冲突
 #+begin_src elisp
-  (setq persp-auto-save-opt 0)
+(setq persp-auto-save-opt 0)
 #+end_src
 
 *** ui
@@ -1822,6 +1824,12 @@ deadgrep与doom有冲突, 不能用了.
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 #+end_src
+*** org-pdftools
+由于网络原因, 暂时过渡:
+#+begin_src elisp
+(package! org-bullets)
+(package! org-pdftools :recipe (:host github :repo " fuxialexander/org-pdftools"))
+#+end_src
 
 *** 需要安装的包
 - chfonts: 中文显示
@@ -1883,11 +1891,9 @@ org-noter
 
 *** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
-org-bullets由于字体原因, 显示不佳.
 
 #+begin_src elisp
 (disable-packages! pangu-spacing)
-;; (disable-packages! org-bullets)
 #+end_src
 
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.

@@ -50,6 +50,9 @@
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 
+(package! org-bullets)
+(package! org-pdftools :recipe (:host github :repo " fuxialexander/org-pdftools"))
+
 ;; (package! cnfonts)
 (package! fcitx)
 ;; (package! berrys-theme)
@@ -64,7 +67,6 @@
 (package! keyfreq)
 
 (disable-packages! pangu-spacing)
-;; (disable-packages! org-bullets)
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)

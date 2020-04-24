@@ -6,6 +6,9 @@ default: doom-sync
 
 install: stow
 	stow --verbose --adopt --no-folding --target ~/ pkg
+	rsync -rav ./doom-hacks/modules/tools/magit ~/.doom.d/modules/gwp/
+	rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
+	rsync -rav ./doom-hacks/modules/lang/rust ~/.doom.d/modules/gwp/
 uninstall:
 	stow --verbose --target ~/ --delete pkg
 

@@ -57,11 +57,10 @@
 ;; 避免显示subtree之间多余的空行
 (setq org-cycle-separator-lines 0)
 
-(use-package org-bullets
+(use-package org-superstar
   :init
   ;; » ◇ ▶
-  ;; (setq org-bullets-bullet-list '("◉" "○" "✸" "✿"))
-  (setq org-bullets-bullet-list '("◉" "◇" "✚" "»" "»"))
+  (setq org-superstar-headline-bullets-list '("○" "◇" "✚" "»" "»"))
   )
 ;; view:1 ends here
 

@@ -161,7 +161,7 @@
           :desc "Git time machine"          "t"   #'git-timemachine-toggle
           :desc "Jump to next hunk"         "]"   #'git-gutter:next-hunk
           :desc "Jump to previous hunk"     "["   #'git-gutter:previous-hunk)
-        (:when (featurep! :tools magit)
+        (:when (featurep! :gwp magit)
           :desc "Manage dotfiles (yadm)"    "."   (lambda! (magit-status "/yadm::"))
           :desc "Magit dispatch"            "/"   #'magit-dispatch
           :desc "Forge dispatch"            "'"   #'forge-dispatch
@@ -205,7 +205,7 @@
             :desc "Branch"                    "b"   #'magit-branch-and-checkout
             :desc "Issue"                     "i"   #'forge-create-issue
             :desc "Pull request"              "p"   #'forge-create-pullreq)))
-    )
+      )
 
 (map! :leader
       ;;; <leader> o --- open

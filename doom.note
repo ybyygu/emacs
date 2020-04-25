@@ -17,13 +17,70 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [17/27]
+* Memo [20/27]
 ** [2020-04-24 Fri] 解决hack modules中autoloads代码无法加载的问题
 需要修改autoloads中首行的路径, 同时不能使用软链接
 : -;;; lang/org/autoload/org-link.el -*- lexical-binding: t; -*-
 : +;;; ~/.doom.d/modules/gwp/org/autoload/org-link.el -*- lexical-binding: t; -*-
 
-** TODO [2020-04-20 Mon] 新建frame时最大化窗口
+** TODO [2020-03-22 Sun] workspace保存时经常出错的问题
+无法确定问题的根源, 有时成功, 有时失败. 成功案例:
+- Cu-u SPC-l-s, 失败后再用SPC-l-s
+
+** TODO [2020-03-20 Fri] org中narrow功能                                  :Idea:
+org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
+必要配合narrow来进行view或tangle.
+
+org-tree-to-indirect-buffer 比 org-narrow-to-subtree更好用, 前者不会影响全局
+buffer, 可以同时浏览多个narrowed subtree, 互不影响.
+- 多次使用 org-tree-to-indirect-buffer时切换narrow和widden状态.
+- 使用C-u调用时, 可以同时开多个narrow buffer.
+
+** TODO [2020-03-13 Fri] smartparens学习
+- [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
+- [[https://gist.github.com/pvik/8eb5755cc34da0226e3fc23a320a3c95][A Cheatsheet for Emacs Smarparens example configuration]]
+
+| sp-kill-sexp | 删除光标附近符号对内容 |
+
+** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
+这个可以自定义的地方更多.
+
+** TODO [2020-03-01 Sun] doom evil学习
+- [ ] 这个和regex-align有点像 https://github.com/edkolev/evil-lion
+- [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
+- [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
+- [ ] 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
+- [ ] [[https://github.com/hlissner/evil-multiedit][hlissner/evil-multiedit: Multiple cursors for evil-mode, based on iedit]]
+- [ ] [[https://github.com/gabesoft/evil-mc][gabesoft/evil-mc: Multiple cursors implementation for evil-mode]]
+- [ ] indent-rigidly: C-x TAB, 可以很方便地向左或向右移动选中文本.
+- [X] expand region: 可以用vi部分代替 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-do-non-evil-users-get-expand-region-but-not-evil-users][URL]]
+- [X] 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
+- [X] gd: 跳转到函数定义位置. 并不总是灵光.
+- Ctrl-h b: 显示所有按键 which-key-show-keymap Ctrl-h b m
+
+** DONE [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
+- State "DONE"       from "TODO"       [2020-04-25 Sat 09:07]
+#+begin_src elisp
+  (load-theme 'material t)
+  ;; (load-theme 'doom-one-light t)
+  (custom-set-faces!
+    '(org-todo :foreground "yellow" :weight bold :background "#263238")
+    '(org-done :foreground "yellow" :weight bold :background "#263238")
+    '(org-table :foreground "#e3f2fd")
+    '(org-level1 :foreground "#e3f2fd")
+    '(org-headline-done :foreground "gray")
+    )
+#+end_src
+
+** DONE [2020-03-01 Sun] 各种emacs distribution
+- State "DONE"       from "TODO"       [2020-04-25 Sat 09:07]
+- [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
+
+** DONE [2020-04-20 Mon] 新建frame时最大化窗口
+- State "DONE"       from "TODO"       [2020-04-25 Sat 08:53]
+[[https://emacs.stackexchange.com/questions/2999/how-to-maximize-my-emacs-frame-on-start-up][How to maximize my Emacs frame on start-up? - Emacs Stack Exchange]]
+
+: (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ** DONE [2020-04-03 Fri] 试用 org-sidebar
 - State "DONE"       from "TODO"       [2020-04-07 Tue 20:01]
@@ -54,57 +111,6 @@ https://org-roam.readthedocs.io/en/latest/ecosystem/
                                       (substring contents begin (match-end 0))))))
                      (org-roam--get-title-or-slug file))))
 #+END_SRC
-
-** TODO [2020-03-22 Sun] workspace保存时经常出错的问题
-无法确定问题的根源, 有时成功, 有时失败. 成功案例:
-- Cu-u SPC-l-s, 失败后再用SPC-l-s
-
-** TODO [2020-03-20 Fri] org中narrow功能                                  :Idea:
-org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
-必要配合narrow来进行view或tangle.
-
-org-tree-to-indirect-buffer 比 org-narrow-to-subtree更好用, 前者不会影响全局
-buffer, 可以同时浏览多个narrowed subtree, 互不影响.
-- 多次使用 org-tree-to-indirect-buffer时切换narrow和widden状态.
-- 使用C-u调用时, 可以同时开多个narrow buffer.
-
-** TODO [2020-03-13 Fri] smartparens学习
-- [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
-- [[https://gist.github.com/pvik/8eb5755cc34da0226e3fc23a320a3c95][A Cheatsheet for Emacs Smarparens example configuration]]
-
-| sp-kill-sexp | 删除光标附近符号对内容 |
-
-** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
-这个可以自定义的地方更多.
-
-** TODO [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
-#+begin_src elisp
-  (load-theme 'material t)
-  ;; (load-theme 'doom-one-light t)
-  (custom-set-faces!
-    '(org-todo :foreground "yellow" :weight bold :background "#263238")
-    '(org-done :foreground "yellow" :weight bold :background "#263238")
-    '(org-table :foreground "#e3f2fd")
-    '(org-level1 :foreground "#e3f2fd")
-    '(org-headline-done :foreground "gray")
-    )
-#+end_src
-
-** TODO [2020-03-01 Sun] 各种emacs distribution
-- [[https://github.com/emacs-tw/awesome-emacs][emacs-tw/awesome-emacs: A community driven list of useful Emacs packages, libraries and others.]]
-
-** TODO [2020-03-01 Sun] doom evil学习
-- [ ] 这个和regex-align有点像 https://github.com/edkolev/evil-lion
-- [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
-- [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-- [ ] 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
-- [ ] [[https://github.com/hlissner/evil-multiedit][hlissner/evil-multiedit: Multiple cursors for evil-mode, based on iedit]]
-- [ ] [[https://github.com/gabesoft/evil-mc][gabesoft/evil-mc: Multiple cursors implementation for evil-mode]]
-- [ ] indent-rigidly: C-x TAB, 可以很方便地向左或向右移动选中文本.
-- [X] expand region: 可以用vi部分代替 [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-do-non-evil-users-get-expand-region-but-not-evil-users][URL]]
-- [X] 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
-- [X] gd: 跳转到函数定义位置. 并不总是灵光.
-- Ctrl-h b: 显示所有按键 which-key-show-keymap Ctrl-h b m
 
 ** DONE [2020-02-29 Sat] 改进literate rust编程体验
 - State "DONE"       from "TODO"       [2020-03-21 Sat 20:00]
@@ -278,7 +284,7 @@ https://segmentfault.com/q/1010000000118837
 使用扩选功能时, expand-region会自动展开显示之前隐藏outline中的内容, 导致显示内容跳转.
 
 解决方案:
-- 修改expand-region.el, 删除掉 "(eval-after-load 'org" 相关内容
+- 修改expand-region.el, 删除掉 "(eval-after-load 'org)" 相关内容
 
 ** TODO [2018-01-24 Wed] 修复org-capture, org-protocol中的几个bug
 - [ ] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
@@ -826,45 +832,45 @@ emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
 * TODO desktop integration
 ** emacsclient-open
 可用于打开.note和.pdf文件
-#+begin_src config :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
-  [Desktop Entry]
-  Version=1.0
-  Name=Emacs Client - GWP
-  GenericName=Text Editor
-  Comment=View and edit files
-  MimeType=application/x-note;application/pdf;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-  Exec=emacsclient %F
-  TryExec=emacs
-  Icon=emacs
-  Type=Application
-  Terminal=false
-  Categories=Utility;Development;TextEditor;
+#+begin_src text :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
+[Desktop Entry]
+Version=1.0
+Name=Emacs Client - GWP
+GenericName=Text Editor
+Comment=View and edit files
+MimeType=application/x-note;application/pdf;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=emacsclient %F
+TryExec=emacs
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;
 #+end_src
 
 ** org-capture
 #+begin_src text :tangle pkg/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
-  [Desktop Entry]
-  Version=1.0
-  Name=Org Capture
-  Comment=Capture using emacs org-mode
-  Exec=org-capture.sh
-  TryExec=emacs
-  Icon=emacs
-  Type=Application
-  Terminal=false
-  Categories=Utility;Development;TextEditor;
+[Desktop Entry]
+Version=1.0
+Name=Org Capture
+Comment=Capture using emacs org-mode
+Exec=org-capture.sh
+TryExec=emacs
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;
 #+end_src
 
 ** org-protocol
 #+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :comments nil
 #+BEGIN_SRC text
-  [Desktop Entry]
-  Name=org-protocol
-  Exec=emacsclient %U
-  Icon=emacs
-  Type=Application
-  Terminal=false
-  MimeType=x-scheme-handler/org-protocol;
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %U
+Icon=emacs
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/org-protocol;
 #+END_SRC
 
 ** firefox
@@ -881,14 +887,14 @@ emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
 
 更新desktop数据库
 #+BEGIN_SRC shell
-  update-desktop-database ~/.local/share/applications/
+update-desktop-database ~/.local/share/applications/
 #+END_SRC
 
 #+begin_src shell :dir ~/.local/share/applications
-  desktop-file-validate gwp-emacsclient.desktop
-  desktop-file-validate gwp-org-capture.desktop
-  xdg-desktop-menu install gwp-emacsclient.desktop
-  xdg-desktop-menu install gwp-org-capture.desktop
+desktop-file-validate gwp-emacsclient.desktop
+desktop-file-validate gwp-org-capture.desktop
+xdg-desktop-menu install gwp-emacsclient.desktop
+xdg-desktop-menu install gwp-org-capture.desktop
 #+end_src
 
 #+RESULTS:
@@ -1429,6 +1435,12 @@ SPC-j-l
 #+begin_src elisp
 (setq split-width-threshold 200)        ; default is 160
 #+end_src
+
+新建frame时最大化窗口
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
 
 **** line number
 默认不显示行号
@@ -2138,7 +2150,7 @@ magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
 
 magit-todos已在magit modules定义.
 #+begin_src elisp :tangle no
-  (package! magit-todos)
+(package! magit-todos)
 #+end_src
 
 ** vc commit
@@ -4330,57 +4342,57 @@ TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统�
 ** org-mode
 *** begin_src
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src
-  # -*- mode: snippet -*-
-  # name: #+begin_src
-  # key: <s
-  # --
-  ,#+begin_src $1
-  $0
-  ,#+end_src
+# -*- mode: snippet -*-
+# name: #+begin_src
+# key: <s
+# --
+,#+begin_src $1
+$0
+,#+end_src
 #+END_SRC
 
 *** begin_src shell
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_sh
-  # -*- mode: snippet -*-
-  # name: #+begin_src shell
-  # key: <sh
-  # --
-  ,#+begin_src shell
-  $0
-  ,#+end_src
+# -*- mode: snippet -*-
+# name: #+begin_src shell
+# key: <sh
+# --
+,#+begin_src shell
+$0
+,#+end_src
 #+END_SRC
 
 *** begin_src elisp
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_elisp
-  # -*- mode: snippet -*-
-  # name: #+begin_src elisp
-  # key: <el
-  # --
-  ,#+begin_src elisp
-  $0
-  ,#+end_src
+# -*- mode: snippet -*-
+# name: #+begin_src elisp
+# key: <el
+# --
+,#+begin_src elisp
+$0
+,#+end_src
 #+END_SRC
 
 *** begin_src python
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_python
-  # -*- mode: snippet -*-
-  # name: #+begin_src python
-  # key: <p
-  # --
-  ,#+begin_src python
-  $0
-  ,#+end_src
+# -*- mode: snippet -*-
+# name: #+begin_src python
+# key: <p
+# --
+,#+begin_src python
+$0
+,#+end_src
 #+END_SRC
 
 *** begin_src rust
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/org-mode/begin_src_rust
-  # -*- mode: snippet -*-
-  # name: #+begin_src rust
-  # key: <r
-  # --
-  ,#+begin_src rust
-  $0
-  ,#+end_src
+# -*- mode: snippet -*-
+# name: #+begin_src rust
+# key: <r
+# --
+,#+begin_src rust
+$0
+,#+end_src
 #+END_SRC
 
 ** rust-mode

@@ -324,6 +324,10 @@ If two universal prefix arguments are used, then prompt for command to use."
 (setq split-width-threshold 200)        ; default is 160
 ;; 窗口大小调整:2 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:3]]
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; 窗口大小调整:3 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
 ;; View images inside Emacs
 (auto-image-file-mode t)

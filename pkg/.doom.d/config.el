@@ -233,7 +233,8 @@ If two universal prefix arguments are used, then prompt for command to use."
       (progn
         ;; english font
         ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
-        (setq doom-font (font-spec :family "Monaco" :size 16))
+        ;; (setq doom-font (font-spec :family "Monaco" :size 16))
+        (setq doom-font (font-spec :family "Monaco"))
         ;; chinese font
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
@@ -249,41 +250,39 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 (if (and (fboundp 'daemonp) (daemonp))
     (add-hook 'after-make-frame-functions #'gwp/init-fonts))
-(call-interactively 'gwp/set-fonts)
 
 ;; org-mode表格中文混排对齐
 (after! org
+  (call-interactively 'gwp/set-fonts)
   (custom-set-faces!
     `(org-table :family "Ubuntu Mono")
     )
   )
 ;; chinese fonts setup:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*big font mode][big font mode:1]]
-;; HiDPI下可用大字模式: SPC-t-b
-(setq doom-font (font-spec :family "Monaco" :size 14))
-(setq doom-big-font-increment 4)
-
-;; (add-hook! doom-big-font-mode-hook #'(gwp/set-fonts))
-;; 上面的不管用
-(setq doom-big-font-mode-hook '(gwp/set-fonts))
-(doom-big-font-mode -1)
-;; big font mode:1 ends here
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 ;; (setq doom-theme 'doom-acario-light)
-;;(setq doom-theme 'doom-one-light)
-(load-theme 'material t)
+;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-material)
+;;(load-theme 'material t)
 (custom-set-faces!
   '(org-todo :foreground "yellow" :weight bold :background "#263238")
   '(org-done :foreground "yellow" :weight bold :background "#263238")
   '(org-table :foreground "#e3f2fd")
-  '(org-level-1 :foreground "#e3f2fd" :height 1.1 :weight bold)
-  '(org-level-2 :foreground "#e3f2fd" :height 1.0 :weight normal)
+  '(hl-line :background "#37474f")
+  '(org-level-1 :foreground "#e3f2fd" :height 1.1 :background nil :weight bold :box nil)
+  '(org-level-2 :foreground "#e3f2fd" :height 1.0 :background nil :weight normal :box nil)
   '(org-headline-done :foreground "gray" :weight normal)
+  )
+
+;; 当前行
+(custom-set-faces!
+  '(hl-line :background "#37474f")
+  '(solaire-hl-line-face :background "#37474f")
+  '(region :background "#555555")
   )
 ;; theme:1 ends here
 

@@ -60,7 +60,7 @@
 (use-package org-superstar
   :init
   ;; » ◇ ▶
-  (setq org-superstar-headline-bullets-list '("○" "◇" "✚" "»" "»"))
+  (setq org-superstar-headline-bullets-list '("◉" "○" "»" "»"))
   )
 ;; view:1 ends here
 

@@ -64,6 +64,27 @@
   )
 ;; view:1 ends here
 
+;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero][zotero:1]]
+;; rust-modules
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
+(require 'zotero)
+
+(defun gwp/org-open-zotero-attachment-at-point (arg)
+  "Open zotero attachment"
+  (interactive "P")
+
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((path (zotero-get-attachment-path link)))
+              (if path
+                  (progn
+                    (message "%s!" path)
+                    (org-open-file path arg))
+                (error "No attachments for item!"))))))))
+;; zotero:1 ends here
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*open-at-point][open-at-point:1]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
@@ -79,7 +100,9 @@
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
-      "o" #'gwp/org-open-at-point-dwim)
+      "o" #'gwp/org-open-at-point-dwim
+      "O" #'gwp/org-open-zotero-attachment-at-point
+)
 ;; open-at-point:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*latex preview][latex preview:1]]

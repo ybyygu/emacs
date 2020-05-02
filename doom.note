@@ -2450,6 +2450,28 @@ Requires cargo-check to be installed."
   )
 #+end_src
 
+** zotero
+#+begin_src elisp
+;; rust-modules
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
+(require 'zotero)
+
+(defun gwp/org-open-zotero-attachment-at-point (arg)
+  "Open zotero attachment"
+  (interactive "P")
+
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((path (zotero-get-attachment-path link)))
+              (if path
+                  (progn
+                    (message "%s!" path)
+                    (org-open-file path arg))
+                (error "No attachments for item!"))))))))
+#+end_src
+
 ** dwim
 *** enter-at-point
 从doom中的org module中摘出来, 略作修改.
@@ -2569,7 +2591,9 @@ Requires cargo-check to be installed."
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
-      "o" #'gwp/org-open-at-point-dwim)
+      "o" #'gwp/org-open-at-point-dwim
+      "O" #'gwp/org-open-zotero-attachment-at-point
+)
 #+end_src
 
 ** screenshot
@@ -3660,8 +3684,6 @@ org-sidebar
       :n [return] #'org-sidebar-tree-jump
       )
 #+end_src
-
-
 * bindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/bindings.el :comments nil

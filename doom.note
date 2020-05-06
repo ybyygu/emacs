@@ -17,8 +17,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [20/28]
-** TODO [2020-04-27 Mon] 好像org响应有些慢了
+* Memo [21/28]
+** DONE [2020-04-27 Mon] 好像org响应有些慢了
+- State "DONE"       from "TODO"       [2020-05-06 Wed 14:03]
 - [[https://github.com/hlissner/doom-emacs/issues/1301][Hang when scrolling with mouse · Issue #1301 · hlissner/doom-emacs]]
 - [[https://github.com/hlissner/doom-emacs/issues/2217][[BUG] Slow scrolling/cursor movement on macOS with large window · Issue #2217 · hlissner/doom-emacs]]
 
@@ -2370,6 +2371,29 @@ Requires cargo-check to be installed."
 ;; (package! smartparens-rust) ; 不确定需要
 #+end_src
 
+** python.el
+[[file:doom-emacs/modules/tools/eval/README.org::+TITLE: tools/eval]]
+
+: SPC-o-r 打开repl
+: SPC-c-s send-region
+默认的挺难用的
+#+begin_src elisp :tangle no
+(after! python
+  (setq python-shell-interpreter "ipython"))
+#+end_src
+
+使用tmux/ipython组合来实现
+
+#+begin_src elisp
+(defun gwp/tmux-ipython-paste-region (beg end &optional region)
+  "Execute \"%paste\" in tmux session"
+  (interactive "r")
+  (kill-ring-save beg end)
+  (+tmux/run "%paste")
+  )
+#+end_src
+
+
 * org.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/org.el
@@ -2451,6 +2475,8 @@ Requires cargo-check to be installed."
 #+end_src
 
 ** zotero
+[[file:rust-modules/rust-modules.note][rust-module.note]]
+
 #+begin_src elisp
 ;; rust-modules
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
@@ -3848,8 +3874,8 @@ org-sidebar
         :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
         :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
         :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
-        :desc "切换终端(vterm)"                        "t"   #'vterm-toggle
-        :desc "复制并注释"                              "y"   #'evilnc-copy-and-comment-lines
+        :desc "Open vterm"                            "t"   #'vterm-toggle
+        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
         :desc "LSP Format buffer/region"              "F"   #'+default/lsp-format-region-or-buffer
         :desc "LSP Organize imports"                  "i"   #'lsp-organize-imports
         (:when (featurep! :completion ivy)
@@ -3860,7 +3886,8 @@ org-sidebar
           :desc "Jump to symbol in any workspace"     "J"   #'helm-lsp-global-workspace-symbol)
         :desc "Jump to documentation"                 "k"   #'+lookup/documentation
         :desc "LSP Rename"                            "r"   #'lsp-rename
-        :desc "Send to repl"                          "s"   #'+eval/send-region-to-repl
+        ;; :desc "Send to repl"                          "s"   #'+eval/send-region-to-repl
+        :desc "Send to repl"                          "s"   #'gwp/tmux-ipython-paste-region
         :desc "Delete trailing whitespace"            "w"   #'delete-trailing-whitespace
         :desc "Delete trailing newlines"              "W"   #'doom/delete-trailing-newlines
         :desc "List errors"                           "x"   #'flymake-show-diagnostics-buffer

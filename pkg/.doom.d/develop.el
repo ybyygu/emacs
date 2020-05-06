@@ -7,7 +7,7 @@
   )
 ;; magit:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:2]]
 (eval-when-compile (require 'el-patch))
 
 (use-package cargo
@@ -84,12 +84,12 @@ Requires cargo-check to be installed."
           :desc "cargo watch"
           "w" #'gwp/cargo-process-watch
           )))
-;; cargo:1 ends here
+;; cargo:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:2]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:3]]
 ;; 修改popup window, 放大一些, 方便查看.
 (set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
-;; cargo:2 ends here
+;; cargo:3 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*racer][racer:1]]
 (use-package cargo
@@ -101,6 +101,15 @@ Requires cargo-check to be installed."
     (add-hook 'racer-mode-hook #'company-mode)
     ))
 ;; racer:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*python.el][python.el:2]]
+(defun gwp/tmux-ipython-paste-region (beg end &optional region)
+  "Execute \"%paste\" in tmux session"
+  (interactive "r")
+  (kill-ring-save beg end)
+  (+tmux/run "%paste")
+  )
+;; python.el:2 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*vc commit][vc commit:1]]
 (use-package vc

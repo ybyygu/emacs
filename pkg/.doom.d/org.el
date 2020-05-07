@@ -64,27 +64,6 @@
   )
 ;; view:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero][zotero:1]]
-;; rust-modules
-(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
-(require 'zotero)
-
-(defun gwp/org-open-zotero-attachment-at-point (arg)
-  "Open zotero attachment"
-  (interactive "P")
-
-  (let ((ct (org-element-context)))
-    (if (eq 'link (org-element-type ct))
-        (let ((link (org-element-property :raw-link ct)))
-          (when link
-            (let ((path (zotero-get-attachment-path link)))
-              (if path
-                  (progn
-                    (message "%s!" path)
-                    (org-open-file path arg))
-                (error "No attachments for item!"))))))))
-;; zotero:1 ends here
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*open-at-point][open-at-point:1]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
@@ -249,6 +228,34 @@ selected instead of creating a new buffer."
 
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 ;; narrow:1 ends here
+
+;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero/link][zotero/link:1]]
+;; rust-modules
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
+(require 'zotero)
+
+(defun gwp/org-open-zotero-attachment-at-point (arg)
+  "Open zotero attachment"
+  (interactive "P")
+
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((path (zotero-get-attachment-path link)))
+              (if path
+                  (progn
+                    (message "%s!" path)
+                    (org-open-file path arg))
+                (error "No attachments for item!"))))))))
+
+;; since org 9
+(org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
+
+(defun gwp/org-zotero-open (path)
+  (setq url (format "zotero:%s" path))
+  (browse-url url))
+;; zotero/link:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*delete link file][delete link file:1]]
 (defun gwp/org-delete-link-file (arg)
@@ -595,17 +602,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero][zotero:1]]
+;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero/export][zotero/export:1]]
 (with-eval-after-load 'org-compat
-
-  ;; since org 9
-  (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
-
-  (defun gwp/org-zotero-open (path)
-    (setq url (format "zotero:%s" path))
-    (browse-url url)
-    )
-
   (defun gwp/org-zotero-export (path desc format)
     "Create the export version of zotero link specified by PATH and
 DESC. FORMATs understood are 'odt','latex and 'html."
@@ -671,7 +669,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (setq desc (format "%s" desc))
     (format refmark zitem desc zitem))
   )
-;; zotero:1 ends here
+;; zotero/export:1 ends here
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*odt export][odt export:1]]
 (use-package ox-odt

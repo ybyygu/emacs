@@ -2,7 +2,7 @@
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
 .ONESHELL:
 
-default: doom-sync
+default: install doom-sync
 
 install: stow
 	stow --verbose --adopt --no-folding --target ~/ pkg

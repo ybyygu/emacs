@@ -68,7 +68,7 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 
 ** DONE [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
 - State "DONE"       from "TODO"       [2020-04-25 Sat 09:07]
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (load-theme 'material t)
   ;; (load-theme 'doom-one-light t)
   (custom-set-faces!
@@ -559,6 +559,7 @@ References
 将annotation.note放到zotero内置库里的优点和问题:
 - 优点: 以zotero为中心进行数据管理. 从文献到笔记很方便.
 - 优点: note和pdf路径相对稳定, 不用担心更换系统后文件路径变化导致的问题.
+- 优点: 方便实现类似roam等工具类似的功能.
 - 问题: 不能方便地在zotero界面里进行搜索 (需要fulltext index) (但可以用自编工具
   notesearch来处理, 不过需要定期更新cache)
 
@@ -1038,6 +1039,9 @@ gwp-merge:
 
 
 * doom/config
+:PROPERTIES:
+:VISIBILITY: children
+:END:
 共三个配置文件, tangle到pkg/.doom.d目录下, 再由stow软链到$HOME.
 ** init.el
 :PROPERTIES:
@@ -1193,7 +1197,7 @@ gwp-merge:
        ;;lean
        ;;factor
        ;;ledger            ; an accounting system in Emacs
-       ;;lua               ; one-based indices? one-based indices
+       lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
@@ -1367,6 +1371,8 @@ gwp-merge:
 ;; (setq doom-theme 'doom-acario-light)
 ;; (setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-material)
+;; (setq doom-theme 'doom-nova)
+(setq doom-theme 'doom-vibrant)
 ;; (load-theme 'material t)
 (custom-set-faces!
   '(org-todo :foreground "yellow" :weight bold :background "#263238")

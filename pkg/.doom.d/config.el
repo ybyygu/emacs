@@ -267,7 +267,9 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; (setq doom-theme 'doom-acario-light)
 ;; (setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-material)
-;;(load-theme 'material t)
+;; (setq doom-theme 'doom-nova)
+(setq doom-theme 'doom-vibrant)
+;; (load-theme 'material t)
 (custom-set-faces!
   '(org-todo :foreground "yellow" :weight bold :background "#263238")
   '(org-done :foreground "yellow" :weight bold :background "#263238")

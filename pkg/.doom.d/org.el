@@ -529,7 +529,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*enter][enter:1]]
 ;; 禁用代码着色, 影响速度
-(setq org-src-fontify-natively nil)
+;; (setq org-src-fontify-natively nil)
 
 ;; 编辑代码时在下方新开窗口
 ;;(setq org-src-window-setup 'split-window-below)

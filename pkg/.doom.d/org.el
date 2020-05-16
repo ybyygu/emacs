@@ -187,18 +187,6 @@
   )
 ;; org-noter/pdf-view:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:2]]
-(after! smartparens-org
-  (sp-with-modes '(org-mode)
-    (sp-local-pair "/" nil :actions :rem)
-    (sp-local-pair "=" nil :actions :rem)
-    (sp-local-pair "~" nil :actions :rem)
-    (sp-local-pair "*" nil :actions :rem)
-    (sp-local-pair "_" nil :actions :rem)
-    )
-  )
-;; pairs:2 ends here
-
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*narrow][narrow:1]]
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.

@@ -17,7 +17,10 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [21/28]
+* Memo [21/29]
+** TODO [2020-05-16 Sat] doom更新出问题
+- https://github.com/hlissner/doom-emacs/issues/2802#issuecomment-606654151
+
 ** DONE [2020-04-27 Mon] 好像org响应有些慢了
 - State "DONE"       from "TODO"       [2020-05-06 Wed 14:03]
 - [[https://github.com/hlissner/doom-emacs/issues/1301][Hang when scrolling with mouse · Issue #1301 · hlissner/doom-emacs]]
@@ -2238,7 +2241,6 @@ magit-todos已在magit modules定义.
 (add-hook 'rust-mode-hook
           (lambda () (require 'smartparens-rust)))
 
-
 ;; 启用rust LSP: 用不起来
 ;; (after! rustic
 ;;   )
@@ -2946,22 +2948,23 @@ pdf-view-fit-width-to-window
 
 ** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
-
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
-  (package! smartparens-org :ignore t)
+(package! smartparens-org :ignore t)
 #+end_src
 
-#+begin_src elisp
-  (after! smartparens-org
-    (sp-with-modes '(org-mode)
-      (sp-local-pair "/" nil :actions :rem)
-      (sp-local-pair "=" nil :actions :rem)
-      (sp-local-pair "~" nil :actions :rem)
-      (sp-local-pair "*" nil :actions :rem)
-      (sp-local-pair "_" nil :actions :rem)
-      )
+[2020-05-16 Sat] doom更新后没这些问题了
+#+begin_src elisp :tangle no
+(after! smartparens-org
+  (sp-with-modes '(org-mode)
+    (sp-local-pair "/" nil :actions :rem)
+    (sp-local-pair "=" nil :actions :rem)
+    (sp-local-pair "~" nil :actions :rem)
+    (sp-local-pair "*" nil :actions :rem)
+    (sp-local-pair "_" nil :actions :rem)
     )
+  )
 #+end_src
+
 ** narrow
 [[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/][Finally solving the lack of a tree-view navigation window in Org : orgmode]]
 #+begin_src elisp

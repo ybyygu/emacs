@@ -875,8 +875,9 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                       (buffer-file-name x)))
                 (buffer-list))))
 
-;; (setq org-refile-targets '((org-agenda-files :tag . "Incoming")))
-(setq org-refile-targets '((gwp/org-get-refile-targets :tag . "Incoming")))
+;;(setq org-refile-targets '((gwp/org-get-refile-targets :tag . "Incoming")))
+(setq org-refile-targets '((gwp/org-get-refile-targets :regexp . "Memo")))
+(setq org-refile-use-outline-path nil)
 
 (setq org-reverse-note-order t)
 (defun gwp/get-org-file-link-path ()
@@ -884,10 +885,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (beginning-of-line)
     (search-forward "[[file:" (line-end-position))
     (if (org-in-regexp org-bracket-link-regexp 1)
-        (org-link-unescape (match-string-no-properties 1))
-      )
-    )
-  )
+        (org-link-unescape (match-string-no-properties 1)))))
 
 (defun gwp/enter-to-read-state()
   "evoke external shell script when entering READ state"
@@ -897,10 +895,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         (progn
           (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
           (message cmd)
-          (shell-command cmd)
-          )
-      )
-    )
+          (shell-command cmd))))
   (when (equal org-last-state "READ")
     (message "try to remove READ state")
     (setq file (gwp/get-org-file-link-path))
@@ -908,11 +903,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         (progn
           (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
           (message cmd)
-          (shell-command cmd)
-          )
-      )
-    )
-  )
+          (shell-command cmd)))))
 (add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
 
 ;; show a sparse-tree in READ keyword

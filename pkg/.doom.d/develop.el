@@ -152,7 +152,6 @@ Requires cargo-check to be installed."
 (add-hook 'rust-mode-hook
           (lambda () (require 'smartparens-rust)))
 
-
 ;; 启用rust LSP: 用不起来
 ;; (after! rustic
 ;;   )

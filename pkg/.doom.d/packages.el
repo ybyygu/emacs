@@ -69,6 +69,8 @@
 
 (disable-packages! pangu-spacing)
 
+
+
 ;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)
 ;; vterm:1 ends here

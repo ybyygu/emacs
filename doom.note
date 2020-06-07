@@ -17,8 +17,20 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [21/29]
-** TODO [2020-05-16 Sat] doom更新出问题
+* Memo [23/30]
+** DONE [2020-05-27 Wed] rust-fmt出问题了
+- State "DONE"       from "TODO"       [2020-06-07 Sun 10:05]
+: +format/region-or-buffer
+禁用了事. 一般也仅用在rust-mode中
+
+快捷键:
+: SPC-m-f, SPC-m-C-f SPC-m-=
+
+[2020-06-14 Sun] 已修复, 但不正常
+- [[https://github.com/hlissner/doom-emacs/commit/991a205ebd439214f5e9f9d6bf68303f44221d48][Fix wrong-number-of-args error on +format/region-or-buffer · hlissner/doom-emacs@991a205]]
+
+** DONE [2020-05-16 Sat] doom更新出问题
+- State "DONE"       from "TODO"       [2020-05-27 Wed 08:49]
 - https://github.com/hlissner/doom-emacs/issues/2802#issuecomment-606654151
 
 ** DONE [2020-04-27 Mon] 好像org响应有些慢了
@@ -1881,7 +1893,6 @@ deadgrep与doom有冲突, 不能用了.
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 #+end_src
-
 *** 由于网络原因, 暂时过渡
 #+begin_src elisp
 ;; (package! org-bullets)
@@ -1960,7 +1971,9 @@ github支持, 减慢速度.
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
 #+end_src
-
+*** 测试
+#+begin_src elisp
+#+end_src
 
 * edit.el
 :PROPERTIES:
@@ -2794,6 +2807,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 (map! :map rust-mode-map
       :localleader
+      "f" #'rust-format-buffer
+      "C-f" #'rust-format-buffer
       "=" #'rust-format-buffer
       )
 #+end_src

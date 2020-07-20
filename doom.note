@@ -17,7 +17,13 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [23/30]
+* Memo [23/31]
+** TODO [2020-07-09 Thu] 试用org-roam
+- [[https://www.orgroam.com/manual/Getting-Started.html#Getting-Started][Getting Started (Org-roam User Manual)]]
+- [[https://www.reddit.com/r/emacs/comments/hltl69/org_roam_for_academics_demo/][Org Roam for Academics Demo : emacs]]
+- [[https://www.zmonster.me/2020/06/27/org-roam-introduction.html][使用 org-roam 构建自己的知识网络 · ZMonster's Blog]]
+
+
 ** DONE [2020-05-27 Wed] rust-fmt出问题了
 - State "DONE"       from "TODO"       [2020-06-07 Sun 10:05]
 : +format/region-or-buffer
@@ -1249,7 +1255,7 @@ gwp-merge:
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp                ; 自定义模块
-       org
+       (org +roam)
        magit
        (rust +lsp)
 
@@ -1971,8 +1977,10 @@ github支持, 减慢速度.
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
 #+end_src
+
 *** 测试
 #+begin_src elisp
+(package! org-roam-server)
 #+end_src
 
 * edit.el

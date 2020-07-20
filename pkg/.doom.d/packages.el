@@ -69,19 +69,19 @@
 
 (disable-packages! pangu-spacing)
 
+(package! org-roam-server)
 
-
-;; [[file:~/Workspace/Programming/emacs/doom.note::*vterm][vterm:1]]
+;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)
 ;; vterm:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*packages][packages:1]]
+;; [[file:../../doom.note::*packages][packages:1]]
 (package! cargo)
 (package! racer)
 ;; (package! smartparens-rust) ; 不确定需要
 ;; packages:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*pairs][pairs:1]]
+;; [[file:../../doom.note::*pairs][pairs:1]]
 (package! smartparens-org :ignore t)
 ;; pairs:1 ends here
 

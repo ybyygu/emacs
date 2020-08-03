@@ -5,6 +5,8 @@
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 
+[[zotero://select/items/1_X9KXBXA5][zotero-note]]
+
 * 配置参考
 - [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
@@ -17,7 +19,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [23/31]
+* Memo [24/31]
 ** TODO [2020-07-09 Thu] 试用org-roam
 - [[https://www.orgroam.com/manual/Getting-Started.html#Getting-Started][Getting Started (Org-roam User Manual)]]
 - [[https://www.reddit.com/r/emacs/comments/hltl69/org_roam_for_academics_demo/][Org Roam for Academics Demo : emacs]]
@@ -315,8 +317,10 @@ https://segmentfault.com/q/1010000000118837
 解决方案:
 - 修改expand-region.el, 删除掉 "(eval-after-load 'org)" 相关内容
 
-** TODO [2018-01-24 Wed] 修复org-capture, org-protocol中的几个bug
-- [ ] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
+** DONE [2018-01-24 Wed] 修复org-capture, org-protocol中的几个bug
+- State "DONE"       from "TODO"       [2020-08-01 Sat 16:20] \\
+  换用doom后没再发现
+- [X] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
 - [X] firefox中, org-protocol在某些网页中无法激活. 是firefox中的"content security policy"导的鬼. 在config里禁用即可. "security.csp.enable"
 
 ** DONE [2018-01-06 Sat] 解决odt导出latex公式分辨率太低的问题
@@ -539,6 +543,11 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 
 ** 打开buffer文件所在目录
 ~SPC-u SPC-f-o~
+* TODO Roam research
+我觉得可以基于zotero来实现类似roam的组织方式. 在zotero中可以打标签, 也可以设置
+related items. 同时zotero中的items也是平级组织, 统一命名, 使用zotero uri可以在
+org文档中自由引用跳转. 现在唯一欠缺的时像org-roam-server那样可以交互式的展现关联
+条目的network展现方式.
 
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
@@ -3042,6 +3051,18 @@ selected instead of creating a new buffer."
                     (message "%s!" path)
                     (org-open-file path arg))
                 (error "No attachments for item!"))))))))
+
+(defun gwp/insert-new-zotero-item (arg)
+  "Create a new zotero item (report)"
+  (interactive "P")
+
+  (let ((uri (zotero-create-new-note)))
+    (if uri
+        (progn
+          (message "%s!" uri)
+          (insert "[[" uri "][" "zotero-note" "]]"))
+      (error "create zotero item failed!"))))
+
 
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)

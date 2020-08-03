@@ -1,4 +1,4 @@
-;; [[file:~/Workspace/Programming/emacs/doom.note::*基本设置][基本设置:1]]
+;; [[file:../../doom.note::*基本设置][基本设置:1]]
 (setq org-blank-before-new-entry nil)
 (setq org-default-notes-file (concat org-directory "/life.note"))
 
@@ -21,7 +21,7 @@
 (setq org-catch-invisible-edits 'show-and-error)
 ;; 基本设置:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*按键行为][按键行为:1]]
+;; [[file:../../doom.note::*按键行为][按键行为:1]]
 (defun gwp/new-memo (arg)
   "Insert a new org-mode memo entry under heading at point."
 
@@ -45,7 +45,7 @@
       )
 ;; 按键行为:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*view][view:1]]
+;; [[file:../../doom.note::*view][view:1]]
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
 (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
@@ -64,7 +64,7 @@
   )
 ;; view:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*open-at-point][open-at-point:1]]
+;; [[file:../../doom.note::*open-at-point][open-at-point:1]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
 (defun gwp/org-open-at-point-dwim (&optional arg)
@@ -84,16 +84,16 @@
 )
 ;; open-at-point:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*latex preview][latex preview:1]]
+;; [[file:../../doom.note::*latex preview][latex preview:1]]
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 ;; latex preview:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*toml][toml:1]]
+;; [[file:../../doom.note::*toml][toml:1]]
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 ;; toml:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*jump][jump:1]]
+;; [[file:../../doom.note::*jump][jump:1]]
 ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
 (defun gwp/org-babel-tangle-jump-to-file ()
   "Jump to tangle file for the source block at point."
@@ -110,7 +110,7 @@
     (error "Cannot open tangle file %S" file)))))
 ;; jump:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:1]]
+;; [[file:../../doom.note::*tangle][tangle:1]]
 ;; tangle blocks for current file at point
 ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
 ;; call org-babel-tangle with C-u C-u
@@ -131,7 +131,7 @@
   )
 ;; tangle:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:2]]
+;; [[file:../../doom.note::*tangle][tangle:2]]
 (defun gwp/org-edit-save-and-tangle ()
   "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
   (interactive)
@@ -156,7 +156,7 @@
   )
 ;; tangle:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*tangle][tangle:3]]
+;; [[file:../../doom.note::*tangle][tangle:3]]
 (defun gwp/org-babel-tangle-no()
   (interactive)
   (if (eq 'src-block (org-element-type (org-element-at-point)))
@@ -166,7 +166,7 @@
   )
 ;; tangle:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
+;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
 (use-package! org-noter
   :config
   (setq org-noter-default-notes-file-names '("annotation.note"))
@@ -187,7 +187,7 @@
   )
 ;; org-noter/pdf-view:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*narrow][narrow:1]]
+;; [[file:../../doom.note::*narrow][narrow:1]]
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.
 The buffer is named after the subtree heading, with the filename
@@ -217,7 +217,7 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 ;; narrow:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero/link][zotero/link:1]]
+;; [[file:../../doom.note::*zotero/link][zotero/link:1]]
 ;; rust-modules
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
 (require 'zotero)
@@ -237,6 +237,18 @@ selected instead of creating a new buffer."
                     (org-open-file path arg))
                 (error "No attachments for item!"))))))))
 
+(defun gwp/insert-new-zotero-item (arg)
+  "Create a new zotero item (report)"
+  (interactive "P")
+
+  (let ((uri (zotero-create-new-note)))
+    (if uri
+        (progn
+          (message "%s!" uri)
+          (insert "[[" uri "][" "zotero-note" "]]"))
+      (error "create zotero item failed!"))))
+
+
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
 
@@ -245,7 +257,7 @@ selected instead of creating a new buffer."
   (browse-url url))
 ;; zotero/link:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*delete link file][delete link file:1]]
+;; [[file:../../doom.note::*delete link file][delete link file:1]]
 (defun gwp/org-delete-link-file (arg)
   "Delete the file that link points to."
   (interactive "P")
@@ -262,7 +274,7 @@ selected instead of creating a new buffer."
       )))
 ;; delete link file:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
+;; [[file:../../doom.note::*bindings][bindings:1]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("b" . "org-babel")
@@ -329,7 +341,7 @@ selected instead of creating a new buffer."
       )
 ;; bindings:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:2]]
+;; [[file:../../doom.note::*bindings][bindings:2]]
 (map! :map org-sidebar-tree-map
       :localleader
       :n "RET" #'org-sidebar-tree-jump
@@ -337,7 +349,7 @@ selected instead of creating a new buffer."
       )
 ;; bindings:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*enter-at-point][enter-at-point:1]]
+;; [[file:../../doom.note::*enter-at-point][enter-at-point:1]]
 (defun gwp/dwim-at-point ()
   "Do-what-I-mean at point.
 
@@ -436,7 +448,7 @@ selected instead of creating a new buffer."
       (_ (+org--refresh-inline-images-in-subtree)))))
 ;; enter-at-point:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*screenshot][screenshot:1]]
+;; [[file:../../doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
     "Annotate LINK with the time of download."
@@ -487,7 +499,7 @@ selected instead of creating a new buffer."
                       )))
 ;; screenshot:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*init][init:1]]
+;; [[file:../../doom.note::*init][init:1]]
 ;; 不缩进org-src块中的代码.
 ;; 注意: 不直接设置为"org-src-preserve-indentation t",
 ;; 只设置org-edit-src-content-indentation为0, 这样仅影响编辑的org, 不影响tangle
@@ -515,7 +527,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 ;; init:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*enter][enter:1]]
+;; [[file:../../doom.note::*enter][enter:1]]
 ;; 禁用代码着色, 影响速度
 ;; (setq org-src-fontify-natively nil)
 
@@ -533,7 +545,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 ;; enter:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*edit][edit:1]]
+;; [[file:../../doom.note::*edit][edit:1]]
 ;; 用于激活 localleader
 (add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
 
@@ -562,7 +574,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 ;; edit:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*template][template:1]]
+;; [[file:../../doom.note::*template][template:1]]
 (with-eval-after-load 'ob
     (setq org-structure-template-alist
           '(
@@ -581,7 +593,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
  )
 ;; template:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*auto time-stamp][auto time-stamp:1]]
+;; [[file:../../doom.note::*auto time-stamp][auto time-stamp:1]]
 (with-eval-after-load "ob-tangle"
   ;; update timestamps on tangled files
   (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
@@ -592,7 +604,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*zotero/export][zotero/export:1]]
+;; [[file:../../doom.note::*zotero/export][zotero/export:1]]
 (with-eval-after-load 'org-compat
   (defun gwp/org-zotero-export (path desc format)
     "Create the export version of zotero link specified by PATH and
@@ -661,7 +673,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; zotero/export:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*odt export][odt export:1]]
+;; [[file:../../doom.note::*odt export][odt export:1]]
 (use-package ox-odt
   :config
   (progn
@@ -675,7 +687,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; odt export:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*odt export][odt export:2]]
+;; [[file:../../doom.note::*odt export][odt export:2]]
 ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
 (defun gwp/clear-unwanted-space (text)
   "clear unwanted space when exporting org-mode to other formats"
@@ -712,7 +724,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 ;; odt export:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*capture & protocol][capture & protocol:1]]
+;; [[file:../../doom.note::*capture & protocol][capture & protocol:1]]
 (setq org-capture-templates
       '(
         ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
@@ -731,7 +743,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       )
 ;; capture & protocol:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*encryption][encryption:1]]
+;; [[file:../../doom.note::*encryption][encryption:1]]
 (require 'org-crypt)
 (require 'epa-file)
 (epa-file-enable)
@@ -745,15 +757,15 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (setq org-crypt-disable-auto-save nil)
 ;; encryption:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*setup][setup:1]]
+;; [[file:../../doom.note::*setup][setup:1]]
 (require 'org-attach)
 ;; setup:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:1]]
+;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:1]]
 (setq org-attach-store-link-p 'attached)
 ;; copy & paste attachments:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:2]]
+;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:2]]
 ;; 1. store the directory
 (defun gwp/org-attach-store (&optional force)
   "store org attachment directory of current enetry"
@@ -777,7 +789,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; copy & paste attachments:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*copy & paste attachments][copy & paste attachments:3]]
+;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:3]]
 ;; 2. move the stored directory to new location
 (defun gwp/org-attach-move (&optional force)
   "move stored attachments to current entry"
@@ -807,7 +819,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; copy & paste attachments:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
+;; [[file:../../doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
     (and (eq (org-element-type el) 'link)
@@ -827,7 +839,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))))
 ;; 从当前位置文件链接提取文件名.:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
+;; [[file:../../doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
 ;; (require 'org-download)
 
 (defun gwp/org-store-link-without-desc (file)
@@ -866,7 +878,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*refile][refile:1]]
+;; [[file:../../doom.note::*refile][refile:1]]
 (defun gwp/org-get-refile-targets ()
   "Return the list of files currently opened in emacs"
   (delq nil
@@ -920,7 +932,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                                 (vector 'return)))))
 ;; refile:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*agenda][agenda:1]]
+;; [[file:../../doom.note::*agenda][agenda:1]]
 (with-eval-after-load 'org-agenda
   ;; 2013-01-20: less is more
   ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
@@ -950,12 +962,12 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; agenda:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*agenda][agenda:2]]
+;; [[file:../../doom.note::*agenda][agenda:2]]
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
 ;; agenda:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*agenda][agenda:3]]
+;; [[file:../../doom.note::*agenda][agenda:3]]
 (with-eval-after-load 'org-agenda
   (setq org-agenda-custom-commands
                '(
@@ -1068,10 +1080,10 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; agenda:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
+;; [[file:../../doom.note::*misc][misc:1]]
 ;; (require 'org-man)
 ;; misc:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:2]]
+;; [[file:../../doom.note::*misc][misc:2]]
 (setq org-fontify-emphasized-text nil)
 ;; misc:2 ends here

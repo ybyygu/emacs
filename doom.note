@@ -25,6 +25,7 @@
 - [[https://www.reddit.com/r/emacs/comments/hltl69/org_roam_for_academics_demo/][Org Roam for Academics Demo : emacs]]
 - [[https://www.zmonster.me/2020/06/27/org-roam-introduction.html][使用 org-roam 构建自己的知识网络 · ZMonster's Blog]]
 
+[2020-08-07 Fri] 感觉用处不大
 
 ** DONE [2020-05-27 Wed] rust-fmt出问题了
 - State "DONE"       from "TODO"       [2020-06-07 Sun 10:05]
@@ -554,6 +555,10 @@ org文档中自由引用跳转. 现在唯一欠缺的时像org-roam-server那样
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
 - 以上按键在org代码块中也可直接执行, org-babel-do-key-sequence-in-edit-buffer
 
+* TODO Python scripting
+- 使用tmux开一终端, 打开ipython
+- 在emacs中写代码, 使用 +tmux/send-region来发送代码到ipython窗口
+ 
 * TODO Research Writing Workflow
 ** 基本流程
 - 使用org-mode来完成文字, 图片, 表格, 公式等内容.
@@ -1691,16 +1696,15 @@ deadgrep与doom有冲突, 不能用了.
 
 *** recent files
 #+begin_src emacs-lisp
-  (require 'recentf)
-  ;; the default is only 20
-  (setq recentf-max-saved-items 1000)
-  (add-to-list 'recentf-exclude "autosave$")
-  (add-to-list 'recentf-exclude "\.png$")
-  (add-to-list 'recentf-exclude "\.pdf$")
-  (add-to-list 'recentf-exclude "\.svg$")
-  (add-to-list 'recentf-exclude "\.odt$")
+(require 'recentf)
+;; the default is only 20
+(setq recentf-max-saved-items 1000)
+(add-to-list 'recentf-exclude "autosave$")
+(add-to-list 'recentf-exclude "\.png$")
+(add-to-list 'recentf-exclude "\.pdf$")
+(add-to-list 'recentf-exclude "\.svg$")
+(add-to-list 'recentf-exclude "\.odt$")
 #+end_src
-
 *** fcitx
 自动中英文切换, 解决vim模式下的一大痛点.
 #+BEGIN_SRC emacs-lisp
@@ -1850,6 +1854,12 @@ deadgrep与doom有冲突, 不能用了.
 
 (load! "bindings")
 #+end_src
+*** dired-sidebar
+#+begin_src elisp
+(use-package dired-sidebar
+  :commands (dired-sidebar-toggle-sidebar))
+#+end_src
+
 ** packages.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el :comments nil
@@ -1990,6 +2000,7 @@ github支持, 减慢速度.
 *** 测试
 #+begin_src elisp
 (package! org-roam-server)
+(package! dired-sidebar)
 #+end_src
 
 * edit.el
@@ -2519,105 +2530,7 @@ Requires cargo-check to be installed."
 
 ** dwim
 *** enter-at-point
-从doom中的org module中摘出来, 略作修改.
-#+begin_src emacs-lisp
-(defun gwp/dwim-at-point ()
-  "Do-what-I-mean at point.
-
-  If on a:
-  - checkbox list item or todo heading: toggle it.
-  - clock: update its time.
-  - headline: toggle latex fragments and inline images underneath.
-  - footnote reference: jump to the footnote's definition
-  - footnote definition: jump to the first reference of this footnote
-  - table-row or a TBLFM: recalculate the table's formulas
-  - table-cell: clear it and go into insert mode. If this is a formula cell,
-    recaluclate it instead.
-  - babel-call: 改为编辑代码, edit-special
-  - statistics-cookie: update it.
-  - latex fragment: toggle it.
-  - link: follow it
-  - otherwise, refresh all inline images in current tree."
-  (interactive)
-  (let* ((context (org-element-context))
-         (type (org-element-type context)))
-    ;; skip over unimportant contexts
-    (while (and context (memq type '(verbatim code bold italic underline strike-through subscript superscript)))
-      (setq context (org-element-property :parent context)
-            type (org-element-type context)))
-    (pcase type
-      (`headline
-       (cond ((and (fboundp 'toc-org-insert-toc)
-                   (member "TOC" (org-get-tags)))
-              (toc-org-insert-toc)
-              (message "Updating table of contents"))
-             ((string= "ARCHIVE" (car-safe (org-get-tags)))
-              (org-force-cycle-archived))
-             ((or (org-element-property :todo-type context)
-                  (org-element-property :scheduled context))
-              (org-todo
-               (if (eq (org-element-property :todo-type context) 'done)
-                   (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
-                       'todo)
-                 'done)))
-             (t
-              (+org--refresh-inline-images-in-subtree)
-              (org-clear-latex-preview)
-              (org-latex-preview '(4)))))
-
-      (`clock (org-clock-update-time-maybe))
-
-      (`footnote-reference
-       (org-footnote-goto-definition (org-element-property :label context)))
-
-      (`footnote-definition
-       (org-footnote-goto-previous-reference (org-element-property :label context)))
-
-      ((or `planning `timestamp)
-       (org-follow-timestamp-link))
-
-      ((or `table `table-row)
-       (if (org-at-TBLFM-p)
-           (org-table-calc-current-TBLFM)
-         (ignore-errors
-           (save-excursion
-             (goto-char (org-element-property :contents-begin context))
-             (org-call-with-arg 'org-table-recalculate (or arg t))))))
-
-      (`table-cell
-       (org-table-blank-field)
-       (org-table-recalculate)
-       (when (and (string-empty-p (string-trim (org-table-get-field)))
-                  (bound-and-true-p evil-local-mode))
-         (evil-change-state 'insert)))
-
-      (`babel-call
-       (org-babel-lob-execute-maybe))
-
-      (`statistics-cookie
-       (save-excursion (org-update-statistics-cookies nil)))
-
-      ((or `src-block `inline-src-block)
-       ;; 还是挺方便的
-       (org-edit-special))
-
-      ((or `latex-fragment `latex-environment)
-       (org-latex-preview))
-
-      (`link
-       (let* ((lineage (org-element-lineage context '(link) t))
-              (path (org-element-property :path lineage)))
-         (if (or (equal (org-element-property :type lineage) "img")
-                 (and path (image-type-from-file-name path)))
-             (+org--refresh-inline-images-in-subtree)
-           (org-open-at-point))))
-
-      ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
-       (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
-         (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
-
-      (_ (+org--refresh-inline-images-in-subtree)))))
-#+end_src
++org/dwim-at-point, 在org-src环境, 直接编辑代码, 而非执行
 
 *** open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
@@ -3721,7 +3634,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
-      :desc "Enter-dwim"                  "RET" #'gwp/dwim-at-point
+      :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
       )
 
 (map! :map org-mode-map

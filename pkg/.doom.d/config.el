@@ -1,4 +1,4 @@
-;; [[file:~/Workspace/Programming/emacs/doom.note::*orig][orig:1]]
+;; [[file:../../doom.note::*orig][orig:1]]
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -43,19 +43,19 @@
 ;; they are implemented.
 ;; orig:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*弹出窗口管理][弹出窗口管理:1]]
+;; [[file:../../doom.note::*弹出窗口管理][弹出窗口管理:1]]
 (map! :i "C-`" #'+popup/toggle)
 ;; 弹出窗口管理:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*line number][line number:1]]
+;; [[file:../../doom.note::*line number][line number:1]]
 (setq display-line-numbers-type nil)
 ;; line number:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*edit][edit:1]]
+;; [[file:../../doom.note::*edit][edit:1]]
 (load! "edit")
 ;; edit:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:1]]
+;; [[file:../../doom.note::*dired][dired:1]]
 (use-package dired
   :config
   ;; Set this variable to non-nil, Dired will try to guess a default
@@ -100,7 +100,7 @@
   )
 ;; dired:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*dired][dired:2]]
+;; [[file:../../doom.note::*dired][dired:2]]
 (use-package dired-x
   :config
   (progn
@@ -110,7 +110,7 @@
   )
 ;; dired:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*org][org:1]]
+;; [[file:../../doom.note::*org][org:1]]
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Notes/")
@@ -122,7 +122,7 @@
 (after! org (load! "org"))
 ;; org:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*open-file-externally][open-file-externally:1]]
+;; [[file:../../doom.note::*open-file-externally][open-file-externally:1]]
 (defun spacemacs/open-in-external-app (file-path)
   "Open `file-path' in external application."
   (let ((process-connection-type nil))
@@ -151,7 +151,7 @@ If two universal prefix arguments are used, then prompt for command to use."
         (message "No file associated to this buffer.")))))
 ;; open-file-externally:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*open in terminal][open in terminal:1]]
+;; [[file:../../doom.note::*open in terminal][open in terminal:1]]
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
@@ -171,7 +171,7 @@ If two universal prefix arguments are used, then prompt for command to use."
   )
 ;; open in terminal:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*ripgrep][ripgrep:1]]
+;; [[file:../../doom.note::*ripgrep][ripgrep:1]]
 ;;;###autoload
 (defun gwp/search-all-notes (arg)
   "search all notes in ~/.cache/notes"
@@ -183,11 +183,11 @@ If two universal prefix arguments are used, then prompt for command to use."
   )
 ;; ripgrep:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*develop][develop:1]]
+;; [[file:../../doom.note::*develop][develop:1]]
 (load! "develop")
 ;; develop:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*recent files][recent files:1]]
+;; [[file:../../doom.note::*recent files][recent files:1]]
 (require 'recentf)
 ;; the default is only 20
 (setq recentf-max-saved-items 1000)
@@ -198,7 +198,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (add-to-list 'recentf-exclude "\.odt$")
 ;; recent files:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*fcitx][fcitx:1]]
+;; [[file:../../doom.note::*fcitx][fcitx:1]]
 (use-package! fcitx
   :after evil
   :config
@@ -210,11 +210,11 @@ If two universal prefix arguments are used, then prompt for command to use."
     ))
 ;; fcitx:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*workspace][workspace:1]]
+;; [[file:../../doom.note::*workspace][workspace:1]]
 (setq persp-auto-save-opt 0)
 ;; workspace:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*chinese fonts setup][chinese fonts setup:1]]
+;; [[file:../../doom.note::*chinese fonts setup][chinese fonts setup:1]]
 ;; (use-package! cnfonts
 ;;   :config
 ;;   (progn
@@ -260,7 +260,7 @@ If two universal prefix arguments are used, then prompt for command to use."
   )
 ;; chinese fonts setup:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*theme][theme:1]]
+;; [[file:../../doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -288,7 +288,7 @@ If two universal prefix arguments are used, then prompt for command to use."
   )
 ;; theme:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
+;; [[file:../../doom.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
       '((:eval (+workspace-current-name)) ;
@@ -298,14 +298,14 @@ If two universal prefix arguments are used, then prompt for command to use."
         ))
 ;; 修改 frame 标题 方便 gnome-shell 桌面切换:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*放大当前窗口][放大当前窗口:1]]
+;; [[file:../../doom.note::*放大当前窗口][放大当前窗口:1]]
 (use-package! golden-ratio
   :config
   (map! :map evil-window-map
         "z" #'golden-ratio))
 ;; 放大当前窗口:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*window切换][window切换:1]]
+;; [[file:../../doom.note::*window切换][window切换:1]]
 (use-package! avy
               :config
               (setq avy-all-windows t)
@@ -314,22 +314,22 @@ If two universal prefix arguments are used, then prompt for command to use."
 (global-set-key [remap evil-window-next] #'ace-window)
 ;; window切换:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:1]]
+;; [[file:../../doom.note::*窗口大小调整][窗口大小调整:1]]
 (map! :nvi
       [C-M-mouse-4] #'evil-window-increase-width
       [C-M-mouse-5] #'evil-window-decrease-width
       )
 ;; 窗口大小调整:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:2]]
+;; [[file:../../doom.note::*窗口大小调整][窗口大小调整:2]]
 (setq split-width-threshold 200)        ; default is 160
 ;; 窗口大小调整:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*窗口大小调整][窗口大小调整:3]]
+;; [[file:../../doom.note::*窗口大小调整][窗口大小调整:3]]
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; 窗口大小调整:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*misc][misc:1]]
+;; [[file:../../doom.note::*misc][misc:1]]
 ;; View images inside Emacs
 (auto-image-file-mode t)
 
@@ -337,7 +337,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (setq-default line-spacing 4)
 ;; misc:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:1]]
+;; [[file:../../doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)
 ;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
 (map! :nvim "C-e" nil)
@@ -363,7 +363,7 @@ If two universal prefix arguments are used, then prompt for command to use."
         )
 ;; bindings:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*bindings][bindings:2]]
+;; [[file:../../doom.note::*bindings][bindings:2]]
 ;; Make M-x harder to miss
 (define-key! 'override
   "M-x" #'execute-extended-command
@@ -390,3 +390,8 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 (load! "bindings")
 ;; bindings:2 ends here
+
+;; [[file:../../doom.note::*dired-sidebar][dired-sidebar:1]]
+(use-package dired-sidebar
+  :commands (dired-sidebar-toggle-sidebar))
+;; dired-sidebar:1 ends here

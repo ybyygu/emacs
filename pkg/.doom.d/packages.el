@@ -70,6 +70,7 @@
 (disable-packages! pangu-spacing)
 
 (package! org-roam-server)
+(package! dired-sidebar)
 
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)

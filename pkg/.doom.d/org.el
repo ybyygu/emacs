@@ -89,81 +89,81 @@
 ;; latex preview:1 ends here
 
 ;; [[file:../../doom.note::*toml][toml:1]]
-;; Add convenience lang alias for markdown blocks
-(add-to-list 'org-src-lang-modes '("toml" . conf-toml))
+  ;; Add convenience lang alias for markdown blocks
+  (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 ;; toml:1 ends here
 
 ;; [[file:../../doom.note::*jump][jump:1]]
-;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
-(defun gwp/org-babel-tangle-jump-to-file ()
-  "Jump to tangle file for the source block at point."
-  (interactive)
-  (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
-    (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
-                         (setq file filename)))
-          ((symbol-function 'delete-file) #'ignore))
-      (org-babel-tangle '(4)))
-    (when file
-      (setq file (expand-file-name file))
-      (if (file-readable-p file)
-      (find-file file)
-    (error "Cannot open tangle file %S" file)))))
+  ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
+  (defun gwp/org-babel-tangle-jump-to-file ()
+    "Jump to tangle file for the source block at point."
+    (interactive)
+    (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
+      (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
+                           (setq file filename)))
+            ((symbol-function 'delete-file) #'ignore))
+        (org-babel-tangle '(4)))
+      (when file
+        (setq file (expand-file-name file))
+        (if (file-readable-p file)
+        (find-file file)
+      (error "Cannot open tangle file %S" file)))))
 ;; jump:1 ends here
 
 ;; [[file:../../doom.note::*tangle][tangle:1]]
-;; tangle blocks for current file at point
-;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
-;; call org-babel-tangle with C-u C-u
-(defun gwp/org-babel-tangle-blocks()
-  (interactive)
-  (let ((current-prefix-arg '(16)))
-    (call-interactively 'org-babel-tangle)
+  ;; tangle blocks for current file at point
+  ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
+  ;; call org-babel-tangle with C-u C-u
+  (defun gwp/org-babel-tangle-blocks()
+    (interactive)
+    (let ((current-prefix-arg '(16)))
+      (call-interactively 'org-babel-tangle)
+      )
     )
-  )
 
-;; narrow to subtree before calling org-babel-tangle
-(defun gwp/org-tangle-subtree()
-  "tange src blocks in current subtree"
-  (interactive)
-  (org-narrow-to-subtree)
-  (org-babel-tangle)
-  (widen)
-  )
+  ;; narrow to subtree before calling org-babel-tangle
+  (defun gwp/org-tangle-subtree()
+    "tange src blocks in current subtree"
+    (interactive)
+    (org-narrow-to-subtree)
+    (org-babel-tangle)
+    (widen)
+    )
 ;; tangle:1 ends here
 
 ;; [[file:../../doom.note::*tangle][tangle:2]]
-(defun gwp/org-edit-save-and-tangle ()
-  "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
-  (interactive)
-  (when (buffer-modified-p) (org-edit-src-save))
-  (org-edit-src-exit)
-  (call-interactively 'gwp/org-babel-tangle-blocks)
-  (org-edit-src-code)
-  )
+  (defun gwp/org-edit-save-and-tangle ()
+    "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+    (interactive)
+    (when (buffer-modified-p) (org-edit-src-save))
+    (org-edit-src-exit)
+    (call-interactively 'gwp/org-babel-tangle-blocks)
+    (org-edit-src-code)
+    )
 
-(defun gwp/org-babel-tangle-dwim()
-  "tangle current file at point whenever in a sub-editing buffer or not"
-  (interactive)
-  (if (org-src-edit-buffer-p)
-      (save-excursion
-        (call-interactively 'gwp/org-edit-save-and-tangle)
+  (defun gwp/org-babel-tangle-dwim()
+    "tangle current file at point whenever in a sub-editing buffer or not"
+    (interactive)
+    (if (org-src-edit-buffer-p)
+        (save-excursion
+          (call-interactively 'gwp/org-edit-save-and-tangle)
+          )
+      (if (eq 'src-block (org-element-type (org-element-at-point)))
+          (call-interactively 'gwp/org-babel-tangle-blocks)
+        (message "not in source block")
         )
-    (if (eq 'src-block (org-element-type (org-element-at-point)))
-        (call-interactively 'gwp/org-babel-tangle-blocks)
-      (message "not in source block")
       )
     )
-  )
 ;; tangle:2 ends here
 
 ;; [[file:../../doom.note::*tangle][tangle:3]]
-(defun gwp/org-babel-tangle-no()
-  (interactive)
-  (if (eq 'src-block (org-element-type (org-element-at-point)))
-    (org-babel-insert-header-arg "tangle" "no")
-    (org-set-property "header-args" ":tangle no")
+  (defun gwp/org-babel-tangle-no()
+    (interactive)
+    (if (eq 'src-block (org-element-type (org-element-at-point)))
+      (org-babel-insert-header-arg "tangle" "no")
+      (org-set-property "header-args" ":tangle no")
+      )
     )
-  )
 ;; tangle:3 ends here
 
 ;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
@@ -312,7 +312,7 @@ selected instead of creating a new buffer."
       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
       :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
       :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
-      :desc "Enter-dwim"                  "RET" #'gwp/dwim-at-point
+      :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
       )
 
 (map! :map org-mode-map
@@ -348,105 +348,6 @@ selected instead of creating a new buffer."
       :n [return] #'org-sidebar-tree-jump
       )
 ;; bindings:2 ends here
-
-;; [[file:../../doom.note::*enter-at-point][enter-at-point:1]]
-(defun gwp/dwim-at-point ()
-  "Do-what-I-mean at point.
-
-  If on a:
-  - checkbox list item or todo heading: toggle it.
-  - clock: update its time.
-  - headline: toggle latex fragments and inline images underneath.
-  - footnote reference: jump to the footnote's definition
-  - footnote definition: jump to the first reference of this footnote
-  - table-row or a TBLFM: recalculate the table's formulas
-  - table-cell: clear it and go into insert mode. If this is a formula cell,
-    recaluclate it instead.
-  - babel-call: 改为编辑代码, edit-special
-  - statistics-cookie: update it.
-  - latex fragment: toggle it.
-  - link: follow it
-  - otherwise, refresh all inline images in current tree."
-  (interactive)
-  (let* ((context (org-element-context))
-         (type (org-element-type context)))
-    ;; skip over unimportant contexts
-    (while (and context (memq type '(verbatim code bold italic underline strike-through subscript superscript)))
-      (setq context (org-element-property :parent context)
-            type (org-element-type context)))
-    (pcase type
-      (`headline
-       (cond ((and (fboundp 'toc-org-insert-toc)
-                   (member "TOC" (org-get-tags)))
-              (toc-org-insert-toc)
-              (message "Updating table of contents"))
-             ((string= "ARCHIVE" (car-safe (org-get-tags)))
-              (org-force-cycle-archived))
-             ((or (org-element-property :todo-type context)
-                  (org-element-property :scheduled context))
-              (org-todo
-               (if (eq (org-element-property :todo-type context) 'done)
-                   (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
-                       'todo)
-                 'done)))
-             (t
-              (+org--refresh-inline-images-in-subtree)
-              (org-clear-latex-preview)
-              (org-latex-preview '(4)))))
-
-      (`clock (org-clock-update-time-maybe))
-
-      (`footnote-reference
-       (org-footnote-goto-definition (org-element-property :label context)))
-
-      (`footnote-definition
-       (org-footnote-goto-previous-reference (org-element-property :label context)))
-
-      ((or `planning `timestamp)
-       (org-follow-timestamp-link))
-
-      ((or `table `table-row)
-       (if (org-at-TBLFM-p)
-           (org-table-calc-current-TBLFM)
-         (ignore-errors
-           (save-excursion
-             (goto-char (org-element-property :contents-begin context))
-             (org-call-with-arg 'org-table-recalculate (or arg t))))))
-
-      (`table-cell
-       (org-table-blank-field)
-       (org-table-recalculate)
-       (when (and (string-empty-p (string-trim (org-table-get-field)))
-                  (bound-and-true-p evil-local-mode))
-         (evil-change-state 'insert)))
-
-      (`babel-call
-       (org-babel-lob-execute-maybe))
-
-      (`statistics-cookie
-       (save-excursion (org-update-statistics-cookies nil)))
-
-      ((or `src-block `inline-src-block)
-       ;; 还是挺方便的
-       (org-edit-special))
-
-      ((or `latex-fragment `latex-environment)
-       (org-latex-preview))
-
-      (`link
-       (let* ((lineage (org-element-lineage context '(link) t))
-              (path (org-element-property :path lineage)))
-         (if (or (equal (org-element-property :type lineage) "img")
-                 (and path (image-type-from-file-name path)))
-             (+org--refresh-inline-images-in-subtree)
-           (org-open-at-point))))
-
-      ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
-       (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
-         (org-toggle-checkbox (if (equal match "[ ]") '(16)))))
-
-      (_ (+org--refresh-inline-images-in-subtree)))))
-;; enter-at-point:1 ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
@@ -575,33 +476,33 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 ;; edit:1 ends here
 
 ;; [[file:../../doom.note::*template][template:1]]
-(with-eval-after-load 'ob
-    (setq org-structure-template-alist
-          '(
-            ("py" . "src python :results output")
-            ("rs" . "src rust")
-            ("el" . "src emacs-lisp")
-            ("sh" . "src sh")
-          ))
+  (with-eval-after-load 'ob
+      (setq org-structure-template-alist
+            '(
+              ("py" . "src python :results output")
+              ("rs" . "src rust")
+              ("el" . "src emacs-lisp")
+              ("sh" . "src sh")
+            ))
 
-  (defun gwp/org-babel-edit-structure-in-place (arg)
-    "Insert source strcture and edit the source"
-    (interactive "P")
-    (call-interactively 'org-insert-structure-template)
-    (call-interactively 'org-edit-src-code)
-    )
- )
+    (defun gwp/org-babel-edit-structure-in-place (arg)
+      "Insert source strcture and edit the source"
+      (interactive "P")
+      (call-interactively 'org-insert-structure-template)
+      (call-interactively 'org-edit-src-code)
+      )
+   )
 ;; template:1 ends here
 
 ;; [[file:../../doom.note::*auto time-stamp][auto time-stamp:1]]
-(with-eval-after-load "ob-tangle"
-  ;; update timestamps on tangled files
-  (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
-  (defun org-babel-post-tangle-hook--time-stamp ()
-    "Update timestamps on tangled files."
-    (time-stamp)
-    (save-buffer))
-  (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
+  (with-eval-after-load "ob-tangle"
+    ;; update timestamps on tangled files
+    (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
+    (defun org-babel-post-tangle-hook--time-stamp ()
+      "Update timestamps on tangled files."
+      (time-stamp)
+      (save-buffer))
+    (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
 ;; [[file:../../doom.note::*zotero/export][zotero/export:1]]
@@ -725,22 +626,22 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; odt export:2 ends here
 
 ;; [[file:../../doom.note::*capture & protocol][capture & protocol:1]]
-(setq org-capture-templates
-      '(
-        ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
-        ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
-        ("n" "Note" entry (file "~/Notes/refile.note")
-         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
-        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-         "* TODO %^T\n  %i" :prepend t)
-        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
-         "* %u %?\n  %i\n" :prepend t)
-        ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
-         "* %u %? %x\n  %i\n" :prepend t)
-        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
-         "* %u %?\n  %i\n" :prepend t)
+  (setq org-capture-templates
+        '(
+          ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
+          ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
+          ("n" "Note" entry (file "~/Notes/refile.note")
+           "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
+          ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+           "* TODO %^T\n  %i" :prepend t)
+          ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+           "* %u %?\n  %i\n" :prepend t)
+          ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
+           "* %u %? %x\n  %i\n" :prepend t)
+          ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+           "* %u %?\n  %i\n" :prepend t)
+          )
         )
-      )
 ;; capture & protocol:1 ends here
 
 ;; [[file:../../doom.note::*encryption][encryption:1]]
@@ -758,65 +659,65 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; encryption:1 ends here
 
 ;; [[file:../../doom.note::*setup][setup:1]]
-(require 'org-attach)
+  (require 'org-attach)
 ;; setup:1 ends here
 
 ;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:1]]
-(setq org-attach-store-link-p 'attached)
+  (setq org-attach-store-link-p 'attached)
 ;; copy & paste attachments:1 ends here
 
 ;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:2]]
-;; 1. store the directory
-(defun gwp/org-attach-store (&optional force)
-  "store org attachment directory of current enetry"
-  (interactive "P")
-  ;; make a temporary symlink to store the attachment path
-  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
-  (let ((attach-dir (org-attach-dir)))
-    (when attach-dir
-      (progn
-        ;; remove existing directory
-        (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
-        ;; remove existing file and symlink
-        (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
-        ;; remove broken symlink
-        (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
-        (make-symbolic-link attach-dir file-attach-tmp)
-        (message (format "stored to: %s" file-attach-tmp))
+  ;; 1. store the directory
+  (defun gwp/org-attach-store (&optional force)
+    "store org attachment directory of current enetry"
+    (interactive "P")
+    ;; make a temporary symlink to store the attachment path
+    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+    (let ((attach-dir (org-attach-dir)))
+      (when attach-dir
+        (progn
+          ;; remove existing directory
+          (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
+          ;; remove existing file and symlink
+          (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+          ;; remove broken symlink
+          (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
+          (make-symbolic-link attach-dir file-attach-tmp)
+          (message (format "stored to: %s" file-attach-tmp))
+          )
         )
       )
     )
-  )
 ;; copy & paste attachments:2 ends here
 
 ;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:3]]
-;; 2. move the stored directory to new location
-(defun gwp/org-attach-move (&optional force)
-  "move stored attachments to current entry"
-  (interactive "P")
-  ;; ~/.emacs.d/.cache/.gwp-attach-tmp
-  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+  ;; 2. move the stored directory to new location
+  (defun gwp/org-attach-move (&optional force)
+    "move stored attachments to current entry"
+    (interactive "P")
+    ;; ~/.emacs.d/.cache/.gwp-attach-tmp
+    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
 
-  (if (file-exists-p file-attach-tmp)
-      ;; create attachment directory if not exists using org-attach-dir function
-      (let ((attach-dir (org-attach-dir t)))
-        (progn
-          ;; read old attach directory from previous stored symlink
-          (setq attach-dir-old (file-chase-links file-attach-tmp))
-          ;; sanity check
-          (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
-              (progn
-                (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
-                ;; remove stale tmp-link
-                (delete-file file-attach-tmp)
-                )
-            (message "cancelled")
+    (if (file-exists-p file-attach-tmp)
+        ;; create attachment directory if not exists using org-attach-dir function
+        (let ((attach-dir (org-attach-dir t)))
+          (progn
+            ;; read old attach directory from previous stored symlink
+            (setq attach-dir-old (file-chase-links file-attach-tmp))
+            ;; sanity check
+            (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
+                (progn
+                  (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
+                  ;; remove stale tmp-link
+                  (delete-file file-attach-tmp)
+                  )
+              (message "cancelled")
+              )
             )
           )
-        )
-    (message (format "no stored symbolic link found: %s" file-attach-tmp))
+      (message (format "no stored symbolic link found: %s" file-attach-tmp))
+      )
     )
-  )
 ;; copy & paste attachments:3 ends here
 
 ;; [[file:../../doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
@@ -840,42 +741,42 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; 从当前位置文件链接提取文件名.:1 ends here
 
 ;; [[file:../../doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
-;; (require 'org-download)
+  ;; (require 'org-download)
 
-(defun gwp/org-store-link-without-desc (file)
-  "store file link without the description part -- a tweak to make odt image exporting correct."
-  (setq org-stored-links
-        (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
-              org-stored-links)
+  (defun gwp/org-store-link-without-desc (file)
+    "store file link without the description part -- a tweak to make odt image exporting correct."
+    (setq org-stored-links
+          (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
+                org-stored-links)
+          )
+    )
+
+  (defun gwp/org-take-as-local-attachment ()
+    "move file link at point as local attachment"
+    (interactive)
+    (let ((file (gwp/org-file-path-at-point)))
+      (if file
+          (progn
+            ;; 1. store the file using copy
+            ;; or we can use the mv method: (org-attach-attach file nil 'mv)
+            ;; do not store file link since it will corrupt odt image exporting
+            (let ((org-attach-store-link-p nil))
+              (org-attach-attach file))
+            ;; 2. remove the old
+            (call-interactively 'org-download-delete)
+            ;; 3. insert the new
+            ;; use file name as the default caption
+            (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
+            (insert "\n")
+            (gwp/org-store-link-without-desc file)
+            (call-interactively 'org-insert-last-stored-link)
+            ;; refresh the image if possbile
+            (org-display-inline-images)
+           )
+        (user-error "Point is not on a link")
         )
-  )
-
-(defun gwp/org-take-as-local-attachment ()
-  "move file link at point as local attachment"
-  (interactive)
-  (let ((file (gwp/org-file-path-at-point)))
-    (if file
-        (progn
-          ;; 1. store the file using copy
-          ;; or we can use the mv method: (org-attach-attach file nil 'mv)
-          ;; do not store file link since it will corrupt odt image exporting
-          (let ((org-attach-store-link-p nil))
-            (org-attach-attach file))
-          ;; 2. remove the old
-          (call-interactively 'org-download-delete)
-          ;; 3. insert the new
-          ;; use file name as the default caption
-          (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
-          (insert "\n")
-          (gwp/org-store-link-without-desc file)
-          (call-interactively 'org-insert-last-stored-link)
-          ;; refresh the image if possbile
-          (org-display-inline-images)
-         )
-      (user-error "Point is not on a link")
       )
     )
-  )
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
 ;; [[file:../../doom.note::*refile][refile:1]]
@@ -933,157 +834,157 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; refile:1 ends here
 
 ;; [[file:../../doom.note::*agenda][agenda:1]]
-(with-eval-after-load 'org-agenda
-  ;; 2013-01-20: less is more
-  ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
-  (setq org-agenda-files "~/Notes/.agenda_files")
+  (with-eval-after-load 'org-agenda
+    ;; 2013-01-20: less is more
+    ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
+    (setq org-agenda-files "~/Notes/.agenda_files")
 
-  ;; the default is todo-start
-  (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
-  (setq org-icalendar-alarm-time 5)
+    ;; the default is todo-start
+    (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
+    (setq org-icalendar-alarm-time 5)
 
-  ;; Show all future entries for repeating tasks
-  (setq org-agenda-repeating-timestamp-show-all t)
+    ;; Show all future entries for repeating tasks
+    (setq org-agenda-repeating-timestamp-show-all t)
 
-  ;; do not show agenda dates if they are empty
-  (setq org-agenda-show-all-dates nil)
+    ;; do not show agenda dates if they are empty
+    (setq org-agenda-show-all-dates nil)
 
-  ;; Sorting order for tasks on the agenda
-  (setq org-agenda-sorting-strategy
-        (quote ((agenda time-up priority-down category-up)
-                (todo priority-down)
-                (tags priority-down))))
+    ;; Sorting order for tasks on the agenda
+    (setq org-agenda-sorting-strategy
+          (quote ((agenda time-up priority-down category-up)
+                  (todo priority-down)
+                  (tags priority-down))))
 
-  ;; Start the weekly agenda today
-  (setq org-agenda-start-on-weekday nil)
+    ;; Start the weekly agenda today
+    (setq org-agenda-start-on-weekday nil)
 
-  ;; do not include todo items
-  (setq org-agenda-include-all-todo nil)
-  )
+    ;; do not include todo items
+    (setq org-agenda-include-all-todo nil)
+    )
 ;; agenda:1 ends here
 
 ;; [[file:../../doom.note::*agenda][agenda:2]]
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
 ;; agenda:2 ends here
 
 ;; [[file:../../doom.note::*agenda][agenda:3]]
-(with-eval-after-load 'org-agenda
-  (setq org-agenda-custom-commands
-               '(
-                 ("g" . "GTD contexts") ; description for "g" prefix
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-custom-commands
+                 '(
+                   ("g" . "GTD contexts") ; description for "g" prefix
+                   )
                  )
-               )
-  ;; project overview
-  (add-to-list 'org-agenda-custom-commands
-               '("gp" "Project"
-                 (
-                  (tags "Project+Action+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "Project\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         )
-                        )
-                  (tags "Action+Study+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "Topics\n------------------")
-                         (org-agenda-files '("~/Notes/research.note"))
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-                  (tags "Action+TODO=\"TODO\""
-                        (
-                         (org-agenda-overriding-header "生活琐事\n------------------")
-                         (org-agenda-files '("~/Notes/life.note"))
-                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-agenda-max-entries 5)
-                         )
-                        )
-                  ;; (tags "Computer+TODO=\"TODO\""
-                  ;;       (
-                  ;;        (org-agenda-overriding-header "电脑调优\n------------------")
-                  ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                  ;;        (org-agenda-max-entries 5)
-                  ;;        )
-                  ;;       )
-                  )
-                 ;; options set here apply to the entire block
-                 (
-                  (org-tags-match-list-sublevels nil)
-                  (org-agenda-prefix-format "%-20c ")
-                  (org-agenda-todo-keyword-format "")
-                  (org-agenda-remove-tags t)
-                  (org-agenda-compact-blocks t)
-                  )
-                 )
-               )
-
-  (add-to-list 'org-agenda-custom-commands
-               '("gr" "Reading"
-                 (
-                  (tags-todo "Reading|Read"
-                             (
-                              (org-agenda-overriding-header "待读列表\n------------------")
-                              (org-agenda-sorting-strategy '(category-keep priority-down))
-                              (org-agenda-remove-tags t)
-                              (org-agenda-compact-blocks t)
-                              )
-                             )
-                  (tags "REFILE"
-                        (
-                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
-                         (org-tags-match-list-sublevels nil)
-                         )
-                        )
-                  )
-                 ;; options set here apply to the entire block
-                 ((org-agenda-compact-blocks t))
-                 )
-               )
-
-  (add-to-list 'org-agenda-custom-commands
-               '("gt" "Tasks"
-                 (
-                  (agenda ""
+    ;; project overview
+    (add-to-list 'org-agenda-custom-commands
+                 '("gp" "Project"
+                   (
+                    (tags "Project+Action+TODO=\"TODO\""
                           (
-                           ;; (org-agenda-entry-types '(:deadline :scheduled))
-                           (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
-                           (org-agenda-include-diary nil)
-                           (org-agenda-overriding-header "Agenda\n------------------")
+                           (org-agenda-overriding-header "Project\n------------------")
+                           (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
                            )
                           )
-                  ;; (tags "ASAP+TODO=\"TODO\""
-                  (tags-todo "ASAP"
-                        (
-                         (org-agenda-entry-types '(:timestamp))
-                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
-                         (org-agenda-overriding-header "\nASAP\n------------------")
-                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                         (org-agenda-max-entries 20)
-                         (org-agenda-prefix-format "%-12c ")
-                         (org-agenda-compact-blocks t)
-                         )
-                        )
-                  )
-                 ;; options set here apply to the entire block
-                 (
-                  (org-tags-match-list-sublevels nil)
-                  ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
-                  (org-agenda-todo-keyword-format "")
-                  (org-agenda-remove-tags t)
-                  )
-                 ;; agenda view exported with: Ctrl-C a e
-                 ("~/Notes/agenda.html" "~/Notes/agenda.txt")
+                    (tags "Action+Study+TODO=\"TODO\""
+                          (
+                           (org-agenda-overriding-header "Topics\n------------------")
+                           (org-agenda-files '("~/Notes/research.note"))
+                           (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                           (org-agenda-max-entries 5)
+                           )
+                          )
+                    (tags "Action+TODO=\"TODO\""
+                          (
+                           (org-agenda-overriding-header "生活琐事\n------------------")
+                           (org-agenda-files '("~/Notes/life.note"))
+                           (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                           (org-agenda-max-entries 5)
+                           )
+                          )
+                    ;; (tags "Computer+TODO=\"TODO\""
+                    ;;       (
+                    ;;        (org-agenda-overriding-header "电脑调优\n------------------")
+                    ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                    ;;        (org-agenda-max-entries 5)
+                    ;;        )
+                    ;;       )
+                    )
+                   ;; options set here apply to the entire block
+                   (
+                    (org-tags-match-list-sublevels nil)
+                    (org-agenda-prefix-format "%-20c ")
+                    (org-agenda-todo-keyword-format "")
+                    (org-agenda-remove-tags t)
+                    (org-agenda-compact-blocks t)
+                    )
+                   )
                  )
-               )
-  )
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("gr" "Reading"
+                   (
+                    (tags-todo "Reading|Read"
+                               (
+                                (org-agenda-overriding-header "待读列表\n------------------")
+                                (org-agenda-sorting-strategy '(category-keep priority-down))
+                                (org-agenda-remove-tags t)
+                                (org-agenda-compact-blocks t)
+                                )
+                               )
+                    (tags "REFILE"
+                          (
+                           (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                           (org-tags-match-list-sublevels nil)
+                           )
+                          )
+                    )
+                   ;; options set here apply to the entire block
+                   ((org-agenda-compact-blocks t))
+                   )
+                 )
+
+    (add-to-list 'org-agenda-custom-commands
+                 '("gt" "Tasks"
+                   (
+                    (agenda ""
+                            (
+                             ;; (org-agenda-entry-types '(:deadline :scheduled))
+                             (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
+                             (org-agenda-include-diary nil)
+                             (org-agenda-overriding-header "Agenda\n------------------")
+                             )
+                            )
+                    ;; (tags "ASAP+TODO=\"TODO\""
+                    (tags-todo "ASAP"
+                          (
+                           (org-agenda-entry-types '(:timestamp))
+                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                           (org-agenda-overriding-header "\nASAP\n------------------")
+                           (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                           (org-agenda-max-entries 20)
+                           (org-agenda-prefix-format "%-12c ")
+                           (org-agenda-compact-blocks t)
+                           )
+                          )
+                    )
+                   ;; options set here apply to the entire block
+                   (
+                    (org-tags-match-list-sublevels nil)
+                    ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
+                    (org-agenda-todo-keyword-format "")
+                    (org-agenda-remove-tags t)
+                    )
+                   ;; agenda view exported with: Ctrl-C a e
+                   ("~/Notes/agenda.html" "~/Notes/agenda.txt")
+                   )
+                 )
+    )
 ;; agenda:3 ends here
 
 ;; [[file:../../doom.note::*misc][misc:1]]
-;; (require 'org-man)
+  ;; (require 'org-man)
 ;; misc:1 ends here
 
 ;; [[file:../../doom.note::*misc][misc:2]]
-(setq org-fontify-emphasized-text nil)
+  (setq org-fontify-emphasized-text nil)
 ;; misc:2 ends here

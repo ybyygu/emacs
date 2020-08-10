@@ -19,8 +19,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [24/31]
-** TODO [2020-07-09 Thu] 试用org-roam
+* Memo [25/31]
+** DONE [2020-07-09 Thu] 试用org-roam
+- State "DONE"       from "TODO"       [2020-08-07 Fri 20:37]
 - [[https://www.orgroam.com/manual/Getting-Started.html#Getting-Started][Getting Started (Org-roam User Manual)]]
 - [[https://www.reddit.com/r/emacs/comments/hltl69/org_roam_for_academics_demo/][Org Roam for Academics Demo : emacs]]
 - [[https://www.zmonster.me/2020/06/27/org-roam-introduction.html][使用 org-roam 构建自己的知识网络 · ZMonster's Blog]]
@@ -2001,6 +2002,7 @@ github支持, 减慢速度.
 #+begin_src elisp
 (package! org-roam-server)
 (package! dired-sidebar)
+(package! dockerfile-mode)
 #+end_src
 
 * edit.el
@@ -2525,6 +2527,7 @@ Requires cargo-check to be installed."
   :init
   ;; » ◇ ▶
   (setq org-superstar-headline-bullets-list '("◉" "○" "»" "»"))
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   )
 #+end_src
 

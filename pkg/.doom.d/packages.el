@@ -71,6 +71,7 @@
 
 (package! org-roam-server)
 (package! dired-sidebar)
+(package! dockerfile-mode)
 
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)

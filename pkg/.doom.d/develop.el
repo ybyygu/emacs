@@ -1,4 +1,4 @@
-;; [[file:~/Workspace/Programming/emacs/doom.note::*magit][magit:1]]
+;; [[file:../../doom.note::*magit][magit:1]]
 (after! magit
   ;;禁用magit中的gravatars支持, 响应能快一些.
   (setq magit-revision-show-gravatars nil)
@@ -7,7 +7,7 @@
   )
 ;; magit:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:2]]
+;; [[file:../../doom.note::*cargo][cargo:2]]
 (eval-when-compile (require 'el-patch))
 
 (use-package cargo
@@ -86,12 +86,12 @@ Requires cargo-check to be installed."
           )))
 ;; cargo:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*cargo][cargo:3]]
+;; [[file:../../doom.note::*cargo][cargo:3]]
 ;; 修改popup window, 放大一些, 方便查看.
 (set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
 ;; cargo:3 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*racer][racer:1]]
+;; [[file:../../doom.note::*racer][racer:1]]
 (use-package cargo
   :defer t
   :init
@@ -102,7 +102,7 @@ Requires cargo-check to be installed."
     ))
 ;; racer:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*python.el][python.el:2]]
+;; [[file:../../doom.note::*python.el][python.el:2]]
 (defun gwp/tmux-ipython-paste-region (beg end &optional region)
   "Execute \"%paste\" in tmux session"
   (interactive "r")
@@ -111,7 +111,7 @@ Requires cargo-check to be installed."
   )
 ;; python.el:2 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*vc commit][vc commit:1]]
+;; [[file:../../doom.note::*vc commit][vc commit:1]]
 (use-package vc
   :init
   (progn
@@ -128,7 +128,7 @@ Requires cargo-check to be installed."
   )
 ;; vc commit:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*yadm \[\[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md\]\[yadm/yadm.md at master · TheLocehiliosan/yadm\]\]][yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]:1]]
+;; [[file:../../doom.note::*yadm \[\[https:/github.com/TheLocehiliosan/yadm/blob/master/yadm.md\]\[yadm/yadm.md at master · TheLocehiliosan/yadm\]\]][yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]:1]]
 ;; (magit-status  "/yadm::")
 (after! tramp
   (add-to-list 'tramp-methods
@@ -141,7 +141,7 @@ Requires cargo-check to be installed."
   )
 ;; yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*edit][edit:1]]
+;; [[file:../../doom.note::*edit][edit:1]]
 (after! smartparens
   (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
   ;; Rust closure中使用
@@ -151,6 +151,9 @@ Requires cargo-check to be installed."
 
 (add-hook 'rust-mode-hook
           (lambda () (require 'smartparens-rust)))
+
+;; (after! org-src
+;;   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 
 ;; 启用rust LSP: 用不起来
 ;; (after! rustic

@@ -1178,7 +1178,7 @@ gwp-merge:
 
        :checkers
        ;;syntax              ; tasing you for every semicolon you forget
-       spell             ; tasing you for misspelling mispelling
+       (spell +flyspell)     ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -2283,6 +2283,9 @@ magit-todos已在magit modules定义.
 
 (add-hook 'rust-mode-hook
           (lambda () (require 'smartparens-rust)))
+
+;; (after! org-src
+;;   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 
 ;; 启用rust LSP: 用不起来
 ;; (after! rustic

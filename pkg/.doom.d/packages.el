@@ -69,6 +69,8 @@
 
 (disable-packages! pangu-spacing)
 
+(package! which-key :ignore t)
+
 (package! org-roam-server)
 (package! dired-sidebar)
 (package! dockerfile-mode)

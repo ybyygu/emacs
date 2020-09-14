@@ -152,11 +152,6 @@ Requires cargo-check to be installed."
 (add-hook 'rust-mode-hook
           (lambda () (require 'smartparens-rust)))
 
-;; (after! org-src
-;;   (add-to-list 'org-src-lang-modes '("rust" . rust)))
-
-;; 启用rust LSP: 用不起来
-;; (after! rustic
-;;   )
-;; (setq rustic-lsp-server 'rust-analyzer)
+(after! org-src
+  (add-to-list 'org-src-lang-modes '("rust" . rust)))
 ;; edit:1 ends here

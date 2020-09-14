@@ -176,7 +176,7 @@
        :gwp                ; 自定义模块
        (org +roam)
        magit
-       (rust +lsp)
+       ;; (rust +lsp)
 
        :config
        ;;literate

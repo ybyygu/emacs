@@ -13,13 +13,18 @@
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][doom-emacs/getting_started.org]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
 - https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
+- [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
 - [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [25/31]
+* Memo [26/32]
+** DONE [2020-09-14 Mon] 禁用which-key-mode
+- State "DONE"       from "TODO"       [2020-09-14 Mon 10:39]
+响应非常慢, 以前在spacemacs中也遇到过. 禁用了之.
+
 ** DONE [2020-07-09 Thu] 试用org-roam
 - State "DONE"       from "TODO"       [2020-08-07 Fri 20:37]
 - [[https://www.orgroam.com/manual/Getting-Started.html#Getting-Started][Getting Started (Org-roam User Manual)]]
@@ -1272,7 +1277,7 @@ gwp-merge:
        :gwp                ; 自定义模块
        (org +roam)
        magit
-       (rust +lsp)
+       ;; (rust +lsp)
 
        :config
        ;;literate
@@ -1998,6 +2003,11 @@ github支持, 减慢速度.
 ;; (package! github-review :ignore t)
 #+end_src
 
+禁用which-key, 响应太慢(未知bug)
+#+begin_src elisp
+(package! which-key :ignore t)
+#+end_src
+
 *** 测试
 #+begin_src elisp
 (package! org-roam-server)
@@ -2284,13 +2294,8 @@ magit-todos已在magit modules定义.
 (add-hook 'rust-mode-hook
           (lambda () (require 'smartparens-rust)))
 
-;; (after! org-src
-;;   (add-to-list 'org-src-lang-modes '("rust" . rust)))
-
-;; 启用rust LSP: 用不起来
-;; (after! rustic
-;;   )
-;; (setq rustic-lsp-server 'rust-analyzer)
+(after! org-src
+  (add-to-list 'org-src-lang-modes '("rust" . rust)))
 #+end_src
 
 *** cargo

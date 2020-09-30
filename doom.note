@@ -4467,6 +4467,14 @@ $0
 #+END_SRC
 *** if let
 : pkg/.doom.d/snippets/rust-mode/if_let
+*** deprecated
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/deprecated
+# -*- mode: snippet -*-
+# name: #deprecated(note=X);
+# key: #dep
+# --
+#[deprecated(note = "$1")]
+#+END_SRC
 
 *** for
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/for
@@ -4481,11 +4489,11 @@ $0
 
 *** print
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/print
-  # -*- mode: snippet -*-
-  # name: print!("{}", value);
-  # key: print
-  # --
-  print!("${1:{}}", $2);
+# -*- mode: snippet -*-
+# name: print!("{}", value);
+# key: print
+# --
+print!("${1:{}}", $2);
 #+END_SRC
 
 *** println
@@ -4508,24 +4516,24 @@ eprintln!("${1:{}}", $2);
 
 *** fn
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fn
-  # -*- mode: snippet -*-
-  # name: fn name() { ... }
-  # key: fn
-  # --
-  fn ${1:name}($2) {
-     ${0:todo!()}
-  }
+# -*- mode: snippet -*-
+# name: fn name() { ... }
+# key: fn
+# --
+fn ${1:name}($2) {
+   ${0:todo!()}
+}
 #+END_SRC
 
 *** fnr
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fnr
-  # -*- mode: snippet -*-
-  # name: fn name() -> Type { ... }
-  # key: fnr
-  # --
-  fn ${1:name}($2) -> ${3:Result<${4:()}>} {
-       ${0:todo!()}
-  }
+# -*- mode: snippet -*-
+# name: fn name() -> Type { ... }
+# key: fnr
+# --
+fn ${1:name}($2) -> ${3:Result<${4:()}>} {
+     ${0:todo!()}
+}
 #+END_SRC
 
 *** fnw

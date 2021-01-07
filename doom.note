@@ -20,7 +20,16 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [26/32]
+* Memo [27/33]
+** DONE [2021-01-07 Thu] 解决自动保存时清理空格的问题
+- State "DONE"       from "TODO"       [2021-01-07 Thu 16:00]
+在输入过程中自动保存后会删掉空格, 应禁用这一行为.
+
+[[https://github.com/hlissner/doom-emacs/issues/4071][Disable ws-butler · Issue #4071 · hlissner/doom-emacs]]
+
+: (remove-hook 'before-save-hook #'ws-butler-before-save)
+以上修改不管用, 禁用了之.
+
 ** DONE [2020-09-14 Mon] 禁用which-key-mode
 - State "DONE"       from "TODO"       [2020-09-14 Mon 10:39]
 响应非常慢, 以前在spacemacs中也遇到过. 禁用了之.
@@ -998,7 +1007,10 @@ above don’t work, there’s always: M-x toggle-debug-on-error
 
 Now that debug-on-error is on, recreate the error. A window should pop up with a
 backtrace.
-
+* doom notes
+** project
+- SPC p t         magit-todos-list
+- SPC p x         doom/open-project-scratch-buffer
 
 * install
 ** Makefile
@@ -1865,6 +1877,11 @@ deadgrep与doom有冲突, 不能用了.
 (use-package dired-sidebar
   :commands (dired-sidebar-toggle-sidebar))
 #+end_src
+*** TODO before save
+以下设置不管用
+#+begin_src elisp
+;; (remove-hook 'before-save-hook 'ws-butler-before-save)
+#+end_src
 
 ** packages.el
 :PROPERTIES:
@@ -2007,6 +2024,12 @@ github支持, 减慢速度.
 #+begin_src elisp
 (package! which-key :ignore t)
 #+end_src
+
+禁用自动空格清理包, 避免有编辑时丢失空格
+#+begin_src elisp
+(package! ws-butler :disable t)
+#+end_src
+
 
 *** 测试
 #+begin_src elisp
@@ -3573,6 +3596,7 @@ refile流程:
    '(idle-org-agenda-mode t)
    )
 #+end_src
+
 ** org-file-apps
 使用gnome打开odt文件. 不太灵.
 

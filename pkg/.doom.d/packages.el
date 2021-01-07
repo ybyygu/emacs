@@ -71,6 +71,8 @@
 
 (package! which-key :ignore t)
 
+(package! ws-butler :disable t)
+
 (package! org-roam-server)
 (package! dired-sidebar)
 (package! dockerfile-mode)

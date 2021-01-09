@@ -1,10 +1,10 @@
-;; [[file:~/Workspace/Programming/emacs/doom.note::*keyfreq][keyfreq:1]]
+;; [[file:../../doom.note::*keyfreq][keyfreq:1]]
 (require 'keyfreq)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 ;; keyfreq:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*auto-save][auto-save:1]]
+;; [[file:../../doom.note::*auto-save][auto-save:1]]
 (setq
  auto-save-default t
  ;; auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
@@ -14,7 +14,7 @@
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*smartparens][smartparens:1]]
+;; [[file:../../doom.note::*smartparens][smartparens:1]]
 (map! :leader
       :nvi
       "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
@@ -25,24 +25,30 @@
       )
 ;; smartparens:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*expand region][expand region:1]]
+;; [[file:../../doom.note::*expand region][expand region:1]]
 (use-package expand-region :after evil :config
   (map! :leader :v "v"
         (function er/expand-region)))
 ;; expand region:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*better jumper][better jumper:1]]
+;; [[file:../../doom.note::*better jumper][better jumper:1]]
 (map! :nm
       [M-mouse-4] #'better-jumper-jump-backward
       [M-mouse-5] #'better-jumper-jump-forward
       )
 ;; better jumper:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*doom tuning][doom tuning:1]]
+;; [[file:../../doom.note::*join next line][join next line:1]]
+(after! evil
+  (advice-remove #'evil-join #'+evil-join-a)
+  )
+;; join next line:1 ends here
+
+;; [[file:../../doom.note::*doom tuning][doom tuning:1]]
 (setq evil-want-fine-undo t)
 ;; doom tuning:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*insert date][insert date:1]]
+;; [[file:../../doom.note::*insert date][insert date:1]]
 (defun gwp/insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."
   (interactive "P")
@@ -56,14 +62,14 @@
 (map! :i "C-c i" #'gwp/insert-date)
 ;; insert date:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*white space][white space:1]]
+;; [[file:../../doom.note::*white space][white space:1]]
 (setq show-trailing-whitespace t)
 (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
 ;; make sure this always work
 (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 ;; white space:1 ends here
 
-;; [[file:~/Workspace/Programming/emacs/doom.note::*advanced selection][advanced selection:1]]
+;; [[file:../../doom.note::*advanced selection][advanced selection:1]]
 ;; expand selection
 ;; http://xahlee.org/emacs/modernization_mark-word.html
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.

@@ -20,7 +20,12 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [27/33]
+* Memo [27/34]
+** TODO [2021-01-09 Sat] 解决join-line命令异常的问题
+[[https://github.com/hlissner/doom-emacs/commit/40cf6139ed53b635fec37ce623c4b1093c78a11e][Make evil-join remove comment delimiters · hlissner/doom-emacs@40cf613]]
+
+: (advice-remove #'evil-join #'+evil-join-a)
+
 ** DONE [2021-01-07 Thu] 解决自动保存时清理空格的问题
 - State "DONE"       from "TODO"       [2021-01-07 Thu 16:00]
 在输入过程中自动保存后会删掉空格, 应禁用这一行为.
@@ -1015,6 +1020,12 @@ backtrace.
 * install
 ** Makefile
 使用gnu stow来将pkg目录下的文件安装symlink到$HOME下对应的目录
+
+安装:
+: make
+
+字体:
+: yay -S ttf-all-the-icons
 
 升级:
 : make doom-upgrade
@@ -2133,6 +2144,16 @@ unwrap
 (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
 ;; make sure this always work
 (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+#+end_src
+** join next line
+doom的引入的"改进"导致很诡异的行为, 应禁用掉.
+
+[[https://github.com/hlissner/doom-emacs/commit/40cf6139ed53b635fec37ce623c4b1093c78a11e][Make evil-join remove comment delimiters · hlissner/doom-emacs@40cf613]]
+
+#+begin_src elisp
+(after! evil
+  (advice-remove #'evil-join #'+evil-join-a)
+  )
 #+end_src
 
 ** TODO advanced selection

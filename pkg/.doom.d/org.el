@@ -275,6 +275,10 @@ selected instead of creating a new buffer."
       )))
 ;; delete link file:1 ends here
 
+;; [[file:../../doom.note::*fix tab][fix tab:1]]
+(add-hook 'org-mode-hook #'evil-normalize-keymaps)
+;; fix tab:1 ends here
+
 ;; [[file:../../doom.note::*bindings][bindings:1]]
 (map! :map org-mode-map
       :localleader

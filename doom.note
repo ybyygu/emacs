@@ -20,8 +20,14 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [27/34]
-** TODO [2021-01-09 Sat] 解决join-line命令异常的问题
+* Memo [28/34]
+** [2021-01-09 Sat] 解决org-mode中Tab键乱窜的问题
+: (add-hook 'org-mode-hook #'evil-normalize-keymaps)
+
+[[https://github.com/hlissner/doom-emacs/issues/2775][TAB key is not behaving properly in org-mode when #+SETUPFILE keyword is present · Issue #2775 · hlissner/doom-emacs]]
+ 
+** DONE [2021-01-09 Sat] 解决join-line命令异常的问题
+- State "DONE"       from "TODO"       [2021-01-09 Sat 10:33]
 [[https://github.com/hlissner/doom-emacs/commit/40cf6139ed53b635fec37ce623c4b1093c78a11e][Make evil-join remove comment delimiters · hlissner/doom-emacs@40cf613]]
 
 : (advice-remove #'evil-join #'+evil-join-a)
@@ -941,6 +947,10 @@ MimeType=x-scheme-handler/org-protocol;
 ** firefox
 - 注册 [[*org-protocol][org-protocol]]
 - 并用 update-desktop-database, 更新MIME数据库
+  #+begin_src shell
+  update-desktop-database ~/.local/share/applications -vv
+  #+end_src
+
 - 在Firefox中禁用security.csp.enable选项
 - 使用bookmarklets来capture网页内容
 
@@ -3627,6 +3637,11 @@ refile流程:
                        ("\\.odt\\'" . system)
                        )))
 #+end_src
+** fix tab
+解决按tab键乱窜的问题
+#+begin_src elisp
+(add-hook 'org-mode-hook #'evil-normalize-keymaps)
+#+end_src
 
 ** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
@@ -4634,3 +4649,9 @@ fn ${1:test_name}() {
 
 * theme
 [[file:emacs-material-theme/][file:~/Workspace/Programming/emacs/emacs-material-theme/]]
+
+* Local variables
+# Emacs:
+# Local Variables:
+# mode: org
+# end:

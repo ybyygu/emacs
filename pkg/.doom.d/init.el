@@ -20,7 +20,7 @@
 (setq recentf-save-file (expand-file-name "recentf" doom-cache-dir))
 
 (doom! :input
-       ;;chinese
+       (chinese)
 
        :completion
        (company +tng)           ; the ultimate code completion backend

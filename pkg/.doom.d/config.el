@@ -260,6 +260,58 @@ If two universal prefix arguments are used, then prompt for command to use."
   )
 ;; chinese fonts setup:1 ends here
 
+;; [[file:../../doom.note::*input method][input method:1]]
+(use-package! pyim
+  :config
+  (setq default-input-method "pyim")
+
+  ;; 我使用五笔
+  (use-package! pyim-wbdict
+    :config (pyim-wbdict-v98-enable))
+  (setq pyim-default-scheme 'wubi)
+
+  ;; 启用拼音大词库，方便忘词用拼音反查
+  (use-package pyim-basedict
+    :config (pyim-basedict-enable))
+  ;; 如果用户在使用五笔输入法的过程中，忘记了某个字的五笔码，可以按 TAB(F2-TAB)键临时切换到辅助输入法来输入，选词完成之后自动退出。
+  (setq pyim-assistant-scheme 'quanpin)
+
+  ;; 全角半角
+  (setq-default pyim-punctuation-half-width-functions
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
+
+  ;; 不使用中文标点, 如需输入可切换至fcitx.
+  ;; (delete '("/" "、")  pyim-punctuation-dict)
+  ;; (add-to-list 'pyim-punctuation-dict '("\\" "、"))
+  (setq pyim-punctuation-dict nil)
+
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  ;; (setq-default pyim-english-input-switch-functions
+  ;;               '(
+  ;;                 ;; pyim-probe-dynamic-english
+  ;;                 pyim-probe-isearch-mode
+  ;;                 pyim-probe-program-mode
+  ;;                 pyim-probe-org-structure-template
+  ;;                 ))
+  
+  ;; 与 pyim-probe-dynamic-english 配合，方便切换至中文模式
+  :bind
+  (
+   ("<f2> SPC" . pyim-convert-string-at-point)
+   ("M-SPC" . toggle-input-method)
+   (:map pyim-mode-map
+    ;; ("<f2> TAB" . pyim-toggle-assistant-scheme)
+    ("/" . pyim-toggle-assistant-scheme)
+    ("_" . pyim-toggle-input-ascii)
+    ("\\" . pyim-toggle-input-ascii)
+    )))
+;; input method:1 ends here
+
 ;; [[file:../../doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the

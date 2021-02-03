@@ -20,7 +20,20 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [28/34]
+* Memo [29/35]
+** DONE [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
+- State "DONE"       from "TODO"       [2021-02-08 Mon 14:20]
+fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用emacs内置的pyim输入法
+可以较好的解决这个问题.
+
+现在有的特性:
+- 使用Ctrl-\按键切换pyim输入法.
+- 尽量和fcitx输入保持一致, 默认使用英文标点.
+- 按下划线(_)或"\"进时临时英文输入模式.
+- 英文状态下，先录入五笔码，比如(fq), 然后按F2-SPC按键进入中文输入状态, 并将光标
+  下字串转换为汉字"无".
+- 如果忘记五笔码，可输入拼音，按“/”键进入临时拼音输入模式.
+
 ** [2021-01-09 Sat] 解决org-mode中Tab键乱窜的问题
 : (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 
@@ -348,7 +361,8 @@ https://segmentfault.com/q/1010000000118837
 - State "DONE"       from "TODO"       [2020-08-01 Sat 16:20] \\
   换用doom后没再发现
 - [X] 在org-capture中, 如果abort会删掉refile.org最开头条目的星号.
-- [X] firefox中, org-protocol在某些网页中无法激活. 是firefox中的"content security policy"导的鬼. 在config里禁用即可. "security.csp.enable"
+- [X] firefox中, org-protocol在某些网页中无法激活. 是firefox中的"content security policy"捣的鬼. 在config里禁用即可. "security.csp.enable"
+- [X] [[https://www.reddit.com/r/firefox/comments/k64ha0/fix_allow_this_site_to_open_the_protocol_link/][Fix "Allow this site to open the PROTOCOL link with APPLICATION" warning : firefox]]
 
 ** DONE [2018-01-06 Sat] 解决odt导出latex公式分辨率太低的问题
 CLOSED: [2018-01-10 Wed 16:18]
@@ -1154,7 +1168,7 @@ gwp-merge:
 
 #+begin_src elisp
 (doom! :input
-       ;;chinese
+       (chinese)
 
        :completion
        (company +tng)           ; the ultimate code completion backend
@@ -1420,6 +1434,61 @@ gwp-merge:
     `(org-table :family "Ubuntu Mono")
     )
   )
+#+end_src
+**** input method
+[[https://tumashu.github.io/pyim/][A Chinese input method which support quanpin, shuangpin, wubi and cangjie. - pyim]]
+
+默认使用 Ctrl-\ 切换输入法
+#+begin_src elisp
+(use-package! pyim
+  :config
+  (setq default-input-method "pyim")
+
+  ;; 我使用五笔
+  (use-package! pyim-wbdict
+    :config (pyim-wbdict-v98-enable))
+  (setq pyim-default-scheme 'wubi)
+
+  ;; 启用拼音大词库，方便忘词用拼音反查
+  (use-package pyim-basedict
+    :config (pyim-basedict-enable))
+  ;; 如果用户在使用五笔输入法的过程中，忘记了某个字的五笔码，可以按 TAB(F2-TAB)键临时切换到辅助输入法来输入，选词完成之后自动退出。
+  (setq pyim-assistant-scheme 'quanpin)
+
+  ;; 全角半角
+  (setq-default pyim-punctuation-half-width-functions
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
+
+  ;; 不使用中文标点, 如需输入可切换至fcitx.
+  ;; (delete '("/" "、")  pyim-punctuation-dict)
+  ;; (add-to-list 'pyim-punctuation-dict '("\\" "、"))
+  (setq pyim-punctuation-dict nil)
+
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  ;; (setq-default pyim-english-input-switch-functions
+  ;;               '(
+  ;;                 ;; pyim-probe-dynamic-english
+  ;;                 pyim-probe-isearch-mode
+  ;;                 pyim-probe-program-mode
+  ;;                 pyim-probe-org-structure-template
+  ;;                 ))
+  
+  ;; 与 pyim-probe-dynamic-english 配合，方便切换至中文模式
+  :bind
+  (
+   ("<f2> SPC" . pyim-convert-string-at-point)
+   ("M-SPC" . toggle-input-method)
+   (:map pyim-mode-map
+    ;; ("<f2> TAB" . pyim-toggle-assistant-scheme)
+    ("/" . pyim-toggle-assistant-scheme)
+    ("_" . pyim-toggle-input-ascii)
+    ("\\" . pyim-toggle-input-ascii)
+    )))
 #+end_src
 
 **** big font mode
@@ -1980,6 +2049,10 @@ deadgrep与doom有冲突, 不能用了.
 #+begin_src elisp
 ;; (package! cnfonts)
 (package! fcitx)
+
+;; 五笔输入法
+(package! pyim-wbdict)
+
 ;; (package! berrys-theme)
 ;; (package! material-theme)
 (package! material-theme

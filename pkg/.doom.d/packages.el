@@ -56,6 +56,10 @@
 
 ;; (package! cnfonts)
 (package! fcitx)
+
+;; 五笔输入法
+(package! pyim-wbdict)
+
 ;; (package! berrys-theme)
 ;; (package! material-theme)
 (package! material-theme

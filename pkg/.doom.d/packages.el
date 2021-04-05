@@ -71,6 +71,8 @@
 
 (package! keyfreq)
 
+(package! nix-mode)
+
 (disable-packages! pangu-spacing)
 
 (package! which-key :ignore t)

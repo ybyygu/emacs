@@ -155,10 +155,9 @@ If two universal prefix arguments are used, then prompt for command to use."
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
-    ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
-    )
-  )
+    ;; (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
+    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+    ))
 
 (defun gwp/open-terminal-here ()
   "Open the current dir in a new terminal window"
@@ -167,8 +166,7 @@ If two universal prefix arguments are used, then prompt for command to use."
                                     (dired-current-directory))
                                default-directory)))
     (gwp/open-in-gnome-terminal (expand-file-name default-directory))
-    )
-  )
+    ))
 ;; open in terminal:1 ends here
 
 ;; [[file:../../doom.note::*ripgrep][ripgrep:1]]

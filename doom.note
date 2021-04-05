@@ -700,6 +700,8 @@ unset GNOME_TERMINAL_SERVICE
 gnome-terminal $*
 #+end_src
 
+[2021-04-05 Mon] alacritty现在真好用. 可以放弃gnome-terminal了.
+
 ** org-capture
 #+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
 #+header: :mkdirp yes :comments yes :padline yes
@@ -1756,10 +1758,9 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
-    (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
-    ;; (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
-    )
-  )
+    ;; (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
+    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+    ))
 
 (defun gwp/open-terminal-here ()
   "Open the current dir in a new terminal window"
@@ -1768,8 +1769,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
                                     (dired-current-directory))
                                default-directory)))
     (gwp/open-in-gnome-terminal (expand-file-name default-directory))
-    )
-  )
+    ))
 #+end_src
 
 *** ripgrep
@@ -2094,6 +2094,12 @@ org-noter
 (package! deadgrep
           :recipe (:host github :repo "ybyygu/deadgrep"))
 #+end_src
+
+编辑nix包管理文件
+#+begin_src elisp
+(package! nix-mode)
+#+end_src
+
 
 *** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
@@ -3082,6 +3088,9 @@ selected instead of creating a new buffer."
 
 ** zotero/link
 [[file:rust-modules/rust-modules.note][rust-module.note]]
+
+
+使用 SPC-u-SPC-m-O, 强制在emacs中打开
 
 #+begin_src elisp
 ;; rust-modules

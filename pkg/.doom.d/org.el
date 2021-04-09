@@ -184,8 +184,11 @@
   (map! :map pdf-view-mode-map
         [C-mouse-4] (lambda! (pdf-view-enlarge 1.10))
         [C-mouse-5] (lambda! (pdf-view-shrink 1.10))
+        [mouse-9] (lambda! (pdf-view-previous-page-command))
+        [mouse-8] (lambda! (pdf-view-next-page-command))
         )
-  )
+  ;; 一页页看更方便
+  (setq pdf-view-continuous nil))
 ;; org-noter/pdf-view:1 ends here
 
 ;; [[file:../../doom.note::*narrow][narrow:1]]

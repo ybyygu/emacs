@@ -2136,6 +2136,7 @@ github支持, 减慢速度.
 (package! org-roam-server)
 (package! dired-sidebar)
 (package! dockerfile-mode)
+(package! yaml-mode)
 #+end_src
 
 * edit.el

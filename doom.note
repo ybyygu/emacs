@@ -510,10 +510,6 @@ eval: major-mode
 ** 编辑功能
 选中文字后按S, 再按"(" 可在选中字符前后加括号.
 
-** magit
-- 在magit status窗口, 可以直接使用dired访问文件: magit-dired-jump (C-M-i)
-- 使用yadm管理dotfiles, SPC-g-.
-
 ** dired-jump
 | SPC-f-j |
 
@@ -558,12 +554,18 @@ eval: major-mode
 : SPC-t r
 
 ** magit
+- 在magit status窗口, 可以直接使用dired访问文件: magit-dired-jump (C-M-i)
+- 使用yadm管理dotfiles, SPC-g-.
+
 | magit-status          |                             |
 | magit-stage-file      |                             |
 | magit-log-buffer-file | Show log for current buffer |
 
 : reset: O
 : discard: x
+
+处理当前文件的编辑历史:
+: magit-file-dispatch
 
 ** Movement
 | Key Binding | Description                            |
@@ -3115,7 +3117,8 @@ selected instead of creating a new buffer."
               (if path
                   (progn
                     (message "%s!" path)
-                    (org-open-file path arg))
+                    (org-open-file path arg)
+                    )
                 (error "No attachments for item!"))))))))
 
 (defun gwp/insert-new-zotero-item (arg)
@@ -3146,6 +3149,8 @@ bibtex更新了item link的格式.
 : zotero://select/items/1_WZKAZKJG
 新的
 : zotero://select/items/6974
+
+[[zotero://select/items/1_IIAJ9MX2][@Cao2011JMCC]]
 
 #+begin_src emacs-lisp
 (with-eval-after-load 'org-compat
@@ -3717,14 +3722,18 @@ refile流程:
 #+end_src
 
 ** org-file-apps
-使用gnome打开odt文件. 不太灵.
+org-open-file调用pdf-tools打开PDF文件
+#+begin_src elisp
+;; (add-to-list 'org-file-apps
+;;              (quote (
+;;                      ("\\.odt\\'" . system)
+;;                      )))
 
-#+begin_src elisp :tangle no
-  (add-to-list 'org-file-apps
-               (quote (
-                       ("\\.odt\\'" . system)
-                       )))
+(add-to-list 'org-file-apps
+             '("\\.pdf\\'" . (lambda (file link)
+                               (org-pdftools-open link))))
 #+end_src
+
 ** fix tab
 解决按tab键乱窜的问题
 #+begin_src elisp

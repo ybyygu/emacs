@@ -238,7 +238,8 @@ selected instead of creating a new buffer."
               (if path
                   (progn
                     (message "%s!" path)
-                    (org-open-file path arg))
+                    (org-open-file path arg)
+                    )
                 (error "No attachments for item!"))))))))
 
 (defun gwp/insert-new-zotero-item (arg)
@@ -277,6 +278,17 @@ selected instead of creating a new buffer."
       (user-error "Point is not on a file link")
       )))
 ;; delete link file:1 ends here
+
+;; [[file:../../doom.note::*org-file-apps][org-file-apps:1]]
+;; (add-to-list 'org-file-apps
+;;              (quote (
+;;                      ("\\.odt\\'" . system)
+;;                      )))
+
+(add-to-list 'org-file-apps
+             '("\\.pdf\\'" . (lambda (file link)
+                               (org-pdftools-open link))))
+;; org-file-apps:1 ends here
 
 ;; [[file:../../doom.note::*fix tab][fix tab:1]]
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)

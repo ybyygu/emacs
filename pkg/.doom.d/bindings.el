@@ -7,7 +7,7 @@
       ;;; <leader> l --- workspace
       (:when (featurep! :ui workspaces)
         (:prefix-map ("l" . "workspace")
-          :desc "Load workspace from file"  "l"   #'+workspace/load
+          :desc "Load workspace from file"  "l"   #'gwp/workspace/load-or-switch
           :desc "Save workspace to file"    "s"   #'+workspace/save
           :desc "Delete this workspace"     "d"   #'+workspace/delete
           :desc "Next workspace"            "n"   #'+workspace/switch-right
@@ -417,6 +417,21 @@
 
       :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
       )
+
+(defun gwp/workspace/load-or-switch (name)
+  "Load or switch to a workspace."
+  (interactive
+   (list
+    (completing-read
+     "Workspace to load: "
+     (persp-list-persp-names-in-file
+      (expand-file-name +workspaces-data-file persp-save-dir)))))
+  (if (+workspace-exists-p name)
+      (+workspace/switch-to name)
+    (if (not (+workspace-load name))
+        (+workspace-error (format "Couldn't load workspace %s" name))
+      (+workspace/switch-to name)))
+  (+workspace/display))
 
 ;; Smart tab, these will only work in GUI Emacs
 (map! ;; Smarter newlines

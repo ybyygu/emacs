@@ -3896,12 +3896,30 @@ org-sidebar
 #+end_src
 
 ** leader/workspace
+改进workspace功能
+#+begin_src elisp
+(defun gwp/workspace/load-or-switch (name)
+  "Load or switch to a workspace."
+  (interactive
+   (list
+    (completing-read
+     "Workspace to load: "
+     (persp-list-persp-names-in-file
+      (expand-file-name +workspaces-data-file persp-save-dir)))))
+  (if (+workspace-exists-p name)
+      (+workspace/switch-to name)
+    (if (not (+workspace-load name))
+        (+workspace-error (format "Couldn't load workspace %s" name))
+      (+workspace/switch-to name)))
+  (+workspace/display))
+#+end_src
+
 #+begin_src emacs-lisp
 (map! :leader
       ;;; <leader> l --- workspace
       (:when (featurep! :ui workspaces)
         (:prefix-map ("l" . "workspace")
-          :desc "Load workspace from file"  "l"   #'+workspace/load
+          :desc "Load workspace from file"  "l"   #'gwp/workspace/load-or-switch
           :desc "Save workspace to file"    "s"   #'+workspace/save
           :desc "Delete this workspace"     "d"   #'+workspace/delete
           :desc "Next workspace"            "n"   #'+workspace/switch-right
@@ -4527,7 +4545,6 @@ org-sidebar
 - [[file:doom-hacks/modules/lang/org/config.el][org/config.el]]
 - [[file:doom-hacks/modules/lang/rust/config.el][rust/config.el]]
 - [[file:doom-hacks/modules/tools/magit/][magit/]]
-
 
 * snippets
 :PROPERTIES:

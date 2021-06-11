@@ -2237,6 +2237,7 @@ unwrap
 ;; make sure this always work
 (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 #+end_src
+
 ** join next line
 doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 
@@ -2345,6 +2346,15 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; https://github.com/magnars/expand-region.el
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
+#+end_src
+** multiedit
+使用M-d选中多个字词, 同步修改. 不需要的可用Enter取消掉.
+#+begin_src elisp
+(use-package evil-multiedit
+  :after evil
+  :config
+  (setq evil-multiedit-follow-matches t)
+  )
 #+end_src
 
 * develop.el

@@ -44,6 +44,14 @@
   )
 ;; join next line:1 ends here
 
+;; [[file:../../doom.note::*multiedit][multiedit:1]]
+(use-package evil-multiedit
+  :after evil
+  :config
+  (setq evil-multiedit-follow-matches t)
+  )
+;; multiedit:1 ends here
+
 ;; [[file:../../doom.note::*doom tuning][doom tuning:1]]
 (setq evil-want-fine-undo t)
 ;; doom tuning:1 ends here

@@ -3037,15 +3037,20 @@ pdf-view-fit-width-to-window
   (map! :map pdf-view-mode-map
         :localleader
         (:prefix ("n" . "org-noter")
-          "n" #'org-noter
-          "i" #'org-noter-insert-note
-          "I" #'org-noter-insert-precise-note
-          ))
+         "n" #'org-noter
+         "i" #'org-noter-insert-note
+         "I" #'org-noter-insert-precise-note
+         )
+        )
+  ;; 方便标注
   (map! :map pdf-view-mode-map
-        [C-mouse-4] (lambda! (pdf-view-enlarge 1.10))
-        [C-mouse-5] (lambda! (pdf-view-shrink 1.10))
-        [mouse-9] (lambda! (pdf-view-previous-page-command))
-        [mouse-8] (lambda! (pdf-view-next-page-command))
+        :localleader
+        ("h" #'pdf-annot-add-highlight-markup-annotation))
+  (map! :map pdf-view-mode-map
+        [C-mouse-4] (cmd! (pdf-view-enlarge 1.10))
+        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
+        [mouse-9] (cmd! (pdf-view-previous-page-command))
+        [mouse-8] (cmd! (pdf-view-next-page-command))
         )
   ;; 一页页看更方便
   (setq pdf-view-continuous nil))

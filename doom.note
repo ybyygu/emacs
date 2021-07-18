@@ -20,7 +20,18 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [29/35]
+* Memo [30/36]
+** DONE [2021-07-18 Sun] 解决doom-emacs升级导致的问题
+- State "DONE"       from "TODO"       [2021-07-25 Sun 08:55]
+原来是org/packages.el升级导致的问题
+
+# required dependencies
+pacman -S git emacs ripgrep
+# optional dependencies
+pacman -S fd
+
+~/.emacs.d/bin/doom install
+
 ** DONE [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
 - State "DONE"       from "TODO"       [2021-02-08 Mon 14:20]
 fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用emacs内置的pyim输入法
@@ -2063,9 +2074,7 @@ deadgrep与doom有冲突, 不能用了.
 
 #+begin_src elisp
 (package! org-sidebar)
-#+end_src
-
-#+begin_src elisp
+(package! cargo)
 (package! el-patch)
 #+end_src
 
@@ -2124,7 +2133,7 @@ github支持, 减慢速度.
 
 禁用which-key, 响应太慢(未知bug)
 #+begin_src elisp
-(package! which-key :ignore t)
+; (package! which-key :ignore t)
 #+end_src
 
 禁用自动空格清理包, 避免有编辑时丢失空格

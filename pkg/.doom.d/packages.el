@@ -66,7 +66,7 @@
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 
 (package! org-sidebar)
-
+(package! cargo)
 (package! el-patch)
 
 (package! keyfreq)
@@ -75,7 +75,7 @@
 
 (disable-packages! pangu-spacing)
 
-(package! which-key :ignore t)
+; (package! which-key :ignore t)
 
 (package! ws-butler :disable t)
 

@@ -43,171 +43,6 @@
 ;; they are implemented.
 ;; orig:1 ends here
 
-;; [[file:../../doom.note::*弹出窗口管理][弹出窗口管理:1]]
-(map! :i "C-`" #'+popup/toggle)
-;; 弹出窗口管理:1 ends here
-
-;; [[file:../../doom.note::*line number][line number:1]]
-(setq display-line-numbers-type nil)
-;; line number:1 ends here
-
-;; [[file:../../doom.note::*edit][edit:1]]
-(load! "edit")
-;; edit:1 ends here
-
-;; [[file:../../doom.note::*dired][dired:1]]
-(use-package dired
-  :config
-  ;; Set this variable to non-nil, Dired will try to guess a default
-  ;; target directory. This means: if there is a dired buffer
-  ;; displayed in the next window, use its current subdir, instead
-  ;; of the current subdir of this dired buffer. The target is used
-  ;; in the prompt for file copy, rename etc.
-  (progn
-    (setq dired-dwim-target t)
-
-    ;; Dired listing switches
-    ;;  -a : Do not ignore entries starting with .
-    ;;  -l : Use long listing format.
-    ;;  -G : Do not print group names like 'users'
-    ;;  -h : Human-readable sizes like 1K, 234M, ..
-    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-    ;;  -F : Classify filenames by appending '*' to executables,
-    ;;       '/' to directories, etc.
-    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
-
-    ;; 用于在dired中复制当前文件的全路径.
-    (defun gwp/dired-copy-file-path()
-      (interactive)
-      (let ((current-prefix-arg '(0)))
-        (call-interactively 'dired-copy-filename-as-kill)
-        )
-      )
-
-    (map! :map dired-mode-map
-          :localleader
-          :n "y" #'gwp/dired-copy-file-path
-          :n "l" #'dired-do-symlink
-          )
-
-    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
-    (map! :map dired-mode-map
-          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-          :nv "C-S-n" #'dired-create-directory
-          ;; :nv [mouse-1] #'dired-find-file
-          )
-    )
-  )
-;; dired:1 ends here
-
-;; [[file:../../doom.note::*dired][dired:2]]
-(use-package dired-x
-  :config
-  (progn
-    (setq dired-omit-verbose t)
-    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
-  )
-;; dired:2 ends here
-
-;; [[file:../../doom.note::*org][org:1]]
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Notes/")
-
-;; treat .note files as org-mode
-(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
-
-(after! org (load! "org"))
-;; org:1 ends here
-
-;; [[file:../../doom.note::*open-file-externally][open-file-externally:1]]
-(defun spacemacs/open-in-external-app (file-path)
-  "Open `file-path' in external application."
-  (let ((process-connection-type nil))
-    (start-process "" nil "xdg-open" file-path)))
-
-(defun spacemacs/open-file-or-directory-in-external-app (arg)
-  "Open current file in external application.
-If the universal prefix argument is used then open the folder
-containing the current file by the default explorer.
-If two universal prefix arguments are used, then prompt for command to use."
-  (interactive "P")
-  (if (equal arg '(4))                  ; C-u
-      (spacemacs/open-in-external-app (expand-file-name default-directory))
-    (let ((file-path (if (derived-mode-p 'dired-mode)
-                         (dired-get-file-for-visit)
-                       buffer-file-name)))
-      (if file-path
-          (if (equal arg '(16))         ; C-u C-u
-              (progn
-                (let ((program (read-shell-command "Open current file with: ")))
-                  (call-process program nil 0 nil file-path)
-                  )
-                )
-            (spacemacs/open-in-external-app file-path)
-            )
-        (message "No file associated to this buffer.")))))
-;; open-file-externally:1 ends here
-
-;; [[file:../../doom.note::*open in terminal][open in terminal:1]]
-(defun gwp/open-in-gnome-terminal (the-directory)
-  "Open `the-directory' in external gnome-terminal."
-  (let ((process-connection-type nil))
-    ;; (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
-    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
-    ))
-
-(defun gwp/open-terminal-here ()
-  "Open the current dir in a new terminal window"
-  (interactive)
-  (let ((default-directory (or (and (eq major-mode 'dired-mode)
-                                    (dired-current-directory))
-                               default-directory)))
-    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
-    ))
-;; open in terminal:1 ends here
-
-;; [[file:../../doom.note::*ripgrep][ripgrep:1]]
-;;;###autoload
-(defun gwp/search-all-notes (arg)
-  "search all notes in ~/.cache/notes"
-  (interactive "P")
-
-  (let ((default-directory "~/.cache/notes"))
-    (call-interactively '+ivy/project-search-from-cwd)
-    )
-  )
-;; ripgrep:1 ends here
-
-;; [[file:../../doom.note::*develop][develop:1]]
-(load! "develop")
-;; develop:1 ends here
-
-;; [[file:../../doom.note::*recent files][recent files:1]]
-(require 'recentf)
-;; the default is only 20
-(setq recentf-max-saved-items 1000)
-(add-to-list 'recentf-exclude "autosave$")
-(add-to-list 'recentf-exclude "\.png$")
-(add-to-list 'recentf-exclude "\.pdf$")
-(add-to-list 'recentf-exclude "\.svg$")
-(add-to-list 'recentf-exclude "\.odt$")
-;; recent files:1 ends here
-
-;; [[file:../../doom.note::*fcitx][fcitx:1]]
-(use-package! fcitx
-  :after evil
-  :config
-  (when (executable-find "fcitx-remote")
-    ;; (fcitx-prefix-keys-add "M-m")
-    ;; 影响搜索界面, 不应该开
-    ;; (setq fcitx-use-dbus t)
-    (fcitx-aggressive-setup)
-    ))
-;; fcitx:1 ends here
-
 ;; [[file:../../doom.note::*workspace][workspace:1]]
 (setq persp-auto-save-opt 0)
 ;; workspace:1 ends here
@@ -364,6 +199,10 @@ If two universal prefix arguments are used, then prompt for command to use."
 (global-set-key [remap evil-window-next] #'ace-window)
 ;; window切换:1 ends here
 
+;; [[file:../../doom.note::*弹出窗口管理][弹出窗口管理:1]]
+(map! :i "C-`" #'+popup/toggle)
+;; 弹出窗口管理:1 ends here
+
 ;; [[file:../../doom.note::*窗口大小调整][窗口大小调整:1]]
 (map! :nvi
       [C-M-mouse-4] #'evil-window-increase-width
@@ -379,6 +218,10 @@ If two universal prefix arguments are used, then prompt for command to use."
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; 窗口大小调整:3 ends here
 
+;; [[file:../../doom.note::*line number][line number:1]]
+(setq display-line-numbers-type nil)
+;; line number:1 ends here
+
 ;; [[file:../../doom.note::*misc][misc:1]]
 ;; View images inside Emacs
 (auto-image-file-mode t)
@@ -386,6 +229,175 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; set line space wider than default
 (setq-default line-spacing 4)
 ;; misc:1 ends here
+
+;; [[file:../../doom.note::*edit][edit:1]]
+(load! "edit")
+;; edit:1 ends here
+
+;; [[file:../../doom.note::*dired][dired:1]]
+(use-package dired
+  :config
+  ;; Set this variable to non-nil, Dired will try to guess a default
+  ;; target directory. This means: if there is a dired buffer
+  ;; displayed in the next window, use its current subdir, instead
+  ;; of the current subdir of this dired buffer. The target is used
+  ;; in the prompt for file copy, rename etc.
+  (progn
+    (setq dired-dwim-target t)
+
+    ;; Dired listing switches
+    ;;  -a : Do not ignore entries starting with .
+    ;;  -l : Use long listing format.
+    ;;  -G : Do not print group names like 'users'
+    ;;  -h : Human-readable sizes like 1K, 234M, ..
+    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+    ;;  -F : Classify filenames by appending '*' to executables,
+    ;;       '/' to directories, etc.
+    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+
+    ;; 用于在dired中复制当前文件的全路径.
+    (defun gwp/dired-copy-file-path()
+      (interactive)
+      (let ((current-prefix-arg '(0)))
+        (call-interactively 'dired-copy-filename-as-kill)
+        )
+      )
+
+    (map! :map dired-mode-map
+          :localleader
+          :n "y" #'gwp/dired-copy-file-path
+          :n "l" #'dired-do-symlink
+          )
+
+    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+    (map! :map dired-mode-map
+          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+          :nv "C-S-n" #'dired-create-directory
+          ;; :nv [mouse-1] #'dired-find-file
+          )
+    )
+  )
+;; dired:1 ends here
+
+;; [[file:../../doom.note::*dired][dired:2]]
+(use-package dired-x
+  :config
+  (progn
+    (setq dired-omit-verbose t)
+    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
+    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
+  )
+;; dired:2 ends here
+
+;; [[file:../../doom.note::*org][org:1]]
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/Notes/")
+(setq org-roam-directory "~/Notes/roam")
+(setq org-roam-file-extensions '("note" "org"))
+
+;; treat .note files as org-mode
+(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
+
+(after! org (load! "org"))
+
+;; https://github.com/org-roam/org-roam-ui#doom
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+    :hook (org-roam . org-roam-ui-mode)
+    :config
+)
+;; org:1 ends here
+
+;; [[file:../../doom.note::*open-file-externally][open-file-externally:1]]
+(defun spacemacs/open-in-external-app (file-path)
+  "Open `file-path' in external application."
+  (let ((process-connection-type nil))
+    (start-process "" nil "xdg-open" file-path)))
+
+(defun spacemacs/open-file-or-directory-in-external-app (arg)
+  "Open current file in external application.
+If the universal prefix argument is used then open the folder
+containing the current file by the default explorer.
+If two universal prefix arguments are used, then prompt for command to use."
+  (interactive "P")
+  (if (equal arg '(4))                  ; C-u
+      (spacemacs/open-in-external-app (expand-file-name default-directory))
+    (let ((file-path (if (derived-mode-p 'dired-mode)
+                         (dired-get-file-for-visit)
+                       buffer-file-name)))
+      (if file-path
+          (if (equal arg '(16))         ; C-u C-u
+              (progn
+                (let ((program (read-shell-command "Open current file with: ")))
+                  (call-process program nil 0 nil file-path)
+                  )
+                )
+            (spacemacs/open-in-external-app file-path)
+            )
+        (message "No file associated to this buffer.")))))
+;; open-file-externally:1 ends here
+
+;; [[file:../../doom.note::*open in terminal][open in terminal:1]]
+(defun gwp/open-in-gnome-terminal (the-directory)
+  "Open `the-directory' in external gnome-terminal."
+  (let ((process-connection-type nil))
+    ;; (start-process "" nil "terminal-dwim.sh" (concat "--working-directory=" the-directory) "-e" "tmux")
+    (start-process "" nil "alacritty" (concat "--working-directory=" the-directory) "-e" "tmux")
+    ))
+
+(defun gwp/open-terminal-here ()
+  "Open the current dir in a new terminal window"
+  (interactive)
+  (let ((default-directory (or (and (eq major-mode 'dired-mode)
+                                    (dired-current-directory))
+                               default-directory)))
+    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
+    ))
+;; open in terminal:1 ends here
+
+;; [[file:../../doom.note::*ripgrep][ripgrep:1]]
+;;;###autoload
+(defun gwp/search-all-notes (arg)
+  "search all notes in ~/.cache/notes"
+  (interactive "P")
+
+  (let ((default-directory "~/.cache/notes"))
+    (call-interactively '+ivy/project-search-from-cwd)
+    )
+  )
+;; ripgrep:1 ends here
+
+;; [[file:../../doom.note::*develop][develop:1]]
+(load! "develop")
+;; develop:1 ends here
+
+;; [[file:../../doom.note::*recent files][recent files:1]]
+(require 'recentf)
+;; the default is only 20
+(setq recentf-max-saved-items 1000)
+(add-to-list 'recentf-exclude "autosave$")
+(add-to-list 'recentf-exclude "\.png$")
+(add-to-list 'recentf-exclude "\.pdf$")
+(add-to-list 'recentf-exclude "\.svg$")
+(add-to-list 'recentf-exclude "\.odt$")
+;; recent files:1 ends here
+
+;; [[file:../../doom.note::*fcitx][fcitx:1]]
+(use-package! fcitx
+  :after evil
+  :config
+  (when (executable-find "fcitx-remote")
+    ;; (fcitx-prefix-keys-add "M-m")
+    ;; 影响搜索界面, 不应该开
+    ;; (setq fcitx-use-dbus t)
+    (fcitx-aggressive-setup)
+    ))
+;; fcitx:1 ends here
 
 ;; [[file:../../doom.note::*bindings][bindings:1]]
 (map! :nvim "C-a" nil)

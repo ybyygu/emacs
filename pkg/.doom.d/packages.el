@@ -71,18 +71,36 @@
 
 (package! keyfreq)
 
+(package! golden-ratio)
+;; (package! zoom)
+
+(package! org-download)
+
+(package! org-noter)
+
 (package! nix-mode)
 
 (disable-packages! pangu-spacing)
+
+(package! doom-snippets :ignore t)
+
+(package! forge :ignore t)
+;; 不能简单的禁用了事
+;; (package! github-review :ignore t)
 
 ; (package! which-key :ignore t)
 
 (package! ws-butler :disable t)
 
-(package! org-roam-server)
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
+
+;; https://github.com/org-roam/org-roam-ui#doom
+;; 2021-08-01 用不起来
+(package! websocket)
+(package! simple-httpd)
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)
@@ -97,16 +115,3 @@
 ;; [[file:../../doom.note::*pairs][pairs:1]]
 (package! smartparens-org :ignore t)
 ;; pairs:1 ends here
-
-(package! golden-ratio)
-;; (package! zoom)
-
-(package! org-download)
-
-(package! org-noter)
-
-(package! doom-snippets :ignore t)
-
-(package! forge :ignore t)
-;; 不能简单的禁用了事
-;; (package! github-review :ignore t)

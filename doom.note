@@ -12,6 +12,8 @@
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][doom-emacs/getting_started.org]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
+  - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
+    
 - https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
 - [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
@@ -20,7 +22,12 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [30/36]
+* Memo [30/37]
+** TODO [2021-08-01 Sun] 试用org-roam2
+org-roam-server改为org-roam-ui
+
+org-roam-ui用不起来. 弃
+
 ** DONE [2021-07-18 Sun] 解决doom-emacs升级导致的问题
 - State "DONE"       from "TODO"       [2021-07-25 Sun 08:55]
 原来是org/packages.el升级导致的问题
@@ -75,6 +82,7 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 - [[https://www.reddit.com/r/emacs/comments/hltl69/org_roam_for_academics_demo/][Org Roam for Academics Demo : emacs]]
 - [[https://www.zmonster.me/2020/06/27/org-roam-introduction.html][使用 org-roam 构建自己的知识网络 · ZMonster's Blog]]
 
+[2021-08-01 Sun] org-capture的更佳替代品
 [2020-08-07 Fri] 感觉用处不大
 
 ** DONE [2020-05-27 Wed] rust-fmt出问题了
@@ -602,6 +610,13 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 related items. 同时zotero中的items也是平级组织, 统一命名, 使用zotero uri可以在
 org文档中自由引用跳转. 现在唯一欠缺的时像org-roam-server那样可以交互式的展现关联
 条目的network展现方式.
+
+org-roam可用于替代org-capture, 这样在浏览时随时记录, 并可保留note间的关联性.
+
+org-roam-capture
+org-roam-node-find
+org-roam-node-insert
+org-roam-buffer-toggle
 
 * TODO Literate Programming in Rust
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
@@ -1337,7 +1352,7 @@ gwp-merge:
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp                ; 自定义模块
-       (org +roam)
+       (org +roam2)
        magit
        ;; (rust +lsp)
 
@@ -1713,15 +1728,27 @@ SPC-j-l
 
 *** org
 #+begin_src emacs-lisp
-  ;; If you use `org' and don't want your org files in the default location below,
-  ;; change `org-directory'. It must be set before org loads!
-  (setq org-directory "~/Notes/")
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/Notes/")
+(setq org-roam-directory "~/Notes/roam")
+(setq org-roam-file-extensions '("note" "org"))
 
-  ;; treat .note files as org-mode
-  (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
-  (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
+;; treat .note files as org-mode
+(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
 
-  (after! org (load! "org"))
+(after! org (load! "org"))
+
+;; https://github.com/org-roam/org-roam-ui#doom
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+    :hook (org-roam . org-roam-ui-mode)
+    :config
+)
 #+end_src
 
 *** re-open-current-file
@@ -2144,10 +2171,15 @@ github支持, 减慢速度.
 
 *** 测试
 #+begin_src elisp
-(package! org-roam-server)
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
+
+;; https://github.com/org-roam/org-roam-ui#doom
+;; 2021-08-01 用不起来
+(package! websocket)
+(package! simple-httpd)
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 #+end_src
 
 * edit.el

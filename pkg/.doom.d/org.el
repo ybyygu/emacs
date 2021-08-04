@@ -85,14 +85,132 @@
 )
 ;; open-at-point:1 ends here
 
+;; [[file:../../doom.note::*screenshot][screenshot:1]]
+(defun gwp/org-image-attributes-default (&optional caption)
+  "default image attributes: caption, name label, width ..."
+    "Annotate LINK with the time of download."
+    (format (concat
+             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
+             ;; set unique figure name
+             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+             ;; unit in px; for displaying in org-mode
+             "#+attr_org: :width 800\n"
+             ;; unit in cm; for exporting as odt
+             "#+attr_odt: :width 10\n"
+             )))
+
+(defun gwp/org-insert-image-attributes (&optional caption)
+  "insert image attributes such as caption and labels"
+  (interactive)
+  (insert (gwp/org-image-attributes-default caption))
+  )
+
+(defun gwp/org-download-annotate (link)
+  "Annotate LINK with the time of download."
+  (gwp/org-image-attributes-default)
+  )
+
+(use-package! org-download
+              :commands
+              org-download-delete
+              org-download-yank
+              org-download-screenshot
+              :config
+              (progn
+                (setq org-download-method 'attach
+                      org-download-annotate-function 'gwp/org-download-annotate
+                      ;; org-download-image-html-width 900 ; in px
+                      ;; org-download-image-latex-width 16 ; in cm
+                      org-download-screenshot-method
+                      (cond ((executable-find "txclip")  "txclip paste --image -o %s")
+                            ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
+                            ((executable-find "scrot") "scrot -s %s"))
+                      )))
+;; screenshot:1 ends here
+
 ;; [[file:../../doom.note::*latex preview][latex preview:1]]
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 ;; latex preview:1 ends here
+
+;; [[file:../../doom.note::*init][init:1]]
+;; 不缩进org-src块中的代码.
+;; 注意: 不直接设置为"org-src-preserve-indentation t",
+;; 只设置org-edit-src-content-indentation为0, 这样仅影响编辑的org, 不影响tangle
+;; 出的代码. 以前的org文档可以逐步调回来
+(setq org-src-preserve-indentation nil)
+(setq org-edit-src-content-indentation 0) ;Default = 2
+
+;; helper functions for literate programming
+;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
+(defun help/set-org-babel-default-header-args (property value)
+  "Easily set system header arguments in org mode.
+
+PROPERTY is the system-wide value that you would like to modify.
+
+VALUE is the new value you wish to store.
+
+Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.html#System_002dwide-header-arguments'"
+  (setq org-babel-default-header-args
+        (cons (cons property value)
+              (assq-delete-all property org-babel-default-header-args))))
+
+;; 几个重要的header args:
+(help/set-org-babel-default-header-args :padline "yes")
+(help/set-org-babel-default-header-args :mkdirp "yes")
+(help/set-org-babel-default-header-args :comments "link")
+;; init:1 ends here
+
+;; [[file:../../doom.note::*enter][enter:1]]
+;; 禁用代码着色, 影响速度
+;; (setq org-src-fontify-natively nil)
+
+;; 编辑代码时在下方新开窗口
+;;(setq org-src-window-setup 'split-window-below)
+(setq org-src-window-setup 'current-window)
+;(setq org-src-window-setup 'reorganize-frame)
+;;(setq org-src-window-setup 'other-frame)
+
+;; 进入代码编辑模式, 改成容易按的
+(map! :map org-mode-map
+      :ni "C-c ;" #'org-edit-special
+      :ni "C-c C-;" #'org-edit-special
+      :localleader ";" #'org-edit-special
+      )
+;; enter:1 ends here
 
 ;; [[file:../../doom.note::*toml][toml:1]]
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 ;; toml:1 ends here
+
+;; [[file:../../doom.note::*edit][edit:1]]
+;; 用于激活 localleader
+(add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
+
+;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
+(map! :map org-src-mode-map
+      "C-c ;"   #'org-edit-src-exit  ; 保存退出
+      "C-c C-;" #'org-edit-src-exit  ; 保存退出
+      "C-c C-k" #'org-edit-src-abort ; 放弃修改
+      )
+(map! :map org-src-mode-map
+      :localleader
+      ";" #'org-edit-src-exit
+      "k" #'org-edit-src-abort
+      )
+
+(map! :map org-src-mode-map
+      :leader
+      ";" #'org-edit-src-exit
+      )
+
+(map! :map rust-mode-map
+      :localleader
+      "f" #'rust-format-buffer
+      "C-f" #'rust-format-buffer
+      "=" #'rust-format-buffer
+      )
+;; edit:1 ends here
 
 ;; [[file:../../doom.note::*jump][jump:1]]
 ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
@@ -166,6 +284,36 @@
     )
   )
 ;; tangle:3 ends here
+
+;; [[file:../../doom.note::*template][template:1]]
+(with-eval-after-load 'ob
+    (setq org-structure-template-alist
+          '(
+            ("py" . "src python :results output")
+            ("rs" . "src rust")
+            ("el" . "src emacs-lisp")
+            ("sh" . "src sh")
+          ))
+
+  (defun gwp/org-babel-edit-structure-in-place (arg)
+    "Insert source strcture and edit the source"
+    (interactive "P")
+    (call-interactively 'org-insert-structure-template)
+    (call-interactively 'org-edit-src-code)
+    )
+ )
+;; template:1 ends here
+
+;; [[file:../../doom.note::*auto time-stamp][auto time-stamp:1]]
+(with-eval-after-load "ob-tangle"
+  ;; update timestamps on tangled files
+  (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
+  (defun org-babel-post-tangle-hook--time-stamp ()
+    "Update timestamps on tangled files."
+    (time-stamp)
+    (save-buffer))
+  (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
+;; auto time-stamp:1 ends here
 
 ;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
 (use-package! org-noter
@@ -266,269 +414,6 @@ selected instead of creating a new buffer."
   (setq url (format "zotero:%s" path))
   (browse-url url))
 ;; zotero/link:1 ends here
-
-;; [[file:../../doom.note::*delete link file][delete link file:1]]
-(defun gwp/org-delete-link-file (arg)
-  "Delete the file that link points to."
-  (interactive "P")
-
-  (let ((file (gwp/org-file-path-at-point)))
-    (if file
-        (if (file-exists-p file)
-            (when (yes-or-no-p (format "Delete link file: %s?" file))
-              (progn (delete-file file)
-                     (message "File deleted"))
-              )
-          (error "No such attachment: %s" file))
-      (user-error "Point is not on a file link")
-      )))
-;; delete link file:1 ends here
-
-;; [[file:../../doom.note::*org-file-apps][org-file-apps:1]]
-;; (add-to-list 'org-file-apps
-;;              (quote (
-;;                      ("\\.odt\\'" . system)
-;;                      )))
-
-(add-to-list 'org-file-apps
-             '("\\.pdf\\'" . (lambda (file link)
-                               (org-pdftools-open link))))
-;; org-file-apps:1 ends here
-
-;; [[file:../../doom.note::*fix tab][fix tab:1]]
-(add-hook 'org-mode-hook #'evil-normalize-keymaps)
-;; fix tab:1 ends here
-
-;; [[file:../../doom.note::*bindings][bindings:1]]
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("b" . "org-babel")
-        :desc "check src block headers"    "c" #'org-babel-check-src-block
-        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
-        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
-        :desc "demarcate block"            "d" #'org-babel-demarcate-block
-        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
-        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
-        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
-        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
-        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-        )
-      (:prefix ("l" . "links")
-        "D" #'gwp/org-delete-link-file)
-      )
-
-(map! :map org-mode-map
-      :localleader
-      :desc "preview inline images"       "I"   #'org-toggle-inline-images
-      :desc "preview latex fragments"     "L"     #'org-latex-preview
-      :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
-      :desc "preview latex fragments"     "C-l"   #'org-latex-preview
-      :desc "Move to next link"           "C-n"   #'org-next-link
-      :desc "Move to prev link"           "C-p"   #'org-previous-link
-      :desc "Move to next link"           [tab]   #'org-next-link
-      :desc "Move to prev link"           [backtab]   #'org-previous-link
-      :desc "preview inline images"       "I"   #'org-toggle-inline-images
-      )
-
-(map! :map org-mode-map
-      :leader
-      :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
-      :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
-      :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
-      :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
-      )
-
-(map! :map org-mode-map
-      :localleader
-      ;; FIXME: 与doom/org定义有冲突
-      (:prefix ("s" . "Subtree")
-        :desc "Demote" "l" #'org-demote-subtree
-        :desc "Promote" "h" #'org-promote-subtree
-        :desc "Archive" "A" #'org-archive-subtree
-        ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-        :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
-        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-        )
-      (:prefix ("SPC" . "Special")
-        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-        )
-      )
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("g" . "Goto")
-        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto
-        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-        )
-      )
-;; bindings:1 ends here
-
-;; [[file:../../doom.note::*bindings][bindings:2]]
-(map! :map org-sidebar-tree-map
-      :localleader
-      :n "RET" #'org-sidebar-tree-jump
-      :n [return] #'org-sidebar-tree-jump
-      )
-;; bindings:2 ends here
-
-;; [[file:../../doom.note::*screenshot][screenshot:1]]
-(defun gwp/org-image-attributes-default (&optional caption)
-  "default image attributes: caption, name label, width ..."
-    "Annotate LINK with the time of download."
-    (format (concat
-             (format "#+DOWNLOADED: %s @ %s\n"
-                     (if (equal link org-download-screenshot-file)
-                         "screenshot"
-                       link)
-                     (format-time-string "%Y-%m-%d %H:%M:%S"))
-             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
-             ;; set unique figure name
-             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-             ;; unit in px; for displaying in org-mode
-             "#+attr_org: :width 800\n"
-             ;; unit in cm; for exporting as odt
-             "#+attr_odt: :width 10\n"
-             )
-            )
-
-  )
-
-(defun gwp/org-insert-image-attributes (&optional caption)
-  "insert image attributes such as caption and labels"
-  (interactive)
-  (insert (gwp/org-image-attributes-default caption))
-  )
-
-(defun gwp/org-download-annotate (link)
-  "Annotate LINK with the time of download."
-  (gwp/org-image-attributes-default)
-  )
-
-(use-package! org-download
-              :commands
-              org-download-delete
-              org-download-yank
-              org-download-screenshot
-              :config
-              (progn
-                (setq org-download-method 'attach
-                      org-download-annotate-function 'gwp/org-download-annotate
-                      ;; org-download-image-html-width 900 ; in px
-                      ;; org-download-image-latex-width 16 ; in cm
-                      org-download-screenshot-method
-                      (cond ((executable-find "txclip")  "txclip paste --image -o %s")
-                            ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
-                            ((executable-find "scrot") "scrot -s %s"))
-                      )))
-;; screenshot:1 ends here
-
-;; [[file:../../doom.note::*init][init:1]]
-;; 不缩进org-src块中的代码.
-;; 注意: 不直接设置为"org-src-preserve-indentation t",
-;; 只设置org-edit-src-content-indentation为0, 这样仅影响编辑的org, 不影响tangle
-;; 出的代码. 以前的org文档可以逐步调回来
-(setq org-src-preserve-indentation nil)
-(setq org-edit-src-content-indentation 0) ;Default = 2
-
-;; helper functions for literate programming
-;; taking from: https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org
-(defun help/set-org-babel-default-header-args (property value)
-  "Easily set system header arguments in org mode.
-
-PROPERTY is the system-wide value that you would like to modify.
-
-VALUE is the new value you wish to store.
-
-Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.html#System_002dwide-header-arguments'"
-  (setq org-babel-default-header-args
-        (cons (cons property value)
-              (assq-delete-all property org-babel-default-header-args))))
-
-;; 几个重要的header args:
-(help/set-org-babel-default-header-args :padline "yes")
-(help/set-org-babel-default-header-args :mkdirp "yes")
-(help/set-org-babel-default-header-args :comments "link")
-;; init:1 ends here
-
-;; [[file:../../doom.note::*enter][enter:1]]
-;; 禁用代码着色, 影响速度
-;; (setq org-src-fontify-natively nil)
-
-;; 编辑代码时在下方新开窗口
-;;(setq org-src-window-setup 'split-window-below)
-(setq org-src-window-setup 'current-window)
-;;(setq org-src-window-setup 'reorganize-frame)
-;;(setq org-src-window-setup 'other-frame)
-
-;; 进入代码编辑模式, 改成容易按的
-(map! :map org-mode-map
-      :ni "C-c ;" #'org-edit-special
-      :ni "C-c C-;" #'org-edit-special
-      :localleader ";" #'org-edit-special
-      )
-;; enter:1 ends here
-
-;; [[file:../../doom.note::*edit][edit:1]]
-;; 用于激活 localleader
-(add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
-
-;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
-(map! :map org-src-mode-map
-      "C-c ;"   #'org-edit-src-exit  ; 保存退出
-      "C-c C-;" #'org-edit-src-exit  ; 保存退出
-      "C-c C-k" #'org-edit-src-abort ; 放弃修改
-      )
-(map! :map org-src-mode-map
-      :localleader
-      ";" #'org-edit-src-exit
-      "k" #'org-edit-src-abort
-      )
-
-(map! :map org-src-mode-map
-      :leader
-      ";" #'org-edit-src-exit
-      )
-
-(map! :map rust-mode-map
-      :localleader
-      "f" #'rust-format-buffer
-      "C-f" #'rust-format-buffer
-      "=" #'rust-format-buffer
-      )
-;; edit:1 ends here
-
-;; [[file:../../doom.note::*template][template:1]]
-(with-eval-after-load 'ob
-    (setq org-structure-template-alist
-          '(
-            ("py" . "src python :results output")
-            ("rs" . "src rust")
-            ("el" . "src emacs-lisp")
-            ("sh" . "src sh")
-          ))
-
-  (defun gwp/org-babel-edit-structure-in-place (arg)
-    "Insert source strcture and edit the source"
-    (interactive "P")
-    (call-interactively 'org-insert-structure-template)
-    (call-interactively 'org-edit-src-code)
-    )
- )
-;; template:1 ends here
-
-;; [[file:../../doom.note::*auto time-stamp][auto time-stamp:1]]
-(with-eval-after-load "ob-tangle"
-  ;; update timestamps on tangled files
-  (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
-  (defun org-babel-post-tangle-hook--time-stamp ()
-    "Update timestamps on tangled files."
-    (time-stamp)
-    (save-buffer))
-  (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
-;; auto time-stamp:1 ends here
 
 ;; [[file:../../doom.note::*zotero/export][zotero/export:1]]
 (with-eval-after-load 'org-compat
@@ -804,6 +689,23 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
+;; [[file:../../doom.note::*delete link file][delete link file:1]]
+(defun gwp/org-delete-link-file (arg)
+  "Delete the file that link points to."
+  (interactive "P")
+
+  (let ((file (gwp/org-file-path-at-point)))
+    (if file
+        (if (file-exists-p file)
+            (when (yes-or-no-p (format "Delete link file: %s?" file))
+              (progn (delete-file file)
+                     (message "File deleted"))
+              )
+          (error "No such attachment: %s" file))
+      (user-error "Point is not on a file link")
+      )))
+;; delete link file:1 ends here
+
 ;; [[file:../../doom.note::*refile][refile:1]]
 (defun gwp/org-get-refile-targets ()
   "Return the list of files currently opened in emacs"
@@ -1006,6 +908,21 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; agenda:3 ends here
 
+;; [[file:../../doom.note::*org-file-apps][org-file-apps:1]]
+;; (add-to-list 'org-file-apps
+;;              (quote (
+;;                      ("\\.odt\\'" . system)
+;;                      )))
+
+(add-to-list 'org-file-apps
+             '("\\.pdf\\'" . (lambda (file link)
+                               (org-pdftools-open link))))
+;; org-file-apps:1 ends here
+
+;; [[file:../../doom.note::*fix tab][fix tab:1]]
+(add-hook 'org-mode-hook #'evil-normalize-keymaps)
+;; fix tab:1 ends here
+
 ;; [[file:../../doom.note::*misc][misc:1]]
 ;; (require 'org-man)
 ;; misc:1 ends here
@@ -1013,3 +930,78 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; [[file:../../doom.note::*misc][misc:2]]
 (setq org-fontify-emphasized-text nil)
 ;; misc:2 ends here
+
+;; [[file:../../doom.note::*bindings][bindings:1]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("b" . "org-babel")
+        :desc "check src block headers"    "c" #'org-babel-check-src-block
+        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
+        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
+        :desc "demarcate block"            "d" #'org-babel-demarcate-block
+        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
+        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
+        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
+        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
+        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+        )
+      (:prefix ("l" . "links")
+        "D" #'gwp/org-delete-link-file)
+      )
+
+(map! :map org-mode-map
+      :localleader
+      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      :desc "preview latex fragments"     "L"     #'org-latex-preview
+      :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
+      :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      :desc "Move to next link"           "C-n"   #'org-next-link
+      :desc "Move to prev link"           "C-p"   #'org-previous-link
+      :desc "Move to next link"           [tab]   #'org-next-link
+      :desc "Move to prev link"           [backtab]   #'org-previous-link
+      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      )
+
+(map! :map org-mode-map
+      :leader
+      :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
+      :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+      :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+      :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
+      )
+
+(map! :map org-mode-map
+      :localleader
+      ;; FIXME: 与doom/org定义有冲突
+      (:prefix ("s" . "Subtree")
+        :desc "Demote" "l" #'org-demote-subtree
+        :desc "Promote" "h" #'org-promote-subtree
+        :desc "Archive" "A" #'org-archive-subtree
+        ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+        :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
+        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+        )
+      (:prefix ("SPC" . "Special")
+        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
+        )
+      )
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("g" . "Goto")
+        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+        )
+      )
+;; bindings:1 ends here
+
+;; [[file:../../doom.note::*bindings][bindings:2]]
+(map! :map org-sidebar-tree-map
+      :localleader
+      :n "RET" #'org-sidebar-tree-jump
+      :n [return] #'org-sidebar-tree-jump
+      )
+;; bindings:2 ends here

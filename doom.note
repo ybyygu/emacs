@@ -151,15 +151,15 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 ** DONE [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
 - State "DONE"       from "TODO"       [2020-04-25 Sat 09:07]
 #+begin_src elisp :tangle no
-  (load-theme 'material t)
-  ;; (load-theme 'doom-one-light t)
-  (custom-set-faces!
-    '(org-todo :foreground "yellow" :weight bold :background "#263238")
-    '(org-done :foreground "yellow" :weight bold :background "#263238")
-    '(org-table :foreground "#e3f2fd")
-    '(org-level1 :foreground "#e3f2fd")
-    '(org-headline-done :foreground "gray")
-    )
+(load-theme 'material t)
+;; (load-theme 'doom-one-light t)
+(custom-set-faces!
+  '(org-todo :foreground "yellow" :weight bold :background "#263238")
+  '(org-done :foreground "yellow" :weight bold :background "#263238")
+  '(org-table :foreground "#e3f2fd")
+  '(org-level1 :foreground "#e3f2fd")
+  '(org-headline-done :foreground "gray")
+  )
 #+end_src
 
 ** DONE [2020-03-01 Sun] 各种emacs distribution
@@ -2772,11 +2772,6 @@ Requires cargo-check to be installed."
   "default image attributes: caption, name label, width ..."
     "Annotate LINK with the time of download."
     (format (concat
-             (format "#+DOWNLOADED: %s @ %s\n"
-                     (if (equal link org-download-screenshot-file)
-                         "screenshot"
-                       link)
-                     (format-time-string "%Y-%m-%d %H:%M:%S"))
              (concat  "#+caption: " (read-string "Caption: " caption) "\n")
              ;; set unique figure name
              (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
@@ -2784,21 +2779,16 @@ Requires cargo-check to be installed."
              "#+attr_org: :width 800\n"
              ;; unit in cm; for exporting as odt
              "#+attr_odt: :width 10\n"
-             )
-            )
-
-  )
+             )))
 
 (defun gwp/org-insert-image-attributes (&optional caption)
   "insert image attributes such as caption and labels"
   (interactive)
-  (insert (gwp/org-image-attributes-default caption))
-  )
+  (insert (gwp/org-image-attributes-default caption)))
 
 (defun gwp/org-download-annotate (link)
   "Annotate LINK with the time of download."
-  (gwp/org-image-attributes-default)
-  )
+  (gwp/org-image-attributes-default))
 
 (use-package! org-download
               :commands
@@ -2890,7 +2880,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 ;; 编辑代码时在下方新开窗口
 ;;(setq org-src-window-setup 'split-window-below)
 (setq org-src-window-setup 'current-window)
-;;(setq org-src-window-setup 'reorganize-frame)
+;(setq org-src-window-setup 'reorganize-frame)
 ;;(setq org-src-window-setup 'other-frame)
 
 ;; 进入代码编辑模式, 改成容易按的

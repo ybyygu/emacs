@@ -672,17 +672,31 @@ workflow
 - 使用org-noter插入笔记
 
 ** 使用org-noter批注
-[2020-01-01 Wed] org-noter比interleave功能更强.
-
+- [2021-08-19 Thu] org-noter也很长时间没有更新了
+- [2020-01-01 Wed] org-noter比interleave功能更强.
+  
 流程:
 - 在zotero界面, 选中待批注的PDF, "copy attachment path"
 - 在普通的org文件中将zotero中的PDF列为附件.
-- 打开org-noter批注该附件.
+- 打开org-noter批注该附件(space-m-n-n).
+
+pdf-view快捷键
+- pdf-view-scroll-down-or-previous-page: ctrl-d
+- pdf-view-scroll-up-or-next-page: ctrl-u
+- pdf-view-next-page-command: ctrl-j
+- pdf-view-previous-page-command: ctrl-k
+- pdf-view-first-page: gg
+- pdf-view-last-page: G
+- pdf-view-fit-width-to-window
+
+鼠标
+- 上一页: mouse-9
+- 下一页: mouse-10
 
 优点:
 - Note和PDF直接关联, 不需要写任何代码. 方便易用.
 - 原始zotero数据库中的为父本, 不同Note中的批注的有不同的副本.
-- 不需要更新.cache/notes列表.
+需要更新.cache/notes列表.
 
 ** 使用interleave批注流程
 - 在zotero界面, 选中待批注的PDF, "copy attachment path"
@@ -3075,10 +3089,13 @@ pdf-view-fit-width-to-window
         )
   ;; 方便标注
   (map! :map pdf-view-mode-map
+        :leader
+        ("d" #'pdf-annot-add-highlight-markup-annotation)
         :localleader
         ("h" #'pdf-annot-add-highlight-markup-annotation))
+
   (map! :map pdf-view-mode-map
-        [C-mouse-4] (cmd! (pdf-view-enlarge 1.10))
+        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
         [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
         [mouse-9] (cmd! (pdf-view-previous-page-command))
         [mouse-8] (cmd! (pdf-view-next-page-command))

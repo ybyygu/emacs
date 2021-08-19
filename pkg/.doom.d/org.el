@@ -102,13 +102,11 @@
 (defun gwp/org-insert-image-attributes (&optional caption)
   "insert image attributes such as caption and labels"
   (interactive)
-  (insert (gwp/org-image-attributes-default caption))
-  )
+  (insert (gwp/org-image-attributes-default caption)))
 
 (defun gwp/org-download-annotate (link)
   "Annotate LINK with the time of download."
-  (gwp/org-image-attributes-default)
-  )
+  (gwp/org-image-attributes-default))
 
 (use-package! org-download
               :commands
@@ -332,10 +330,13 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         )
   ;; 方便标注
   (map! :map pdf-view-mode-map
+        :leader
+        ("d" #'pdf-annot-add-highlight-markup-annotation)
         :localleader
         ("h" #'pdf-annot-add-highlight-markup-annotation))
+
   (map! :map pdf-view-mode-map
-        [C-mouse-4] (cmd! (pdf-view-enlarge 1.10))
+        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
         [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
         [mouse-9] (cmd! (pdf-view-previous-page-command))
         [mouse-8] (cmd! (pdf-view-next-page-command))

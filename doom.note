@@ -22,7 +22,18 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [30/37]
+* Memo [30/39]
+** TODO [2021-08-21 Sat] 试用ivy-bibtex文献搜索界面
+不太满意
+- 中英文混排不对齐
+- 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索)
+  
+** TODO [2021-08-20 Fri] 实现zotero管理界面
+- [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
+- [[https://oremacs.com/swiper/#actions][Ivy User Manual]]
+- [[id:f9dbae5c-d135-47fd-be30-e788fc1e3eb7][ivy 新手教程 - Emacs-general - Emacs China]]
+- [[id:dba75f6c-108f-4e84-a0ae-589065f572f6][JSON-RPC :: Better BibTeX for Zotero]] 
+  
 ** TODO [2021-08-01 Sun] 试用org-roam2
 org-roam-server改为org-roam-ui
 
@@ -611,7 +622,8 @@ related items. 同时zotero中的items也是平级组织, 统一命名, 使用zo
 org文档中自由引用跳转. 现在唯一欠缺的时像org-roam-server那样可以交互式的展现关联
 条目的network展现方式.
 
-org-roam可用于替代org-capture, 这样在浏览时随时记录, 并可保留note间的关联性.
+org-roam可用于替代org-capture, 这样在浏览时随时记录, 并可保留note间的关联性. 同
+时由于是多文件, 可以减少文件同步冲突.
 
 org-roam-capture
 org-roam-node-find
@@ -619,6 +631,12 @@ org-roam-node-insert
 org-roam-buffer-toggle
 
 * TODO Literate Programming in Rust
+需要安装[[https://github.com/racer-rust/racer][racer]]
+: rustup toolchain add nightly
+: rustup component add rust-src
+: cargo +nightly install racer
+: racer complete std::io::B 
+
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
 - 以上按键在org代码块中也可直接执行, org-babel-do-key-sequence-in-edit-buffer
@@ -666,14 +684,22 @@ References
 - 问题: 不能方便地在zotero界面里进行搜索 (需要fulltext index) (但可以用自编工具
   notesearch来处理, 不过需要定期更新cache)
 
-workflow
-- 将pdf文件关联到emacs, 使用pdf-tools打开(pdf-view-mode)
-- 进入org-noter界面(SPC-n-n), 按提示将 annotation.note放到PDF所在目录
-- 使用org-noter插入笔记
+** Zotero笔记管理
+- 在Emacs中gwp/insert-new-zotero-item, 将在zotero中新添加一report类似的note
+- 在Zotero界面选中某文献, 右键Attach New File, 将自动附上一note文件
 
-** 使用org-noter批注
+** 使用org-noter批注PDF
 - [2021-08-19 Thu] org-noter也很长时间没有更新了
 - [2020-01-01 Wed] org-noter比interleave功能更强.
+  
+将pdf文件关联到emacs, 使用pdf-tools打开(pdf-view-mode)
+- 进入org-noter界面(SPC-n-n), 按提示将 annotation.note放到PDF所在目录
+- 使用org-noter插入笔记
+  
+优点:
+- Note和PDF直接关联, 不需要写任何代码. 方便易用.
+- 原始zotero数据库中的为父本, 不同Note中的批注的有不同的副本.
+需要更新.cache/notes列表.
   
 流程:
 - 在zotero界面, 选中待批注的PDF, "copy attachment path"
@@ -693,12 +719,7 @@ pdf-view快捷键
 - 上一页: mouse-9
 - 下一页: mouse-10
 
-优点:
-- Note和PDF直接关联, 不需要写任何代码. 方便易用.
-- 原始zotero数据库中的为父本, 不同Note中的批注的有不同的副本.
-需要更新.cache/notes列表.
-
-** 使用interleave批注流程
+** 使用interleave批注流程(old)
 - 在zotero界面, 选中待批注的PDF, "copy attachment path"
 - 打开org-capture, 使用interleave模板, 生成~/annotation.note
 - 在zotero界面, 使用zotfile的 "Attach New File"功能, 自动将annotation.note加入附
@@ -1278,6 +1299,7 @@ gwp-merge:
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
+       biblio
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
@@ -2152,7 +2174,6 @@ org-noter
 (package! nix-mode)
 #+end_src
 
-
 *** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 
@@ -2411,6 +2432,14 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   (setq evil-multiedit-follow-matches t)
   )
 #+end_src
+** bibtex
+用于搜索zotero导出的bibtex文献. bibtex中keywords对应zotero中的tags
+#+begin_src elisp
+(setq bibtex-completion-bibliography
+      '("~/Data/zotero/my.bib"))
+(setq bibtex-completion-pdf-field "file")
+(setq bibtex-completion-additional-search-fields '(keywords annotation note))
+#+end_src
 
 * develop.el
 :PROPERTIES:
@@ -2617,7 +2646,8 @@ Requires cargo-check to be installed."
 #+end_src
 
 *** racer
-#+begin_src elisp
+[2021-08-21 Sat] 老报错, 禁用了之
+#+begin_src elisp :tangle no
 (use-package cargo
   :defer t
   :init
@@ -2633,6 +2663,7 @@ Requires cargo-check to be installed."
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
 (package! cargo)
 (package! racer)
+(package! rust-mode)
 ;; (package! smartparens-rust) ; 不确定需要
 #+end_src
 
@@ -3159,7 +3190,6 @@ selected instead of creating a new buffer."
 
 ** zotero/link
 [[file:rust-modules/rust-modules.note][rust-module.note]]
-
 
 使用 SPC-u-SPC-m-O, 强制在emacs中打开
 
@@ -3902,6 +3932,67 @@ org-sidebar
       :n [return] #'org-sidebar-tree-jump
       )
 #+end_src
+* zotero.el
+[[file:rust-modules/rust-modules.note][rust-module.note]]
+action-1: (⌘ python Dacapo misc Dacapo =has-pdf=  (=has-pdf= . ⌘) (keywords . python) (title . Dacapo) (=type= . misc) (=key= . Dacapo))
+#+begin_src elisp
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
+(require 'zotero)
+
+(defun gwp/zotero-search (&optional arg local-bib)
+  "Search Zotero entries using ivy."
+  (interactive "P")
+
+  (bibtex-completion-init)
+  (let* ((candidates (my-candidates)))
+    (ivy-read (format "Zotero entries: ")
+              candidates
+              :action '(1
+                        ("o" my-action-1 "action 1")
+                        ("j" my-action-2 "action 2")
+                        ("k" my-action-3 "action 3")))))
+
+
+(defun my-candidates ()
+  '("foo" "bar" "baz"))
+
+(defun my-action-1 (x)
+  (message "action-1: %s" x))
+
+(defun my-action-2 (x)
+  (message "action-2: %s" x))
+
+(defun my-action-3 (x)
+  (message "action-3: %s" x))
+
+(defun gwp/org-open-zotero-attachment-at-point (arg)
+  "Open zotero attachment"
+  (interactive "P")
+
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((path (zotero-get-attachment-path link)))
+              (if path
+                  (progn
+                    (message "%s!" path)
+                    (org-open-file path arg)
+                    )
+                (error "No attachments for item!"))))))))
+
+(defun gwp/insert-new-zotero-item (arg)
+  "Create a new zotero item (report)"
+  (interactive "P")
+
+  (let ((uri (zotero-create-new-note)))
+    (if uri
+        (progn
+          (message "%s!" uri)
+          (insert "[[" uri "][" "zotero-note" "]]"))
+      (error "create zotero item failed!"))))
+#+end_src
+
 * bindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/bindings.el :comments nil

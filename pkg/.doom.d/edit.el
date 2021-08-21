@@ -31,30 +31,16 @@
         (function er/expand-region)))
 ;; expand region:1 ends here
 
+;; [[file:../../doom.note::*doom tuning][doom tuning:1]]
+(setq evil-want-fine-undo t)
+;; doom tuning:1 ends here
+
 ;; [[file:../../doom.note::*better jumper][better jumper:1]]
 (map! :nm
       [M-mouse-4] #'better-jumper-jump-backward
       [M-mouse-5] #'better-jumper-jump-forward
       )
 ;; better jumper:1 ends here
-
-;; [[file:../../doom.note::*join next line][join next line:1]]
-(after! evil
-  (advice-remove #'evil-join #'+evil-join-a)
-  )
-;; join next line:1 ends here
-
-;; [[file:../../doom.note::*multiedit][multiedit:1]]
-(use-package evil-multiedit
-  :after evil
-  :config
-  (setq evil-multiedit-follow-matches t)
-  )
-;; multiedit:1 ends here
-
-;; [[file:../../doom.note::*doom tuning][doom tuning:1]]
-(setq evil-want-fine-undo t)
-;; doom tuning:1 ends here
 
 ;; [[file:../../doom.note::*insert date][insert date:1]]
 (defun gwp/insert-date (arg)
@@ -76,6 +62,12 @@
 ;; make sure this always work
 (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 ;; white space:1 ends here
+
+;; [[file:../../doom.note::*join next line][join next line:1]]
+(after! evil
+  (advice-remove #'evil-join #'+evil-join-a)
+  )
+;; join next line:1 ends here
 
 ;; [[file:../../doom.note::*advanced selection][advanced selection:1]]
 ;; expand selection
@@ -174,3 +166,18 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
 ;; advanced selection:1 ends here
+
+;; [[file:../../doom.note::*multiedit][multiedit:1]]
+(use-package evil-multiedit
+  :after evil
+  :config
+  (setq evil-multiedit-follow-matches t)
+  )
+;; multiedit:1 ends here
+
+;; [[file:../../doom.note::*bibtex][bibtex:1]]
+(setq bibtex-completion-bibliography
+      '("~/Data/zotero/my.bib"))
+(setq bibtex-completion-pdf-field "file")
+(setq bibtex-completion-additional-search-fields '(keywords annotation note))
+;; bibtex:1 ends here

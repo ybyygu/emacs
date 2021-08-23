@@ -22,11 +22,17 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [30/39]
-** TODO [2021-08-21 Sat] 试用ivy-bibtex文献搜索界面
+* Memo [31/39]
+** DONE [2021-08-21 Sat] 实现类ivy-bibtex文献搜索界面
+- State "DONE"       from "TODO"       [2021-08-23 Mon 10:17]
 不太满意
 - 中英文混排不对齐
 - 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索)
+
+[2021-08-23 Mon] 自己写了一个, 简洁够用.
+流程:
+: gwp/zotero-searcn
+: Ctrl-o, o
   
 ** TODO [2021-08-20 Fri] 实现zotero管理界面
 - [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
@@ -3198,6 +3204,38 @@ selected instead of creating a new buffer."
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
 (require 'zotero)
 
+(defun gwp/zotero-search (&optional arg local-bib)
+  "Search Zotero entries using ivy."
+  (interactive "P")
+
+  (let* ((candidates (zotero-search-items)))
+    (ivy-read (format "Zotero entries: ")
+              candidates
+              :action '(2               ; set the default action to open link
+                        ("i" gwp--ivy-action-insert-link "Insert link")
+                        ("O" gwp--ivy-action-open-link "Open link")
+                        ))))
+
+
+(defun gwp--ivy-action-insert-link (x)
+  (let ((uri (zotero-get-selected-item-link x)))
+    (if uri
+        (progn
+          (message "%s!" x)
+          (insert "[[" uri "][" "zotero-item" "]]")
+          )
+      (error "No link extracted from: %s" x)
+      )))
+
+(defun gwp--ivy-action-open-link (x)
+  (let ((uri (zotero-get-selected-item-link x)))
+    (if uri
+        (progn
+          (message "%s!" x)
+          (org-link-open-from-string (format "[[%s]]" uri)))
+      (error "No link extracted from: %s" x)
+      )))
+
 (defun gwp/org-open-zotero-attachment-at-point (arg)
   "Open zotero attachment"
   (interactive "P")
@@ -3224,7 +3262,6 @@ selected instead of creating a new buffer."
           (message "%s!" uri)
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
-
 
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
@@ -3931,66 +3968,6 @@ org-sidebar
       :n "RET" #'org-sidebar-tree-jump
       :n [return] #'org-sidebar-tree-jump
       )
-#+end_src
-* zotero.el
-[[file:rust-modules/rust-modules.note][rust-module.note]]
-action-1: (⌘ python Dacapo misc Dacapo =has-pdf=  (=has-pdf= . ⌘) (keywords . python) (title . Dacapo) (=type= . misc) (=key= . Dacapo))
-#+begin_src elisp
-(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
-(require 'zotero)
-
-(defun gwp/zotero-search (&optional arg local-bib)
-  "Search Zotero entries using ivy."
-  (interactive "P")
-
-  (bibtex-completion-init)
-  (let* ((candidates (my-candidates)))
-    (ivy-read (format "Zotero entries: ")
-              candidates
-              :action '(1
-                        ("o" my-action-1 "action 1")
-                        ("j" my-action-2 "action 2")
-                        ("k" my-action-3 "action 3")))))
-
-
-(defun my-candidates ()
-  '("foo" "bar" "baz"))
-
-(defun my-action-1 (x)
-  (message "action-1: %s" x))
-
-(defun my-action-2 (x)
-  (message "action-2: %s" x))
-
-(defun my-action-3 (x)
-  (message "action-3: %s" x))
-
-(defun gwp/org-open-zotero-attachment-at-point (arg)
-  "Open zotero attachment"
-  (interactive "P")
-
-  (let ((ct (org-element-context)))
-    (if (eq 'link (org-element-type ct))
-        (let ((link (org-element-property :raw-link ct)))
-          (when link
-            (let ((path (zotero-get-attachment-path link)))
-              (if path
-                  (progn
-                    (message "%s!" path)
-                    (org-open-file path arg)
-                    )
-                (error "No attachments for item!"))))))))
-
-(defun gwp/insert-new-zotero-item (arg)
-  "Create a new zotero item (report)"
-  (interactive "P")
-
-  (let ((uri (zotero-create-new-note)))
-    (if uri
-        (progn
-          (message "%s!" uri)
-          (insert "[[" uri "][" "zotero-note" "]]"))
-      (error "create zotero item failed!"))))
 #+end_src
 
 * bindings.el

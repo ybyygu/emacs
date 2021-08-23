@@ -380,6 +380,38 @@ selected instead of creating a new buffer."
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
 (require 'zotero)
 
+(defun gwp/zotero-search (&optional arg local-bib)
+  "Search Zotero entries using ivy."
+  (interactive "P")
+
+  (let* ((candidates (zotero-search-items)))
+    (ivy-read (format "Zotero entries: ")
+              candidates
+              :action '(2               ; set the default action to open link
+                        ("i" gwp--ivy-action-insert-link "Insert link")
+                        ("O" gwp--ivy-action-open-link "Open link")
+                        ))))
+
+
+(defun gwp--ivy-action-insert-link (x)
+  (let ((uri (zotero-get-selected-item-link x)))
+    (if uri
+        (progn
+          (message "%s!" x)
+          (insert "[[" uri "][" "zotero-item" "]]")
+          )
+      (error "No link extracted from: %s" x)
+      )))
+
+(defun gwp--ivy-action-open-link (x)
+  (let ((uri (zotero-get-selected-item-link x)))
+    (if uri
+        (progn
+          (message "%s!" x)
+          (org-link-open-from-string (format "[[%s]]" uri)))
+      (error "No link extracted from: %s" x)
+      )))
+
 (defun gwp/org-open-zotero-attachment-at-point (arg)
   "Open zotero attachment"
   (interactive "P")
@@ -406,7 +438,6 @@ selected instead of creating a new buffer."
           (message "%s!" uri)
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
-
 
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)

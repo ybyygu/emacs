@@ -389,9 +389,18 @@ selected instead of creating a new buffer."
               candidates
               :action '(2               ; set the default action to open link
                         ("i" gwp--ivy-action-insert-link "Insert link")
-                        ("O" gwp--ivy-action-open-link "Open link")
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ))))
 
+
+(defun gwp--ivy-action-open-attachments (x)
+  "ivy completion for zotero attachments."
+  (let* ((candidates (zotero-get-selected-item-attachment-paths x)))
+    (ivy-read (format "Open attachment: ")
+              candidates
+              :action '(1               ; set the default action to open link
+                        ("o" org-open-file "Open")))))
 
 (defun gwp--ivy-action-insert-link (x)
   (let ((uri (zotero-get-selected-item-link x)))

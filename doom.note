@@ -29,16 +29,18 @@
 - 中英文混排不对齐
 - 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索)
 
+** TODO [2021-08-20 Fri] 实现zotero管理界面
+- [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
+- [[https://oremacs.com/swiper/#actions][Ivy User Manual]]
+- [[id:f9dbae5c-d135-47fd-be30-e788fc1e3eb7][ivy 新手教程 - Emacs-general - Emacs China]]
+- [[id:dba75f6c-108f-4e84-a0ae-589065f572f6][JSON-RPC :: Better BibTeX for Zotero]]
+- [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][helm-bibtex/ivy-bibtex.el at master · tmalsburg/helm-bibtex]]
+  
 [2021-08-23 Mon] 自己写了一个, 简洁够用.
 流程:
 : gwp/zotero-searcn
 : Ctrl-o, o
   
-** TODO [2021-08-20 Fri] 实现zotero管理界面
-- [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
-- [[https://oremacs.com/swiper/#actions][Ivy User Manual]]
-- [[id:f9dbae5c-d135-47fd-be30-e788fc1e3eb7][ivy 新手教程 - Emacs-general - Emacs China]]
-- [[id:dba75f6c-108f-4e84-a0ae-589065f572f6][JSON-RPC :: Better BibTeX for Zotero]] 
   
 ** TODO [2021-08-01 Sun] 试用org-roam2
 org-roam-server改为org-roam-ui
@@ -3213,9 +3215,18 @@ selected instead of creating a new buffer."
               candidates
               :action '(2               ; set the default action to open link
                         ("i" gwp--ivy-action-insert-link "Insert link")
-                        ("O" gwp--ivy-action-open-link "Open link")
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ))))
 
+
+(defun gwp--ivy-action-open-attachments (x)
+  "ivy completion for zotero attachments."
+  (let* ((candidates (zotero-get-selected-item-attachment-paths x)))
+    (ivy-read (format "Open attachment: ")
+              candidates
+              :action '(1               ; set the default action to open link
+                        ("o" org-open-file "Open")))))
 
 (defun gwp--ivy-action-insert-link (x)
   (let ((uri (zotero-get-selected-item-link x)))

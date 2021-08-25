@@ -5,8 +5,6 @@
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 
-[[zotero://select/items/1_X9KXBXA5][zotero-note]]
-
 * 配置参考
 - [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
@@ -22,12 +20,73 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [31/39]
+* Memo [33/40]
+** DONE [2021-08-25 Wed] 改进字体设置
+- State "DONE"       from "TODO"       [2021-08-25 Wed 09:20]
+
+[2021-08-26 Thu] 现用Sarasa Nerd fonts. 已打包到gwp-fonts中.
+
+nerd-fonts是加了各种图形化字体补丁的字体, 比如nered-fonts-ubuntu-mono
+
+Sarasa类字体, 等宽等高, 可以解决中英文混排的问题. 不需要为org-table单独设字体了.
+
+包含样式：
+Sarasa Gothic / 更纱黑体：基于Noto Sans，全宽引号
+Sarasa UI / 更纱黑体 UI：基于Noto Sans窄引号
+Sarasa Mono T / 等距更纱黑体 T：基于Iosevka，有连字，全宽破折号
+Sarasa Mono / 等距更纱黑体：基于Iosevka，有连字，半宽破折号
+Sarasa Term：基于Iosevka，无连字，半宽破折号
+
+字形：
+CL: Classical orthography
+SC: Simplified Chinese
+TC: Traditional Chinese
+HC: Hong Kong Chinese
+J : Japanese
+K : Korean
+
+| WenQuanYi Zenhei Mono (文泉驿等宽正黑) | 中英文，半宽，等高                                         |
+| Inconsolata                            | 英文，半宽                                                 |
+| Ubuntu Mono                            | 英文，半宽                                                 |
+| ProgmataPro                            | 英文，半宽，付费                                           |
+| Noto Sans Mono CJK SC                  | 中英文，半宽，以前的版本英文部分用的 Adobe Source code pro |
+
+参考
+- [[https://manateelazycat.github.io/emacs/2020/04/02/org-font.html][Org-Mode 表格对齐设置]]
+  
 ** DONE [2021-08-21 Sat] 实现类ivy-bibtex文献搜索界面
 - State "DONE"       from "TODO"       [2021-08-23 Mon 10:17]
 不太满意
 - 中英文混排不对齐
 - 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索)
+
+  | 好 | x         |
+  |    | 好看就t末 |
+
+#+begin_src elisp
+;; (setq doom-font (font-spec :family "Sarasa Mono T SC" :size 16)
+;;       doom-unicode-font (font-spec :family "Sarasa Mono T SC"))
+
+;; (setq doom-font (font-spec :family "Ubuntu Mono" :size 16)
+;;       doom-unicode-font (font-spec :family "Ubuntu Mono"))
+
+;; (when (member "Sarasa Nerd" (font-family-list))
+;;   (setq doom-font (font-spec :family "Sarasa Nerd" :size 16)
+;;         doom-variable-pitch-font (font-spec :family "Sarasa Nerd")
+;;         doom-unicode-font (font-spec :family "Sarasa Nerd")
+;;         doom-big-font (font-spec :family "Sarasa Nerd" :size 20)))
+
+;; (setq doom-font (font-spec :family "Sarasa Mono T SC" :size 24 :weight 'regular)
+;;   doom-variable-pitch-font (font-spec :family "Sarasa Mono T SC" :size 24)
+;;   doom-unicode-font (font-spec :family "Sarasa Mono T SC")
+;;   doom-big-font (font-spec :family "Sarasa Mono T SC" :size 24))
+
+(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 24)
+      doom-serif-font (font-spec :family "Sarasa Mono Slab SC")
+      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font Mono")
+      doom-unicode-font (font-spec :family "Sarasa Mono Slab SC")
+      doom-big-font (font-spec :family "Sarasa Mono Slab SC" :size 30))
+#+end_src
 
 ** TODO [2021-08-20 Fri] 实现zotero管理界面
 - [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
@@ -36,12 +95,13 @@
 - [[id:dba75f6c-108f-4e84-a0ae-589065f572f6][JSON-RPC :: Better BibTeX for Zotero]]
 - [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][helm-bibtex/ivy-bibtex.el at master · tmalsburg/helm-bibtex]]
   
+*** Memo
+[2021-08-25 Wed] 这个链接打不开? [[zotero://select/items/1_I9BXB5GH][@WenBin2007]] 已修复
 [2021-08-23 Mon] 自己写了一个, 简洁够用.
 流程:
 : gwp/zotero-searcn
 : Ctrl-o, o
-  
-  
+
 ** TODO [2021-08-01 Sun] 试用org-roam2
 org-roam-server改为org-roam-ui
 
@@ -136,7 +196,8 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 无法确定问题的根源, 有时成功, 有时失败. 成功案例:
 - Cu-u SPC-l-s, 失败后再用SPC-l-s
 
-** TODO [2020-03-20 Fri] org中narrow功能                                  :Idea:
+** DONE [2020-03-20 Fri] org中narrow功能                                  :Idea:
+- State "DONE"       from "TODO"       [2021-08-26 Thu 07:44]
 org中进行Literate porgramming时, 如果source blocks太多, 会严重影响性能, 这时很有
 必要配合narrow来进行view或tangle.
 
@@ -528,6 +589,15 @@ CLOSED: [2017-11-01 Wed 10:34]
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
+** ivy notes
+| 命令            | 功能             | Tips                         |
+|-----------------+------------------+------------------------------|
+| counsel-recentf | 打开最近文件列表 | 按C-o,f可强制在新的frame打开 |
+|                 |                  |                              |
+
+| VVA3ZTSS => 2017 | A first-principles evaluation of the stability, accessibility, and strength of Brønsted acid sites | 申宝剑老师的文章 有空看看 |
+| HB2WME7W => 2017 | Structure of the SnO2(110)−(4×1) Surface                                                           | 表面结构搜索              |
+
 ** org-mode
 | org-kill-note-or-show-branches | C-c C-k | 查看headlines, 当前上下文TAB键无效时有用   |
 
@@ -715,8 +785,8 @@ References
 - 打开org-noter批注该附件(space-m-n-n).
 
 pdf-view快捷键
-- pdf-view-scroll-down-or-previous-page: ctrl-d
-- pdf-view-scroll-up-or-next-page: ctrl-u
+- pdf-view-scroll-down-or-previous-page: ctrl-d, ctrl-b
+- pdf-view-scroll-up-or-next-page: ctrl-u, ctrl-f
 - pdf-view-next-page-command: ctrl-j
 - pdf-view-previous-page-command: ctrl-k
 - pdf-view-first-page: gg
@@ -748,136 +818,7 @@ pdf-view快捷键
 - 重要的tangle参数已在配置文件中做全局设置, 比如: ~padline~ ~mkdirp~ ~comments~
 
 * TODO scripts
-** take-screenshot-dwim
-[2020-03-08 Sun] 用不上了.
-屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
-#+header: :tangle no
-#+begin_src shell
-  [[ $# < 1 ]] && echo "no image path" && exit 0
-
-  # switch to active window
-  xdotool keydown alt key Tab; xdotool keyup alt
-  # take a screenshot
-  deepin-screenshot -n -s "$1" 2>/dev/null
-  # switch back
-  xdotool keydown alt key Tab; xdotool keyup alt
-#+end_src
-** start-terminal
-gnome-terminal使用client/server架构, 没法在emacs中直接打开, 需要清除几个环境变量.
-#+header: :tangle pkg/.local/bin/terminal-dwim.sh :shebang #! /usr/bin/env bash
-#+begin_src shell
-unset GNOME_TERMINAL_SCREEN
-unset GNOME_TERMINAL_SERVICE
-gnome-terminal $*
-#+end_src
-
-[2021-04-05 Mon] alacritty现在真好用. 可以放弃gnome-terminal了.
-
-** org-capture
-#+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
-#+header: :mkdirp yes :comments yes :padline yes
-#+begin_src shell
-  emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
-#+end_src
-
-** org-agenda
-#+header: :mkdirp yes :comments yes :padline yes
-#+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
-  emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
-#+end_src
-
-** pdf-view
-以全屏窗口打开PDF文件
-#+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle pkg/.local/bin/emacs-pdf.sh
-emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
-#+end_src
-
-** org-read-todo
-#+BEGIN_SRC sh
-  dir_read_root=~/ToDo/READ/Research
-  dir_topic=$(basename "`pwd`")
-
-  dir_read="$dir_read_root"/"$dir_topic"
-
-  mkdir -p "$dir_read"
-
-  cp "$(pwd)/${1#file:}" "$dir_read"/
-#+END_SRC
-
-** org-read-done
-#+BEGIN_SRC sh
-  dir_read_root=~/ToDo/READ/Research
-  dir_topic=$(basename "`pwd`")
-
-  dir_read="$dir_read_root"/"$dir_topic"
-
-  path="$dir_read"/$(basename "${1#file:}")
-
-  [[ -f "$path" ]] && rm -f "$path"
-#+END_SRC
-
-** emacsclient-open
-:PROPERTIES:
-:header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
-:END:
-*** header
-#+begin_src python
-  # -*- coding: utf-8 -*-
-  #==============================================================================#
-  #   DESCRIPTION:  open text file with emacsclient and register the it into the
-  #                 recently-used-files list (~/.recently-used.xbel)
-  #
-  #       OPTIONS:  ---
-  #  REQUIREMENTS:  ---
-  #         NOTES:
-  #        AUTHOR:  Wenping Guo (ybyygu)
-  #         EMAIL:  winpng@gmail.com
-  #       LICENCE:  GPL version 2 or upper
-  #       CREATED:  <2010-09-01 Wed 16:04>
-  #       UPDATED:  <>
-  #==============================================================================#
-  #
-  # basically, to make emacsclient perfect, there are three things need be done:
-  # 1. use parameter "-a ''", that is, use a void alternate-editor to automatically start
-  #    emacs daemon
-  # 2. open the file without "-n" option to make sure the file buffer will be killed when frame
-  #    is closed
-  # 3. if the file has been opened, use "-n" option.
-#+end_src
-
-*** main
-#+begin_src python
-  import os
-  import sys
-  import subprocess
-
-  def check_emacs_client(path):
-      """check if the file has been opened by emacsclient"""
-      cmdlines = ["/usr/bin/pgrep", "-fa", "emacsclient -c"]
-      output = subprocess.Popen(cmdlines,
-                                universal_newlines=True,  # output is a str not bytes
-                                stdout=subprocess.PIPE).stdout.read()
-      print(output)
-      if path in output:
-          return True
-      return False
-
-  if len(sys.argv) == 1:
-      print("%s: open file using emacsclient." % (__file__))
-      sys.exit(0)
-
-  path = os.path.abspath(sys.argv[1])
-  if check_emacs_client(path):
-      print("{:} is opened.".format(path))
-      args = ["emacsclient", "-n", path]
-      subprocess.call(args)
-  else:
-      args = ["emacsclient", "-c", "-a", "", path]
-      subprocess.Popen(args)
-#+end_src
-
+** TODO [2015-11-29 Sun] 使用 Kitchin 的 ox-archive.el 代替旧的 org-archive.py [[https://github.com/jkitchin/jmax/blob/master/ox-archive.el][URL]]
 ** org-archive.py
 :PROPERTIES:
 :header-args: :tangle pkg/.local/bin/org-archive.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python2
@@ -986,6 +927,137 @@ def main(argv=None):
 if __name__ == '__main__':
     main()
 #+end_src
+
+** pdf-view
+以全屏窗口打开PDF文件
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/emacs-pdf.sh
+emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
+#+end_src
+
+** take-screenshot-dwim
+[2020-03-08 Sun] 用不上了, 现在clipboard方案.
+屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
+#+header: :tangle no
+#+begin_src shell
+[[ $# < 1 ]] && echo "no image path" && exit 0
+
+# switch to active window
+xdotool keydown alt key Tab; xdotool keyup alt
+# take a screenshot
+deepin-screenshot -n -s "$1" 2>/dev/null
+# switch back
+xdotool keydown alt key Tab; xdotool keyup alt
+#+end_src
+
+** emacsclient-open
+:PROPERTIES:
+:header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
+:END:
+*** header
+#+begin_src python
+  # -*- coding: utf-8 -*-
+  #==============================================================================#
+  #   DESCRIPTION:  open text file with emacsclient and register the it into the
+  #                 recently-used-files list (~/.recently-used.xbel)
+  #
+  #       OPTIONS:  ---
+  #  REQUIREMENTS:  ---
+  #         NOTES:
+  #        AUTHOR:  Wenping Guo (ybyygu)
+  #         EMAIL:  winpng@gmail.com
+  #       LICENCE:  GPL version 2 or upper
+  #       CREATED:  <2010-09-01 Wed 16:04>
+  #       UPDATED:  <>
+  #==============================================================================#
+  #
+  # basically, to make emacsclient perfect, there are three things need be done:
+  # 1. use parameter "-a ''", that is, use a void alternate-editor to automatically start
+  #    emacs daemon
+  # 2. open the file without "-n" option to make sure the file buffer will be killed when frame
+  #    is closed
+  # 3. if the file has been opened, use "-n" option.
+#+end_src
+
+*** main
+#+begin_src python
+import os
+import sys
+import subprocess
+
+def check_emacs_client(path):
+    """check if the file has been opened by emacsclient"""
+    cmdlines = ["/usr/bin/pgrep", "-fa", "emacsclient -c"]
+    output = subprocess.Popen(cmdlines,
+                              universal_newlines=True,  # output is a str not bytes
+                              stdout=subprocess.PIPE).stdout.read()
+    print(output)
+    if path in output:
+        return True
+    return False
+
+if len(sys.argv) == 1:
+    print("%s: open file using emacsclient." % (__file__))
+    sys.exit(0)
+
+path = os.path.abspath(sys.argv[1])
+if check_emacs_client(path):
+    print("{:} is opened.".format(path))
+    args = ["emacsclient", "-n", path]
+    subprocess.call(args)
+else:
+    args = ["emacsclient", "-c", "-a", "", path]
+    subprocess.Popen(args)
+#+end_src
+
+** start-terminal
+gnome-terminal使用client/server架构, 没法在emacs中直接打开, 需要清除几个环境变量.
+#+header: :tangle pkg/.local/bin/terminal-dwim.sh :shebang #! /usr/bin/env bash
+#+begin_src shell
+unset GNOME_TERMINAL_SCREEN
+unset GNOME_TERMINAL_SERVICE
+gnome-terminal $*
+#+end_src
+
+[2021-04-05 Mon] alacritty现在真好用. 可以放弃gnome-terminal了.
+
+** org-capture
+#+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
+#+header: :mkdirp yes :comments yes :padline yes
+#+begin_src shell
+emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
+#+end_src
+
+** org-agenda
+#+header: :mkdirp yes :comments yes :padline yes
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
+  emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
+#+end_src
+
+** org-read-todo
+#+BEGIN_SRC sh
+dir_read_root=~/ToDo/READ/Research
+dir_topic=$(basename "`pwd`")
+
+dir_read="$dir_read_root"/"$dir_topic"
+
+mkdir -p "$dir_read"
+
+cp "$(pwd)/${1#file:}" "$dir_read"/
+#+END_SRC
+
+** org-read-done
+#+BEGIN_SRC sh
+dir_read_root=~/ToDo/READ/Research
+dir_topic=$(basename "`pwd`")
+
+dir_read="$dir_read_root"/"$dir_topic"
+
+path="$dir_read"/$(basename "${1#file:}")
+
+[[ -f "$path" ]] && rm -f "$path"
+#+END_SRC
 
 * TODO desktop integration
 ** emacsclient-open
@@ -1464,18 +1536,13 @@ gwp-merge:
 
 *** ui
 **** chinese fonts setup
-#+begin_src elisp
-;; (use-package! cnfonts
-;;   :config
-;;   (progn
-;;     (setq cnfonts-profiles
-;;           '("program" "org-mode" "read-book"))
-;;     (setq cnfonts-use-face-font-rescale t)
-;;     )
-;;   (cnfonts-enable)
-;;   )
+最早用cnfonts, 不过这个也比较麻烦. 现在用Sarasa之类的中英文等宽字体, 可较完美解
+决中英文表格对齐问题
 
-;; 这样modeline就正常了
+查看字体:
+: describe-char
+#+begin_src elisp :comments nil
+;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390
 (defun gwp/set-fonts()
   (interactive)
@@ -1484,31 +1551,44 @@ gwp-merge:
         ;; english font
         ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
         ;; (setq doom-font (font-spec :family "Monaco" :size 16))
-        (setq doom-font (font-spec :family "Monaco"))
+        ;; (setq doom-font (font-spec :family "Monaco"))
         ;; chinese font
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
     ))
-(global-set-key (kbd "<f5> <f5>") 'gwp/set-fonts)
 
-(defun gwp/init-fonts(frame)
-  (with-selected-frame frame
-    (if (display-graphic-p)
-        (gwp/set-fonts))))
-
-(if (and (fboundp 'daemonp) (daemonp))
-    (add-hook 'after-make-frame-functions #'gwp/init-fonts))
-
+;; 2021-08-25: 不需要单独设置了
 ;; org-mode表格中文混排对齐
-(after! org
-  (call-interactively 'gwp/set-fonts)
-  (custom-set-faces!
-    `(org-table :family "Ubuntu Mono")
-    )
+;; (after! org
+;;   ;; (call-interactively 'gwp/set-fonts)
+;;   (custom-set-faces!
+;;     `(org-table :family "Ubuntu Mono")
+;;     )
+;;   )
+
+;; for doom-emacs only
+;; https://emacs-china.org/t/emacs/15676/20
+;; https://github.com/ztlevi/doom-config/blob/main/%2Bui.el
+(when (display-graphic-p)
+  (setq user-font
+        (cond
+         ;; https://github.com/laishulu/Sarasa-Mono-SC-Nerd
+         ((find-font (font-spec :name  "Sarasa Mono SC Nerd")) "Sarasa Mono SC Nerd")
+         ((find-font (font-spec :name  "Noto Sans Mono CJK SC")) "Noto Sans Mono CJK SC")
+         ((find-font (font-spec :name  "Source Code Pro")) "Source Code Pro")))
+  (setq resolution-factor (eval (/ (x-display-pixel-height) 1080)))
+  (setq ideal-font-size (eval (* 15 resolution-factor)))
+  (setq big-font-size (eval (* 18 resolution-factor)))
+  (setq doom-font (font-spec :family user-font :size ideal-font-size)
+        ;; doom-serif-font (font-spec :family user-font)
+        doom-variable-pitch-font (font-spec :family user-font)
+        ;; doom-unicode-font (font-spec :family user-font)
+        doom-big-font (font-spec :family user-font :size big-font-size))
   )
 #+end_src
+
 **** input method
 [[https://tumashu.github.io/pyim/][A Chinese input method which support quanpin, shuangpin, wubi and cangjie. - pyim]]
 
@@ -3196,10 +3276,23 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 #+end_src
 
-** zotero/link
+** zotero/link                                                          :ATTACH:
+:PROPERTIES:
+:ID:       0cbea3c4-ceef-44b4-9d07-250080801511
+:END:
 [[file:rust-modules/rust-modules.note][rust-module.note]]
 
 使用 SPC-u-SPC-m-O, 强制在emacs中打开
+流程:
+- 搜索文献
+- 选中文献, 右键或Ctrl-o, 打开ivy actions界面
+- 选择打开附件, ctrl-o, 打开action界面, 选择标注
+
+#+caption: 文献PDF注解界面
+#+name: fig:3381b8ba
+#+attr_org: :width 800
+#+attr_odt: :width 10
+[[attachment:2021-08-25_16-19-20_screenshot.png]]
 
 #+begin_src elisp
 ;; rust-modules
@@ -3219,6 +3312,15 @@ selected instead of creating a new buffer."
                         ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ))))
 
+(defun gwp--ivy-action-annotate-attachment (pdf-file)
+  "Annotate the attachment with org-noter."
+  (let ((annotation-file (expand-file-name (car org-noter-default-notes-file-names) (file-name-directory pdf-file))))
+    (progn
+      ;; create an empty annotation file if not exists
+      (unless (file-exists-p annotation-file) (write-region "" nil annotation-file))
+      (org-open-file pdf-file)
+      (org-noter))
+    ))
 
 (defun gwp--ivy-action-open-attachments (x)
   "ivy completion for zotero attachments."
@@ -3226,7 +3328,8 @@ selected instead of creating a new buffer."
     (ivy-read (format "Open attachment: ")
               candidates
               :action '(1               ; set the default action to open link
-                        ("o" org-open-file "Open")))))
+                        ("o" org-open-file "Open")
+                        ("n" gwp--ivy-action-annotate-attachment "Annotate")))))
 
 (defun gwp--ivy-action-insert-link (x)
   (let ((uri (zotero-get-selected-item-link x)))

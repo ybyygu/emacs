@@ -47,18 +47,7 @@
 (setq persp-auto-save-opt 0)
 ;; workspace:1 ends here
 
-;; [[file:../../doom.note::*chinese fonts setup][chinese fonts setup:1]]
-;; (use-package! cnfonts
-;;   :config
-;;   (progn
-;;     (setq cnfonts-profiles
-;;           '("program" "org-mode" "read-book"))
-;;     (setq cnfonts-use-face-font-rescale t)
-;;     )
-;;   (cnfonts-enable)
-;;   )
-
-;; 这样modeline就正常了
+;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390
 (defun gwp/set-fonts()
   (interactive)
@@ -67,31 +56,42 @@
         ;; english font
         ;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Monaco" 16)) ;; 11 13 17 19 23
         ;; (setq doom-font (font-spec :family "Monaco" :size 16))
-        (setq doom-font (font-spec :family "Monaco"))
+        ;; (setq doom-font (font-spec :family "Monaco"))
         ;; chinese font
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "Adobe Heiti Std")))) ;; 14 16 20 22 28
     ))
-(global-set-key (kbd "<f5> <f5>") 'gwp/set-fonts)
 
-(defun gwp/init-fonts(frame)
-  (with-selected-frame frame
-    (if (display-graphic-p)
-        (gwp/set-fonts))))
-
-(if (and (fboundp 'daemonp) (daemonp))
-    (add-hook 'after-make-frame-functions #'gwp/init-fonts))
-
+;; 2021-08-25: 不需要单独设置了
 ;; org-mode表格中文混排对齐
-(after! org
-  (call-interactively 'gwp/set-fonts)
-  (custom-set-faces!
-    `(org-table :family "Ubuntu Mono")
-    )
+;; (after! org
+;;   ;; (call-interactively 'gwp/set-fonts)
+;;   (custom-set-faces!
+;;     `(org-table :family "Ubuntu Mono")
+;;     )
+;;   )
+
+;; for doom-emacs only
+;; https://emacs-china.org/t/emacs/15676/20
+;; https://github.com/ztlevi/doom-config/blob/main/%2Bui.el
+(when (display-graphic-p)
+  (setq user-font
+        (cond
+         ;; https://github.com/laishulu/Sarasa-Mono-SC-Nerd
+         ((find-font (font-spec :name  "Sarasa Mono SC Nerd")) "Sarasa Mono SC Nerd")
+         ((find-font (font-spec :name  "Noto Sans Mono CJK SC")) "Noto Sans Mono CJK SC")
+         ((find-font (font-spec :name  "Source Code Pro")) "Source Code Pro")))
+  (setq resolution-factor (eval (/ (x-display-pixel-height) 1080)))
+  (setq ideal-font-size (eval (* 15 resolution-factor)))
+  (setq big-font-size (eval (* 18 resolution-factor)))
+  (setq doom-font (font-spec :family user-font :size ideal-font-size)
+        ;; doom-serif-font (font-spec :family user-font)
+        doom-variable-pitch-font (font-spec :family user-font)
+        ;; doom-unicode-font (font-spec :family user-font)
+        doom-big-font (font-spec :family user-font :size big-font-size))
   )
-;; chinese fonts setup:1 ends here
 
 ;; [[file:../../doom.note::*input method][input method:1]]
 (use-package! pyim

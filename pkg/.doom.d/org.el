@@ -393,6 +393,15 @@ selected instead of creating a new buffer."
                         ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ))))
 
+(defun gwp--ivy-action-annotate-attachment (pdf-file)
+  "Annotate the attachment with org-noter."
+  (let ((annotation-file (expand-file-name (car org-noter-default-notes-file-names) (file-name-directory pdf-file))))
+    (progn
+      ;; create an empty annotation file if not exists
+      (unless (file-exists-p annotation-file) (write-region "" nil annotation-file))
+      (org-open-file pdf-file)
+      (org-noter))
+    ))
 
 (defun gwp--ivy-action-open-attachments (x)
   "ivy completion for zotero attachments."
@@ -400,7 +409,8 @@ selected instead of creating a new buffer."
     (ivy-read (format "Open attachment: ")
               candidates
               :action '(1               ; set the default action to open link
-                        ("o" org-open-file "Open")))))
+                        ("o" org-open-file "Open")
+                        ("n" gwp--ivy-action-annotate-attachment "Annotate")))))
 
 (defun gwp--ivy-action-insert-link (x)
   (let ((uri (zotero-get-selected-item-link x)))

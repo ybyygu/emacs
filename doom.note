@@ -2881,7 +2881,7 @@ Requires cargo-check to be installed."
 (map! :map org-mode-map
       :localleader
       "o" #'gwp/org-open-at-point-dwim
-      "O" #'gwp/org-open-zotero-attachment-at-point
+      "O" #'gwp/org-open-zotero-attachments-at-point
 )
 #+end_src
 
@@ -3350,21 +3350,17 @@ selected instead of creating a new buffer."
       (error "No link extracted from: %s" x)
       )))
 
-(defun gwp/org-open-zotero-attachment-at-point (arg)
-  "Open zotero attachment"
+(defun gwp/org-open-zotero-attachments-at-point (arg)
+  "Handle zotero attachments in org-mode"
   (interactive "P")
-
   (let ((ct (org-element-context)))
     (if (eq 'link (org-element-type ct))
         (let ((link (org-element-property :raw-link ct)))
           (when link
-            (let ((path (zotero-get-attachment-path link)))
-              (if path
-                  (progn
-                    (message "%s!" path)
-                    (org-open-file path arg)
-                    )
-                (error "No attachments for item!"))))))))
+            (let ((key (zotero-get-item-key-from-link link)))
+              (if key
+                  (gwp--ivy-action-open-attachments key)
+                (error "Invalid zotero link!"))))))))
 
 (defun gwp/insert-new-zotero-item (arg)
   "Create a new zotero item (report)"

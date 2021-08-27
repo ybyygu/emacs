@@ -390,8 +390,20 @@ selected instead of creating a new buffer."
               :action '(2               ; set the default action to open link
                         ("i" gwp--ivy-action-insert-link "Insert link")
                         ("o" gwp--ivy-action-open-link "Open link")
+                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
                         ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ))))
+
+(defun gwp--ivy-action-show-related-items (x)
+  "show related items from selection"
+  (let* ((candidates (zotero-get-related-items x)))
+    (ivy-read (format "Related: ")
+              candidates
+              :action '(2               ; set the default action to open link
+                        ("i" gwp--ivy-action-insert-link "Insert link")
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")))))
 
 (defun gwp--ivy-action-annotate-attachment (pdf-file)
   "Annotate the attachment with org-noter."
@@ -400,8 +412,7 @@ selected instead of creating a new buffer."
       ;; create an empty annotation file if not exists
       (unless (file-exists-p annotation-file) (write-region "" nil annotation-file))
       (org-open-file pdf-file)
-      (org-noter))
-    ))
+      (org-noter))))
 
 (defun gwp--ivy-action-open-attachments (x)
   "ivy completion for zotero attachments."

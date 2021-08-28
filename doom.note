@@ -934,6 +934,10 @@ if __name__ == '__main__':
 #+begin_src sh :tangle pkg/.local/bin/emacs-pdf.sh
 emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
 #+end_src
+** stop-daemon
+#+begin_src shell
+/usr/bin/emacsclient --no-wait --eval "(progn (setq kill-emacs-hook nil) (kill-emacs))"
+#+end_src
 
 ** take-screenshot-dwim
 [2020-03-08 Sun] 用不上了, 现在clipboard方案.
@@ -1069,7 +1073,7 @@ Name=Emacs Client - GWP
 GenericName=Text Editor
 Comment=View and edit files
 MimeType=application/x-note;application/pdf;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-Exec=emacsclient %F
+Exec=emacsclient -create-frame --alternate-editor="" --no-wait %F
 TryExec=emacs
 Icon=emacs
 Type=Application
@@ -1578,7 +1582,8 @@ gwp-merge:
          ((find-font (font-spec :name  "Sarasa Mono SC Nerd")) "Sarasa Mono SC Nerd")
          ((find-font (font-spec :name  "Noto Sans Mono CJK SC")) "Noto Sans Mono CJK SC")
          ((find-font (font-spec :name  "Source Code Pro")) "Source Code Pro")))
-  (setq resolution-factor (eval (/ (x-display-pixel-height) 1080)))
+  ;; (setq resolution-factor (eval (/ (x-display-pixel-height) 1080)))
+  (setq resolution-factor 2)
   (setq ideal-font-size (eval (* 15 resolution-factor)))
   (setq big-font-size (eval (* 18 resolution-factor)))
   (setq doom-font (font-spec :family user-font :size ideal-font-size)
@@ -2880,9 +2885,7 @@ Requires cargo-check to be installed."
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
-      "o" #'gwp/org-open-at-point-dwim
-      "O" #'gwp/org-open-zotero-attachments-at-point
-)
+      "o" #'gwp/org-open-at-point-dwim)
 #+end_src
 
 ** screenshot
@@ -3276,7 +3279,7 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 #+end_src
 
-** zotero/link                                                          :ATTACH:
+** zotero/ui                                                            :ATTACH:
 :PROPERTIES:
 :ID:       0cbea3c4-ceef-44b4-9d07-250080801511
 :END:
@@ -3310,8 +3313,7 @@ selected instead of creating a new buffer."
                         ("i" gwp--ivy-action-insert-link "Insert link")
                         ("o" gwp--ivy-action-open-link "Open link")
                         ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")
-                        ))))
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")))))
 
 (defun gwp--ivy-action-show-related-items (x)
   "show related items from selection"
@@ -3347,10 +3349,8 @@ selected instead of creating a new buffer."
     (if uri
         (progn
           (message "%s!" x)
-          (insert "[[" uri "][" "zotero-item" "]]")
-          )
-      (error "No link extracted from: %s" x)
-      )))
+          (insert "[[" uri "][" "zotero-item" "]]"))
+      (error "No link extracted from: %s" x))))
 
 (defun gwp--ivy-action-open-link (x)
   (let ((uri (zotero-get-selected-item-link x)))
@@ -3358,8 +3358,7 @@ selected instead of creating a new buffer."
         (progn
           (message "%s!" x)
           (org-link-open-from-string (format "[[%s]]" uri)))
-      (error "No link extracted from: %s" x)
-      )))
+      (error "No link extracted from: %s" x))))
 
 (defun gwp/org-open-zotero-attachments-at-point (arg)
   "Handle zotero attachments in org-mode"
@@ -3384,6 +3383,13 @@ selected instead of creating a new buffer."
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
 
+(map! :map org-mode-map
+      :localleader
+      "O" #'gwp/org-open-zotero-attachments-at-point)
+#+end_src
+
+** zotero/link
+#+begin_src elisp
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
 
@@ -3674,42 +3680,42 @@ file-exists-p函数对symlink的特殊性:
 
 **** 使用org-attach将文件move到当到附录中并更新文件链接
 #+begin_src emacs-lisp
-  ;; (require 'org-download)
+;; (require 'org-download)
 
-  (defun gwp/org-store-link-without-desc (file)
-    "store file link without the description part -- a tweak to make odt image exporting correct."
-    (setq org-stored-links
-          (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
-                org-stored-links)
-          )
-    )
-
-  (defun gwp/org-take-as-local-attachment ()
-    "move file link at point as local attachment"
-    (interactive)
-    (let ((file (gwp/org-file-path-at-point)))
-      (if file
-          (progn
-            ;; 1. store the file using copy
-            ;; or we can use the mv method: (org-attach-attach file nil 'mv)
-            ;; do not store file link since it will corrupt odt image exporting
-            (let ((org-attach-store-link-p nil))
-              (org-attach-attach file))
-            ;; 2. remove the old
-            (call-interactively 'org-download-delete)
-            ;; 3. insert the new
-            ;; use file name as the default caption
-            (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
-            (insert "\n")
-            (gwp/org-store-link-without-desc file)
-            (call-interactively 'org-insert-last-stored-link)
-            ;; refresh the image if possbile
-            (org-display-inline-images)
-           )
-        (user-error "Point is not on a link")
+(defun gwp/org-store-link-without-desc (file)
+  "store file link without the description part -- a tweak to make odt image exporting correct."
+  (setq org-stored-links
+        (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
+              org-stored-links)
         )
+  )
+
+(defun gwp/org-take-as-local-attachment ()
+  "move file link at point as local attachment"
+  (interactive)
+  (let ((file (gwp/org-file-path-at-point)))
+    (if file
+        (progn
+          ;; 1. store the file using copy
+          ;; or we can use the mv method: (org-attach-attach file nil 'mv)
+          ;; do not store file link since it will corrupt odt image exporting
+          (let ((org-attach-store-link-p nil))
+            (org-attach-attach file))
+          ;; 2. remove the old
+          (call-interactively 'org-download-delete)
+          ;; 3. insert the new
+          ;; use file name as the default caption
+          (gwp/org-insert-image-attributes (file-name-sans-extension (file-name-nondirectory file)))
+          (insert "\n")
+          (gwp/org-store-link-without-desc file)
+          (call-interactively 'org-insert-last-stored-link)
+          ;; refresh the image if possbile
+          (org-display-inline-images)
+         )
+      (user-error "Point is not on a link")
       )
     )
+  )
 #+end_src
 
 *** delete link file

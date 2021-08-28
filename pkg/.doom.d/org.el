@@ -80,9 +80,7 @@
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
-      "o" #'gwp/org-open-at-point-dwim
-      "O" #'gwp/org-open-zotero-attachments-at-point
-)
+      "o" #'gwp/org-open-at-point-dwim)
 ;; open-at-point:1 ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]
@@ -375,7 +373,7 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 ;; narrow:1 ends here
 
-;; [[file:../../doom.note::*zotero/link][zotero/link:1]]
+;; [[file:../../doom.note::*zotero/ui][zotero/ui:1]]
 ;; rust-modules
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
 (require 'zotero)
@@ -391,8 +389,7 @@ selected instead of creating a new buffer."
                         ("i" gwp--ivy-action-insert-link "Insert link")
                         ("o" gwp--ivy-action-open-link "Open link")
                         ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")
-                        ))))
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")))))
 
 (defun gwp--ivy-action-show-related-items (x)
   "show related items from selection"
@@ -428,10 +425,8 @@ selected instead of creating a new buffer."
     (if uri
         (progn
           (message "%s!" x)
-          (insert "[[" uri "][" "zotero-item" "]]")
-          )
-      (error "No link extracted from: %s" x)
-      )))
+          (insert "[[" uri "][" "zotero-item" "]]"))
+      (error "No link extracted from: %s" x))))
 
 (defun gwp--ivy-action-open-link (x)
   (let ((uri (zotero-get-selected-item-link x)))
@@ -439,8 +434,7 @@ selected instead of creating a new buffer."
         (progn
           (message "%s!" x)
           (org-link-open-from-string (format "[[%s]]" uri)))
-      (error "No link extracted from: %s" x)
-      )))
+      (error "No link extracted from: %s" x))))
 
 (defun gwp/org-open-zotero-attachments-at-point (arg)
   "Handle zotero attachments in org-mode"
@@ -465,6 +459,12 @@ selected instead of creating a new buffer."
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
 
+(map! :map org-mode-map
+      :localleader
+      "O" #'gwp/org-open-zotero-attachments-at-point)
+;; zotero/ui:1 ends here
+
+;; [[file:../../doom.note::*zotero/link][zotero/link:1]]
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
 

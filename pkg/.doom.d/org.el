@@ -448,6 +448,18 @@ selected instead of creating a new buffer."
                   (gwp--ivy-action-open-attachments key)
                 (error "Invalid zotero link!"))))))))
 
+(defun gwp/org-open-zotero-related-at-point (arg)
+  "Open related zotero items for zotero link at point"
+  (interactive "P")
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((key (zotero-get-item-key-from-link link)))
+              (if key
+                  (gwp--ivy-action-show-related-items key)
+                (error "Invalid zotero link!"))))))))
+
 (defun gwp/insert-new-zotero-item (arg)
   "Create a new zotero item (report)"
   (interactive "P")
@@ -459,8 +471,13 @@ selected instead of creating a new buffer."
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
 
+;; key bindings
 (map! :map org-mode-map
       :localleader
+      (:prefix ("z" . "zotero")
+       :desc "search items"        "z" #'gwp/zotero-search
+       :desc "open attachments"    "o" #'gwp/org-open-zotero-attachments-at-point
+       :desc "open related items"  "r" #'gwp/org-open-zotero-related-at-point)
       "O" #'gwp/org-open-zotero-attachments-at-point)
 ;; zotero/ui:1 ends here
 

@@ -378,29 +378,29 @@ selected instead of creating a new buffer."
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
 (require 'zotero)
 
-(defun gwp/zotero-search (&optional arg local-bib)
-  "Search Zotero entries using ivy."
-  (interactive "P")
+(defun gwp/zotero-search (tag)
+  "Search Zotero entries by tag using ivy."
+  (interactive "sTag: ")
 
-  (let* ((candidates (zotero-search-items)))
+  (let* ((candidates (zotero-search-items tag)))
     (ivy-read (format "Zotero entries: ")
               candidates
-              :action '(2               ; set the default action to open link
-                        ("i" gwp--ivy-action-insert-link "Insert link")
+              :action '(2               ; set the default action to open attachments
                         ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")))))
+                        ("i" gwp--ivy-action-insert-link "Insert link")))))
 
 (defun gwp--ivy-action-show-related-items (x)
   "show related items from selection"
   (let* ((candidates (zotero-get-related-items x)))
     (ivy-read (format "Related: ")
               candidates
-              :action '(2               ; set the default action to open link
-                        ("i" gwp--ivy-action-insert-link "Insert link")
+              :action '(2               ; set the default action to open attachments
                         ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
                         ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")))))
+                        ("i" gwp--ivy-action-insert-link "Insert link")))))
 
 (defun gwp--ivy-action-annotate-attachment (pdf-file)
   "Annotate the attachment with org-noter."

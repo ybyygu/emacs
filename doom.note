@@ -819,11 +819,11 @@ pdf-view快捷键
 - 重要的tangle参数已在配置文件中做全局设置, 比如: ~padline~ ~mkdirp~ ~comments~
 
 * TODO scripts
-** TODO [2015-11-29 Sun] 使用 Kitchin 的 ox-archive.el 代替旧的 org-archive.py [[https://github.com/jkitchin/jmax/blob/master/ox-archive.el][URL]]
 ** org-archive.py
 :PROPERTIES:
 :header-args: :tangle pkg/.local/bin/org-archive.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python2
 :END:
+*** TODO [2015-11-29 Sun] 使用 Kitchin 的 ox-archive.el 代替旧的 org-archive.py [[https://github.com/jkitchin/jmax/blob/master/ox-archive.el][URL]]
 *** header
 #+begin_src python
 # -*- coding: utf-8 -*-
@@ -929,32 +929,6 @@ if __name__ == '__main__':
     main()
 #+end_src
 
-** pdf-view
-以全屏窗口打开PDF文件
-#+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle pkg/.local/bin/emacs-pdf.sh
-emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
-#+end_src
-** stop-daemon
-#+begin_src shell
-/usr/bin/emacsclient --no-wait --eval "(progn (setq kill-emacs-hook nil) (kill-emacs))"
-#+end_src
-
-** take-screenshot-dwim
-[2020-03-08 Sun] 用不上了, 现在clipboard方案.
-屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
-#+header: :tangle no
-#+begin_src shell
-[[ $# < 1 ]] && echo "no image path" && exit 0
-
-# switch to active window
-xdotool keydown alt key Tab; xdotool keyup alt
-# take a screenshot
-deepin-screenshot -n -s "$1" 2>/dev/null
-# switch back
-xdotool keydown alt key Tab; xdotool keyup alt
-#+end_src
-
 ** emacsclient-open
 :PROPERTIES:
 :header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
@@ -1015,6 +989,50 @@ else:
     subprocess.Popen(args)
 #+end_src
 
+** pdf-view
+以全屏窗口打开PDF文件
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/emacs-pdf.sh
+emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
+#+end_src
+
+** org-capture
+用doom自带的更好. doom-emacs/bin
+可绑定全局按键, 随时记录所思所想.
+
+#+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
+#+header: :mkdirp yes :comments yes :padline yes
+#+begin_src shell
+emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
+#+end_src
+
+** stop-daemon
+#+begin_src shell
+/usr/bin/emacsclient --no-wait --eval "(progn (setq kill-emacs-hook nil) (kill-emacs))"
+#+end_src
+
+** org-agenda
+#+header: :mkdirp yes :comments yes :padline yes
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
+emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
+#+end_src
+
+** take-screenshot-dwim
+[2020-03-08 Sun] 用不上了, 现在clipboard方案.
+屏幕截图时隐藏当前窗口, 完成后再切回原窗口. 需要安装xdotool工具.
+#+header: :tangle no
+#+begin_src shell
+[[ $# < 1 ]] && echo "no image path" && exit 0
+
+# switch to active window
+xdotool keydown alt key Tab; xdotool keyup alt
+# take a screenshot
+deepin-screenshot -n -s "$1" 2>/dev/null
+# switch back
+xdotool keydown alt key Tab; xdotool keyup alt
+#+end_src
+
 ** start-terminal
 gnome-terminal使用client/server架构, 没法在emacs中直接打开, 需要清除几个环境变量.
 #+header: :tangle pkg/.local/bin/terminal-dwim.sh :shebang #! /usr/bin/env bash
@@ -1025,20 +1043,6 @@ gnome-terminal $*
 #+end_src
 
 [2021-04-05 Mon] alacritty现在真好用. 可以放弃gnome-terminal了.
-
-** org-capture
-#+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
-#+header: :mkdirp yes :comments yes :padline yes
-#+begin_src shell
-emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
-#+end_src
-
-** org-agenda
-#+header: :mkdirp yes :comments yes :padline yes
-#+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
-  emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
-#+end_src
 
 ** org-read-todo
 #+BEGIN_SRC sh
@@ -1082,20 +1086,6 @@ Terminal=false
 Categories=Utility;Development;TextEditor;
 #+end_src
 
-** org-capture
-#+begin_src text :tangle pkg/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
-[Desktop Entry]
-Version=1.0
-Name=Org Capture
-Comment=Capture using emacs org-mode
-Exec=org-capture.sh
-TryExec=emacs
-Icon=emacs
-Type=Application
-Terminal=false
-Categories=Utility;Development;TextEditor;
-#+end_src
-
 ** org-protocol
 #+header: :tangle pkg/.local/share/applications/gwp-org-protocol.desktop :comments nil
 #+BEGIN_SRC text
@@ -1118,6 +1108,21 @@ MimeType=x-scheme-handler/org-protocol;
 - 在Firefox中禁用security.csp.enable选项
 - 使用bookmarklets来capture网页内容
 
+** org-capture
+[2021-08-28 Sat] 似乎用处不大了
+#+begin_src text :tangle pkg/.local/share/applications/gwp-org-capture.desktop :mkdirp yes
+[Desktop Entry]
+Version=1.0
+Name=Org Capture
+Comment=Capture using emacs org-mode
+Exec=org-capture.sh
+TryExec=emacs
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;
+#+end_src
+
 ** install
 1. 验证桌面文件. 桌面文件开头的gwp-为vendor.
 2. 安装桌面文件.
@@ -1131,9 +1136,9 @@ update-desktop-database ~/.local/share/applications/
 
 #+begin_src shell :dir ~/.local/share/applications
 desktop-file-validate gwp-emacsclient.desktop
-desktop-file-validate gwp-org-capture.desktop
 xdg-desktop-menu install gwp-emacsclient.desktop
-xdg-desktop-menu install gwp-org-capture.desktop
+# desktop-file-validate gwp-org-capture.desktop
+# xdg-desktop-menu install gwp-org-capture.desktop
 #+end_src
 
 
@@ -3396,13 +3401,21 @@ selected instead of creating a new buffer."
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
 
+;; https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/
+(require 'transient)
+(transient-define-prefix gwp/zotero-search-transient ()
+  "Search zotero database"
+  [["Search zotero items:"
+    ("t" "search by tag" gwp/zotero-search)
+    ("c" "search by collection" gwp/zotero-search)
+    ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
+    ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
+    ]]
+  )
 ;; key bindings
 (map! :map org-mode-map
       :localleader
-      (:prefix ("z" . "zotero")
-       :desc "search items"        "z" #'gwp/zotero-search
-       :desc "open attachments"    "o" #'gwp/org-open-zotero-attachments-at-point
-       :desc "open related items"  "r" #'gwp/org-open-zotero-related-at-point)
+      "z" #'gwp/zotero-search-transient
       "O" #'gwp/org-open-zotero-attachments-at-point)
 #+end_src
 

@@ -471,13 +471,21 @@ selected instead of creating a new buffer."
           (insert "[[" uri "][" "zotero-note" "]]"))
       (error "create zotero item failed!"))))
 
+;; https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/
+(require 'transient)
+(transient-define-prefix gwp/zotero-search-transient ()
+  "Search zotero database"
+  [["Search zotero items:"
+    ("t" "search by tag" gwp/zotero-search)
+    ("c" "search by collection" gwp/zotero-search)
+    ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
+    ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
+    ]]
+  )
 ;; key bindings
 (map! :map org-mode-map
       :localleader
-      (:prefix ("z" . "zotero")
-       :desc "search items"        "z" #'gwp/zotero-search
-       :desc "open attachments"    "o" #'gwp/org-open-zotero-attachments-at-point
-       :desc "open related items"  "r" #'gwp/org-open-zotero-related-at-point)
+      "z" #'gwp/zotero-search-transient
       "O" #'gwp/org-open-zotero-attachments-at-point)
 ;; zotero/ui:1 ends here
 

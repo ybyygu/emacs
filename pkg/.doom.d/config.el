@@ -367,9 +367,11 @@ If two universal prefix arguments are used, then prompt for command to use."
   "search all notes in ~/.cache/notes"
   (interactive "P")
 
-  (let ((default-directory "~/.cache/notes"))
-    (call-interactively '+ivy/project-search-from-cwd)
-    )
+  ;; (let ((default-directory "~/.cache/notes"))
+  ;; (call-interactively '+ivy/project-search-from-cwd))
+  
+  ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
+  (counsel-rg "" "~/.cache/notes" "--follow")
   )
 ;; ripgrep:1 ends here
 

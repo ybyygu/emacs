@@ -4,6 +4,47 @@
 ;;
 
 (map! :leader
+      ;; :desc "Eval expression"       ";"    #'pp-eval-expression
+      :desc "M-x"                   ":"    #'execute-extended-command
+      :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
+      :desc "Org Capture"           "X"    #'org-capture
+
+      ;; C-u is used by evil
+      :desc "Universal argument"    "u"    #'universal-argument
+      :desc "window"                "w"    evil-window-map
+      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
+      :desc "help"                  "h"    help-map
+
+      (:when (featurep! :ui popup)
+        :desc "Toggle last popup"     "~"    #'+popup/toggle)
+      :desc "Find file"             "."    #'find-file
+
+      :desc "Switch buffer"         ","    #'switch-to-buffer
+      (:when (featurep! :ui workspaces)
+        :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
+        :desc "Switch buffer"           "<" #'switch-to-buffer)
+
+      :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
+
+      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
+      )
+
+(defun gwp/workspace/load-or-switch (name)
+  "Load or switch to a workspace."
+  (interactive
+   (list
+    (completing-read
+     "Workspace to load: "
+     (persp-list-persp-names-in-file
+      (expand-file-name +workspaces-data-file persp-save-dir)))))
+  (if (+workspace-exists-p name)
+      (+workspace/switch-to name)
+    (if (not (+workspace-load name))
+        (+workspace-error (format "Couldn't load workspace %s" name))
+      (+workspace/switch-to name)))
+  (+workspace/display))
+
+(map! :leader
       ;;; <leader> l --- workspace
       (:when (featurep! :ui workspaces)
         (:prefix-map ("l" . "workspace")
@@ -145,7 +186,6 @@
         :desc "Sudo find file"              "u"   #'doom/sudo-find-file
         :desc "Sudo this file"              "U"   #'doom/sudo-this-file
         :desc "Yank filename"               "y"   #'+default/yank-buffer-filename)
-
     )
 
 (map! :leader
@@ -326,7 +366,6 @@
         :desc "Search buffer"                "b" #'swiper
         :desc "Search current directory"     "d" #'+default/search-cwd
         :desc "Search other directory"       "D" #'+default/search-other-cwd
-        :desc "Locate file"                  "f" #'locate
         :desc "Jump to symbol"               "i" #'imenu
         :desc "Jump to visible link"         "l" #'link-hint-open-link
         :desc "Jump to link"                 "L" #'ffap-menu
@@ -391,47 +430,6 @@
           :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
           :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
     )
-
-(map! :leader
-      ;; :desc "Eval expression"       ";"    #'pp-eval-expression
-      :desc "M-x"                   ":"    #'execute-extended-command
-      :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
-      :desc "Org Capture"           "X"    #'org-capture
-
-      ;; C-u is used by evil
-      :desc "Universal argument"    "u"    #'universal-argument
-      :desc "window"                "w"    evil-window-map
-      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
-      :desc "help"                  "h"    help-map
-
-      (:when (featurep! :ui popup)
-        :desc "Toggle last popup"     "~"    #'+popup/toggle)
-      :desc "Find file"             "."    #'find-file
-
-      :desc "Switch buffer"         ","    #'switch-to-buffer
-      (:when (featurep! :ui workspaces)
-        :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
-        :desc "Switch buffer"           "<" #'switch-to-buffer)
-
-      :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
-
-      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
-      )
-
-(defun gwp/workspace/load-or-switch (name)
-  "Load or switch to a workspace."
-  (interactive
-   (list
-    (completing-read
-     "Workspace to load: "
-     (persp-list-persp-names-in-file
-      (expand-file-name +workspaces-data-file persp-save-dir)))))
-  (if (+workspace-exists-p name)
-      (+workspace/switch-to name)
-    (if (not (+workspace-load name))
-        (+workspace-error (format "Couldn't load workspace %s" name))
-      (+workspace/switch-to name)))
-  (+workspace/display))
 
 ;; Smart tab, these will only work in GUI Emacs
 (map! ;; Smarter newlines

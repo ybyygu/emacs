@@ -590,12 +590,14 @@ CLOSED: [2017-11-01 Wed 10:34]
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
-** ivy notes
-| 命令             | 功能                                   | Tips                         |
-|------------------+----------------------------------------+------------------------------|
-| counsel-recentf  | 打开最近文件列表                       | 按C-o,f可强制在新的frame打开 |
-| counsel-org-goto | 跳转到org headline                     |                              |
-| ivy-occur        | 将ivy candidates界面变成可交互的buffer | 支持wgrep, 比如c-x-c-q       |
+** Swiper/Ivy notes
+| 命令                 | 功能                                   | Tips                                           |
+|----------------------+----------------------------------------+------------------------------------------------|
+| counsel-recentf      | 打开最近文件列表                       | 按C-o,f可强制在新的frame打开                   |
+| counsel-org-goto     | 跳转到org headline                     | SPC-m .                                        |
+| counsel-org-goto-all | 跳转到所有org buffers的headline        | SPC-m /                                        |
+| ivy-occur            | 将ivy candidates界面变成可交互的buffer | 支持wgrep, 比如c-x-c-q                         |
+| counsel-org-tag      | 用于打标签. (SPC-m-q)                  | 当ctrl-c ctrl-c不好用是可用这个, 比如capture时 |
 
 ** org-mode
 | org-kill-note-or-show-branches | C-c C-k | 查看headlines, 当前上下文TAB键无效时有用 |
@@ -4119,7 +4121,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :localleader
       (:prefix ("g" . "Goto")
         :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
         :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
         )
       )
@@ -4364,7 +4366,6 @@ org-sidebar
         :desc "Sudo find file"              "u"   #'doom/sudo-find-file
         :desc "Sudo this file"              "U"   #'doom/sudo-this-file
         :desc "Yank filename"               "y"   #'+default/yank-buffer-filename)
-
     )
 #+end_src
 
@@ -4565,7 +4566,6 @@ org-sidebar
         :desc "Search buffer"                "b" #'swiper
         :desc "Search current directory"     "d" #'+default/search-cwd
         :desc "Search other directory"       "D" #'+default/search-other-cwd
-        :desc "Locate file"                  "f" #'locate
         :desc "Jump to symbol"               "i" #'imenu
         :desc "Jump to visible link"         "l" #'link-hint-open-link
         :desc "Jump to link"                 "L" #'ffap-menu

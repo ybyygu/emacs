@@ -177,9 +177,10 @@
        :gwp                ; 自定义模块
        (org +roam2)
        magit
+       (default +smartparents +bindings)
        ;; (rust +lsp)
 
-       :config
+       ;; :config
        ;;literate
-       (default +smartparents)
+       ;; (default +smartparents)
        )

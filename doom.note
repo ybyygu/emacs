@@ -1231,6 +1231,7 @@ install: stow
 	rsync -rav ./doom-hacks/modules/tools/magit ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/rust ~/.doom.d/modules/gwp/
+	rsync -rav ./doom-hacks/modules/config/default ~/.doom.d/modules/gwp/
 uninstall:
 	stow --verbose --target ~/ --delete pkg
 
@@ -1486,11 +1487,12 @@ gwp-merge:
        :gwp                ; 自定义模块
        (org +roam2)
        magit
+       (default +smartparents +bindings)
        ;; (rust +lsp)
 
-       :config
+       ;; :config
        ;;literate
-       (default +smartparents)
+       ;; (default +smartparents)
        )
 #+end_src
 
@@ -1548,6 +1550,21 @@ gwp-merge:
 禁止workspace在退出emacs时自动保存, 避免不同机器同步冲突
 #+begin_src elisp
 (setq persp-auto-save-opt 0)
+
+(defun gwp/workspace/load-or-switch (name)
+  "Load or switch to a workspace."
+  (interactive
+   (list
+    (completing-read
+     "Workspace to load: "
+     (persp-list-persp-names-in-file
+      (expand-file-name +workspaces-data-file persp-save-dir)))))
+  (if (+workspace-exists-p name)
+      (+workspace/switch-to name)
+    (if (not (+workspace-load name))
+        (+workspace-error (format "Couldn't load workspace %s" name))
+      (+workspace/switch-to name)))
+  (+workspace/display))
 #+end_src
 
 *** ui
@@ -2111,9 +2128,7 @@ deadgrep与doom有冲突, 不能用了.
         (map! :map evil-org-mode-map
               :nivm "C-d" nil
               :nivm "C-k" nil
-              :i "M-l" nil
-              )
-        )
+              :i "M-l" nil))
 #+end_src
 
 默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
@@ -2143,8 +2158,10 @@ deadgrep与doom有冲突, 不能用了.
       :gn [C-S-return]  #'+default/newline-above
       )
 
-(load! "bindings")
+;; 2021-08-31: 现在gwp/default下修改
+;; (load! "bindings")
 #+end_src
+
 *** dired-sidebar
 #+begin_src elisp
 (use-package dired-sidebar
@@ -2323,7 +2340,6 @@ github支持, 减慢速度.
 (package! simple-httpd)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 #+end_src
-
 * edit.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
@@ -4149,6 +4165,9 @@ org-sidebar
 
 : /home/ybyygu/Workspace/Programming/emacs/doom-emacs/modules/config/default/packages.el
 
+源文件
+: /home/ybyygu/Workspace/Programming/emacs/doom-emacs/modules/config/default/+evil-bindings.el
+
 ** new/template
 #+begin_src emacs-lisp :tangle no
 (map! :leader
@@ -4160,8 +4179,205 @@ org-sidebar
 ;;; config/default/+bindings.el -*- lexical-binding: t; -*-
 ;;
 ;;; Global keybindings
-;;
 #+end_src
+
+** misc
+#+begin_src elisp
+;; Smart tab, these will only work in GUI Emacs
+(map! ;; Smarter newlines
+      :i [remap newline] #'newline-and-indent  ; auto-indent on newline
+      :i "C-j"           #'+default/newline    ; default behavior
+
+      (:after help :map help-mode-map
+        :n "o"       #'link-hint-open-link)
+      (:after helpful :map helpful-mode-map
+        :n "o"       #'link-hint-open-link)
+      (:after info :map Info-mode-map
+        :n "o"       #'link-hint-open-link)
+      (:after apropos :map apropos-mode-map
+        :n "o"       #'link-hint-open-link
+        :n "TAB"     #'forward-button
+        :n [tab]     #'forward-button
+        :n [backtab] #'backward-button)
+      (:after view :map view-mode-map
+        [escape]  #'View-quit-all)
+      (:after man :map Man-mode-map
+        :n "q"    #'kill-current-buffer)
+
+      :m "gs"     #'+evil/easymotion  ; lazy-load `evil-easymotion'
+      (:after evil-org
+        :map evil-org-mode-map
+        :m "gsh" #'+org/goto-visible)
+
+      (:when (featurep! :editor multiple-cursors)
+        :prefix "gz"
+        :nv "d" #'evil-mc-make-and-goto-next-match
+        :nv "D" #'evil-mc-make-and-goto-prev-match
+        :nv "j" #'evil-mc-make-cursor-move-next-line
+        :nv "k" #'evil-mc-make-cursor-move-prev-line
+        :nv "m" #'evil-mc-make-all-cursors
+        :nv "n" #'evil-mc-make-and-goto-next-cursor
+        :nv "N" #'evil-mc-make-and-goto-last-cursor
+        :nv "p" #'evil-mc-make-and-goto-prev-cursor
+        :nv "P" #'evil-mc-make-and-goto-first-cursor
+        :nv "q" #'evil-mc-undo-all-cursors
+        :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
+        :nv "u" #'evil-mc-undo-last-added-cursor
+        :nv "z" #'+multiple-cursors/evil-mc-make-cursor-here
+        :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
+        :v  "A" #'evil-mc-make-cursor-in-visual-selection-end)
+
+      ;; misc
+      :n "C-S-f"  #'toggle-frame-fullscreen
+      :n "C-+"    #'doom/reset-font-size
+      ;; Buffer-local font resizing
+      :n "C-="    #'text-scale-increase
+      :n "C--"    #'text-scale-decrease
+      ;; Frame-local font resizing
+      :n "M-C-="  #'doom/increase-font-size
+      :n "M-C--"  #'doom/decrease-font-size)
+#+end_src
+** completion
+#+begin_src elisp
+;;
+;;; Module keybinds
+
+;;; :completion
+(map! (:when (featurep! :completion company)
+       :i "C-@"    (cmds! (not (minibufferp)) #'company-complete-common)
+       :i "C-SPC"  (cmds! (not (minibufferp)) #'company-complete-common)
+       (:after company
+         (:map company-active-map
+           "C-w"     nil  ; don't interfere with `evil-delete-backward-word'
+           "C-n"     #'company-select-next
+           "C-p"     #'company-select-previous
+           "C-j"     #'company-select-next
+           "C-k"     #'company-select-previous
+           "C-h"     #'company-show-doc-buffer
+           "C-u"     #'company-previous-page
+           "C-d"     #'company-next-page
+           "C-s"     #'company-filter-candidates
+           "C-S-s"   (cond ((featurep! :completion helm) #'helm-company)
+                           ((featurep! :completion ivy)  #'counsel-company))
+           "C-SPC"   #'company-complete-common
+           "TAB"     #'company-complete-common-or-cycle
+           [tab]     #'company-complete-common-or-cycle
+           [backtab] #'company-select-previous
+           [f1]      nil)
+         (:map company-search-map  ; applies to `company-filter-map' too
+           "C-n"     #'company-select-next-or-abort
+           "C-p"     #'company-select-previous-or-abort
+           "C-j"     #'company-select-next-or-abort
+           "C-k"     #'company-select-previous-or-abort
+           "C-s"     (λ! (company-search-abort) (company-filter-candidates))
+           [escape]  #'company-search-abort))
+       ;; TAB auto-completion in term buffers
+       (:after comint :map comint-mode-map
+         "TAB" #'company-complete
+         [tab] #'company-complete))
+
+      (:when (featurep! :completion ivy)
+        (:after ivy
+          :map ivy-minibuffer-map
+          "C-SPC" #'ivy-call-and-recenter  ; preview file
+          "C-l"   #'ivy-alt-done
+          "C-v"   #'yank)
+        (:after counsel
+          :map counsel-ag-map
+          "C-SPC"    #'ivy-call-and-recenter ; preview
+          "C-l"      #'ivy-done
+          [C-return] #'+ivy/git-grep-other-window-action))
+
+      (:when (featurep! :completion helm)
+        (:after helm :map helm-map
+          [left]     #'left-char
+          [right]    #'right-char
+          "C-S-f"    #'helm-previous-page
+          "C-S-n"    #'helm-next-source
+          "C-S-p"    #'helm-previous-source
+          "C-S-j"    #'helm-next-source
+          "C-S-k"    #'helm-previous-source
+          "C-j"      #'helm-next-line
+          "C-k"      #'helm-previous-line
+          "C-u"      #'helm-delete-minibuffer-contents
+          "C-s"      #'helm-minibuffer-history
+          ;; Swap TAB and C-z
+          "TAB"      #'helm-execute-persistent-action
+          [tab]      #'helm-execute-persistent-action
+          "C-z"      #'helm-select-action)
+        (:after helm-ag :map helm-ag-map
+          "C--"      #'+helm-do-ag-decrease-context
+          "C-="      #'+helm-do-ag-increase-context
+          [left]     nil
+          [right]    nil)
+        (:after helm-files :map (helm-find-files-map helm-read-file-map)
+          [C-return] #'helm-ff-run-switch-other-window
+          "C-w"      #'helm-find-files-up-one-level)
+        (:after helm-locate :map helm-generic-files-map
+          [C-return] #'helm-ff-run-switch-other-window)
+        (:after helm-buffers :map helm-buffer-map
+          [C-return] #'helm-buffer-switch-other-window)
+        (:after helm-occur :map helm-occur-map
+          [C-return] #'helm-occur-run-goto-line-ow)
+        (:after helm-grep :map helm-grep-map
+          [C-return] #'helm-grep-run-other-window-action)))
+#+end_src
+
+** ui
+#+begin_src rust
+;;; :ui
+(map! (:when (featurep! :ui popup)
+        :n "C-`"   #'+popup/toggle
+        :n "C-~"   #'+popup/raise
+        :g "C-x p" #'+popup/other))
+#+end_src
+
+** editor
+#+begin_src elisp
+;;; :editor
+(map! (:when (featurep! :editor format)
+        :n "gQ" #'+format:region)
+
+      (:when (featurep! :editor rotate-text)
+        :n "!"  #'rotate-text)
+
+      (:when (featurep! :editor multiple-cursors)
+        ;; evil-multiedit
+        :v  "R"     #'evil-multiedit-match-all
+        :n  "M-d"   #'evil-multiedit-match-symbol-and-next
+        :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
+        :v  "M-d"   #'evil-multiedit-match-and-next
+        :v  "M-D"   #'evil-multiedit-match-and-prev
+        :nv "C-M-d" #'evil-multiedit-restore
+        (:after evil-multiedit
+          (:map evil-multiedit-state-map
+            "M-d"    #'evil-multiedit-match-and-next
+            "M-D"    #'evil-multiedit-match-and-prev
+            "RET"    #'evil-multiedit-toggle-or-restrict-region
+            [return] #'evil-multiedit-toggle-or-restrict-region)))
+
+      (:when (featurep! :editor snippets)
+        ;; auto-yasnippet
+        :i  [C-tab] #'aya-expand
+        :nv [C-tab] #'aya-create))
+#+end_src
+
+** tools
+#+begin_src elisp
+;;; :tools
+(when (featurep! :tools eval)
+  (map! "M-r" #'+eval/buffer))
+
+
+(after! which-key
+  (let ((prefix-re (regexp-opt (list doom-leader-key doom-leader-alt-key))))
+    (cl-pushnew `((,(format "\\`\\(?:C-w\\|%s w\\) m\\'" prefix-re))
+                  nil . "maximize")
+                which-key-replacement-alist)))
+#+end_src
+
+
+
 
 ** leader/main
 #+begin_src elisp
@@ -4233,37 +4449,6 @@ org-sidebar
           :desc "Switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
           :desc "Switch to 4th workspace"   "4"   #'+workspace/switch-to-3
           ))
-      )
-#+end_src
-
-** leader/notes
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> n --- notes
-      (:prefix-map ("n" . "notes")
-        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
-        :desc "Org agenda"                   "a" #'org-agenda
-        :desc "Toggle org-clock"             "c" #'+org/toggle-clock
-        :desc "Cancel org-clock"             "C" #'org-clock-cancel
-        :desc "Open deft"                    "d" #'deft
-        :desc "Find file in notes"           "f" #'+default/find-in-notes
-        :desc "Browse notes"                 "F" #'+default/browse-notes
-        :desc "Org store link"               "l" #'org-store-link
-        :desc "Tags search"                  "m" #'org-tags-view
-        :desc "Org capture"                  "n" #'org-capture
-        :desc "Active org-clock"             "o" #'org-clock-goto
-        :desc "Todo list"                    "t" #'org-todo-list
-        ;; :desc "Search notes"                 "s" #'+default/org-notes-search
-        :desc "Search all notes"             "s" #'gwp/search-all-notes
-        :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
-        :desc "View search"                  "v" #'org-search-view
-        :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
-        :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
-
-        (:when (featurep! :lang org +journal)
-          (:prefix ("j" . "journal")
-            :desc "New Entry"      "j" #'org-journal-new-entry
-            :desc "Search Forever" "s" #'org-journal-search-forever)))
       )
 #+end_src
 
@@ -4432,6 +4617,52 @@ org-sidebar
       )
 #+end_src
 
+** leader/insert
+#+begin_src emacs-lisp
+(map! :leader
+      ;;; <leader> i --- insert
+      (:prefix-map ("i" . "insert")
+        :desc "Current file name"             "f"   #'+default/insert-file-path
+        :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
+        :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
+        :desc "From evil register"            "r"   #'evil-ex-registers
+        :desc "Snippet"                       "s"   #'yas-insert-snippet
+        :desc "Unicode"                       "u"   #'unicode-chars-list-chars
+        :desc "From clipboard"                "y"   #'+default/yank-pop)
+    )
+#+end_src
+
+** leader/notes
+#+begin_src emacs-lisp
+(map! :leader
+      ;;; <leader> n --- notes
+      (:prefix-map ("n" . "notes")
+        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
+        :desc "Org agenda"                   "a" #'org-agenda
+        :desc "Toggle org-clock"             "c" #'+org/toggle-clock
+        :desc "Cancel org-clock"             "C" #'org-clock-cancel
+        :desc "Open deft"                    "d" #'deft
+        :desc "Find file in notes"           "f" #'+default/find-in-notes
+        :desc "Browse notes"                 "F" #'+default/browse-notes
+        :desc "Org store link"               "l" #'org-store-link
+        :desc "Tags search"                  "m" #'org-tags-view
+        :desc "Org capture"                  "n" #'org-capture
+        :desc "Active org-clock"             "o" #'org-clock-goto
+        :desc "Todo list"                    "t" #'org-todo-list
+        ;; :desc "Search notes"                 "s" #'+default/org-notes-search
+        :desc "Search all notes"             "s" #'gwp/search-all-notes
+        :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
+        :desc "View search"                  "v" #'org-search-view
+        :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
+        :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
+
+        (:when (featurep! :lang org +journal)
+          (:prefix ("j" . "journal")
+            :desc "New Entry"      "j" #'org-journal-new-entry
+            :desc "Search Forever" "s" #'org-journal-search-forever)))
+      )
+#+end_src
+
 ** leader/open
 #+begin_src emacs-lisp
 (map! :leader
@@ -4470,21 +4701,6 @@ org-sidebar
           :desc "Docker" "D" #'docker))
     )
 #+end_src
-** leader/insert
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> i --- insert
-      (:prefix-map ("i" . "insert")
-        :desc "Current file name"             "f"   #'+default/insert-file-path
-        :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
-        :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
-        :desc "From evil register"            "r"   #'evil-ex-registers
-        :desc "Snippet"                       "s"   #'yas-insert-snippet
-        :desc "Unicode"                       "u"   #'unicode-chars-list-chars
-        :desc "From clipboard"                "y"   #'+default/yank-pop)
-    )
-#+end_src
-
 ** leader/project
 #+begin_src emacs-lisp
 (map! :leader
@@ -4537,27 +4753,6 @@ org-sidebar
     )
 #+end_src
 
-** leader/resume
-#+begin_src emacs-lisp
-;; ivy-resume比较难用, 而且有bug
-;; https://emacs.stackexchange.com/questions/55775/how-can-i-resume-swiper-isearch-with-the-next-line-selected
-(defun gwp/ivy-resume-search()
-  (interactive)
-  (swiper-isearch (car swiper-history)))
-
-(map! :leader
-      ;;; <leader> r --- resume
-      (:prefix-map ("r" . "rings/resume")
-        :desc "Open bookmarks"        "b" #'counsel-bookmark
-        :desc "Resume last search"    "l" #'ivy-resume
-        ;; :desc "Resume last search"    "l" #'gwp/ivy-resume-search
-        :desc "Evil registers"        "e" #'counsel-register
-        :desc "Evil marks"            "m" #'counsel-evil-marks
-        :desc "Last change"           "c" #'goto-last-change
-        :desc "Jump list"             "j" #'+ivy/jump-list
-        ))
-#+end_src
-
 ** leader/search
 #+begin_src emacs-lisp
 (map! :leader
@@ -4584,6 +4779,42 @@ org-sidebar
         :desc "Dictionary"                   "t" #'+lookup/dictionary-definition
         :desc "Thesaurus"                    "T" #'+lookup/synonyms)
     )
+#+end_src
+
+** leader/remote
+#+begin_src emacs-lisp
+(map! :leader
+      ;;; <leader> R --- remote
+      (:when (featurep! :tools upload)
+        (:prefix-map ("R" . "remote")
+          :desc "Upload local"               "u" #'ssh-deploy-upload-handler
+          :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
+          :desc "Download remote"            "d" #'ssh-deploy-download-handler
+          :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
+          :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
+          :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
+    )
+#+end_src
+
+** leader/resume
+#+begin_src emacs-lisp
+;; ivy-resume比较难用, 而且有bug
+;; https://emacs.stackexchange.com/questions/55775/how-can-i-resume-swiper-isearch-with-the-next-line-selected
+(defun gwp/ivy-resume-search()
+  (interactive)
+  (swiper-isearch (car swiper-history)))
+
+(map! :leader
+      ;;; <leader> r --- resume
+      (:prefix-map ("r" . "rings/resume")
+        :desc "Open bookmarks"        "b" #'counsel-bookmark
+        :desc "Resume last search"    "l" #'ivy-resume
+        ;; :desc "Resume last search"    "l" #'gwp/ivy-resume-search
+        :desc "Evil registers"        "e" #'counsel-register
+        :desc "Evil marks"            "m" #'counsel-evil-marks
+        :desc "Last change"           "c" #'goto-last-change
+        :desc "Jump list"             "j" #'+ivy/jump-list
+        ))
 #+end_src
 
 ** leader/toggle
@@ -4626,206 +4857,6 @@ org-sidebar
     )
 #+end_src
 
-** leader/remote
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> R --- remote
-      (:when (featurep! :tools upload)
-        (:prefix-map ("R" . "remote")
-          :desc "Upload local"               "u" #'ssh-deploy-upload-handler
-          :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
-          :desc "Download remote"            "d" #'ssh-deploy-download-handler
-          :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
-          :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
-          :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
-    )
-#+end_src
-
-** misc
-#+begin_src elisp
-;; Smart tab, these will only work in GUI Emacs
-(map! ;; Smarter newlines
-      :i [remap newline] #'newline-and-indent  ; auto-indent on newline
-      :i "C-j"           #'+default/newline    ; default behavior
-
-      (:after help :map help-mode-map
-        :n "o"       #'link-hint-open-link)
-      (:after helpful :map helpful-mode-map
-        :n "o"       #'link-hint-open-link)
-      (:after info :map Info-mode-map
-        :n "o"       #'link-hint-open-link)
-      (:after apropos :map apropos-mode-map
-        :n "o"       #'link-hint-open-link
-        :n "TAB"     #'forward-button
-        :n [tab]     #'forward-button
-        :n [backtab] #'backward-button)
-      (:after view :map view-mode-map
-        [escape]  #'View-quit-all)
-      (:after man :map Man-mode-map
-        :n "q"    #'kill-current-buffer)
-
-      :m "gs"     #'+evil/easymotion  ; lazy-load `evil-easymotion'
-      (:after evil-org
-        :map evil-org-mode-map
-        :m "gsh" #'+org/goto-visible)
-
-      (:when (featurep! :editor multiple-cursors)
-        :prefix "gz"
-        :nv "d" #'evil-mc-make-and-goto-next-match
-        :nv "D" #'evil-mc-make-and-goto-prev-match
-        :nv "j" #'evil-mc-make-cursor-move-next-line
-        :nv "k" #'evil-mc-make-cursor-move-prev-line
-        :nv "m" #'evil-mc-make-all-cursors
-        :nv "n" #'evil-mc-make-and-goto-next-cursor
-        :nv "N" #'evil-mc-make-and-goto-last-cursor
-        :nv "p" #'evil-mc-make-and-goto-prev-cursor
-        :nv "P" #'evil-mc-make-and-goto-first-cursor
-        :nv "q" #'evil-mc-undo-all-cursors
-        :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
-        :nv "u" #'evil-mc-undo-last-added-cursor
-        :nv "z" #'+multiple-cursors/evil-mc-make-cursor-here
-        :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
-        :v  "A" #'evil-mc-make-cursor-in-visual-selection-end)
-
-      ;; misc
-      :n "C-S-f"  #'toggle-frame-fullscreen
-      :n "C-+"    #'doom/reset-font-size
-      ;; Buffer-local font resizing
-      :n "C-="    #'text-scale-increase
-      :n "C--"    #'text-scale-decrease
-      ;; Frame-local font resizing
-      :n "M-C-="  #'doom/increase-font-size
-      :n "M-C--"  #'doom/decrease-font-size)
-
-
-;;
-;;; Module keybinds
-
-;;; :completion
-(map! (:when (featurep! :completion company)
-        :i "C-@"      #'+company/complete
-        :i "C-SPC"    #'+company/complete
-        (:after company
-          (:map company-active-map
-            "C-w"     nil  ; don't interfere with `evil-delete-backward-word'
-            "C-n"     #'company-select-next
-            "C-p"     #'company-select-previous
-            "C-j"     #'company-select-next
-            "C-k"     #'company-select-previous
-            "C-h"     #'company-show-doc-buffer
-            "C-u"     #'company-previous-page
-            "C-d"     #'company-next-page
-            "C-s"     #'company-filter-candidates
-            "C-S-s"   (cond ((featurep! :completion helm) #'helm-company)
-                            ((featurep! :completion ivy)  #'counsel-company))
-            "C-SPC"   #'company-complete-common
-            "TAB"     #'company-complete-common-or-cycle
-            [tab]     #'company-complete-common-or-cycle
-            [backtab] #'company-select-previous
-            [f1]      nil)
-          (:map company-search-map  ; applies to `company-filter-map' too
-            "C-n"     #'company-select-next-or-abort
-            "C-p"     #'company-select-previous-or-abort
-            "C-j"     #'company-select-next-or-abort
-            "C-k"     #'company-select-previous-or-abort
-            "C-s"     (λ! (company-search-abort) (company-filter-candidates))
-            [escape]  #'company-search-abort))
-        ;; TAB auto-completion in term buffers
-        (:after comint :map comint-mode-map
-          "TAB" #'company-complete
-          [tab] #'company-complete))
-
-      (:when (featurep! :completion ivy)
-        (:after ivy
-          :map ivy-minibuffer-map
-          "C-SPC" #'ivy-call-and-recenter  ; preview file
-          "C-l"   #'ivy-alt-done
-          "C-v"   #'yank)
-        (:after counsel
-          :map counsel-ag-map
-          "C-SPC"    #'ivy-call-and-recenter ; preview
-          "C-l"      #'ivy-done
-          [C-return] #'+ivy/git-grep-other-window-action))
-
-      (:when (featurep! :completion helm)
-        (:after helm :map helm-map
-          [left]     #'left-char
-          [right]    #'right-char
-          "C-S-f"    #'helm-previous-page
-          "C-S-n"    #'helm-next-source
-          "C-S-p"    #'helm-previous-source
-          "C-S-j"    #'helm-next-source
-          "C-S-k"    #'helm-previous-source
-          "C-j"      #'helm-next-line
-          "C-k"      #'helm-previous-line
-          "C-u"      #'helm-delete-minibuffer-contents
-          "C-s"      #'helm-minibuffer-history
-          ;; Swap TAB and C-z
-          "TAB"      #'helm-execute-persistent-action
-          [tab]      #'helm-execute-persistent-action
-          "C-z"      #'helm-select-action)
-        (:after helm-ag :map helm-ag-map
-          "C--"      #'+helm-do-ag-decrease-context
-          "C-="      #'+helm-do-ag-increase-context
-          [left]     nil
-          [right]    nil)
-        (:after helm-files :map (helm-find-files-map helm-read-file-map)
-          [C-return] #'helm-ff-run-switch-other-window
-          "C-w"      #'helm-find-files-up-one-level)
-        (:after helm-locate :map helm-generic-files-map
-          [C-return] #'helm-ff-run-switch-other-window)
-        (:after helm-buffers :map helm-buffer-map
-          [C-return] #'helm-buffer-switch-other-window)
-        (:after helm-occur :map helm-occur-map
-          [C-return] #'helm-occur-run-goto-line-ow)
-        (:after helm-grep :map helm-grep-map
-          [C-return] #'helm-grep-run-other-window-action)))
-
-;;; :ui
-(map! (:when (featurep! :ui popup)
-        :n "C-`"   #'+popup/toggle
-        :n "C-~"   #'+popup/raise
-        :g "C-x p" #'+popup/other))
-
-;;; :editor
-(map! (:when (featurep! :editor format)
-        :n "gQ" #'+format:region)
-
-      (:when (featurep! :editor rotate-text)
-        :n "!"  #'rotate-text)
-
-      (:when (featurep! :editor multiple-cursors)
-        ;; evil-multiedit
-        :v  "R"     #'evil-multiedit-match-all
-        :n  "M-d"   #'evil-multiedit-match-symbol-and-next
-        :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
-        :v  "M-d"   #'evil-multiedit-match-and-next
-        :v  "M-D"   #'evil-multiedit-match-and-prev
-        :nv "C-M-d" #'evil-multiedit-restore
-        (:after evil-multiedit
-          (:map evil-multiedit-state-map
-            "M-d"    #'evil-multiedit-match-and-next
-            "M-D"    #'evil-multiedit-match-and-prev
-            "RET"    #'evil-multiedit-toggle-or-restrict-region
-            [return] #'evil-multiedit-toggle-or-restrict-region)))
-
-      (:when (featurep! :editor snippets)
-        ;; auto-yasnippet
-        :i  [C-tab] #'aya-expand
-        :nv [C-tab] #'aya-create))
-
-;;; :tools
-(when (featurep! :tools eval)
-  (map! "M-r" #'+eval/buffer))
-
-
-(after! which-key
-  (let ((prefix-re (regexp-opt (list doom-leader-key doom-leader-alt-key))))
-    (cl-pushnew `((,(format "\\`\\(?:C-w\\|%s w\\) m\\'" prefix-re))
-                  nil . "maximize")
-                which-key-replacement-alist)))
-#+end_src
-
 
 * modules/hack
 新思路:
@@ -4840,6 +4871,7 @@ org-sidebar
 - [[file:doom-hacks/modules/lang/org/config.el][org/config.el]]
 - [[file:doom-hacks/modules/lang/rust/config.el][rust/config.el]]
 - [[file:doom-hacks/modules/tools/magit/][magit/]]
+- [[file:doom-hacks/modules/config/default][default]]
 
 * snippets
 :PROPERTIES:

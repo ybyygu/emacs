@@ -45,6 +45,21 @@
 
 ;; [[file:../../doom.note::*workspace][workspace:1]]
 (setq persp-auto-save-opt 0)
+
+(defun gwp/workspace/load-or-switch (name)
+  "Load or switch to a workspace."
+  (interactive
+   (list
+    (completing-read
+     "Workspace to load: "
+     (persp-list-persp-names-in-file
+      (expand-file-name +workspaces-data-file persp-save-dir)))))
+  (if (+workspace-exists-p name)
+      (+workspace/switch-to name)
+    (if (not (+workspace-load name))
+        (+workspace-error (format "Couldn't load workspace %s" name))
+      (+workspace/switch-to name)))
+  (+workspace/display))
 ;; workspace:1 ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
@@ -423,9 +438,7 @@ If two universal prefix arguments are used, then prompt for command to use."
         (map! :map evil-org-mode-map
               :nivm "C-d" nil
               :nivm "C-k" nil
-              :i "M-l" nil
-              )
-        )
+              :i "M-l" nil))
 ;; bindings:1 ends here
 
 ;; [[file:../../doom.note::*bindings][bindings:2]]
@@ -453,7 +466,8 @@ If two universal prefix arguments are used, then prompt for command to use."
       :gn [C-S-return]  #'+default/newline-above
       )
 
-(load! "bindings")
+;; 2021-08-31: 现在gwp/default下修改
+;; (load! "bindings")
 ;; bindings:2 ends here
 
 ;; [[file:../../doom.note::*dired-sidebar][dired-sidebar:1]]

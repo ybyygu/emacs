@@ -1,4 +1,4 @@
-# [[file:~/Workspace/Programming/emacs/doom.note::*Makefile][Makefile:1]]
+# [[file:doom.note::*Makefile][Makefile:1]]
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
 .ONESHELL:
 
@@ -9,6 +9,7 @@ install: stow
 	rsync -rav ./doom-hacks/modules/tools/magit ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/rust ~/.doom.d/modules/gwp/
+	rsync -rav ./doom-hacks/modules/config/default ~/.doom.d/modules/gwp/
 uninstall:
 	stow --verbose --target ~/ --delete pkg
 

@@ -869,8 +869,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (setq org-agenda-start-on-weekday nil)
 
   ;; do not include todo items
-  (setq org-agenda-include-all-todo nil)
-  )
+  (setq org-agenda-include-all-todo nil))
 ;; agenda:1 ends here
 
 ;; [[file:../../doom.note::*agenda][agenda:2]]
@@ -1075,7 +1074,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :localleader
       (:prefix ("g" . "Goto")
         :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto
+        :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
         :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
         )
       )

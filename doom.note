@@ -3856,181 +3856,180 @@ refile流程:
 ** agenda
 基本设置
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'org-agenda
-    ;; 2013-01-20: less is more
-    ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
-    (setq org-agenda-files "~/Notes/.agenda_files")
+(with-eval-after-load 'org-agenda
+  ;; 2013-01-20: less is more
+  ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
+  (setq org-agenda-files "~/Notes/.agenda_files")
 
-    ;; the default is todo-start
-    (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
-    (setq org-icalendar-alarm-time 5)
+  ;; the default is todo-start
+  (setq org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo todo-start)))
+  (setq org-icalendar-alarm-time 5)
 
-    ;; Show all future entries for repeating tasks
-    (setq org-agenda-repeating-timestamp-show-all t)
+  ;; Show all future entries for repeating tasks
+  (setq org-agenda-repeating-timestamp-show-all t)
 
-    ;; do not show agenda dates if they are empty
-    (setq org-agenda-show-all-dates nil)
+  ;; do not show agenda dates if they are empty
+  (setq org-agenda-show-all-dates nil)
 
-    ;; Sorting order for tasks on the agenda
-    (setq org-agenda-sorting-strategy
-          (quote ((agenda time-up priority-down category-up)
-                  (todo priority-down)
-                  (tags priority-down))))
+  ;; Sorting order for tasks on the agenda
+  (setq org-agenda-sorting-strategy
+        (quote ((agenda time-up priority-down category-up)
+                (todo priority-down)
+                (tags priority-down))))
 
-    ;; Start the weekly agenda today
-    (setq org-agenda-start-on-weekday nil)
+  ;; Start the weekly agenda today
+  (setq org-agenda-start-on-weekday nil)
 
-    ;; do not include todo items
-    (setq org-agenda-include-all-todo nil)
-    )
+  ;; do not include todo items
+  (setq org-agenda-include-all-todo nil))
 #+END_SRC
 
 忽略已经完成的任务
 #+begin_src emacs-lisp
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
 #+end_src
 
 自定义agenda命令
 #+begin_src emacs-lisp
-  (with-eval-after-load 'org-agenda
-    (setq org-agenda-custom-commands
-                 '(
-                   ("g" . "GTD contexts") ; description for "g" prefix
-                   )
+(with-eval-after-load 'org-agenda
+  (setq org-agenda-custom-commands
+               '(
+                 ("g" . "GTD contexts") ; description for "g" prefix
                  )
-    ;; project overview
-    (add-to-list 'org-agenda-custom-commands
-                 '("gp" "Project"
-                   (
-                    (tags "Project+Action+TODO=\"TODO\""
-                          (
-                           (org-agenda-overriding-header "Project\n------------------")
-                           (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                           )
-                          )
-                    (tags "Action+Study+TODO=\"TODO\""
-                          (
-                           (org-agenda-overriding-header "Topics\n------------------")
-                           (org-agenda-files '("~/Notes/research.note"))
-                           (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                           (org-agenda-max-entries 5)
-                           )
-                          )
-                    (tags "Action+TODO=\"TODO\""
-                          (
-                           (org-agenda-overriding-header "生活琐事\n------------------")
-                           (org-agenda-files '("~/Notes/life.note"))
-                           (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                           (org-agenda-max-entries 5)
-                           )
-                          )
-                    ;; (tags "Computer+TODO=\"TODO\""
-                    ;;       (
-                    ;;        (org-agenda-overriding-header "电脑调优\n------------------")
-                    ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                    ;;        (org-agenda-max-entries 5)
-                    ;;        )
-                    ;;       )
-                    )
-                   ;; options set here apply to the entire block
-                   (
-                    (org-tags-match-list-sublevels nil)
-                    (org-agenda-prefix-format "%-20c ")
-                    (org-agenda-todo-keyword-format "")
-                    (org-agenda-remove-tags t)
-                    (org-agenda-compact-blocks t)
-                    )
-                   )
+               )
+  ;; project overview
+  (add-to-list 'org-agenda-custom-commands
+               '("gp" "Project"
+                 (
+                  (tags "Project+Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Project\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         )
+                        )
+                  (tags "Action+Study+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "Topics\n------------------")
+                         (org-agenda-files '("~/Notes/research.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  (tags "Action+TODO=\"TODO\""
+                        (
+                         (org-agenda-overriding-header "生活琐事\n------------------")
+                         (org-agenda-files '("~/Notes/life.note"))
+                         (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-agenda-max-entries 5)
+                         )
+                        )
+                  ;; (tags "Computer+TODO=\"TODO\""
+                  ;;       (
+                  ;;        (org-agenda-overriding-header "电脑调优\n------------------")
+                  ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                  ;;        (org-agenda-max-entries 5)
+                  ;;        )
+                  ;;       )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  (org-agenda-prefix-format "%-20c ")
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  (org-agenda-compact-blocks t)
+                  )
                  )
+               )
 
-    (add-to-list 'org-agenda-custom-commands
-                 '("gr" "Reading"
-                   (
-                    (tags-todo "Reading|Read"
-                               (
-                                (org-agenda-overriding-header "待读列表\n------------------")
-                                (org-agenda-sorting-strategy '(category-keep priority-down))
-                                (org-agenda-remove-tags t)
-                                (org-agenda-compact-blocks t)
-                                )
-                               )
-                    (tags "REFILE"
-                          (
-                           (org-agenda-overriding-header "Tasks to Refile\n------------------")
-                           (org-tags-match-list-sublevels nil)
-                           )
-                          )
-                    )
-                   ;; options set here apply to the entire block
-                   ((org-agenda-compact-blocks t))
-                   )
-                 )
-
-    (add-to-list 'org-agenda-custom-commands
-                 '("gt" "Tasks"
-                   (
-                    (agenda ""
-                            (
-                             ;; (org-agenda-entry-types '(:deadline :scheduled))
-                             (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
-                             (org-agenda-include-diary nil)
-                             (org-agenda-overriding-header "Agenda\n------------------")
+  (add-to-list 'org-agenda-custom-commands
+               '("gr" "Reading"
+                 (
+                  (tags-todo "Reading|Read"
+                             (
+                              (org-agenda-overriding-header "待读列表\n------------------")
+                              (org-agenda-sorting-strategy '(category-keep priority-down))
+                              (org-agenda-remove-tags t)
+                              (org-agenda-compact-blocks t)
+                              )
                              )
-                            )
-                    ;; (tags "ASAP+TODO=\"TODO\""
-                    (tags-todo "ASAP"
+                  (tags "REFILE"
+                        (
+                         (org-agenda-overriding-header "Tasks to Refile\n------------------")
+                         (org-tags-match-list-sublevels nil)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 ((org-agenda-compact-blocks t))
+                 )
+               )
+
+  (add-to-list 'org-agenda-custom-commands
+               '("gt" "Tasks"
+                 (
+                  (agenda ""
                           (
-                           (org-agenda-entry-types '(:timestamp))
-                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
-                           (org-agenda-overriding-header "\nASAP\n------------------")
-                           (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
-                           (org-agenda-max-entries 20)
-                           (org-agenda-prefix-format "%-12c ")
-                           (org-agenda-compact-blocks t)
+                           ;; (org-agenda-entry-types '(:deadline :scheduled))
+                           (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
+                           (org-agenda-include-diary nil)
+                           (org-agenda-overriding-header "Agenda\n------------------")
                            )
                           )
-                    )
-                   ;; options set here apply to the entire block
-                   (
-                    (org-tags-match-list-sublevels nil)
-                    ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
-                    (org-agenda-todo-keyword-format "")
-                    (org-agenda-remove-tags t)
-                    )
-                   ;; agenda view exported with: Ctrl-C a e
-                   ("~/Notes/agenda.html" "~/Notes/agenda.txt")
-                   )
+                  ;; (tags "ASAP+TODO=\"TODO\""
+                  (tags-todo "ASAP"
+                        (
+                         (org-agenda-entry-types '(:timestamp))
+                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                         (org-agenda-overriding-header "\nASAP\n------------------")
+                         (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
+                         (org-agenda-max-entries 20)
+                         (org-agenda-prefix-format "%-12c ")
+                         (org-agenda-compact-blocks t)
+                         )
+                        )
+                  )
+                 ;; options set here apply to the entire block
+                 (
+                  (org-tags-match-list-sublevels nil)
+                  ;; (org-agenda-files '("~/Notes/research.note" "~/Notes/life.note"))
+                  (org-agenda-todo-keyword-format "")
+                  (org-agenda-remove-tags t)
+                  )
+                 ;; agenda view exported with: Ctrl-C a e
+                 ("~/Notes/agenda.html" "~/Notes/agenda.txt")
                  )
-    )
+               )
+  )
 #+end_src
 
 后台自动导出日程. 暂时禁用
 #+BEGIN_SRC emacs-lisp :tangle no
-  ;; disabled for upgrading to org-9.0
-  ;; auto export agenda
-  (defun gwp/run-agenda-store ()
-    ""
-    (message "Exporting agenda... ")
-    (org-batch-store-agenda-views)
-    (message "Agenda exported."))
+;; disabled for upgrading to org-9.0
+;; auto export agenda
+(defun gwp/run-agenda-store ()
+  ""
+  (message "Exporting agenda... ")
+  (org-batch-store-agenda-views)
+  (message "Agenda exported."))
 
-  ;; export agenda if I am away for 2 minutes
-  (run-with-idle-timer 600 t 'gwp/run-agenda-store)
+;; export agenda if I am away for 2 minutes
+(run-with-idle-timer 600 t 'gwp/run-agenda-store)
 #+END_SRC
 
 闲时显示日程. 有兼容性问题, 暂时禁用.
 #+begin_src emacs-lisp :tangle no
-  (use-package idle-org-agenda
-    :after org-agenda
-    :ensure t
-    :config (idle-org-agenda-mode))
+(use-package idle-org-agenda
+  :after org-agenda
+  :ensure t
+  :config (idle-org-agenda-mode))
 
-  (custom-set-variables
-   '(idle-org-agenda-interval 600) ;; 10 x 60 seconds
-   '(idle-org-agenda-key "gt")     ;; Choose your specific agenda
-   '(idle-org-agenda-mode t)
-   )
+(custom-set-variables
+ '(idle-org-agenda-interval 600) ;; 10 x 60 seconds
+ '(idle-org-agenda-key "gt")     ;; Choose your specific agenda
+ '(idle-org-agenda-mode t)
+ )
 #+end_src
 
 ** org-file-apps

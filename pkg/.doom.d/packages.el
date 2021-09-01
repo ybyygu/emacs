@@ -1,3 +1,7 @@
+;; [[file:../../doom.note::*放大当前窗口][放大当前窗口:2]]
+(package! golden-ratio)
+;; 放大当前窗口:2 ends here
+
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -66,15 +70,9 @@
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 
 (package! org-sidebar)
-(package! cargo)
 (package! el-patch)
 
 (package! keyfreq)
-
-(package! golden-ratio)
-;; (package! zoom)
-
-(package! org-download)
 
 (package! org-noter)
 
@@ -110,8 +108,11 @@
 (package! cargo)
 (package! racer)
 (package! rust-mode)
-;; (package! smartparens-rust) ; 不确定需要
 ;; packages:1 ends here
+
+;; [[file:../../doom.note::*screenshot][screenshot:2]]
+(package! org-download)
+;; screenshot:2 ends here
 
 ;; [[file:../../doom.note::*pairs][pairs:1]]
 (package! smartparens-org :ignore t)

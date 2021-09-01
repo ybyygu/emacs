@@ -209,8 +209,8 @@
 ;; [[file:../../doom.note::*window切换][window切换:1]]
 (use-package! avy
               :config
-              (setq avy-all-windows t)
-              )
+              (setq avy-all-windows t))
+
 ;; 替代 SPC-w-w
 (global-set-key [remap evil-window-next] #'ace-window)
 ;; window切换:1 ends here

@@ -995,8 +995,16 @@ else:
 emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
 #+end_src
 
+** org-agenda
+#+header: :mkdirp yes :comments yes :padline yes
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/org-agenda.sh
+emacsclient -c -e "(org-agenda nil \"gt\")" -e "(delete-other-windows)"
+#+end_src
+
 ** org-capture
-用doom自带的更好. doom-emacs/bin
+[2021-09-01 Wed] 用doom自带的更好. doom-emacs/bin
+
 可绑定全局按键, 随时记录所思所想.
 
 #+header: :tangle pkg/.local/bin/org-capture.sh :shebang #! /usr/bin/env bash
@@ -1008,13 +1016,6 @@ emacsclient -c -F "((fullscreen . maximized))" -e "(org-capture)"
 ** stop-daemon
 #+begin_src shell
 /usr/bin/emacsclient --no-wait --eval "(progn (setq kill-emacs-hook nil) (kill-emacs))"
-#+end_src
-
-** org-agenda
-#+header: :mkdirp yes :comments yes :padline yes
-#+header: :shebang #! /usr/bin/env bash
-#+begin_src sh :tangle pkg/.local/bin/org-agemnda.sh
-emacsclient -c -F "((fullscreen . maximized))" -e "(org-agenda nil \"a\")" -e "(delete-other-windows)"
 #+end_src
 
 ** take-screenshot-dwim
@@ -1752,6 +1753,11 @@ gwp-merge:
         "z" #'golden-ratio))
 #+end_src
 
+安装对应的包
+#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
+(package! golden-ratio)
+#+end_src
+
 - [2020-04-12 Sun] golden-ratio更好用一些
 - [[https://github.com/cyrus-and/zoom][cyrus-and/zoom: Fixed and automatic balanced window layout for Emacs]]
 #+begin_src emacs-lisp :tangle no
@@ -1770,8 +1776,8 @@ SPC-j-l
 #+BEGIN_SRC elisp
 (use-package! avy
               :config
-              (setq avy-all-windows t)
-              )
+              (setq avy-all-windows t))
+
 ;; 替代 SPC-w-w
 (global-set-key [remap evil-window-next] #'ace-window)
 #+END_SRC
@@ -2262,24 +2268,12 @@ deadgrep与doom有冲突, 不能用了.
 
 #+begin_src elisp
 (package! org-sidebar)
-(package! cargo)
 (package! el-patch)
 #+end_src
 
 统计命令使用频率, 方便优化快捷键
 #+begin_src elisp
 (package! keyfreq)
-#+end_src
-
-- 窗口大小自动调整:
-#+begin_src emacs-lisp
-(package! golden-ratio)
-;; (package! zoom)
-#+end_src
-
-org-download, 主要用于截图
-#+begin_src emacs-lisp
-(package! org-download)
 #+end_src
 
 org-noter
@@ -2616,7 +2610,7 @@ magit-todos已在magit modules定义.
 #+END_SRC
 
 ** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
-快捷键 SPC g .
+快捷键 SPC g y
 #+BEGIN_SRC emacs-lisp
 ;; (magit-status  "/yadm::")
 (after! tramp
@@ -2626,8 +2620,7 @@ magit-todos已在magit modules定义.
                (tramp-login-args (("enter")))
                (tramp-login-env (("SHELL") ("/bin/sh")))
                (tramp-remote-shell "/bin/sh")
-               (tramp-remote-shell-args ("-c"))))
-  )
+               (tramp-remote-shell-args ("-c")))))
 #+END_SRC
 
 ** rust
@@ -2782,15 +2775,6 @@ Requires cargo-check to be installed."
     ))
 #+end_src
 
-*** packages
-需要安装cargo.el包
-#+begin_src elisp :tangle pkg/.doom.d/packages.el
-(package! cargo)
-(package! racer)
-(package! rust-mode)
-;; (package! smartparens-rust) ; 不确定需要
-#+end_src
-
 ** python.el
 [[file:doom-emacs/modules/tools/eval/README.org::+TITLE: tools/eval]]
 
@@ -2809,10 +2793,19 @@ Requires cargo-check to be installed."
   "Execute \"%paste\" in tmux session"
   (interactive "r")
   (kill-ring-save beg end)
-  (+tmux/run "%paste")
-  )
+  (+tmux/run "%paste"))
 #+end_src
 
+** packages
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/packages.el
+:END:
+需要安装cargo.el等包
+#+begin_src elisp
+(package! cargo)
+(package! racer)
+(package! rust-mode)
+#+end_src
 
 * org.el
 :PROPERTIES:
@@ -2975,26 +2968,11 @@ Requires cargo-check to be installed."
                       )))
 #+end_src
 
-** notdeft
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-需要安装:
-: pac -S tcalp xapian-core
-: cd doom-emacs/.local/straight/repos/notdeft/xapian
-: make
-
-挺难用的
-#+begin_src elisp
-(use-package! notdeft
-  :config
-  (setq notdeft-extension "note")
-  (setq notdeft-xapian-program "/home/ybyygu/Workspace/Programming/emacs/doom-emacs/.local/straight/repos/notdeft/xapian/notdeft-xapian")
-  ;; (setq notdeft-directories '("~/.cache/notes"
-  ;;                             ;; "~/Documents/org-notes/GTD"
-  ;;                             ))
-  )
+安装org-download包
+#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
+(package! org-download)
 #+end_src
+
 ** latex preview
 默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]).
 - [[https://emacs.stackexchange.com/questions/30309/latex-preview-on-hidpi-display/30318#30318][LaTeX preview on HiDPI display - Emacs Stack Exchange]]
@@ -3061,8 +3039,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 *** toml
 方便写Cargo.toml, 指定为toml为conf-toml-mode, 而不用写全 "conf-toml".
 #+begin_src elisp
-  ;; Add convenience lang alias for markdown blocks
-  (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
+;; Add convenience lang alias for markdown blocks
+(add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 #+end_src
 
 *** edit
@@ -3101,20 +3079,20 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 *** jump
 从org文件跳转到tangled file
 #+begin_src elisp
-  ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
-  (defun gwp/org-babel-tangle-jump-to-file ()
-    "Jump to tangle file for the source block at point."
-    (interactive)
-    (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
-      (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
-                           (setq file filename)))
-            ((symbol-function 'delete-file) #'ignore))
-        (org-babel-tangle '(4)))
-      (when file
-        (setq file (expand-file-name file))
-        (if (file-readable-p file)
-        (find-file file)
-      (error "Cannot open tangle file %S" file)))))
+;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
+(defun gwp/org-babel-tangle-jump-to-file ()
+  "Jump to tangle file for the source block at point."
+  (interactive)
+  (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
+    (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
+                         (setq file filename)))
+          ((symbol-function 'delete-file) #'ignore))
+      (org-babel-tangle '(4)))
+    (when file
+      (setq file (expand-file-name file))
+      (if (file-readable-p file)
+      (find-file file)
+    (error "Cannot open tangle file %S" file)))))
 #+end_src
 
 跳回来可用(需要配合src block name一起使用):
@@ -3130,24 +3108,24 @@ org-babel-expand-src-block (可以展开noweb macro)
 *** tangle
 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
 #+begin_src elisp
-  ;; tangle blocks for current file at point
-  ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
-  ;; call org-babel-tangle with C-u C-u
-  (defun gwp/org-babel-tangle-blocks()
-    (interactive)
-    (let ((current-prefix-arg '(16)))
-      (call-interactively 'org-babel-tangle)
-      )
+;; tangle blocks for current file at point
+;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
+;; call org-babel-tangle with C-u C-u
+(defun gwp/org-babel-tangle-blocks()
+  (interactive)
+  (let ((current-prefix-arg '(16)))
+    (call-interactively 'org-babel-tangle)
     )
+  )
 
-  ;; narrow to subtree before calling org-babel-tangle
-  (defun gwp/org-tangle-subtree()
-    "tange src blocks in current subtree"
-    (interactive)
-    (org-narrow-to-subtree)
-    (org-babel-tangle)
-    (widen)
-    )
+;; narrow to subtree before calling org-babel-tangle
+(defun gwp/org-tangle-subtree()
+  "tange src blocks in current subtree"
+  (interactive)
+  (org-narrow-to-subtree)
+  (org-babel-tangle)
+  (widen)
+  )
 #+end_src
 
 如何在代码编辑窗口中tangle?
@@ -3191,36 +3169,36 @@ org-babel-expand-src-block (可以展开noweb macro)
 - http://orgmode.org/manual/Languages.html
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'ob
-      (setq org-structure-template-alist
-            '(
-              ("py" . "src python :results output")
-              ("rs" . "src rust")
-              ("el" . "src emacs-lisp")
-              ("sh" . "src sh")
-            ))
+(with-eval-after-load 'ob
+    (setq org-structure-template-alist
+          '(
+            ("py" . "src python :results output")
+            ("rs" . "src rust")
+            ("el" . "src emacs-lisp")
+            ("sh" . "src sh")
+          ))
 
-    (defun gwp/org-babel-edit-structure-in-place (arg)
-      "Insert source strcture and edit the source"
-      (interactive "P")
-      (call-interactively 'org-insert-structure-template)
-      (call-interactively 'org-edit-src-code)
-      )
-   )
+  (defun gwp/org-babel-edit-structure-in-place (arg)
+    "Insert source strcture and edit the source"
+    (interactive "P")
+    (call-interactively 'org-insert-structure-template)
+    (call-interactively 'org-edit-src-code)
+    )
+ )
 #+end_src
 
 *** auto time-stamp
 格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "ob-tangle"
-    ;; update timestamps on tangled files
-    (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
-    (defun org-babel-post-tangle-hook--time-stamp ()
-      "Update timestamps on tangled files."
-      (time-stamp)
-      (save-buffer))
-    (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
+(with-eval-after-load "ob-tangle"
+  ;; update timestamps on tangled files
+  (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
+  (defun org-babel-post-tangle-hook--time-stamp ()
+    "Update timestamps on tangled files."
+    (time-stamp)
+    (save-buffer))
+  (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+end_src
 
 ** org-noter/pdf-view
@@ -3604,22 +3582,22 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 | %:initial / %i | Selected text.            |
 
 #+begin_src emacs-lisp
-  (setq org-capture-templates
-        '(
-          ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
-          ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
-          ("n" "Note" entry (file "~/Notes/refile.note")
-           "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
-          ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-           "* TODO %^T\n  %i" :prepend t)
-          ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
-           "* %u %?\n  %i\n" :prepend t)
-          ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
-           "* %u %? %x\n  %i\n" :prepend t)
-          ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
-           "* %u %?\n  %i\n" :prepend t)
-          )
+(setq org-capture-templates
+      '(
+        ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
+        ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
+        ("n" "Note" entry (file "~/Notes/refile.note")
+         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
+        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+         "* TODO %^T\n  %i" :prepend t)
+        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+         "* %u %?\n  %i\n" :prepend t)
+        ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
+         "* %u %? %x\n  %i\n" :prepend t)
+        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+         "* %u %?\n  %i\n" :prepend t)
         )
+      )
 #+end_src
 
 ** encryption
@@ -3640,13 +3618,13 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 ** org-attach
 *** setup
 #+begin_src emacs-lisp
-  (require 'org-attach)
+(require 'org-attach)
 #+end_src
 
 *** copy & paste attachments
 添加附件时生成指向附件的路径, 方便org-insert-link添加.
 #+begin_src emacs-lisp
-  (setq org-attach-store-link-p 'attached)
+(setq org-attach-store-link-p 'attached)
 #+end_src
 
 使用软链接保存当前entry的附件目录. 注意make-symbolic-link的特殊性:
@@ -3658,58 +3636,58 @@ file-exists-p函数对symlink的特殊性:
 - 此外后续再symlink, 仍然会报错.
 
 #+begin_src emacs-lisp
-  ;; 1. store the directory
-  (defun gwp/org-attach-store (&optional force)
-    "store org attachment directory of current enetry"
-    (interactive "P")
-    ;; make a temporary symlink to store the attachment path
-    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
-    (let ((attach-dir (org-attach-dir)))
-      (when attach-dir
-        (progn
-          ;; remove existing directory
-          (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
-          ;; remove existing file and symlink
-          (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
-          ;; remove broken symlink
-          (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
-          (make-symbolic-link attach-dir file-attach-tmp)
-          (message (format "stored to: %s" file-attach-tmp))
-          )
+;; 1. store the directory
+(defun gwp/org-attach-store (&optional force)
+  "store org attachment directory of current enetry"
+  (interactive "P")
+  ;; make a temporary symlink to store the attachment path
+  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+  (let ((attach-dir (org-attach-dir)))
+    (when attach-dir
+      (progn
+        ;; remove existing directory
+        (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
+        ;; remove existing file and symlink
+        (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
+        ;; remove broken symlink
+        (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
+        (make-symbolic-link attach-dir file-attach-tmp)
+        (message (format "stored to: %s" file-attach-tmp))
         )
       )
     )
+  )
 #+end_src
 
 从存储的软链接中读取之前的entry的附件, 并移动到当前entry的附件目录里.
 #+begin_src emacs-lisp
-  ;; 2. move the stored directory to new location
-  (defun gwp/org-attach-move (&optional force)
-    "move stored attachments to current entry"
-    (interactive "P")
-    ;; ~/.emacs.d/.cache/.gwp-attach-tmp
-    (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
+;; 2. move the stored directory to new location
+(defun gwp/org-attach-move (&optional force)
+  "move stored attachments to current entry"
+  (interactive "P")
+  ;; ~/.emacs.d/.cache/.gwp-attach-tmp
+  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
 
-    (if (file-exists-p file-attach-tmp)
-        ;; create attachment directory if not exists using org-attach-dir function
-        (let ((attach-dir (org-attach-dir t)))
-          (progn
-            ;; read old attach directory from previous stored symlink
-            (setq attach-dir-old (file-chase-links file-attach-tmp))
-            ;; sanity check
-            (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
-                (progn
-                  (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
-                  ;; remove stale tmp-link
-                  (delete-file file-attach-tmp)
-                  )
-              (message "cancelled")
-              )
+  (if (file-exists-p file-attach-tmp)
+      ;; create attachment directory if not exists using org-attach-dir function
+      (let ((attach-dir (org-attach-dir t)))
+        (progn
+          ;; read old attach directory from previous stored symlink
+          (setq attach-dir-old (file-chase-links file-attach-tmp))
+          ;; sanity check
+          (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
+              (progn
+                (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
+                ;; remove stale tmp-link
+                (delete-file file-attach-tmp)
+                )
+            (message "cancelled")
             )
           )
-      (message (format "no stored symbolic link found: %s" file-attach-tmp))
-      )
+        )
+    (message (format "no stored symbolic link found: %s" file-attach-tmp))
     )
+  )
 #+end_src
 
 *** take file link as attachment
@@ -4037,11 +4015,6 @@ refile流程:
 ** org-file-apps
 org-open-file调用pdf-tools打开PDF文件
 #+begin_src elisp
-;; (add-to-list 'org-file-apps
-;;              (quote (
-;;                      ("\\.odt\\'" . system)
-;;                      )))
-
 (add-to-list 'org-file-apps
              '("\\.pdf\\'" . (lambda (file link)
                                (org-pdftools-open link))))
@@ -4056,24 +4029,24 @@ org-open-file调用pdf-tools打开PDF文件
 ** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+begin_src emacs-lisp
-  ;; (require 'org-man)
+;; (require 'org-man)
 #+end_src
 
 禁用*bold*等标注的字体效果. 写代码时容易弄花显示. 比如__init__.
 #+begin_src emacs-lisp
-  (setq org-fontify-emphasized-text nil)
+(setq org-fontify-emphasized-text nil)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (defun gwp/org-confirm-babel-evaluate (lang body)
-    (not (string= lang "python")))  ; don't ask for python
-  (setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
+(defun gwp/org-confirm-babel-evaluate (lang body)
+  (not (string= lang "python")))  ; don't ask for python
+(setq org-confirm-babel-evaluate 'gwp/org-confirm-babel-evaluate)
 #+end_src
 
 自动保存编辑的代码. [2018-12-17 Mon] will cause timerp error
 #+begin_src emacs-lisp :tangle no
-  ;; saving a source code buffer back into its base buffer
-  (setq org-edit-src-auto-save-idle-delay 1)
+;; saving a source code buffer back into its base buffer
+(setq org-edit-src-auto-save-idle-delay 1)
 #+end_src
 
 ** bindings
@@ -4153,712 +4126,6 @@ org-sidebar
       )
 #+end_src
 
-* bindings.el
-:PROPERTIES:
-:header-args: :tangle pkg/.doom.d/bindings.el :comments nil
-:END:
-** docs
-- [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#map][doom-emacs/api: map!]]
-
-从doom config module中取出, 禁用Tab键相关设置, 修复按键Bug.
-
-此文件在config.el中使用load!宏来加载
-
-: /home/ybyygu/Workspace/Programming/emacs/doom-emacs/modules/config/default/packages.el
-
-源文件
-: /home/ybyygu/Workspace/Programming/emacs/doom-emacs/modules/config/default/+evil-bindings.el
-
-** new/template
-#+begin_src emacs-lisp :tangle no
-(map! :leader
-    )
-#+end_src
-
-** header
-#+begin_src emacs-lisp
-;;; config/default/+bindings.el -*- lexical-binding: t; -*-
-;;
-;;; Global keybindings
-#+end_src
-
-** misc
-#+begin_src elisp
-;; Smart tab, these will only work in GUI Emacs
-(map! ;; Smarter newlines
-      :i [remap newline] #'newline-and-indent  ; auto-indent on newline
-      :i "C-j"           #'+default/newline    ; default behavior
-
-      (:after help :map help-mode-map
-        :n "o"       #'link-hint-open-link)
-      (:after helpful :map helpful-mode-map
-        :n "o"       #'link-hint-open-link)
-      (:after info :map Info-mode-map
-        :n "o"       #'link-hint-open-link)
-      (:after apropos :map apropos-mode-map
-        :n "o"       #'link-hint-open-link
-        :n "TAB"     #'forward-button
-        :n [tab]     #'forward-button
-        :n [backtab] #'backward-button)
-      (:after view :map view-mode-map
-        [escape]  #'View-quit-all)
-      (:after man :map Man-mode-map
-        :n "q"    #'kill-current-buffer)
-
-      :m "gs"     #'+evil/easymotion  ; lazy-load `evil-easymotion'
-      (:after evil-org
-        :map evil-org-mode-map
-        :m "gsh" #'+org/goto-visible)
-
-      (:when (featurep! :editor multiple-cursors)
-        :prefix "gz"
-        :nv "d" #'evil-mc-make-and-goto-next-match
-        :nv "D" #'evil-mc-make-and-goto-prev-match
-        :nv "j" #'evil-mc-make-cursor-move-next-line
-        :nv "k" #'evil-mc-make-cursor-move-prev-line
-        :nv "m" #'evil-mc-make-all-cursors
-        :nv "n" #'evil-mc-make-and-goto-next-cursor
-        :nv "N" #'evil-mc-make-and-goto-last-cursor
-        :nv "p" #'evil-mc-make-and-goto-prev-cursor
-        :nv "P" #'evil-mc-make-and-goto-first-cursor
-        :nv "q" #'evil-mc-undo-all-cursors
-        :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
-        :nv "u" #'evil-mc-undo-last-added-cursor
-        :nv "z" #'+multiple-cursors/evil-mc-make-cursor-here
-        :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
-        :v  "A" #'evil-mc-make-cursor-in-visual-selection-end)
-
-      ;; misc
-      :n "C-S-f"  #'toggle-frame-fullscreen
-      :n "C-+"    #'doom/reset-font-size
-      ;; Buffer-local font resizing
-      :n "C-="    #'text-scale-increase
-      :n "C--"    #'text-scale-decrease
-      ;; Frame-local font resizing
-      :n "M-C-="  #'doom/increase-font-size
-      :n "M-C--"  #'doom/decrease-font-size)
-#+end_src
-** completion
-#+begin_src elisp
-;;
-;;; Module keybinds
-
-;;; :completion
-(map! (:when (featurep! :completion company)
-       :i "C-@"    (cmds! (not (minibufferp)) #'company-complete-common)
-       :i "C-SPC"  (cmds! (not (minibufferp)) #'company-complete-common)
-       (:after company
-         (:map company-active-map
-           "C-w"     nil  ; don't interfere with `evil-delete-backward-word'
-           "C-n"     #'company-select-next
-           "C-p"     #'company-select-previous
-           "C-j"     #'company-select-next
-           "C-k"     #'company-select-previous
-           "C-h"     #'company-show-doc-buffer
-           "C-u"     #'company-previous-page
-           "C-d"     #'company-next-page
-           "C-s"     #'company-filter-candidates
-           "C-S-s"   (cond ((featurep! :completion helm) #'helm-company)
-                           ((featurep! :completion ivy)  #'counsel-company))
-           "C-SPC"   #'company-complete-common
-           "TAB"     #'company-complete-common-or-cycle
-           [tab]     #'company-complete-common-or-cycle
-           [backtab] #'company-select-previous
-           [f1]      nil)
-         (:map company-search-map  ; applies to `company-filter-map' too
-           "C-n"     #'company-select-next-or-abort
-           "C-p"     #'company-select-previous-or-abort
-           "C-j"     #'company-select-next-or-abort
-           "C-k"     #'company-select-previous-or-abort
-           "C-s"     (λ! (company-search-abort) (company-filter-candidates))
-           [escape]  #'company-search-abort))
-       ;; TAB auto-completion in term buffers
-       (:after comint :map comint-mode-map
-         "TAB" #'company-complete
-         [tab] #'company-complete))
-
-      (:when (featurep! :completion ivy)
-        (:after ivy
-          :map ivy-minibuffer-map
-          "C-SPC" #'ivy-call-and-recenter  ; preview file
-          "C-l"   #'ivy-alt-done
-          "C-v"   #'yank)
-        (:after counsel
-          :map counsel-ag-map
-          "C-SPC"    #'ivy-call-and-recenter ; preview
-          "C-l"      #'ivy-done
-          [C-return] #'+ivy/git-grep-other-window-action))
-
-      (:when (featurep! :completion helm)
-        (:after helm :map helm-map
-          [left]     #'left-char
-          [right]    #'right-char
-          "C-S-f"    #'helm-previous-page
-          "C-S-n"    #'helm-next-source
-          "C-S-p"    #'helm-previous-source
-          "C-S-j"    #'helm-next-source
-          "C-S-k"    #'helm-previous-source
-          "C-j"      #'helm-next-line
-          "C-k"      #'helm-previous-line
-          "C-u"      #'helm-delete-minibuffer-contents
-          "C-s"      #'helm-minibuffer-history
-          ;; Swap TAB and C-z
-          "TAB"      #'helm-execute-persistent-action
-          [tab]      #'helm-execute-persistent-action
-          "C-z"      #'helm-select-action)
-        (:after helm-ag :map helm-ag-map
-          "C--"      #'+helm-do-ag-decrease-context
-          "C-="      #'+helm-do-ag-increase-context
-          [left]     nil
-          [right]    nil)
-        (:after helm-files :map (helm-find-files-map helm-read-file-map)
-          [C-return] #'helm-ff-run-switch-other-window
-          "C-w"      #'helm-find-files-up-one-level)
-        (:after helm-locate :map helm-generic-files-map
-          [C-return] #'helm-ff-run-switch-other-window)
-        (:after helm-buffers :map helm-buffer-map
-          [C-return] #'helm-buffer-switch-other-window)
-        (:after helm-occur :map helm-occur-map
-          [C-return] #'helm-occur-run-goto-line-ow)
-        (:after helm-grep :map helm-grep-map
-          [C-return] #'helm-grep-run-other-window-action)))
-#+end_src
-
-** ui
-#+begin_src rust
-;;; :ui
-(map! (:when (featurep! :ui popup)
-        :n "C-`"   #'+popup/toggle
-        :n "C-~"   #'+popup/raise
-        :g "C-x p" #'+popup/other))
-#+end_src
-
-** editor
-#+begin_src elisp
-;;; :editor
-(map! (:when (featurep! :editor format)
-        :n "gQ" #'+format:region)
-
-      (:when (featurep! :editor rotate-text)
-        :n "!"  #'rotate-text)
-
-      (:when (featurep! :editor multiple-cursors)
-        ;; evil-multiedit
-        :v  "R"     #'evil-multiedit-match-all
-        :n  "M-d"   #'evil-multiedit-match-symbol-and-next
-        :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
-        :v  "M-d"   #'evil-multiedit-match-and-next
-        :v  "M-D"   #'evil-multiedit-match-and-prev
-        :nv "C-M-d" #'evil-multiedit-restore
-        (:after evil-multiedit
-          (:map evil-multiedit-state-map
-            "M-d"    #'evil-multiedit-match-and-next
-            "M-D"    #'evil-multiedit-match-and-prev
-            "RET"    #'evil-multiedit-toggle-or-restrict-region
-            [return] #'evil-multiedit-toggle-or-restrict-region)))
-
-      (:when (featurep! :editor snippets)
-        ;; auto-yasnippet
-        :i  [C-tab] #'aya-expand
-        :nv [C-tab] #'aya-create))
-#+end_src
-
-** tools
-#+begin_src elisp
-;;; :tools
-(when (featurep! :tools eval)
-  (map! "M-r" #'+eval/buffer))
-
-
-(after! which-key
-  (let ((prefix-re (regexp-opt (list doom-leader-key doom-leader-alt-key))))
-    (cl-pushnew `((,(format "\\`\\(?:C-w\\|%s w\\) m\\'" prefix-re))
-                  nil . "maximize")
-                which-key-replacement-alist)))
-#+end_src
-
-
-
-
-** leader/main
-#+begin_src elisp
-(map! :leader
-      ;; :desc "Eval expression"       ";"    #'pp-eval-expression
-      :desc "M-x"                   ":"    #'execute-extended-command
-      :desc "Pop up scratch buffer" "x"    #'doom/open-scratch-buffer
-      :desc "Org Capture"           "X"    #'org-capture
-
-      ;; C-u is used by evil
-      :desc "Universal argument"    "u"    #'universal-argument
-      :desc "window"                "w"    evil-window-map
-      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
-      :desc "help"                  "h"    help-map
-
-      (:when (featurep! :ui popup)
-        :desc "Toggle last popup"     "~"    #'+popup/toggle)
-      :desc "Find file"             "."    #'find-file
-
-      :desc "Switch buffer"         ","    #'switch-to-buffer
-      (:when (featurep! :ui workspaces)
-        :desc "Switch workspace buffer" "," #'persp-switch-to-buffer
-        :desc "Switch buffer"           "<" #'switch-to-buffer)
-
-      :desc "Switch to last buffer" "`"    #'evil-switch-to-windows-last-buffer
-
-      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
-      )
-#+end_src
-
-** leader/workspace
-改进workspace功能
-#+begin_src elisp
-(defun gwp/workspace/load-or-switch (name)
-  "Load or switch to a workspace."
-  (interactive
-   (list
-    (completing-read
-     "Workspace to load: "
-     (persp-list-persp-names-in-file
-      (expand-file-name +workspaces-data-file persp-save-dir)))))
-  (if (+workspace-exists-p name)
-      (+workspace/switch-to name)
-    (if (not (+workspace-load name))
-        (+workspace-error (format "Couldn't load workspace %s" name))
-      (+workspace/switch-to name)))
-  (+workspace/display))
-#+end_src
-
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> l --- workspace
-      (:when (featurep! :ui workspaces)
-        (:prefix-map ("l" . "workspace")
-          :desc "Load workspace from file"  "l"   #'gwp/workspace/load-or-switch
-          :desc "Save workspace to file"    "s"   #'+workspace/save
-          :desc "Delete this workspace"     "d"   #'+workspace/delete
-          :desc "Next workspace"            "n"   #'+workspace/switch-right
-          :desc "Previous workspace"        "p"   #'+workspace/switch-left
-          :desc "Switch to last workspace"  "b"   #'+workspace/other
-          :desc "Display tab bar"           "."   #'+workspace/display
-          :desc "Switch workspace"          "TAB" #'+workspace/switch-to
-          :desc "New workspace"             "N"   #'+workspace/new
-          :desc "Delete session"            "x"   #'+workspace/kill-session
-          :desc "Rename workspace"          "r"   #'+workspace/rename
-          :desc "Restore last session"      "R"   #'+workspace/restore-last-session
-          :desc "Switch to 1st workspace"   "1"   #'+workspace/switch-to-0
-          :desc "Switch to 2nd workspace"   "2"   #'+workspace/switch-to-1
-          :desc "Switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
-          :desc "Switch to 4th workspace"   "4"   #'+workspace/switch-to-3
-          ))
-      )
-#+end_src
-
-** leader/buffer
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> b --- buffer
-      (:prefix-map ("b" . "buffer")
-        :desc "Toggle narrowing"            "-"   #'doom/toggle-narrow-buffer
-        :desc "Previous buffer"             "["   #'previous-buffer
-        :desc "Next buffer"                 "]"   #'next-buffer
-        (:when (featurep! :ui workspaces)
-          :desc "Switch workspace buffer" "b" #'persp-switch-to-buffer
-          :desc "Switch buffer"           "B" #'switch-to-buffer)
-        (:unless (featurep! :ui workspaces)
-          :desc "Switch buffer"           "b" #'switch-to-buffer)
-        :desc "Kill buffer"                 "d"   #'kill-current-buffer
-        :desc "Kill buffer"                 "k"   #'kill-current-buffer
-        :desc "ibuffer"                     "i"   #'ibuffer
-        :desc "Kill all buffers"            "K"   #'doom/kill-all-buffers
-        :desc "Switch to last buffer"       "l"   #'evil-switch-to-windows-last-buffer
-        :desc "Set bookmark"                "m"   #'bookmark-set
-        :desc "Delete bookmark"             "M"   #'bookmark-delete
-        :desc "Next buffer"                 "n"   #'next-buffer
-        :desc "New empty buffer"            "N"   #'evil-buffer-new
-        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
-        :desc "Previous buffer"             "p"   #'previous-buffer
-        :desc "Revert buffer"               "r"   #'revert-buffer
-        :desc "Save buffer"                 "s"   #'basic-save-buffer
-        :desc "Save all buffers"            "S"   #'evil-write-all
-        :desc "Save buffer as root"         "u"   #'doom/sudo-save-buffer
-        :desc "Pop up scratch buffer"       "x"   #'doom/open-scratch-buffer
-        :desc "Switch to scratch buffer"    "X"   #'doom/switch-to-scratch-buffer
-        :desc "Bury buffer"                 "z"   #'bury-buffer
-        :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers)
-    )
-#+end_src
-
-** leader/code
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> c --- code
-      (:prefix-map ("c" . "code")
-        :desc "indent region"                         "TAB" #'indent-region
-        :desc "indent region"                         [tab] #'indent-region
-        :desc "LSP Execute code action"               "a"   #'lsp-execute-code-action
-        :desc "Compile"                               "c"   #'compile
-        :desc "Recompile"                             "C"   #'recompile
-        :desc "Jump to definition"                    "d"   #'+lookup/definition
-        :desc "Jump to references"                    "D"   #'+lookup/references
-        :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
-        :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
-        :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
-        :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
-        :desc "Open vterm"                            "t"   #'vterm-toggle
-        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
-        :desc "LSP Format buffer/region"              "F"   #'+default/lsp-format-region-or-buffer
-        :desc "LSP Organize imports"                  "i"   #'lsp-organize-imports
-        (:when (featurep! :completion ivy)
-          :desc "Jump to symbol in current workspace" "j"   #'lsp-ivy-workspace-symbol
-          :desc "Jump to symbol in any workspace"     "J"   #'lsp-ivy-global-workspace-symbol)
-        (:when (featurep! :completion helm)
-          :desc "Jump to symbol in current workspace" "j"   #'helm-lsp-workspace-symbol
-          :desc "Jump to symbol in any workspace"     "J"   #'helm-lsp-global-workspace-symbol)
-        :desc "Jump to documentation"                 "k"   #'+lookup/documentation
-        :desc "LSP Rename"                            "r"   #'lsp-rename
-        ;; :desc "Send to repl"                          "s"   #'+eval/send-region-to-repl
-        :desc "Send to repl"                          "s"   #'gwp/tmux-ipython-paste-region
-        :desc "Delete trailing whitespace"            "w"   #'delete-trailing-whitespace
-        :desc "Delete trailing newlines"              "W"   #'doom/delete-trailing-newlines
-        :desc "List errors"                           "x"   #'flymake-show-diagnostics-buffer
-        (:when (featurep! :checkers syntax)
-          :desc "List errors"                         "x"   #'flycheck-list-errors))
-    )
-#+end_src
-
-** leader/file
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> f --- file
-      (:prefix-map ("f" . "file")
-        :desc "Open bookmarks"              "b"   #'counsel-bookmark
-        :desc "Open project editorconfig"   "c"   #'editorconfig-find-current-editorconfig
-        :desc "Copy this file"              "C"   #'doom/copy-this-file
-        :desc "Find directory"              "d"   #'dired
-        :desc "Delete this file"            "D"   #'doom/delete-this-file
-        :desc "Find file in emacs.d"        "e"   #'+default/find-in-emacsd
-        :desc "Browse emacs.d"              "E"   #'+default/browse-emacsd
-        :desc "Find file"                   "f"   #'find-file
-        :desc "Find file from here"         "F"   #'+default/find-file-under-here
-        :desc "Jump to Dired buffer"        "j"   #'dired-jump
-        :desc "Locate file"                 "l"   #'locate
-        :desc "Open file/dir externally"    "o"   #'spacemacs/open-file-or-directory-in-external-app
-        :desc "Find file in private config" "p"   #'doom/find-file-in-private-config
-        :desc "Browse private config"       "P"   #'doom/open-private-config
-        :desc "Recent files"                "r"   #'recentf-open-files
-        :desc "Rename/move file"            "R"   #'doom/move-this-file
-        :desc "Save file"                   "s"   #'save-buffer
-        :desc "Save file as..."             "S"   #'write-file
-        :desc "Sudo find file"              "u"   #'doom/sudo-find-file
-        :desc "Sudo this file"              "U"   #'doom/sudo-this-file
-        :desc "Yank filename"               "y"   #'+default/yank-buffer-filename)
-    )
-#+end_src
-
-** leader/git
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> g --- git
-      (:prefix-map ("g" . "git")
-        :desc "Git revert file"             "R"   #'vc-revert
-        :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill-file-or-region
-        :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage
-        (:when (featurep! :ui hydra)
-          :desc "SMerge"                    "m"   #'+vc/smerge-hydra/body)
-        (:when (featurep! :ui vc-gutter)
-          :desc "Git revert hunk"           "r"   #'git-gutter:revert-hunk
-          :desc "Git stage hunk"            "s"   #'git-gutter:stage-hunk
-          :desc "Git time machine"          "t"   #'git-timemachine-toggle
-          :desc "Jump to next hunk"         "]"   #'git-gutter:next-hunk
-          :desc "Jump to previous hunk"     "["   #'git-gutter:previous-hunk)
-        (:when (featurep! :gwp magit)
-          :desc "Manage dotfiles (yadm)"    "."   (lambda! (magit-status "/yadm::"))
-          :desc "Magit dispatch"            "/"   #'magit-dispatch
-          :desc "Forge dispatch"            "'"   #'forge-dispatch
-          :desc "Magit switch branch"       "b"   #'magit-branch-checkout
-          :desc "Magit status"              "g"   #'magit-status
-          :desc "Magit file delete"         "D"   #'magit-file-delete
-          :desc "Magit blame"               "B"   #'magit-blame-addition
-          :desc "Magit clone"               "C"   #'magit-clone
-          :desc "Magit fetch"               "F"   #'magit-fetch
-          :desc "Magit buffer log"          "L"   #'magit-log
-          :desc "Git stage file"            "S"   #'magit-stage-file
-          :desc "Git unstage file"          "U"   #'magit-unstage-file
-          (:prefix ("f" . "find")
-            :desc "Find file"                 "f"   #'magit-find-file
-            :desc "Find gitconfig file"       "g"   #'magit-find-git-config-file
-            :desc "Find commit"               "c"   #'magit-show-commit
-            :desc "Find issue"                "i"   #'forge-visit-issue
-            :desc "Find pull request"         "p"   #'forge-visit-pullreq)
-          (:prefix ("o" . "open in browser")
-            :desc "Browse file or region"     "o"   #'browse-at-remote
-            :desc "Browse homepage"           "h"   #'+vc/browse-at-remote-homepage
-            :desc "Browse remote"             "r"   #'forge-browse-remote
-            :desc "Browse commit"             "c"   #'forge-browse-commit
-            :desc "Browse an issue"           "i"   #'forge-browse-issue
-            :desc "Browse a pull request"     "p"   #'forge-browse-pullreq
-            :desc "Browse issues"             "I"   #'forge-browse-issues
-            :desc "Browse pull requests"      "P"   #'forge-browse-pullreqs)
-          (:prefix ("l" . "list")
-            (:when (featurep! :tools gist)
-              :desc "List gists"              "g"   #'+gist:list)
-            :desc "List repositories"         "r"   #'magit-list-repositories
-            :desc "List submodules"           "s"   #'magit-list-submodules
-            :desc "List issues"               "i"   #'forge-list-issues
-            :desc "List pull requests"        "p"   #'forge-list-pullreqs
-            :desc "List notifications"        "n"   #'forge-list-notifications)
-          (:prefix ("c" . "create")
-            :desc "Initialize repo"           "r"   #'magit-init
-            :desc "Clone repo"                "R"   #'magit-clone
-            :desc "Commit"                    "c"   #'magit-commit-create
-            :desc "Fixup"                     "f"   #'magit-commit-fixup
-            :desc "Branch"                    "b"   #'magit-branch-and-checkout
-            :desc "Issue"                     "i"   #'forge-create-issue
-            :desc "Pull request"              "p"   #'forge-create-pullreq)))
-      )
-#+end_src
-
-** leader/insert
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> i --- insert
-      (:prefix-map ("i" . "insert")
-        :desc "Current file name"             "f"   #'+default/insert-file-path
-        :desc "Current file path"             "F"   (λ!! #'+default/insert-file-path t)
-        :desc "Evil ex path"                  "p"   (λ! (evil-ex "R!echo "))
-        :desc "From evil register"            "r"   #'evil-ex-registers
-        :desc "Snippet"                       "s"   #'yas-insert-snippet
-        :desc "Unicode"                       "u"   #'unicode-chars-list-chars
-        :desc "From clipboard"                "y"   #'+default/yank-pop)
-    )
-#+end_src
-
-** leader/notes
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> n --- notes
-      (:prefix-map ("n" . "notes")
-        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
-        :desc "Org agenda"                   "a" #'org-agenda
-        :desc "Toggle org-clock"             "c" #'+org/toggle-clock
-        :desc "Cancel org-clock"             "C" #'org-clock-cancel
-        :desc "Open deft"                    "d" #'deft
-        :desc "Find file in notes"           "f" #'+default/find-in-notes
-        :desc "Browse notes"                 "F" #'+default/browse-notes
-        :desc "Org store link"               "l" #'org-store-link
-        :desc "Tags search"                  "m" #'org-tags-view
-        :desc "Org capture"                  "n" #'org-capture
-        :desc "Active org-clock"             "o" #'org-clock-goto
-        :desc "Todo list"                    "t" #'org-todo-list
-        ;; :desc "Search notes"                 "s" #'+default/org-notes-search
-        :desc "Search all notes"             "s" #'gwp/search-all-notes
-        :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
-        :desc "View search"                  "v" #'org-search-view
-        :desc "Org export to clipboard"        "y" #'+org/export-to-clipboard
-        :desc "Org export to clipboard as RTF" "Y" #'+org/export-to-clipboard-as-rich-text
-
-        (:when (featurep! :lang org +journal)
-          (:prefix ("j" . "journal")
-            :desc "New Entry"      "j" #'org-journal-new-entry
-            :desc "Search Forever" "s" #'org-journal-search-forever)))
-      )
-#+end_src
-
-** leader/open
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> o --- open
-      (:prefix-map ("o" . "open")
-        :desc "Org agenda"       "A"  #'org-agenda
-        (:prefix ("a" . "org agenda")
-          :desc "Agenda"         "a"  #'org-agenda
-          :desc "Todo list"      "t"  #'org-todo-list
-          :desc "Tags search"    "m"  #'org-tags-view
-          :desc "View search"    "v"  #'org-search-view)
-        :desc "Start debugger"     "d"  #'+debugger/start
-        :desc "New frame"          "f"  #'make-frame
-        :desc "REPL"               "r"  #'+eval/open-repl-other-window
-        :desc "REPL (same window)" "R"  #'+eval/open-repl-same-window
-        :desc "Dired"              "-"  #'dired-jump
-        (:when (featurep! :ui neotree)
-          :desc "Project sidebar"              "p" #'+neotree/open
-          :desc "Find file in project sidebar" "P" #'+neotree/find-this-file)
-        (:when (featurep! :ui treemacs)
-          :desc "Project sidebar" "p" #'+treemacs/toggle
-          :desc "Find file in project sidebar" "P" #'+treemacs/find-file)
-        (:when (featurep! :term shell)
-          :desc "Toggle shell popup"    "t" #'+shell/toggle
-          :desc "Open shell here"       "T" #'+shell/here)
-        (:when (featurep! :term term)
-          :desc "Toggle terminal popup" "t" #'+term/toggle
-          :desc "Open terminal here"    "T" #'+term/here)
-        (:when (featurep! :term vterm)
-          :desc "Toggle vterm popup"    "t" #'+vterm/toggle
-          :desc "Open vterm here"       "T" #'gwp/open-terminal-here)
-        (:when (featurep! :term eshell)
-          :desc "Toggle eshell popup"   "e" #'+eshell/toggle
-          :desc "Open eshell here"      "E" #'+eshell/here)
-        (:when (featurep! :tools docker)
-          :desc "Docker" "D" #'docker))
-    )
-#+end_src
-** leader/project
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> p --- project
-      (:prefix-map ("p" . "project")
-        :desc "Browse project"               "." #'+default/browse-project
-        :desc "Browse other project"         ">" #'doom/browse-in-other-project
-        :desc "Run cmd in project root"      "!" #'projectile-run-shell-command-in-root
-        :desc "Add new project"              "a" #'projectile-add-known-project
-        :desc "Switch to project buffer"     "b" #'projectile-switch-to-buffer
-        :desc "Compile in project"           "c" #'projectile-compile-project
-        :desc "Repeat last command"          "C" #'projectile-repeat-last-command
-        :desc "Remove known project"         "d" #'projectile-remove-known-project
-        :desc "Discover projects in folder"  "D" #'+default/discover-projects
-        :desc "Edit project .dir-locals"     "e" #'projectile-edit-dir-locals
-        :desc "Find file in project"         "f" #'projectile-find-file
-        :desc "Find file in other project"   "F" #'doom/find-file-in-other-project
-        :desc "Configure project"            "g" #'projectile-configure-project
-        :desc "Invalidate project cache"     "i" #'projectile-invalidate-cache
-        :desc "Kill project buffers"         "k" #'projectile-kill-buffers
-        :desc "Find other file"              "o" #'projectile-find-other-file
-        :desc "Switch project"               "p" #'projectile-switch-project
-        :desc "Find recent project files"    "r" #'projectile-recentf
-        :desc "Run project"                  "R" #'projectile-run-project
-        :desc "Save project files"           "s" #'projectile-save-project-buffers
-        :desc "Pop up scratch buffer"        "x" #'doom/open-project-scratch-buffer
-        :desc "Switch to scratch buffer"     "X" #'doom/switch-to-project-scratch-buffer
-        :desc "List project tasks"           "t" #'magit-todos-list
-        :desc "Test project"                 "T" #'projectile-test-project)
-    )
-#+end_src
-
-** leader/quit
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> q --- quit/session
-      (:prefix-map ("q" . "quit/session")
-        :desc "Restart emacs server"         "d" #'+default/restart-server
-        :desc "Delete frame"                 "f" #'delete-frame
-        :desc "Clear current frame"          "F" #'doom/kill-all-buffers
-        :desc "Kill Emacs (and daemon)"      "K" #'save-buffers-kill-emacs
-        :desc "Quit Emacs"                   "q" #'save-buffers-kill-terminal
-        :desc "Quit Emacs without saving"    "Q" #'evil-quit-all-with-error-code
-        :desc "Quick save current session"   "s" #'doom/quicksave-session
-        :desc "Restore last session"         "l" #'doom/quickload-session
-        :desc "Save session to file"         "S" #'doom/save-session
-        :desc "Restore session from file"    "L" #'doom/load-session
-        :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
-        :desc "Restart Emacs"                "R" #'doom/restart)
-    )
-#+end_src
-
-** leader/search
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> s --- search
-      (:prefix-map ("s" . "search")
-        :desc "Search buffer"                "b" #'swiper
-        :desc "Search current directory"     "d" #'+default/search-cwd
-        :desc "Search other directory"       "D" #'+default/search-other-cwd
-        :desc "Jump to symbol"               "i" #'imenu
-        :desc "Jump to visible link"         "l" #'link-hint-open-link
-        :desc "Jump to link"                 "L" #'ffap-menu
-        :desc "Jump list"                    "j" #'evil-show-jumps
-        :desc "Jump to bookmark"             "m" #'bookmark-jump
-        :desc "Search all notes"             "n" #'gwp/search-all-notes
-        :desc "Look up online"               "o" #'+lookup/online
-        :desc "Look up online (w/ prompt)"   "O" #'+lookup/online-select
-        :desc "Look up in local docsets"     "k" #'+lookup/in-docsets
-        :desc "Look up in all docsets"       "K" #'+lookup/in-all-docsets
-        :desc "Search project"               "p" #'+default/search-project
-        :desc "Search other project"         "P" #'+default/search-other-project
-        :desc "Jump to mark"                 "r" #'evil-show-marks
-        :desc "Search buffer"                "s" #'swiper-isearch
-        :desc "Search buffer for thing at point" "S" #'swiper-isearch-thing-at-point
-        :desc "Dictionary"                   "t" #'+lookup/dictionary-definition
-        :desc "Thesaurus"                    "T" #'+lookup/synonyms)
-    )
-#+end_src
-
-** leader/remote
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> R --- remote
-      (:when (featurep! :tools upload)
-        (:prefix-map ("R" . "remote")
-          :desc "Upload local"               "u" #'ssh-deploy-upload-handler
-          :desc "Upload local (force)"       "U" #'ssh-deploy-upload-handler-forced
-          :desc "Download remote"            "d" #'ssh-deploy-download-handler
-          :desc "Diff local & remote"        "D" #'ssh-deploy-diff-handler
-          :desc "Browse remote files"        "." #'ssh-deploy-browse-remote-handler
-          :desc "Detect remote changes"      ">" #'ssh-deploy-remote-changes-handler))
-    )
-#+end_src
-
-** leader/resume
-#+begin_src emacs-lisp
-;; ivy-resume比较难用, 而且有bug
-;; https://emacs.stackexchange.com/questions/55775/how-can-i-resume-swiper-isearch-with-the-next-line-selected
-(defun gwp/ivy-resume-search()
-  (interactive)
-  (swiper-isearch (car swiper-history)))
-
-(map! :leader
-      ;;; <leader> r --- resume
-      (:prefix-map ("r" . "rings/resume")
-        :desc "Open bookmarks"        "b" #'counsel-bookmark
-        :desc "Resume last search"    "l" #'ivy-resume
-        ;; :desc "Resume last search"    "l" #'gwp/ivy-resume-search
-        :desc "Evil registers"        "e" #'counsel-register
-        :desc "Evil marks"            "m" #'counsel-evil-marks
-        :desc "Last change"           "c" #'goto-last-change
-        :desc "Jump list"             "j" #'+ivy/jump-list
-        ))
-#+end_src
-
-** leader/toggle
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> t --- toggle
-      (:prefix-map ("t" . "toggle")
-        :desc "Big mode"                     "b" #'doom-big-font-mode
-        :desc "Flymake"                      "f" #'flymake-mode
-        :desc "Menubar"                      "m" #'menu-bar-mode
-        :desc "切换终端(vterm)"               "t" #'vterm-toggle
-        :desc "Toolbar"                      "T" #'tool-bar-mode
-        (:when (featurep! :checkers syntax)
-          :desc "Flycheck"                   "f" #'flycheck-mode)
-        :desc "Frame fullscreen"             "F" #'toggle-frame-fullscreen
-        :desc "Evil goggles"                 "g" #'evil-goggles-mode
-        (:when (featurep! :ui indent-guides)
-          :desc "Indent guides"              "i" #'highlight-indent-guides-mode)
-        :desc "Indent style"                 "I" #'doom/toggle-indent-style
-        :desc "Line numbers"                 "l" #'doom/toggle-line-numbers
-        (:when (featurep! :lang org +present)
-          :desc "org-tree-slide mode"        "p" #'org-tree-slide-mode)
-        :desc "Read-only mode"               "r" #'read-only-mode
-        (:when (featurep! :checkers spell)
-          :desc "Flyspell"                   "s" #'flyspell-mode)
-        :desc "Soft line wrapping"           "w" #'visual-line-mode
-        (:when (featurep! :ui word-wrap)
-          :desc "Soft line wrapping"         "w" #'+word-wrap-mode)
-        :desc "Zen mode"                     "z" #'writeroom-mode)
-    )
-#+end_src
-
-** leader/jump
-#+begin_src emacs-lisp
-(map! :leader
-      ;;; <leader> j --- jump
-      (:prefix-map ("j" . "jump")
-                   :desc "avy line"    "l" #'evil-avy-goto-line
-                   )
-    )
-#+end_src
-
-
 * modules/hack
 新思路:
 - fork doom-emacs, 仅做必要的修改. 将其中的org module更名后, 放到pkg下载入?
@@ -4869,10 +4136,10 @@ org-sidebar
   : +;;; ~/.doom.d/modules/gwp/org/autoload/org-link.el -*- lexical-binding: t; -*-
 
 修改的模块:
-- [[file:doom-hacks/modules/lang/org/config.el][org/config.el]]
-- [[file:doom-hacks/modules/lang/rust/config.el][rust/config.el]]
-- [[file:doom-hacks/modules/tools/magit/][magit/]]
-- [[file:doom-hacks/modules/config/default][default]]
+** [[file:doom-hacks/modules/lang/org/config.el][org/config.el]]
+** [[file:doom-hacks/modules/lang/rust/config.el][rust/config.el]]
+** [[file:doom-hacks/modules/tools/magit/][magit/]]
+** [[file:doom-hacks/modules/config/default][default]]
 
 * snippets
 :PROPERTIES:

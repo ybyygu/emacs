@@ -379,11 +379,24 @@ selected instead of creating a new buffer."
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
 (require 'zotero)
 
-(defun gwp/zotero-search (tag)
+(defun gwp/zotero-search-by-tag (name)
   "Search Zotero entries by tag using ivy."
   (interactive "sTag: ")
 
-  (let* ((candidates (zotero-search-items tag)))
+  (let* ((candidates (zotero-search-items-by-tag name)))
+    (ivy-read (format "Zotero entries: ")
+              candidates
+              :action '(2               ; set the default action to open attachments
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
+                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
+                        ("i" gwp--ivy-action-insert-link "Insert link")))))
+
+(defun gwp/zotero-search-by-collection (name)
+  "Search Zotero entries by collection name using ivy."
+  (interactive "sCollection: ")
+
+  (let* ((candidates (zotero-search-items-by-collection name)))
     (ivy-read (format "Zotero entries: ")
               candidates
               :action '(2               ; set the default action to open attachments
@@ -477,8 +490,8 @@ selected instead of creating a new buffer."
 (transient-define-prefix gwp/zotero-search-transient ()
   "Search zotero database"
   [["Search zotero items:"
-    ("t" "search by tag" gwp/zotero-search)
-    ("c" "search by collection" gwp/zotero-search)
+    ("t" "search by tag" gwp/zotero-search-by-tag)
+    ("c" "search by collection" gwp/zotero-search-by-collection)
     ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
     ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
     ]]
@@ -992,11 +1005,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; agenda:3 ends here
 
 ;; [[file:../../doom.note::*org-file-apps][org-file-apps:1]]
-;; (add-to-list 'org-file-apps
-;;              (quote (
-;;                      ("\\.odt\\'" . system)
-;;                      )))
-
 (add-to-list 'org-file-apps
              '("\\.pdf\\'" . (lambda (file link)
                                (org-pdftools-open link))))

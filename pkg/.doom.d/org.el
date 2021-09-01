@@ -340,7 +340,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         [mouse-8] (cmd! (pdf-view-next-page-command))
         )
   ;; 一页页看更方便
-  (setq pdf-view-continuous nil))
+  (setq pdf-view-continuous nil)
+  (setq-default pdf-view-display-size 'fit-width))
 ;; org-noter/pdf-view:1 ends here
 
 ;; [[file:../../doom.note::*narrow][narrow:1]]

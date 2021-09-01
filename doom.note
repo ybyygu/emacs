@@ -97,6 +97,7 @@ K : Korean
 - [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][helm-bibtex/ivy-bibtex.el at master · tmalsburg/helm-bibtex]]
   
 *** Memo
+[2021-08-31 Tue] 实现自动编译模块? [[https://github.com/casouri/xeft/blob/master/xeft.el][URL]]
 [2021-08-25 Wed] 这个链接打不开? [[zotero://select/items/1_I9BXB5GH][@WenBin2007]] 已修复
 [2021-08-23 Mon] 自己写了一个, 简洁够用.
 流程:
@@ -1076,7 +1077,7 @@ Name=Emacs Client - GWP
 GenericName=Text Editor
 Comment=View and edit files
 MimeType=application/x-note;application/pdf;text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-Exec=emacsclient -create-frame --alternate-editor="" --no-wait %F
+Exec=emacsclient --create-frame --alternate-editor="" --no-wait %F
 TryExec=emacs
 Icon=emacs
 Type=Application
@@ -1089,7 +1090,7 @@ Categories=Utility;Development;TextEditor;
 #+BEGIN_SRC text
 [Desktop Entry]
 Name=org-protocol
-Exec=emacsclient %U
+Exec=emacsclient --no-wait %U
 Icon=emacs
 Type=Application
 Terminal=false
@@ -1128,7 +1129,7 @@ Categories=Utility;Development;TextEditor;
    desktop文件所指定的一定.
 
 更新desktop数据库
-#+BEGIN_SRC shell
+#+BEGIN_SRC shell :results none
 update-desktop-database ~/.local/share/applications/
 #+END_SRC
 
@@ -3253,7 +3254,8 @@ pdf-view-fit-width-to-window
         [mouse-8] (cmd! (pdf-view-next-page-command))
         )
   ;; 一页页看更方便
-  (setq pdf-view-continuous nil))
+  (setq pdf-view-continuous nil)
+  (setq-default pdf-view-display-size 'fit-width))
 #+end_src
 
 #+RESULTS:

@@ -181,3 +181,9 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq bibtex-completion-pdf-field "file")
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 ;; bibtex:1 ends here
+
+;; [[file:../../doom.note::*find notes][find notes:1]]
+(defun gwp/find-file-in-notes ()
+  "Find a file under `~/.cache/notes', recursively."
+  (interactive) (doom-project-find-file "~/.cache/notes"))
+;; find notes:1 ends here

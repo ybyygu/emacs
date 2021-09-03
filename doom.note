@@ -21,7 +21,41 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [33/40]
+* Memo [34/41]
+** DONE [2021-09-03 Fri] 使用magit transient来调用命令行程序?
+- State "DONE"       from "TODO"       [2021-09-05 Sun 18:00]
+如何可避免使用emacs-module, 改进容错.
+
+- [[https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/][Anyone have good examples for Transient? : emacs]]
+
+#+begin_src elisp
+(defun test-function (&optional args)
+  (interactive
+   (list (transient-args 'test-transient)))
+  (message "args %s" args))
+
+(define-infix-argument test-transient:--message ()
+  :description "Message"
+  :class 'transient-option
+  :shortarg "-m"
+  :argument "--message=")
+
+(define-transient-command test-transient ()
+  "Test Transient Title"
+  ["Arguments"
+   ("-s" "Switch" "--switch")
+   ("-a" "Another switch" "--another")
+   (test-transient:--message)]
+  ["Actions"
+   ("d" "Action d" test-function)])
+
+(test-transient)
+#+end_src
+
+#+RESULTS:
+| transient--resume-which-key-mode |
+
+
 ** DONE [2021-08-25 Wed] 改进字体设置
 - State "DONE"       from "TODO"       [2021-08-25 Wed 09:20]
 
@@ -499,16 +533,14 @@ References
 - [[https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/][Help me with my org-mode workflow for note-taking? : emacs]]
 
 ** DONE [2017-11-10 Fri] 进一步改进org-attach功能 方便移动不同的outline及其attachments
-CLOSED: [2017-11-10 Fri 20:37]
+- State "DONE"       from "TODO"       [2021-09-03 Fri 17:47]
 - State "DONE"       from "TODO"       [2017-11-10 Fri 20:37]
 
 操作流程
-- 存储当前entry的附件内容: gwp/org-attach-store
-- 将当前enetry文本移动到新的文件中
-- 将之前存储的附件内容移回到新的attachment目录中来: gwp/org-attach-move
-
-此外:
-修改了变量 org-attach-store-link-p, 这样可以方便的生成指向data目录的文件链接.
+- 存储当前entry的附件内容: gwp/org-attach-copy
+- 将当前org entry文本移动到新的文件中
+- 将之前存储的附件内容复制到新的attachment目录中来: gwp/org-attach-paste. 此时会
+  自动生成与之前相同的attach目录和文件.
 
 ** DONE [2017-11-10 Fri] 修改tangle函数, 能更方便的tangle代码
 - State "DONE"       from "TODO"       [2020-04-07 Tue 20:03]
@@ -3642,10 +3674,32 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+end_src
 
 *** copy & paste attachments
-添加附件时生成指向附件的路径, 方便org-insert-link添加.
 #+begin_src emacs-lisp
 (setq org-attach-store-link-p 'attached)
+
+;; 1. store the ataach files into clipboard
+(defun gwp/org-attach-copy (&optional force)
+  "store org attachment directory of current enetry"
+  (interactive "P")
+  ;; make a temporary symlink to store the attachment path
+  (if-let (attach-files (counsel-org-files))
+      (let ((current-dir (if buffer-file-name (file-name-directory buffer-file-name) default-directory)))
+        (zotero-attach-txclip-copy-files attach-files current-dir))
+    (message "No attachment found")))
+
+;; 2. paste the stored files to new location
+(defun gwp/org-attach-paste (&optional force)
+  "move stored attachments to current entry"
+  (interactive "P")
+  (let ((current-dir (file-name-directory buffer-file-name)))
+    (zotero-attach-txclip-paste-files current-dir)))
 #+end_src
+
+**** old
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+添加附件时生成指向附件的路径, 方便org-insert-link添加.
 
 使用软链接保存当前entry的附件目录. 注意make-symbolic-link的特殊性:
 - 如果dest是个目录, 会在目录下建立目录
@@ -3657,7 +3711,7 @@ file-exists-p函数对symlink的特殊性:
 
 #+begin_src emacs-lisp
 ;; 1. store the directory
-(defun gwp/org-attach-store (&optional force)
+(defun gwp/org-attach-copy (&optional force)
   "store org attachment directory of current enetry"
   (interactive "P")
   ;; make a temporary symlink to store the attachment path
@@ -3682,7 +3736,7 @@ file-exists-p函数对symlink的特殊性:
 从存储的软链接中读取之前的entry的附件, 并移动到当前entry的附件目录里.
 #+begin_src emacs-lisp
 ;; 2. move the stored directory to new location
-(defun gwp/org-attach-move (&optional force)
+(defun gwp/org-attach-paste (&optional force)
   "move stored attachments to current entry"
   (interactive "P")
   ;; ~/.emacs.d/.cache/.gwp-attach-tmp
@@ -3741,9 +3795,7 @@ file-exists-p函数对symlink的特殊性:
   "store file link without the description part -- a tweak to make odt image exporting correct."
   (setq org-stored-links
         (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
-              org-stored-links)
-        )
-  )
+              org-stored-links)))
 
 (defun gwp/org-take-as-local-attachment ()
   "move file link at point as local attachment"
@@ -3765,12 +3817,8 @@ file-exists-p函数对symlink的特殊性:
           (gwp/org-store-link-without-desc file)
           (call-interactively 'org-insert-last-stored-link)
           ;; refresh the image if possbile
-          (org-display-inline-images)
-         )
-      (user-error "Point is not on a link")
-      )
-    )
-  )
+          (org-display-inline-images))
+      (user-error "Point is not on a link"))))
 #+end_src
 
 *** delete link file
@@ -3788,8 +3836,7 @@ file-exists-p函数对symlink的特殊性:
                      (message "File deleted"))
               )
           (error "No such attachment: %s" file))
-      (user-error "Point is not on a file link")
-      )))
+      (user-error "Point is not on a file link"))))
 #+end_src
 
 ** refile

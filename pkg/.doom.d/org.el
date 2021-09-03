@@ -111,6 +111,8 @@
   org-download-delete
   org-download-yank
   org-download-clipboard
+  :bind (:map org-mode-map
+         ("C-c v" . org-download-clipboard))
   :config
   (progn
     (setq org-download-method 'attach
@@ -671,61 +673,24 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 ;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:1]]
 (setq org-attach-store-link-p 'attached)
-;; copy & paste attachments:1 ends here
 
-;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:2]]
-;; 1. store the directory
-(defun gwp/org-attach-store (&optional force)
+;; 1. store the ataach files into clipboard
+(defun gwp/org-attach-copy (&optional force)
   "store org attachment directory of current enetry"
   (interactive "P")
   ;; make a temporary symlink to store the attachment path
-  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
-  (let ((attach-dir (org-attach-dir)))
-    (when attach-dir
-      (progn
-        ;; remove existing directory
-        (when (file-directory-p file-attach-tmp) (delete-directory file-attach-tmp t))
-        ;; remove existing file and symlink
-        (when (file-exists-p file-attach-tmp) (delete-file file-attach-tmp))
-        ;; remove broken symlink
-        (when (file-symlink-p file-attach-tmp) (delete-file file-attach-tmp))
-        (make-symbolic-link attach-dir file-attach-tmp)
-        (message (format "stored to: %s" file-attach-tmp))
-        )
-      )
-    )
-  )
-;; copy & paste attachments:2 ends here
+  (if-let (attach-files (counsel-org-files))
+      (let ((current-dir (if buffer-file-name (file-name-directory buffer-file-name) default-directory)))
+        (zotero-attach-txclip-copy-files attach-files current-dir))
+    (message "No attachment found")))
 
-;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:3]]
-;; 2. move the stored directory to new location
-(defun gwp/org-attach-move (&optional force)
+;; 2. paste the stored files to new location
+(defun gwp/org-attach-paste (&optional force)
   "move stored attachments to current entry"
   (interactive "P")
-  ;; ~/.emacs.d/.cache/.gwp-attach-tmp
-  (setq file-attach-tmp (concat spacemacs-cache-directory ".gwp-attach-tmp"))
-
-  (if (file-exists-p file-attach-tmp)
-      ;; create attachment directory if not exists using org-attach-dir function
-      (let ((attach-dir (org-attach-dir t)))
-        (progn
-          ;; read old attach directory from previous stored symlink
-          (setq attach-dir-old (file-chase-links file-attach-tmp))
-          ;; sanity check
-          (if (y-or-n-p (format "%s/* ==> %s ?" attach-dir-old attach-dir))
-              (progn
-                (shell-command (format "mv %s/* %s" attach-dir-old attach-dir))
-                ;; remove stale tmp-link
-                (delete-file file-attach-tmp)
-                )
-            (message "cancelled")
-            )
-          )
-        )
-    (message (format "no stored symbolic link found: %s" file-attach-tmp))
-    )
-  )
-;; copy & paste attachments:3 ends here
+  (let ((current-dir (file-name-directory buffer-file-name)))
+    (zotero-attach-txclip-paste-files current-dir)))
+;; copy & paste attachments:1 ends here
 
 ;; [[file:../../doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
 (defun gwp/org-file-link-p (&optional element)
@@ -754,9 +719,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   "store file link without the description part -- a tweak to make odt image exporting correct."
   (setq org-stored-links
         (cons (list (org-attach-expand-link (file-name-nondirectory file)) "")
-              org-stored-links)
-        )
-  )
+              org-stored-links)))
 
 (defun gwp/org-take-as-local-attachment ()
   "move file link at point as local attachment"
@@ -778,12 +741,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
           (gwp/org-store-link-without-desc file)
           (call-interactively 'org-insert-last-stored-link)
           ;; refresh the image if possbile
-          (org-display-inline-images)
-         )
-      (user-error "Point is not on a link")
-      )
-    )
-  )
+          (org-display-inline-images))
+      (user-error "Point is not on a link"))))
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
 ;; [[file:../../doom.note::*delete link file][delete link file:1]]
@@ -799,8 +758,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                      (message "File deleted"))
               )
           (error "No such attachment: %s" file))
-      (user-error "Point is not on a file link")
-      )))
+      (user-error "Point is not on a file link"))))
 ;; delete link file:1 ends here
 
 ;; [[file:../../doom.note::*refile][refile:1]]

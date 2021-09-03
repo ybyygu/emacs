@@ -2541,6 +2541,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
 #+end_src
+
 ** multiedit
 使用M-d选中多个字词, 同步修改. 不需要的可用Enter取消掉.
 #+begin_src elisp
@@ -2920,32 +2921,30 @@ Requires cargo-check to be installed."
 
 ** screenshot
 - org-contrib: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-screenshot.el][org-screenshot.el]]
-
+  
 目前最佳方案: 使用org-download来实现屏幕截图的功能
-- 在firefox或deepin-screenshot等截图后复制到X11剪贴板.
-- 使用org-screenshot-dwim.sh为org-download的截图工具, 将剪贴板里的图片下载到
-  org-download指定的临时文件.
-- 调用org-download-screenshot完成后续操作.
+- 在firefox或screenshot等截图后复制到X11剪贴板.
+- 调用org-download-clipboard完成图片插入操作.
   - 图片自动保存到org attachment目录
   - 自动添加图片显示参数, 设定在org中显示的大小
-  - 可以使用org-download-delete来删除当前image
+- 可以使用org-download-delete来删除当前image
 
 目前的问题 ([2020-03-06 Fri])
-- 第二次执行截图时, 如果clipboard无图, emacs会挂住, 原因不明, 现在无解.
+- 第二次执行截图时, 如果clipboard无图, emacs会挂住, 现在无解.
 
 #+begin_src emacs-lisp
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
-    "Annotate LINK with the time of download."
-    (format (concat
-             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
-             ;; set unique figure name
-             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-             ;; unit in px; for displaying in org-mode
-             "#+attr_org: :width 800\n"
-             ;; unit in cm; for exporting as odt
-             "#+attr_odt: :width 10\n"
-             )))
+  "Annotate LINK with the time of download."
+  (format (concat
+           (concat  "#+caption: " (read-string "Caption: " caption) "\n")
+           ;; set unique figure name
+           (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+           ;; unit in px; for displaying in org-mode
+           "#+attr_org: :width 800\n"
+           ;; unit in cm; for exporting as odt
+           "#+attr_odt: :width 10\n"
+           )))
 
 (defun gwp/org-insert-image-attributes (&optional caption)
   "insert image attributes such as caption and labels"
@@ -2957,21 +2956,23 @@ Requires cargo-check to be installed."
   (gwp/org-image-attributes-default))
 
 (use-package! org-download
-              :commands
-              org-download-delete
-              org-download-yank
-              org-download-screenshot
-              :config
-              (progn
-                (setq org-download-method 'attach
-                      org-download-annotate-function 'gwp/org-download-annotate
-                      ;; org-download-image-html-width 900 ; in px
-                      ;; org-download-image-latex-width 16 ; in cm
-                      org-download-screenshot-method
-                      (cond ((executable-find "txclip")  "txclip paste --image -o %s")
-                            ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
-                            ((executable-find "scrot") "scrot -s %s"))
-                      )))
+  :commands
+  org-download-delete
+  org-download-yank
+  org-download-clipboard
+  :bind (:map org-mode-map
+         ("C-c v" . org-download-clipboard))
+  :config
+  (progn
+    (setq org-download-method 'attach
+          org-download-annotate-function 'gwp/org-download-annotate
+          ;; org-download-image-html-width 900 ; in px
+          ;; org-download-image-latex-width 16 ; in cm
+          ;; 2021-09-03: 直接调用org-download-clipboard即可, 以下代码不必要
+          ;; org-download-screenshot-method
+          ;; (cond ((executable-find "txclip")  "txclip paste --image -o %s")
+          ;;       ((executable-find "scrot") "scrot -s %s"))
+          )))
 #+end_src
 
 安装org-download包
@@ -4091,16 +4092,13 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 
 (map! :map org-mode-map
       :localleader
-      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      :desc "preview inline images"       "I"     #'org-toggle-inline-images
       :desc "preview latex fragments"     "L"     #'org-latex-preview
-      :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
-      :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      :desc "Paste image from clipboard"  "C-v"   #'org-download-clipboard
       :desc "Move to next link"           "C-n"   #'org-next-link
       :desc "Move to prev link"           "C-p"   #'org-previous-link
       :desc "Move to next link"           [tab]   #'org-next-link
-      :desc "Move to prev link"           [backtab]   #'org-previous-link
-      :desc "preview inline images"       "I"   #'org-toggle-inline-images
-      )
+      :desc "Move to prev link"           [backtab]   #'org-previous-link)
 
 (map! :map org-mode-map
       :leader

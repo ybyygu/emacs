@@ -86,16 +86,16 @@
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
-    "Annotate LINK with the time of download."
-    (format (concat
-             (concat  "#+caption: " (read-string "Caption: " caption) "\n")
-             ;; set unique figure name
-             (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
-             ;; unit in px; for displaying in org-mode
-             "#+attr_org: :width 800\n"
-             ;; unit in cm; for exporting as odt
-             "#+attr_odt: :width 10\n"
-             )))
+  "Annotate LINK with the time of download."
+  (format (concat
+           (concat  "#+caption: " (read-string "Caption: " caption) "\n")
+           ;; set unique figure name
+           (format "#+name: fig:%s\n" (substring (org-id-new) 0 8))
+           ;; unit in px; for displaying in org-mode
+           "#+attr_org: :width 800\n"
+           ;; unit in cm; for exporting as odt
+           "#+attr_odt: :width 10\n"
+           )))
 
 (defun gwp/org-insert-image-attributes (&optional caption)
   "insert image attributes such as caption and labels"
@@ -107,21 +107,21 @@
   (gwp/org-image-attributes-default))
 
 (use-package! org-download
-              :commands
-              org-download-delete
-              org-download-yank
-              org-download-screenshot
-              :config
-              (progn
-                (setq org-download-method 'attach
-                      org-download-annotate-function 'gwp/org-download-annotate
-                      ;; org-download-image-html-width 900 ; in px
-                      ;; org-download-image-latex-width 16 ; in cm
-                      org-download-screenshot-method
-                      (cond ((executable-find "txclip")  "txclip paste --image -o %s")
-                            ((executable-find "deepin-screenshot")  "deepin-screenshot -s %s")
-                            ((executable-find "scrot") "scrot -s %s"))
-                      )))
+  :commands
+  org-download-delete
+  org-download-yank
+  org-download-clipboard
+  :config
+  (progn
+    (setq org-download-method 'attach
+          org-download-annotate-function 'gwp/org-download-annotate
+          ;; org-download-image-html-width 900 ; in px
+          ;; org-download-image-latex-width 16 ; in cm
+          ;; 2021-09-03: 直接调用org-download-clipboard即可, 以下代码不必要
+          ;; org-download-screenshot-method
+          ;; (cond ((executable-find "txclip")  "txclip paste --image -o %s")
+          ;;       ((executable-find "scrot") "scrot -s %s"))
+          )))
 ;; screenshot:1 ends here
 
 ;; [[file:../../doom.note::*latex preview][latex preview:1]]
@@ -1044,16 +1044,13 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 (map! :map org-mode-map
       :localleader
-      :desc "preview inline images"       "I"   #'org-toggle-inline-images
+      :desc "preview inline images"       "I"     #'org-toggle-inline-images
       :desc "preview latex fragments"     "L"     #'org-latex-preview
-      :desc "preview inline images"       "C-v"   #'org-toggle-inline-images
-      :desc "preview latex fragments"     "C-l"   #'org-latex-preview
+      :desc "Paste image from clipboard"  "C-v"   #'org-download-clipboard
       :desc "Move to next link"           "C-n"   #'org-next-link
       :desc "Move to prev link"           "C-p"   #'org-previous-link
       :desc "Move to next link"           [tab]   #'org-next-link
-      :desc "Move to prev link"           [backtab]   #'org-previous-link
-      :desc "preview inline images"       "I"   #'org-toggle-inline-images
-      )
+      :desc "Move to prev link"           [backtab]   #'org-previous-link)
 
 (map! :map org-mode-map
       :leader

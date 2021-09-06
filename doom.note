@@ -2010,30 +2010,36 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 #+end_src
 
 *** ripgrep
-search org note files
+搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
+我们使用自定义脚本ripgrep, 强制命令退出码为0. 注意~/.local/bin应在PATH变量中.
+
+#+begin_src shell :tangle ~/.local/bin/ripgrep :shebang #! /bin/bash
+/usr/bin/rg $@
+
+exit 0
+#+end_src
+
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun gwp/search-all-notes (arg)
   "search all notes in ~/.cache/notes"
   (interactive "P")
 
-  ;; (let ((default-directory "~/.cache/notes"))
-  ;; (call-interactively '+ivy/project-search-from-cwd))
-  
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (counsel-rg "" "~/.cache/notes" "--follow")
-  )
+  (let ((counsel-rg-base-command (list "ripgrep" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
+    (counsel-rg "" "~/.cache/notes")))
 #+end_src
 
 deadgrep与doom有冲突, 不能用了.
 #+begin_src emacs-lisp :tangle no
-  (defun gwp/return-default-notes-dir ()
-    "~/.cache/notes"
-    )
-  (use-package! deadgrep
-                :config
-                (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
-                )
+(defun gwp/return-default-notes-dir ()
+  "~/.cache/notes"
+  )
+(use-package! deadgrep
+              :config
+              (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
+              )
 #+end_src
 
 *** develop

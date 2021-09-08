@@ -383,7 +383,7 @@ If two universal prefix arguments are used, then prompt for command to use."
   (interactive "P")
 
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (let ((counsel-rg-base-command (list "ripgrep" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
+  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
     (counsel-rg "" "~/.cache/notes")))
 ;; ripgrep:2 ends here
 

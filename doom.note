@@ -587,14 +587,38 @@ CLOSED: [2017-11-01 Wed 10:34]
 
 #+name: 12d167c2-43c7-4f54-9a27-2b55432d113d
 #+BEGIN_SRC javascript
-  javascript:
-  var title = document.title;
-  if (title == '') {
-      title = 'URL';
-  }
+javascript:
+var title = document.title;
+if (title == '') {
+    title = 'URL';
+}
 
-  location.href = 'org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title) + "&body=" + encodeURIComponent(window.getSelection());
+location.href = 'org-protocol:///capture?template=n' + '&url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title) + "&body=" + encodeURIComponent(window.getSelection());
 #+END_SRC
+
+*** clipboard
+生成org链接, 方便capture. 不需要走 org-protocol
+
+[[https://gist.github.com/stefanmaric/2abf96c740191cda3bc7a8b0fc905a7d][Create Bookmarklet (browser bookmark that executes Javsacript) to copy a given text to Clipboard]]
+
+#+begin_src js
+(function (text) {
+  var node = document.createElement('textarea')
+  var selection = document.getSelection()
+
+  node.textContent = text
+  document.body.appendChild(node)
+
+  selection.removeAllRanges()
+  node.select()
+  document.execCommand('copy')
+
+  selection.removeAllRanges()
+  document.body.removeChild(node)
+})('[[' + location.href + ']' + '[' + document.title + ']]')
+#+end_src
+
+javascript:!function(a){var b=document.createElement("textarea"),c=document.getSelection();b.textContent=a,document.body.appendChild(b),c.removeAllRanges(),b.select(),document.execCommand("copy"),c.removeAllRanges(),document.body.removeChild(b)}('[['+location.href+']'+'['+document.title+']]');
 
 *** References
 原理
@@ -1123,12 +1147,15 @@ Categories=Utility;Development;TextEditor;
 #+BEGIN_SRC text
 [Desktop Entry]
 Name=org-protocol
-Exec=emacsclient --no-wait %U
+Exec=emacsclient %U
 Icon=emacs
 Type=Application
 Terminal=false
 MimeType=x-scheme-handler/org-protocol;
 #+END_SRC
+
+: xdg-open 'org-protocol://store-link?url=https%3A%2F%2Forgmode.org%2Fworg%2Forg-contrib%2Forg-protocol.html' 
+: xdg-open 'org-protocol:///capture?template=n&url=http://www.baidu.com'
 
 ** firefox
 - 注册 [[*org-protocol][org-protocol]]
@@ -2027,7 +2054,7 @@ exit 0
   (interactive "P")
 
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (let ((counsel-rg-base-command (list "ripgrep" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
+  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
     (counsel-rg "" "~/.cache/notes")))
 #+end_src
 

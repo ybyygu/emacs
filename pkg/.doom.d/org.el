@@ -634,25 +634,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 ;; odt export:2 ends here
 
-;; [[file:../../doom.note::*capture & protocol][capture & protocol:1]]
-(setq org-capture-templates
-      '(
-        ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
-        ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
-        ("n" "Note" entry (file "~/Notes/refile.note")
-         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
-        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-         "* TODO %^T\n  %i" :prepend t)
-        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
-         "* %u %?\n  %i\n" :prepend t)
-        ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
-         "* %u %? %x\n  %i\n" :prepend t)
-        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
-         "* %u %?\n  %i\n" :prepend t)
-        )
-      )
-;; capture & protocol:1 ends here
-
 ;; [[file:../../doom.note::*encryption][encryption:1]]
 (require 'org-crypt)
 (require 'epa-file)
@@ -760,6 +741,23 @@ DESC. FORMATs understood are 'odt','latex and 'html."
           (error "No such attachment: %s" file))
       (user-error "Point is not on a file link"))))
 ;; delete link file:1 ends here
+
+;; [[file:../../doom.note::*capture & protocol][capture & protocol:1]]
+(setq org-capture-templates
+      '(
+        ("n" "Note" entry (file "~/Notes/refile.note")
+         "* %u %? %x\n  %:initial\n" :prepend t)
+        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+         "* TODO %^T %? %x\n  %i" :prepend t)
+        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+         "* %u %? %x\n  %i\n" :prepend t)
+        ("p" "Paper" entry (file+headline "~/Notes/research.note" "Literature")
+         "* TODO %u %? %x\n  %i\n" :prepend t)
+        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+         "* %u %? %x\n  %i\n" :prepend t)
+        ("N" "Note from protocol" entry (file "~/Notes/refile.note")
+         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
+;; capture & protocol:1 ends here
 
 ;; [[file:../../doom.note::*refile][refile:1]]
 (defun gwp/org-get-refile-targets ()

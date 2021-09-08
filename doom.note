@@ -21,7 +21,11 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [34/41]
+* Memo [35/42]
+** DONE [2021-09-09 Thu] 几个按键问题
+- State "DONE"       from "TODO"       [2021-09-09 Thu 19:23]
+space-j, mode-line: ctrl-k
+
 ** DONE [2021-09-03 Fri] 使用magit transient来调用命令行程序?
 - State "DONE"       from "TODO"       [2021-09-05 Sun 18:00]
 如何可避免使用emacs-module, 改进容错.
@@ -552,6 +556,7 @@ References
 ** DONE [2017-10-27 Fri] 完善org-protocol和org-capture             :Starred:
 CLOSED: [2017-11-01 Wed 10:34]
 
+- 添加将html页面生成org-mode link功能, 通过clipboard来与emacs交互. 解决KDE下capture窗口失焦问题 [2021-09-09 Thu]
 - 进一步完善js代码
 - 进一步优化bookmarklet, 方便在firefox中使用 [2018-01-24 Wed 21:02]
 - State "DONE"       from "TODO"       [2017-11-01 Wed 10:34]
@@ -570,16 +575,16 @@ CLOSED: [2017-11-01 Wed 10:34]
 
 版本2: 使用selection或document title做为description. 如果没有, 默认为URL.
 #+BEGIN_SRC javascript
-  javascript:
-  var title = window.getSelection();
-  if (title == '') {
-      title = document.title;
-      if (title == '') {
-          title = 'URL';
-      }
-  }
+javascript:
+var title = window.getSelection();
+if (title == '') {
+    title = document.title;
+    if (title == '') {
+        title = 'URL';
+    }
+}
 
-  location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
+location.href = 'org-protocol:///store-link?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title);
 #+END_SRC
 
 *** capture
@@ -597,38 +602,50 @@ location.href = 'org-protocol:///capture?template=n' + '&url=' + encodeURICompon
 #+END_SRC
 
 *** clipboard
-生成org链接, 方便capture. 不需要走 org-protocol
+生成org链接, 方便capture. 不需要走 org-protocol.
+
+链接生成规则: 如果有选中文字, 则以选中文字为title, 否则以页面标题为链接title. 如
+果页面标题也为空, 则以"URL"为链接显示标题.
 
 [[https://gist.github.com/stefanmaric/2abf96c740191cda3bc7a8b0fc905a7d][Create Bookmarklet (browser bookmark that executes Javsacript) to copy a given text to Clipboard]]
 
 #+begin_src js
+var title = window.getSelection();
+if (title == "") {
+  title = document.title;
+}
+if (title == "") {
+  title = "URL";
+}
 (function (text) {
-  var node = document.createElement('textarea')
-  var selection = document.getSelection()
+  var node = document.createElement("textarea");
+  var selection = document.getSelection();
 
-  node.textContent = text
-  document.body.appendChild(node)
+  node.textContent = text;
+  document.body.appendChild(node);
 
-  selection.removeAllRanges()
-  node.select()
-  document.execCommand('copy')
+  selection.removeAllRanges();
+  node.select();
+  document.execCommand("copy");
 
-  selection.removeAllRanges()
-  document.body.removeChild(node)
-})('[[' + location.href + ']' + '[' + document.title + ']]')
+  selection.removeAllRanges();
+  document.body.removeChild(node);
+})("[[" + location.href + "]" + "[" + title + "]]");
 #+end_src
 
-javascript:!function(a){var b=document.createElement("textarea"),c=document.getSelection();b.textContent=a,document.body.appendChild(b),c.removeAllRanges(),b.select(),document.execCommand("copy"),c.removeAllRanges(),document.body.removeChild(b)}('[['+location.href+']'+'['+document.title+']]');
+javascript:void function(){var a=window.getSelection();""==a%26%26(a=document.title),""==a%26%26(a="URL"),function(a){var b=document.createElement("textarea"),c=document.getSelection();b.textContent=a,document.body.appendChild(b),c.removeAllRanges(),b.select(),document.execCommand("copy"),c.removeAllRanges(),document.body.removeChild(b)}("[["+location.href+"]["+a+"]]")}();
 
 *** References
-原理
+原理: 通过劫持emacsclient功能, 将org-protocol://之类的URL与org-mode实现功能交互.
 - org-capture.el
+- [[https://www.ruanyifeng.com/blog/2011/06/a_guide_for_writing_bookmarklet.html][Bookmarklet编写指南 - 阮一峰的网络日志]]
 - https://github.com/alphapapa/org-protocol-capture-html
 - org capture extensions: https://github.com/sprig/org-capture-extension
 - [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol.el – Intercept calls from emacsclient to trigger custom actions]] (outdated)
 工具
-- [[https://mrcoles.com/bookmarklet/][Bookmarklet Creator with Script Includer - Peter Coles]]
+- 从js代码生成url: [[https://chriszarate.github.io/bookmarkleter/][Bookmarkleter]]
 - [[http://jsbeautifier.org/][Online JavaScript beautifier]]
+- [[https://mrcoles.com/bookmarklet/][Bookmarklet Creator with Script Includer - Peter Coles]]
 
 ** [2017-10-06 Fri] 解决org-mode加载大文件太慢的问题
 - [2017-10-07 Sat] 发现是hl-todo这个包导致的问题. 禁用该包即可.
@@ -988,29 +1005,30 @@ if __name__ == '__main__':
 :PROPERTIES:
 :header-args: :tangle pkg/.local/bin/emacsclient-open.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python
 :END:
+[2021-09-09 Thu] 这个用不上了.
 *** header
 #+begin_src python
-  # -*- coding: utf-8 -*-
-  #==============================================================================#
-  #   DESCRIPTION:  open text file with emacsclient and register the it into the
-  #                 recently-used-files list (~/.recently-used.xbel)
-  #
-  #       OPTIONS:  ---
-  #  REQUIREMENTS:  ---
-  #         NOTES:
-  #        AUTHOR:  Wenping Guo (ybyygu)
-  #         EMAIL:  winpng@gmail.com
-  #       LICENCE:  GPL version 2 or upper
-  #       CREATED:  <2010-09-01 Wed 16:04>
-  #       UPDATED:  <>
-  #==============================================================================#
-  #
-  # basically, to make emacsclient perfect, there are three things need be done:
-  # 1. use parameter "-a ''", that is, use a void alternate-editor to automatically start
-  #    emacs daemon
-  # 2. open the file without "-n" option to make sure the file buffer will be killed when frame
-  #    is closed
-  # 3. if the file has been opened, use "-n" option.
+# -*- coding: utf-8 -*-
+#==============================================================================#
+#   DESCRIPTION:  open text file with emacsclient and register the it into the
+#                 recently-used-files list (~/.recently-used.xbel)
+#
+#       OPTIONS:  ---
+#  REQUIREMENTS:  ---
+#         NOTES:
+#        AUTHOR:  Wenping Guo (ybyygu)
+#         EMAIL:  winpng@gmail.com
+#       LICENCE:  GPL version 2 or upper
+#       CREATED:  <2010-09-01 Wed 16:04>
+#       UPDATED:  <>
+#==============================================================================#
+#
+# basically, to make emacsclient perfect, there are three things need be done:
+# 1. use parameter "-a ''", that is, use a void alternate-editor to automatically start
+#    emacs daemon
+# 2. open the file without "-n" option to make sure the file buffer will be killed when frame
+#    is closed
+# 3. if the file has been opened, use "-n" option.
 #+end_src
 
 *** main
@@ -3660,31 +3678,6 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 #+end_src
 
-** capture & protocol
-占位符:
-| %:link         | URL of the web-page       |
-| %:description  | The title of the web-page |
-| %:initial / %i | Selected text.            |
-
-#+begin_src emacs-lisp
-(setq org-capture-templates
-      '(
-        ;; ("i" "interleave" plain (file "~/Incoming/annotation.note")
-        ;;  "#+setupfile: ~/Notes/common.org\n#+ZOTERO_ITEM: %x\n#+INTERLEAVE_PDF: %?\n" :prepend t :kill-buffer t)
-        ("n" "Note" entry (file "~/Notes/refile.note")
-         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)
-        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-         "* TODO %^T\n  %i" :prepend t)
-        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
-         "* %u %?\n  %i\n" :prepend t)
-        ("p" "Paper" entry (file+headline "~/Notes/research.note" "References")
-         "* %u %? %x\n  %i\n" :prepend t)
-        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
-         "* %u %?\n  %i\n" :prepend t)
-        )
-      )
-#+end_src
-
 ** encryption
 #+begin_src emacs-lisp
 (require 'org-crypt)
@@ -3870,6 +3863,29 @@ file-exists-p函数对symlink的特殊性:
               )
           (error "No such attachment: %s" file))
       (user-error "Point is not on a file link"))))
+#+end_src
+
+** capture & protocol
+占位符:
+| %:link         | URL of the web-page       |
+| %:description  | The title of the web-page |
+| %:initial / %i | Selected text.            |
+
+#+begin_src emacs-lisp
+(setq org-capture-templates
+      '(
+        ("n" "Note" entry (file "~/Notes/refile.note")
+         "* %u %? %x\n  %:initial\n" :prepend t)
+        ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
+         "* TODO %^T %? %x\n  %i" :prepend t)
+        ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
+         "* %u %? %x\n  %i\n" :prepend t)
+        ("p" "Paper" entry (file+headline "~/Notes/research.note" "Literature")
+         "* TODO %u %? %x\n  %i\n" :prepend t)
+        ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
+         "* %u %? %x\n  %i\n" :prepend t)
+        ("N" "Note from protocol" entry (file "~/Notes/refile.note")
+         "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 #+end_src
 
 ** refile

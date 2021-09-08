@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=org-protocol
-Exec=emacsclient --no-wait %U
+Exec=emacsclient %U
 Icon=emacs
 Type=Application
 Terminal=false

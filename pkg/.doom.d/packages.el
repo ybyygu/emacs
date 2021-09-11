@@ -100,6 +100,12 @@
 (package! simple-httpd)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 
+(package! org-transclusion
+  :recipe (:host github
+           :repo "nobiot/org-transclusion"
+           :branch "main"
+           :files ("*.el")))
+
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)
 ;; vterm:1 ends here

@@ -14,6 +14,14 @@
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
 
+;; [[file:../../doom.note::*ctrl-z][ctrl-z:1]]
+(after! evil
+  ;; 如何误入evil-emacs-state, 按ESC返回normal state
+  (define-key evil-emacs-state-map [escape] 'evil-normal-state)
+  ;; (map! :nvim "C-z" #'undo)
+  )
+;; ctrl-z:1 ends here
+
 ;; [[file:../../doom.note::*smartparens][smartparens:1]]
 (map! :leader
       :nvi

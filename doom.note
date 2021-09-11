@@ -21,10 +21,16 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [35/42]
-** DONE [2021-09-09 Thu] 几个按键问题
+* Memo [34/42]
+** TODO [2021-09-09 Thu] 几个按键问题
 - State "DONE"       from "TODO"       [2021-09-09 Thu 19:23]
+  
 space-j, mode-line: ctrl-k
+
+Ctrl-z suspend-frame
+
+evil-emacs-state, evil-exit-emacs-state
+
 
 ** DONE [2021-09-03 Fri] 使用magit transient来调用命令行程序?
 - State "DONE"       from "TODO"       [2021-09-05 Sun 18:00]
@@ -768,6 +774,7 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 ** 打开buffer文件所在目录
 ~SPC-u SPC-f-o~
 * TODO Roam research
+** org-roam
 我觉得可以基于zotero来实现类似roam的组织方式. 在zotero中可以打标签, 也可以设置
 related items. 同时zotero中的items也是平级组织, 统一命名, 使用zotero uri可以在
 org文档中自由引用跳转. 现在唯一欠缺的时像org-roam-server那样可以交互式的展现关联
@@ -780,6 +787,18 @@ org-roam-capture
 org-roam-node-find
 org-roam-node-insert
 org-roam-buffer-toggle
+
+** TODO 笔记管理系统思考
+- 火花笔记, fleeting note, slip-box: 这些用org-capture就很好, 关键是快, 电光石火
+- 永久笔记, permanent note: 这些可放置在zotero里. 使用zotero数据库, 可实现条目的
+  永久链接, 不受笔记路径变化的影响.
+
+关键功能:
+- 双向链接 backlinks
+- 块引用
+  - [[https://github.com/nobiot/org-transclusion][nobiot/org-transclusion: (alpha) Emacs package to enable transclusion with Org Mode]]
+  - [[https://github.com/Kinneyzhang/roam-block][Kinneyzhang/roam-block: An all-purpose block ref and block embed implement in emacs.]]
+- 图表展示(可用org-protocol链接)
 
 * TODO Literate Programming in Rust
 需要安装[[https://github.com/racer-rust/racer][racer]]
@@ -1372,6 +1391,7 @@ gwp-merge:
 :VISIBILITY: children
 :END:
 共三个配置文件, tangle到pkg/.doom.d目录下, 再由stow软链到$HOME.
+
 ** init.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/init.el :comments nil
@@ -2417,7 +2437,15 @@ github支持, 减慢速度.
 (package! websocket)
 (package! simple-httpd)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+
+(package! org-transclusion
+  :recipe (:host github
+           :repo "nobiot/org-transclusion"
+           :branch "main"
+           :files ("*.el")))
 #+end_src
+
+
 * edit.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
@@ -2440,6 +2468,15 @@ github支持, 减慢速度.
  )
 
 (auto-save-visited-mode +1)
+#+end_src
+** ctrl-z
+默认切换为emacs-state, 经常按错. 
+#+begin_src elisp
+(after! evil
+  ;; 如何误入evil-emacs-state, 按ESC返回normal state
+  (define-key evil-emacs-state-map [escape] 'evil-normal-state)
+  ;; (map! :nvim "C-z" #'undo)
+  )
 #+end_src
 
 ** smartparens

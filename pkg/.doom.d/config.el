@@ -94,10 +94,10 @@
 (when (display-graphic-p)
   (setq user-font
         (cond
-         ;; https://github.com/laishulu/Sarasa-Mono-SC-Nerd
-         ((find-font (font-spec :name  "Sarasa Mono SC Nerd")) "Sarasa Mono SC Nerd")
-         ((find-font (font-spec :name  "Noto Sans Mono CJK SC")) "Noto Sans Mono CJK SC")
-         ((find-font (font-spec :name  "Source Code Pro")) "Source Code Pro")))
+         ((find-font (font-spec :name  "Sarasa Fixed SC")) "Sarasa Fixed SC")
+         ((find-font (font-spec :name  "Iosevka")) "Iosevka")
+         ((find-font (font-spec :name  "Inconsolata Nerd Font")) "Inconsolata Nerd Font")
+         ((find-font (font-spec :name  "Ubuntu Mono")) "Ubuntu Mono")))
   ;; (setq resolution-factor (eval (/ (x-display-pixel-height) 1080)))
   (setq resolution-factor 2)
   (setq ideal-font-size (eval (* 15 resolution-factor)))

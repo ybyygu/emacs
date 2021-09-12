@@ -471,7 +471,3 @@ If two universal prefix arguments are used, then prompt for command to use."
 (use-package dired-sidebar
   :commands (dired-sidebar-toggle-sidebar))
 ;; dired-sidebar:1 ends here
-
-;; [[file:../../doom.note::*before save][before save:1]]
-;; (remove-hook 'before-save-hook 'ws-butler-before-save)
-;; before save:1 ends here

@@ -144,6 +144,22 @@ K : Korean
 - [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][helm-bibtex/ivy-bibtex.el at master · tmalsburg/helm-bibtex]]
   
 *** Memo
+[2021-09-12 Sun] 改进文本对齐
+#+begin_src elisp :tangle no
+(require 'ivy-bibtex)
+(setq candidate '("2008 袁亚湘 非线性优化计算方法 book 袁亚湘2008  "
+ ("year" . "2008")
+ ("author" . "袁亚湘")
+ ("title" . "{非线性优化计算方法}")
+ ("=type=" . "book")
+ ("=key=" . "袁亚湘2008")
+))
+(bibtex-completion-format-entry candidate 20)
+
+(truncate-string-to-width "magit-diff: elisp-demos" 40 0 ?\s)
+(truncate-string-to-width "magit-diff: elisp-好好" 40 0 ?\s)
+#+end_src
+
 [2021-08-31 Tue] 实现自动编译模块? [[https://github.com/casouri/xeft/blob/master/xeft.el][URL]]
 [2021-08-25 Wed] 这个链接打不开? [[zotero://select/items/1_I9BXB5GH][@WenBin2007]] 已修复
 [2021-08-23 Mon] 自己写了一个, 简洁够用.
@@ -193,12 +209,10 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 
 ** DONE [2021-01-07 Thu] 解决自动保存时清理空格的问题
 - State "DONE"       from "TODO"       [2021-01-07 Thu 16:00]
-在输入过程中自动保存后会删掉空格, 应禁用这一行为.
+在编辑过程中自动保存后会删掉空格, 应禁用这一行为.
 
-[[https://github.com/hlissner/doom-emacs/issues/4071][Disable ws-butler · Issue #4071 · hlissner/doom-emacs]]
-
-: (remove-hook 'before-save-hook #'ws-butler-before-save)
-以上修改不管用, 禁用了之.
+[2021-09-12 Sun] 似乎改进了, 重新启用.
+- [[file:doom-emacs/docs/getting_started.org::*Using ~delete-trailing-whitespaces~ or ~whitespace-cleanup~ to manage leftover whitespace][Using ~delete-trailing-whitespaces~ or ~whitespace-cleanup~ to manage leftover whitespace]]
 
 ** DONE [2020-09-14 Mon] 禁用which-key-mode
 - State "DONE"       from "TODO"       [2020-09-14 Mon 10:39]
@@ -2278,11 +2292,6 @@ Argument E is a mouse event used by `mouse-set-point'."
 (use-package dired-sidebar
   :commands (dired-sidebar-toggle-sidebar))
 #+end_src
-*** TODO before save
-以下设置不管用
-#+begin_src elisp
-;; (remove-hook 'before-save-hook 'ws-butler-before-save)
-#+end_src
 
 ** packages.el
 :PROPERTIES:
@@ -2422,7 +2431,7 @@ github支持, 减慢速度.
 #+end_src
 
 禁用自动空格清理包, 避免有编辑时丢失空格
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (package! ws-butler :disable t)
 #+end_src
 

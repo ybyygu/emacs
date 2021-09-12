@@ -88,8 +88,6 @@
 
 ; (package! which-key :ignore t)
 
-(package! ws-butler :disable t)
-
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)

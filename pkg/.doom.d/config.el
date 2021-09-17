@@ -43,6 +43,10 @@
 ;; they are implemented.
 ;; orig:1 ends here
 
+;; [[file:../../doom.note::*scratch][scratch:1]]
+(setq doom-scratch-initial-major-mode 'org-mode)
+;; scratch:1 ends here
+
 ;; [[file:../../doom.note::*workspace][workspace:1]]
 (setq persp-auto-save-opt 0)
 

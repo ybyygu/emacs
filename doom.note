@@ -21,7 +21,47 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [34/42]
+* Memo [33/42]
+** TODO [2021-09-16 Thu] 最近关于笔记管理的好文 [[https://index.pmthinking.com/3a8c5d77b5be42c58719d174bfbfa935][何谓渐进式总结]]          :ATTACH:
+:PROPERTIES:
+:ID:       71394edd-0d8b-4d34-b49e-e0c7e8ade4c1
+:END:
+
+- 适当的压缩信息（这个系列便是如此）能更利于我们记忆
+- 知识的挑战不在于获取知识, 而在于将部分知识跨时距传递(在需要的时候)
+- 笔记系统要平衡可发现性和可理解性
+
+渐进式总结
+- 不断地总结，把思路提炼成越来越小的层次。
+- 有了这些层层暴露，我们就可以从高空鸟瞰笔记的山峰，判断这座山峰是否与我们要找的东西有关。
+- 但我们也保留了所有的层级，所以如果我们看到一个看起来很有前景的山峰，就可以用我
+  们的 "理解的降落伞 "直接潜入其中，往下钻，只要我们需要的深度。
+
+渐进式总结将丛林变成了一个群岛式的岛屿。它揭示了你的个人信息地貌 —— 你的目标、价
+值观、兴趣和追求的独特地形。有了清晰的地形图，你就有了引导的能力。
+
+- 快速索引知识，并将其压缩成许多知识块;
+- 迅速忘掉所学的东西, 放入笔记系统(第二大脑), 将大脑放空;
+- 目标: 保持清晰的大脑，又能建立起持久的结构.
+
+记忆的关键:
+- 不是要把每一个想法尽无遗地罗列出来
+- 而是要创造一个丰富的触发器、提示和钩子的环境, 以引发记忆、联系，甚至是更多的新
+  想法
+- 拥有正确的知识不是最大的挑战, 寻找知识才是最大的挑战. 知识是存在的，只是我们找
+  不到而已.
+- 让我们从「记详细的笔记」转化为「记录笔记的关键词、核心思想和其他元数据上」
+
+#+name: fig:da08e510
+#+attr_org: :width 800
+#+attr_odt: :width 10
+[[attachment:2021-09-16_09-57-42_screenshot.png]]
+
+#+name: fig:9b50705a
+#+attr_org: :width 800
+#+attr_odt: :width 10
+[[attachment:2021-09-16_09-57-54_screenshot.png]]
+
 ** TODO [2021-09-09 Thu] 几个按键问题
 - State "DONE"       from "TODO"       [2021-09-09 Thu 19:23]
   
@@ -102,47 +142,19 @@ K : Korean
 参考
 - [[https://manateelazycat.github.io/emacs/2020/04/02/org-font.html][Org-Mode 表格对齐设置]]
   
-** DONE [2021-08-21 Sat] 实现类ivy-bibtex文献搜索界面
-- State "DONE"       from "TODO"       [2021-08-23 Mon 10:17]
-不太满意
-- 中英文混排不对齐
-- 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索)
-
-  | 好 | x         |
-  |    | 好看就t末 |
-
-#+begin_src elisp
-;; (setq doom-font (font-spec :family "Sarasa Mono T SC" :size 16)
-;;       doom-unicode-font (font-spec :family "Sarasa Mono T SC"))
-
-;; (setq doom-font (font-spec :family "Ubuntu Mono" :size 16)
-;;       doom-unicode-font (font-spec :family "Ubuntu Mono"))
-
-;; (when (member "Sarasa Nerd" (font-family-list))
-;;   (setq doom-font (font-spec :family "Sarasa Nerd" :size 16)
-;;         doom-variable-pitch-font (font-spec :family "Sarasa Nerd")
-;;         doom-unicode-font (font-spec :family "Sarasa Nerd")
-;;         doom-big-font (font-spec :family "Sarasa Nerd" :size 20)))
-
-;; (setq doom-font (font-spec :family "Sarasa Mono T SC" :size 24 :weight 'regular)
-;;   doom-variable-pitch-font (font-spec :family "Sarasa Mono T SC" :size 24)
-;;   doom-unicode-font (font-spec :family "Sarasa Mono T SC")
-;;   doom-big-font (font-spec :family "Sarasa Mono T SC" :size 24))
-
-(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 24)
-      doom-serif-font (font-spec :family "Sarasa Mono Slab SC")
-      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font Mono")
-      doom-unicode-font (font-spec :family "Sarasa Mono Slab SC")
-      doom-big-font (font-spec :family "Sarasa Mono Slab SC" :size 30))
-#+end_src
-
 ** TODO [2021-08-20 Fri] 实现zotero管理界面
 - [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
 - [[https://oremacs.com/swiper/#actions][Ivy User Manual]]
 - [[id:f9dbae5c-d135-47fd-be30-e788fc1e3eb7][ivy 新手教程 - Emacs-general - Emacs China]]
 - [[id:dba75f6c-108f-4e84-a0ae-589065f572f6][JSON-RPC :: Better BibTeX for Zotero]]
 - [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][helm-bibtex/ivy-bibtex.el at master · tmalsburg/helm-bibtex]]
-  
+
+不太满意
+- [ ] 搜索时, keyword为空时响应非常慢.
+- [ ] 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索).
+  ivy-bibtex可以选择多个item, 再执行统一的操作. 可以研究下. [[https://github.com/tmalsburg/helm-bibtex#apply-actions-to-multiple-entries][Apply actions to multiple entries]]
+- [X] 中英文混排不对齐
+
 *** Memo
 [2021-09-12 Sun] 改进文本对齐
 #+begin_src elisp :tangle no
@@ -256,6 +268,7 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 : +;;; ~/.doom.d/modules/gwp/org/autoload/org-link.el -*- lexical-binding: t; -*-
 
 ** TODO [2020-03-22 Sun] workspace保存时经常出错的问题
+[2021-09-12 Sun] 最近正常
 无法确定问题的根源, 有时成功, 有时失败. 成功案例:
 - Cu-u SPC-l-s, 失败后再用SPC-l-s
 
@@ -278,10 +291,13 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
 这个可以自定义的地方更多.
 
-** TODO [2020-03-01 Sun] doom evil学习
-- [ ] [[https://github.com/noctuid/evil-guide][noctuid/evil-guide: Draft of a guide for using emacs with evil]]
+** TODO [2020-03-01 Sun] doom evil学习                                  :ATTACH:
+:PROPERTIES:
+:ID:       bc618f17-00a0-4e52-9236-3447cf7f72a1
+:END:
+- [X] [[https://github.com/noctuid/evil-guide][noctuid/evil-guide: Draft of a guide for using emacs with evil]]
 - [ ] 这个和regex-align有点像 https://github.com/edkolev/evil-lion
-- [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
+- [ ] [[https://noelwelsh.com/posts/doom-emacs/][Noel Welsh: Doom Emacs Workflows]]
 - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 - [ ] 位置跳转: better-jumper-jump-backward. 先按ctrl-o, 跳回之前的位置, 按TAB返回.
 - [ ] [[https://github.com/hlissner/evil-multiedit][hlissner/evil-multiedit: Multiple cursors for evil-mode, based on iedit]]
@@ -417,16 +433,16 @@ https://org-roam.readthedocs.io/en/latest/ecosystem/
 - 使用下面的脚本, 从X11 clipboard复制截图, 这样避免了截图时emacs窗口如何最小化的
   问题. [2020-03-06 Fri] 不太好用, 用rust重写了.
   #+begin_src shell :tangle no
-    set -e
-    if [ "x$1" = "x" ]; then
-        echo "Usage: [options] $0 file..." >&2
-        exit 1
-    fi
+  set -e
+  if [ "x$1" = "x" ]; then
+      echo "Usage: [options] $0 file..." >&2
+      exit 1
+  fi
 
-    xclip -selection clipboard -t image/png -o > "$1"
+  xclip -selection clipboard -t image/png -o > "$1"
 
-    # remove zero sized file
-    [ ! -s "$1" ] && rm "$1"
+  # remove zero sized file
+  [ ! -s "$1" ] && rm "$1"
   #+end_src
 
 ** DONE [2020-03-02 Mon] 完成ripgrep搜索notes功能
@@ -1113,6 +1129,14 @@ emacs --maximized --file "$*" --eval "(pdf-view-fit-width-to-window)"
 emacsclient -c -e "(org-agenda nil \"gt\")" -e "(delete-other-windows)"
 #+end_src
 
+** org-scratch
+#+header: :mkdirp yes :comments yes :padline yes
+#+header: :shebang #! /usr/bin/env bash
+#+begin_src sh :tangle pkg/.local/bin/org-scratch.sh
+emacsclient -c -e "(find-file \"~/Notes/scratch.note\")" -e "(delete-other-windows)"
+#+end_src
+
+
 ** org-capture
 [2021-09-01 Wed] 用doom自带的更好. doom-emacs/bin
 
@@ -1662,6 +1686,10 @@ gwp-merge:
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 #+END_SRC
+*** scratch
+#+begin_src elisp
+(setq doom-scratch-initial-major-mode 'org-mode)
+#+end_src
 
 *** workspace
 禁止workspace在退出emacs时自动保存, 避免不同机器同步冲突
@@ -3446,7 +3474,7 @@ selected instead of creating a new buffer."
 
 #+begin_src elisp
 ;; rust-modules
-(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
 (require 'zotero)
 
 (defun gwp/zotero-search-by-tag (name)

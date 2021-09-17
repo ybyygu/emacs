@@ -378,7 +378,7 @@ selected instead of creating a new buffer."
 
 ;; [[file:../../doom.note::*zotero/ui][zotero/ui:1]]
 ;; rust-modules
-(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules/target/debug")
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
 (require 'zotero)
 
 (defun gwp/zotero-search-by-tag (name)

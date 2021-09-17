@@ -316,10 +316,6 @@
 (setq org-roam-directory "~/Notes/roam")
 (setq org-roam-file-extensions '("note" "org"))
 
-;; treat .note files as org-mode
-(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
-
 (after! org (load! "org"))
 
 ;; https://github.com/org-roam/org-roam-ui#doom

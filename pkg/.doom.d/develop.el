@@ -51,89 +51,24 @@
   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 ;; edit:1 ends here
 
-;; [[file:../../doom.note::*cargo][cargo:2]]
-(eval-when-compile (require 'el-patch))
-
+;; [[file:../../doom.note::*racer][racer:1]]
 (use-package cargo
   :defer t
-  :hook (rust-mode . cargo-minor-mode)
-  :config/el-patch
-  ;; 默认的error pattern太局限了, 放宽一些
-  (defconst cargo-process--errno-regex "^error"
-    "A regular expression to match Rust error number.")
-
-  (defun cargo-process--start (name command &optional last-cmd opens-external)
-    "Start the Cargo process NAME with the cargo command COMMAND.
-OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
-Returns the created process."
-    (set-rust-backtrace command)
-    (let* ((buffer (concat "*Cargo " name "*"))
-           (project-root (cargo-process--project-root))
-           (cmd
-            (or last-cmd
-                (cargo-process--maybe-read-command
-                 (cargo-process--augment-cmd-for-os opens-external
-                                                    (mapconcat #'identity (list (shell-quote-argument cargo-process--custom-path-to-bin)
-                                                                                command
-                                                                                ;; (manifest-path-argument name)
-                                                                                cargo-process--command-flags)
-                                                               " ")))))
-           ;; (default-directory (or project-root default-directory))
-           )
-      (save-some-buffers (not compilation-ask-about-save)
-                         (lambda ()
-                           (and project-root
-                                buffer-file-name
-                                (string-prefix-p project-root (file-truename buffer-file-name)))))
-      (setq cargo-process-last-command (list name command cmd))
-      ;; (let ((default-directory (or (cargo-process--workspace-root)
-      ;;                              default-directory)))
-      ;;   (compilation-start cmd 'cargo-process-mode (lambda(_) buffer)))
-      (compilation-start cmd 'cargo-process-mode (lambda(_) buffer))
-      (let ((process (get-buffer-process buffer)))
-        (set-process-sentinel process 'cargo-process--finished-sentinel)
-        process)))
   :init
-  (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
-  (setq cargo-process--command-test "d")
+  (progn
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)
+    ))
+;; racer:1 ends here
 
-  (require 'cargo-process)
-  (defun gwp/cargo-process-watch ()
-    "Run the Cargo check command.
-With the prefix argument, modify the command's invocation.
-Cargo: Check compile the current project.
-Requires cargo-check to be installed."
-    (interactive)
-    (cargo-process--start "Watch" "watch -x check -x d"))
-
-  (map! :map cargo-minor-mode-map
-        :localleader
-        (:prefix ("c" . "cargo")
-          :desc "cargo check"
-          "c" #'cargo-process-check
-          :desc "cargo test (all)"
-          "t" #'cargo-process-test
-          :desc "cargo test (current)"
-          "T" #'cargo-process-current-test
-          :desc "cargo run"
-          "r" #'cargo-process-test
-          :desc "repeat last cargo cmd"
-          "." #'cargo-process-repeat
-          :desc "cargo clippy"
-          "l" #'cargo-process-clippy
-          :desc "cargo update"
-          "u" #'cargo-process-update
-          :desc "cargo doc --open"
-          "d" #'cargo-process-doc-open
-          :desc "cargo watch"
-          "w" #'gwp/cargo-process-watch
-          )))
-;; cargo:2 ends here
-
-;; [[file:../../doom.note::*cargo][cargo:3]]
-;; 修改popup window, 放大一些, 方便查看.
-(set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
-;; cargo:3 ends here
+;; [[file:../../doom.note::*bindings][bindings:1]]
+(map! :map rust-mode-map
+      :localleader
+      "f" #'rust-format-buffer
+      "C-f" #'rust-format-buffer
+      "=" #'rust-format-buffer)
+;; bindings:1 ends here
 
 ;; [[file:../../doom.note::*python.el][python.el:2]]
 (defun gwp/tmux-ipython-paste-region (beg end &optional region)

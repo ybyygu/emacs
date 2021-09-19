@@ -1,3 +1,41 @@
+;; [[file:../../doom.note::*completion][completion:1]]
+;; Use hippie-expand instead of dabbrev-expand
+;; (global-set-key (kbd "M-/") #'dabbrev-expand)
+(global-set-key (kbd "M-/") #'hippie-expand)
+;; the same behavior as the original `dabbrev-expand'
+(setq hippie-expand-dabbrev-skip-space t)
+
+;; adjust the list of functions that hippie-expand will try
+(setq hippie-expand-try-functions-list
+      '(
+        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-line
+        try-expand-dabbrev-from-kill
+        ;; try-expand-all-abbrevs
+        ;; try-expand-list
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol
+        ))
+
+;; ;; https://github.com/redguardtoo/company-ctags
+;; (use-package company-ctags
+;;   :after (company)
+;;   :init
+;;   (setq company-ctags-everywhere t
+;;         company-ctags-fuzzy-match-p t)
+;;   :config
+;;   (company-ctags-auto-setup)
+;;   (message "Init company-ctags"))
+
+;; ;; for rust completion
+;; ;; https://github.com/dan-t/rusty-tags
+;; (setq company-ctags-tags-file-name "rusty-tags.emacs")
+;; completion:1 ends here
+
 ;; [[file:../../doom.note::*keyfreq][keyfreq:1]]
 (require 'keyfreq)
 (keyfreq-mode 1)

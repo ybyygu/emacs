@@ -205,13 +205,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       :leader
       ";" #'org-edit-src-exit
       )
-
-(map! :map rust-mode-map
-      :localleader
-      "f" #'rust-format-buffer
-      "C-f" #'rust-format-buffer
-      "=" #'rust-format-buffer
-      )
 ;; edit:1 ends here
 
 ;; [[file:../../doom.note::*jump][jump:1]]

@@ -178,7 +178,7 @@
        (org +roam2)
        magit
        (default +smartparents +bindings)
-       ;; (rust +lsp)
+       ;; (rust)
 
        ;; :config
        ;;literate

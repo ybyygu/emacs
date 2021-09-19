@@ -21,7 +21,20 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [33/42]
+* Memo [33/43]
+** TODO [2021-09-18 Sat] 研究下自动补全系统
+dabbrev-expand
+hippie-expand
+
+hippie-expand默认会使用dabbrev-expand的补全项, 因此可替代之:
+: (global-set-key "\M-/" 'hippie-expand)
+
+
+redgaurdtoo: "代码自动完成和代码自动导航我推荐基于ctags的方案，缺点当然是智能程度不高。但是速
+度快，支持正则表达式定制，通吃所有语言。在我眼里优点远远压倒了缺点。"
+
+- [[https://github.com/redguardtoo/company-ctags][Fastest auto-completion using Company and Ctags]]
+
 ** TODO [2021-09-16 Thu] 最近关于笔记管理的好文 [[https://index.pmthinking.com/3a8c5d77b5be42c58719d174bfbfa935][何谓渐进式总结]]          :ATTACH:
 :PROPERTIES:
 :ID:       71394edd-0d8b-4d34-b49e-e0c7e8ade4c1
@@ -835,7 +848,8 @@ org-roam-buffer-toggle
 - 图表展示(可用org-protocol链接)
 
 * TODO Literate Programming in Rust
-需要安装[[https://github.com/racer-rust/racer][racer]]
+需要安装[[https://github.com/racer-rust/racer][racer]], 注意不能用系统库中的, 不然补全std会报错.
+
 : rustup toolchain add nightly
 : rustup component add rust-src
 : cargo +nightly install racer
@@ -844,6 +858,7 @@ org-roam-buffer-toggle
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
 - 以上按键在org代码块中也可直接执行, org-babel-do-key-sequence-in-edit-buffer
+- rust-promote-module-into-dir
 
 * TODO Python scripting
 - 使用tmux开一终端, 打开ipython
@@ -1629,7 +1644,7 @@ gwp-merge:
        (org +roam2)
        magit
        (default +smartparents +bindings)
-       ;; (rust +lsp)
+       ;; (rust)
 
        ;; :config
        ;;literate
@@ -2484,6 +2499,55 @@ github支持, 减慢速度.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+** completion
+#+begin_src elisp
+;; Use hippie-expand instead of dabbrev-expand
+;; (global-set-key (kbd "M-/") #'dabbrev-expand)
+(global-set-key (kbd "M-/") #'hippie-expand)
+;; the same behavior as the original `dabbrev-expand'
+(setq hippie-expand-dabbrev-skip-space t)
+
+;; adjust the list of functions that hippie-expand will try
+(setq hippie-expand-try-functions-list
+      '(
+        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-line
+        try-expand-dabbrev-from-kill
+        ;; try-expand-all-abbrevs
+        ;; try-expand-list
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol
+        ))
+
+(after! company
+  (setq company-idle-delay 1.5
+        company-minimum-prefix-length 2))
+
+;; 2021-09-19: 没用起来
+;; ;; https://github.com/redguardtoo/company-ctags
+;; (use-package company-ctags
+;;   :after (company)
+;;   :init
+;;   (setq company-ctags-everywhere t
+;;         company-ctags-fuzzy-match-p t)
+;;   :config
+;;   (company-ctags-auto-setup)
+;;   (message "Init company-ctags"))
+
+;; ;; for rust completion
+;; ;; https://github.com/dan-t/rusty-tags
+;; (setq company-ctags-tags-file-name "rusty-tags.emacs")
+#+end_src
+
+安装对应的包
+#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el :tangle no
+(package! company-ctags)
+#+end_src
+
 ** keyfreq
 [[https://github.com/dacap/keyfreq][dacap/keyfreq: Track Emacs commands frequency]]
 #+begin_src elisp
@@ -2783,12 +2847,16 @@ magit-todos已在magit modules定义.
                (tramp-remote-shell "/bin/sh")
                (tramp-remote-shell-args ("-c")))))
 #+END_SRC
-
-** rust
+** rust-mode
 *** docs
-解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
+- 关于补全: lsp/rust-analyze太重了, racer更简单一些.
+- 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
+
+重要资源
+- [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]]
 - rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
+  (rustic-mode以后会是依赖于rust-mode的增强版 [[https://github.com/rust-lang/rust-mode/issues/405][Towards making rustic use rust-mode #405]])
 
 *** edit
 #+begin_src emacs-lisp
@@ -2807,9 +2875,16 @@ magit-todos已在magit modules定义.
 #+end_src
 
 *** cargo
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果使用C-u 调用, 可以修
 改cargo参数.
+
+[2021-09-19 Sun] rust-mode中默认带了cargo, 可能更好用?
+
 - [[https://github.com/kwrooijen/cargo.el][kwrooijen/cargo.el: Emacs Minor Mode for Cargo, Rust's Package Manager.]]
+- [[https://github.com/rust-lang/rust-mode/blob/master/rust-compile.el][rust-mode/rust-compile.el]]
 
 以下自定义cargo-watch命令, 可能比在vterm下执行略好一些.
 - p, n来跳转到前一个或下一个error
@@ -2819,24 +2894,6 @@ rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果�
 
 基于compilation mode定制
 - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
-
-#+begin_src text :tangle no
-    Checking rxexplore v0.0.35 (/home/ybyygu/Workspace/Programming/structure-predication/reaction-explore)
-error: format argument must be a string literal
-   --> reaction-explore/src/dimer_.rs:325:20
-    |
-325 |             print!(s);
-    |                    ^
-    |
-
-
-error[E0277]: `std::result::Result<std::string::String, serde_json::error::Error>` doesn't implement `std::fmt::Display`
-   --> reaction-explore/src/dimer_.rs:325:26
-    |
-325 |             print!("{}", s);
-    |                          ^ `std::result::Result<std::string::String, serde_json::error::Error>` cannot be formatted with the default formatter
-    |
-#+end_src
 
 使用el-path修改cargo-process调用方式, 更匹配命令行使用习惯.
 #+begin_src elisp
@@ -2924,8 +2981,7 @@ Requires cargo-check to be installed."
 #+end_src
 
 *** racer
-[2021-08-21 Sat] 老报错, 禁用了之
-#+begin_src elisp :tangle no
+#+begin_src elisp
 (use-package cargo
   :defer t
   :init
@@ -2934,6 +2990,28 @@ Requires cargo-check to be installed."
     (add-hook 'racer-mode-hook #'eldoc-mode)
     (add-hook 'racer-mode-hook #'company-mode)
     ))
+#+end_src
+*** bindings
+rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
+#+begin_src elisp
+(map! :map rust-mode-map
+      :localleader
+      "f" #'rust-format-buffer
+      "C-f" #'rust-format-buffer
+      "=" #'rust-format-buffer)
+#+end_src
+
+** rustic-mode
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+#+begin_src elisp
+(use-package rustic
+  :custom
+  (rustic-lsp-client nil)
+  (rustic-format-on-save nil)
+  (rustic-display-spinner nil)
+  )
 #+end_src
 
 ** python.el
@@ -3231,13 +3309,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (map! :map org-src-mode-map
       :leader
       ";" #'org-edit-src-exit
-      )
-
-(map! :map rust-mode-map
-      :localleader
-      "f" #'rust-format-buffer
-      "C-f" #'rust-format-buffer
-      "=" #'rust-format-buffer
       )
 #+end_src
 

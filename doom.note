@@ -2874,113 +2874,192 @@ magit-todos已在magit modules定义.
   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 #+end_src
 
-*** cargo
+*** cargo/rust-mode
+使用 rust-mode中的cargo
+- [[https://github.com/rust-lang/rust-mode/blob/master/rust-compile.el][rust-mode/rust-compile.el]]
+
+基于compilation mode定制
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
+
+以下自定义cargo命令, 比在term下执行更好一些.
+- 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
+- 链接到的src文件可直接打开.
+
+现有如下问题, 导致编译buffer无法基于出错信息跳转到对应文件:
+- [[https://github.com/rust-lang/cargo/issues/5895][Error messages use relative paths differently if in a workspace · Issue #5895 · rust-lang/cargo]]
+
+为此, 我们需要cargo.sh, 包装下cargo命令, 在emacs调用前, 切到workspace根目录, 但执行cargo时再换为到原buffer对应目录.
+这样, 可仅编译当前包, 无不是所有workspace中的包, 同时还能解决error跳转的问题.
+
+cargo默认输出warning太多, 以下命令调用cargo, 但忽略warnings. 同时编译信息里强制输出文件全路径
+#+begin_src shell :tangle ~/.local/bin/cargo.sh :shebang #! /bin/bash
+# a wrapper for cargo command to work around a cargo issue:
+# https://github.com/rust-lang/cargo/issues/5450#issuecomment-732954248
+
+# goto current workspace memeber directory
+cd "$1"
+shift
+
+# supress warnings and print full file paths in compilation
+export RUSTFLAGS="$RUSTFLAGS -Awarnings"
+cargo $@
+#+end_src
+
+#+begin_src elisp
+(require 'rust-mode)
+(require 'cargo)
+
+;; taken from rust-cargo.el
+(defun gwp/cargo-compile (args)
+  ;; taken from cargo.el
+  ;;
+  ;; workaround cargo issue: https://github.com/rust-lang/cargo/issues/5895
+  ;;
+  ;; to make "jump-to-error" work, we need start compilation in workspace root dir
+  (let (
+        ;; save current directory
+        (old-directory default-directory)
+        (default-directory (or (cargo-process--workspace-root)
+                               default-directory))
+        )
+    (compile (format "cargo.sh \"%s\" %s" old-directory args))
+    ))
+
+(defun gwp/rust-cargo-watch-check ()
+  "Compile using `cargo watch and check`"
+  (interactive)
+  (gwp/cargo-compile "check"))
+
+(defun gwp/rust-cargo-watch-test ()
+  "Compile using `cargo watch and test`"
+  (interactive)
+  (gwp/cargo-compile "d"))
+
+(defun gwp/rust-cargo-update ()
+  "Execute `cargo update` command"
+  (interactive)
+  (gwp/cargo-compile "update"))
+
+(defun gwp/rust-cargo-doc-open ()
+  "Execute `cargo doc --open` command"
+  (interactive)
+  (gwp/cargo-compile "doc --open --no-deps"))
+
+;; ;; 修改popup window, 放大一些, 方便查看.
+;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
+
+(require 'transient)
+(transient-define-prefix gwp/rust-cargo-transient ()
+  "rust development tools"
+  [["compile rust project:"
+    ("c" "cargo check" gwp/rust-cargo-watch-check)
+    ("t" "cargo test" gwp/rust-cargo-watch-test)
+    ("u" "cargo update" gwp/rust-cargo-update)
+    ("d" "cargo doc" gwp/rust-cargo-doc-open)
+    ("r" "recompile" recompile)
+    ("k" "kill" kill-compilation)
+    ]]
+  )
+
+(map! :map org-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+(map! :map rust-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+#+end_src
+
+*** cargo/cargo.el
 :PROPERTIES:
 :header-args: :tangle no
 :END:
-rustic虽然集成了, 但在org-src中还是用自己配的. cargo命令如果使用C-u 调用, 可以修
-改cargo参数.
-
-[2021-09-19 Sun] rust-mode中默认带了cargo, 可能更好用?
-
 - [[https://github.com/kwrooijen/cargo.el][kwrooijen/cargo.el: Emacs Minor Mode for Cargo, Rust's Package Manager.]]
-- [[https://github.com/rust-lang/rust-mode/blob/master/rust-compile.el][rust-mode/rust-compile.el]]
 
-以下自定义cargo-watch命令, 可能比在vterm下执行略好一些.
+[2021-09-20 Mon] 这里的问题: 执行时会切到workspace root执行, 如果hack后, 就与rust-mode中的功能相当了.
+
+cargo命令如果使用C-u 调用, 可在minibuffer中修改cargo参数.
+
+以下自定义cargo-watch命令, 比在term下执行更好一些.
 - p, n来跳转到前一个或下一个error
 - 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
 - 链接到的src文件可直接打开.
 - 按q退出
 
-基于compilation mode定制
-- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
-
-使用el-path修改cargo-process调用方式, 更匹配命令行使用习惯.
+使用el-path修改cargo-process调用方式, 不要切换至workspace根目录执行cargo命令, 更
+匹配命令行使用习惯.
 #+begin_src elisp
 (eval-when-compile (require 'el-patch))
 
 (use-package cargo
   :defer t
   :hook (rust-mode . cargo-minor-mode)
-  :config/el-patch
-  ;; 默认的error pattern太局限了, 放宽一些
-  (defconst cargo-process--errno-regex "^error"
-    "A regular expression to match Rust error number.")
+  :custom
+  (cargo-process--custom-path-to-bin "cargo.sh")
+  (cargo-process--command-check "check -q")
+  (cargo-process--command-test "test -- --nocapture --test-threads=1")
+  ;;   :config/el-patch
+  ;;   (defun cargo-process--start (name command &optional last-cmd opens-external)
+  ;;     "Start the Cargo process NAME with the cargo command COMMAND.
+  ;; OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
+  ;; Returns the created process."
+  ;;     (set-rust-backtrace command)
+  ;;     (let* ((buffer (concat "*Cargo " name "*"))
+  ;;            (project-root (cargo-process--project-root))
+  ;;            (cmd
+  ;;             (or last-cmd
+  ;;                 (cargo-process--maybe-read-command
+  ;;                  (cargo-process--augment-cmd-for-os opens-external
+  ;;                                                     (mapconcat #'identity (list (shell-quote-argument cargo-process--custom-path-to-bin)
+  ;;                                                                                 command
+  ;;                                                                                 ;; (manifest-path-argument name)
+  ;;                                                                                 cargo-process--command-flags)
+  ;;                                                                " ")))))
+  ;;            ;; (default-directory (or project-root default-directory))
+  ;;            )
+  ;;       (save-some-buffers (not compilation-ask-about-save)
+  ;;                          (lambda ()
+  ;;                            (and project-root
+  ;;                                 buffer-file-name
+  ;;                                 (string-prefix-p project-root (file-truename buffer-file-name)))))
+  ;;       (setq cargo-process-last-command (list name command cmd))
+  ;;       ;; (let ((default-directory (or (cargo-process--workspace-root)
+  ;;       ;;                              default-directory)))
+  ;;       ;;   (compilation-start cmd 'cargo-process-mode (lambda(_) buffer)))
+  ;;       (compilation-start cmd 'cargo-process-mode (lambda(_) buffer))
+  ;;       (let ((process (get-buffer-process buffer)))
+  ;;         (set-process-sentinel process 'cargo-process--finished-sentinel)
+  ;;         process)))
 
-  (defun cargo-process--start (name command &optional last-cmd opens-external)
-    "Start the Cargo process NAME with the cargo command COMMAND.
-OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
-Returns the created process."
-    (set-rust-backtrace command)
-    (let* ((buffer (concat "*Cargo " name "*"))
-           (project-root (cargo-process--project-root))
-           (cmd
-            (or last-cmd
-                (cargo-process--maybe-read-command
-                 (cargo-process--augment-cmd-for-os opens-external
-                                                    (mapconcat #'identity (list (shell-quote-argument cargo-process--custom-path-to-bin)
-                                                                                command
-                                                                                ;; (manifest-path-argument name)
-                                                                                cargo-process--command-flags)
-                                                               " ")))))
-           ;; (default-directory (or project-root default-directory))
-           )
-      (save-some-buffers (not compilation-ask-about-save)
-                         (lambda ()
-                           (and project-root
-                                buffer-file-name
-                                (string-prefix-p project-root (file-truename buffer-file-name)))))
-      (setq cargo-process-last-command (list name command cmd))
-      ;; (let ((default-directory (or (cargo-process--workspace-root)
-      ;;                              default-directory)))
-      ;;   (compilation-start cmd 'cargo-process-mode (lambda(_) buffer)))
-      (compilation-start cmd 'cargo-process-mode (lambda(_) buffer))
-      (let ((process (get-buffer-process buffer)))
-        (set-process-sentinel process 'cargo-process--finished-sentinel)
-        process)))
   :init
   (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
-  (setq cargo-process--command-test "d")
+  )
 
-  (require 'cargo-process)
-  (defun gwp/cargo-process-watch ()
-    "Run the Cargo check command.
-With the prefix argument, modify the command's invocation.
-Cargo: Check compile the current project.
-Requires cargo-check to be installed."
-    (interactive)
-    (cargo-process--start "Watch" "watch -x check -x d"))
+(require 'cargo)
+(require 'transient)
+(transient-define-prefix gwp/rust-cargo-transient ()
+  "Search zotero database"
+  [["Search zotero items:"
+    ("c" "cargo check" cargo-process-check)
+    ("t" "cargo test" cargo-process-test)
+    ("u" "cargo update" cargo-process-update)
+    ("d" "cargo doc" cargo-process-doc-open)
+    ]]
+  )
 
-  (map! :map cargo-minor-mode-map
-        :localleader
-        (:prefix ("c" . "cargo")
-          :desc "cargo check"
-          "c" #'cargo-process-check
-          :desc "cargo test (all)"
-          "t" #'cargo-process-test
-          :desc "cargo test (current)"
-          "T" #'cargo-process-current-test
-          :desc "cargo run"
-          "r" #'cargo-process-test
-          :desc "repeat last cargo cmd"
-          "." #'cargo-process-repeat
-          :desc "cargo clippy"
-          "l" #'cargo-process-clippy
-          :desc "cargo update"
-          "u" #'cargo-process-update
-          :desc "cargo doc --open"
-          "d" #'cargo-process-doc-open
-          :desc "cargo watch"
-          "w" #'gwp/cargo-process-watch
-          )))
-#+end_src
-
-#+begin_src elisp
-;; 修改popup window, 放大一些, 方便查看.
-(set-popup-rule! "^\\*Cargo" :size 0.85 :quit t :select t :ttl nil)
+(map! :map org-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+(map! :map rust-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
 #+end_src
 
 *** racer
+用于自动补全, 比lsp更轻便些.
 #+begin_src elisp
 (use-package cargo
   :defer t
@@ -2991,6 +3070,7 @@ Requires cargo-check to be installed."
     (add-hook 'racer-mode-hook #'company-mode)
     ))
 #+end_src
+
 *** bindings
 rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
 #+begin_src elisp

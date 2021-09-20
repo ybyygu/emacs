@@ -51,6 +51,72 @@
   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 ;; edit:1 ends here
 
+;; [[file:../../doom.note::*cargo/rust-mode][cargo/rust-mode:2]]
+(require 'rust-mode)
+(require 'cargo)
+
+;; taken from rust-cargo.el
+(defun gwp/cargo-compile (args)
+  ;; taken from cargo.el
+  ;;
+  ;; workaround cargo issue: https://github.com/rust-lang/cargo/issues/5895
+  ;;
+  ;; to make "jump-to-error" work, we need start compilation in workspace root dir
+  (let (
+        ;; save current directory
+        (old-directory default-directory)
+        (default-directory (or (cargo-process--workspace-root)
+                               default-directory))
+        )
+    (compile (format "cargo.sh \"%s\" %s" old-directory args))
+    ))
+
+(defun gwp/rust-cargo-watch-check ()
+  "Compile using `cargo watch and check`"
+  (interactive)
+  (gwp/cargo-compile "check"))
+
+(defun gwp/rust-cargo-watch-test ()
+  "Compile using `cargo watch and test`"
+  (interactive)
+  (gwp/cargo-compile "d"))
+
+(defun gwp/rust-cargo-update ()
+  "Execute `cargo update` command"
+  (interactive)
+  (gwp/cargo-compile "update"))
+
+(defun gwp/rust-cargo-doc-open ()
+  "Execute `cargo doc --open` command"
+  (interactive)
+  (gwp/cargo-compile "doc --open --no-deps"))
+
+;; ;; 修改popup window, 放大一些, 方便查看.
+;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
+
+(require 'transient)
+(transient-define-prefix gwp/rust-cargo-transient ()
+  "rust development tools"
+  [["compile rust project:"
+    ("c" "cargo check" gwp/rust-cargo-watch-check)
+    ("t" "cargo test" gwp/rust-cargo-watch-test)
+    ("u" "cargo update" gwp/rust-cargo-update)
+    ("d" "cargo doc" gwp/rust-cargo-doc-open)
+    ("r" "recompile" recompile)
+    ("k" "kill" kill-compilation)
+    ]]
+  )
+
+(map! :map org-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+(map! :map rust-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+;; cargo/rust-mode:2 ends here
+
 ;; [[file:../../doom.note::*racer][racer:1]]
 (use-package cargo
   :defer t

@@ -280,23 +280,24 @@
       (interactive)
       (let ((current-prefix-arg '(0)))
         (call-interactively 'dired-copy-filename-as-kill)
-        )
-      )
+        ))
 
     (map! :map dired-mode-map
           :localleader
+          :desc "Copy file path"
           :n "y" #'gwp/dired-copy-file-path
+          :desc "Make symlink"
           :n "l" #'dired-do-symlink
+          :desc "Async shell command"
+          :n "!" #'dired-do-async-shell-command
           )
 
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
           :nv "DEL"   #'dired-up-directory       ; BACKSPACE
           :nv "C-S-n" #'dired-create-directory
-          ;; :nv [mouse-1] #'dired-find-file
           )
-    )
-  )
+    ))
 ;; dired:1 ends here
 
 ;; [[file:../../doom.note::*dired][dired:2]]

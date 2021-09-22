@@ -128,13 +128,21 @@
     ))
 ;; racer:1 ends here
 
-;; [[file:../../doom.note::*bindings][bindings:1]]
+;; [[file:../../doom.note::*rust-format][rust-format:1]]
 (map! :map rust-mode-map
       :localleader
       "f" #'rust-format-buffer
       "C-f" #'rust-format-buffer
       "=" #'rust-format-buffer)
-;; bindings:1 ends here
+
+(use-package rust-mode
+  :hook (rust-mode . gwp/override-doom-format-buffer)
+  )
+
+(defun gwp/override-doom-format-buffer ()
+  (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
+  )
+;; rust-format:1 ends here
 
 ;; [[file:../../doom.note::*python.el][python.el:2]]
 (defun gwp/tmux-ipython-paste-region (beg end &optional region)

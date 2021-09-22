@@ -2019,23 +2019,24 @@ SPC-j-l
       (interactive)
       (let ((current-prefix-arg '(0)))
         (call-interactively 'dired-copy-filename-as-kill)
-        )
-      )
+        ))
 
     (map! :map dired-mode-map
           :localleader
+          :desc "Copy file path"
           :n "y" #'gwp/dired-copy-file-path
+          :desc "Make symlink"
           :n "l" #'dired-do-symlink
+          :desc "Async shell command"
+          :n "!" #'dired-do-async-shell-command
           )
 
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
           :nv "DEL"   #'dired-up-directory       ; BACKSPACE
           :nv "C-S-n" #'dired-create-directory
-          ;; :nv [mouse-1] #'dired-find-file
           )
-    )
-  )
+    ))
 #+end_src
 
 隐藏.dotfiles, doom中默认omit的太少
@@ -2892,6 +2893,7 @@ magit-todos已在magit modules定义.
 这样, 可仅编译当前包, 无不是所有workspace中的包, 同时还能解决error跳转的问题.
 
 cargo默认输出warning太多, 以下命令调用cargo, 但忽略warnings. 同时编译信息里强制输出文件全路径
+
 #+begin_src shell :tangle ~/.local/bin/cargo.sh :shebang #! /bin/bash
 # a wrapper for cargo command to work around a cargo issue:
 # https://github.com/rust-lang/cargo/issues/5450#issuecomment-732954248
@@ -3071,7 +3073,7 @@ cargo命令如果使用C-u 调用, 可在minibuffer中修改cargo参数.
     ))
 #+end_src
 
-*** bindings
+*** rust-format
 rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
 #+begin_src elisp
 (map! :map rust-mode-map
@@ -3079,6 +3081,14 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
       "f" #'rust-format-buffer
       "C-f" #'rust-format-buffer
       "=" #'rust-format-buffer)
+
+(use-package rust-mode
+  :hook (rust-mode . gwp/override-doom-format-buffer)
+  )
+
+(defun gwp/override-doom-format-buffer ()
+  (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
+  )
 #+end_src
 
 ** rustic-mode

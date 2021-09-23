@@ -2927,15 +2927,26 @@ cargo $@
     (compile (format "cargo.sh \"%s\" %s" old-directory args))
     ))
 
-(defun gwp/rust-cargo-watch-check ()
-  "Compile using `cargo watch and check`"
-  (interactive)
-  (gwp/cargo-compile "check"))
+(defun gwp/rust-cargo-watch-check (arg)
+  "Compile using `cargo watch and check`
+If the universal prefix argument is used then org src will be tangled first.
+"
+  (interactive "P")
+  (when (equal arg '(4))                  ; C-u
+    (gwp/org-babel-tangle-dwim)
+    )
+  (gwp/cargo-compile "check -q"))
 
-(defun gwp/rust-cargo-watch-test ()
-  "Compile using `cargo watch and test`"
-  (interactive)
-  (gwp/cargo-compile "d"))
+(defun gwp/rust-cargo-watch-test (arg)
+  "Compile using `cargo watch and test`
+If the universal prefix argument is used then org src will be tangled first.
+"
+  (interactive "P")
+  (when (equal arg '(4))                  ; C-u
+    (gwp/org-babel-tangle-dwim)
+    )
+  (gwp/cargo-compile "d")
+  )
 
 (defun gwp/rust-cargo-update ()
   "Execute `cargo update` command"
@@ -2949,6 +2960,7 @@ cargo $@
 
 ;; ;; 修改popup window, 放大一些, 方便查看.
 ;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
+;; gwp/org-babel-tangle-dwim
 
 (require 'transient)
 (transient-define-prefix gwp/rust-cargo-transient ()
@@ -2959,7 +2971,6 @@ cargo $@
     ("u" "cargo update" gwp/rust-cargo-update)
     ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("r" "recompile" recompile)
-    ("k" "kill" kill-compilation)
     ]]
   )
 
@@ -3456,28 +3467,28 @@ org-babel-expand-src-block (可以展开noweb macro)
 
 如何在代码编辑窗口中tangle?
 #+begin_src elisp
-  (defun gwp/org-edit-save-and-tangle ()
-    "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
-    (interactive)
-    (when (buffer-modified-p) (org-edit-src-save))
-    (org-edit-src-exit)
-    (call-interactively 'gwp/org-babel-tangle-blocks)
-    (org-edit-src-code)
-    )
+(defun gwp/org-edit-save-and-tangle ()
+  "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+  (interactive)
+  (when (buffer-modified-p) (org-edit-src-save))
+  (org-edit-src-exit)
+  (call-interactively 'gwp/org-babel-tangle-blocks)
+  (org-edit-src-code)
+  )
 
-  (defun gwp/org-babel-tangle-dwim()
-    "tangle current file at point whenever in a sub-editing buffer or not"
-    (interactive)
-    (if (org-src-edit-buffer-p)
-        (save-excursion
-          (call-interactively 'gwp/org-edit-save-and-tangle)
-          )
-      (if (eq 'src-block (org-element-type (org-element-at-point)))
-          (call-interactively 'gwp/org-babel-tangle-blocks)
-        (message "not in source block")
+(defun gwp/org-babel-tangle-dwim()
+  "tangle current file at point whenever in a sub-editing buffer or not"
+  (interactive)
+  (if (org-src-edit-buffer-p)
+      (save-excursion
+        (call-interactively 'gwp/org-edit-save-and-tangle)
         )
+    (if (eq 'src-block (org-element-type (org-element-at-point)))
+        (call-interactively 'gwp/org-babel-tangle-blocks)
+      (message "not in source block")
       )
     )
+  )
 #+end_src
 
 禁用当前代码块或整个headline. 还可以用 org-delete-property 删除 header-args

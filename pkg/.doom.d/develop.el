@@ -71,15 +71,26 @@
     (compile (format "cargo.sh \"%s\" %s" old-directory args))
     ))
 
-(defun gwp/rust-cargo-watch-check ()
-  "Compile using `cargo watch and check`"
-  (interactive)
-  (gwp/cargo-compile "check"))
+(defun gwp/rust-cargo-watch-check (arg)
+  "Compile using `cargo watch and check`
+If the universal prefix argument is used then org src will be tangled first.
+"
+  (interactive "P")
+  (when (equal arg '(4))                  ; C-u
+    (gwp/org-babel-tangle-dwim)
+    )
+  (gwp/cargo-compile "check -q"))
 
-(defun gwp/rust-cargo-watch-test ()
-  "Compile using `cargo watch and test`"
-  (interactive)
-  (gwp/cargo-compile "d"))
+(defun gwp/rust-cargo-watch-test (arg)
+  "Compile using `cargo watch and test`
+If the universal prefix argument is used then org src will be tangled first.
+"
+  (interactive "P")
+  (when (equal arg '(4))                  ; C-u
+    (gwp/org-babel-tangle-dwim)
+    )
+  (gwp/cargo-compile "d")
+  )
 
 (defun gwp/rust-cargo-update ()
   "Execute `cargo update` command"
@@ -93,6 +104,7 @@
 
 ;; ;; 修改popup window, 放大一些, 方便查看.
 ;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
+;; gwp/org-babel-tangle-dwim
 
 (require 'transient)
 (transient-define-prefix gwp/rust-cargo-transient ()
@@ -103,7 +115,6 @@
     ("u" "cargo update" gwp/rust-cargo-update)
     ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("r" "recompile" recompile)
-    ("k" "kill" kill-compilation)
     ]]
   )
 

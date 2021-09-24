@@ -102,6 +102,11 @@ If the universal prefix argument is used then org src will be tangled first.
   (interactive)
   (gwp/cargo-compile "doc --open --no-deps"))
 
+(defun gwp/rust-cargo-edit-upgrade ()
+  "Execute `cargo upgrade --dry-run` command"
+  (interactive)
+  (gwp/cargo-compile "upgrade --dry-run"))
+
 ;; ;; 修改popup window, 放大一些, 方便查看.
 ;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
 ;; gwp/org-babel-tangle-dwim
@@ -113,6 +118,7 @@ If the universal prefix argument is used then org src will be tangled first.
     ("c" "cargo check" gwp/rust-cargo-watch-check)
     ("t" "cargo test" gwp/rust-cargo-watch-test)
     ("u" "cargo update" gwp/rust-cargo-update)
+    ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
     ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("r" "recompile" recompile)
     ]]

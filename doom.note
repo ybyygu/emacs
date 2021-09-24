@@ -21,19 +21,26 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [33/43]
-** TODO [2021-09-18 Sat] 研究下自动补全系统
+* Memo [34/45]
+** TODO [2021-09-24 Fri] 使用hydra改进窗口大小调整按键
+
+** TODO [2021-09-24 Fri] clipbaord出问题了?
+org-capture中用的是 primary clipboard中的内容
+
+** DONE [2021-09-18 Sat] 研究下自动补全系统
+- State "DONE"       from "TODO"       [2021-09-24 Fri 14:20]
 dabbrev-expand
 hippie-expand
 
-hippie-expand默认会使用dabbrev-expand的补全项, 因此可替代之:
+hippie-expand默认会使用dabbrev-expand的补全项, 因此可替代之(需要设置hippie-expand-dabbrev-skip-space):
 : (global-set-key "\M-/" 'hippie-expand)
-
 
 redgaurdtoo: "代码自动完成和代码自动导航我推荐基于ctags的方案，缺点当然是智能程度不高。但是速
 度快，支持正则表达式定制，通吃所有语言。在我眼里优点远远压倒了缺点。"
 
 - [[https://github.com/redguardtoo/company-ctags][Fastest auto-completion using Company and Ctags]]
+
+[2021-09-24 Fri] 试了下, 有难度, 没用起来.
 
 ** TODO [2021-09-16 Thu] 最近关于笔记管理的好文 [[https://index.pmthinking.com/3a8c5d77b5be42c58719d174bfbfa935][何谓渐进式总结]]          :ATTACH:
 :PROPERTIES:
@@ -1128,6 +1135,16 @@ if check_emacs_client(path):
 else:
     args = ["emacsclient", "-c", "-a", "", path]
     subprocess.Popen(args)
+#+end_src
+** alacritty daemon
+开启tmux daemon, 方便alacritty等调用. 仿dropdown式的guake terminal
+
+#+begin_src shell :tangle ~/.local/bin/tmux.sh :shebang #! /bin/bash
+tmux new-session -A -D -s ala
+#+end_src
+
+#+begin_src shell :tangle ~/.local/bin/ala-daemon.sh :shebang #! /bin/bash
+alacritty -e tmux.sh
 #+end_src
 
 ** pdf-view
@@ -2958,6 +2975,11 @@ If the universal prefix argument is used then org src will be tangled first.
   (interactive)
   (gwp/cargo-compile "doc --open --no-deps"))
 
+(defun gwp/rust-cargo-edit-upgrade ()
+  "Execute `cargo upgrade --dry-run` command"
+  (interactive)
+  (gwp/cargo-compile "upgrade --dry-run"))
+
 ;; ;; 修改popup window, 放大一些, 方便查看.
 ;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
 ;; gwp/org-babel-tangle-dwim
@@ -2969,6 +2991,7 @@ If the universal prefix argument is used then org src will be tangled first.
     ("c" "cargo check" gwp/rust-cargo-watch-check)
     ("t" "cargo test" gwp/rust-cargo-watch-test)
     ("u" "cargo update" gwp/rust-cargo-update)
+    ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
     ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("r" "recompile" recompile)
     ]]
@@ -4114,9 +4137,10 @@ file-exists-p函数对symlink的特殊性:
 
 ** capture & protocol
 占位符:
-| %:link         | URL of the web-page       |
-| %:description  | The title of the web-page |
-| %:initial / %i | Selected text.            |
+| %:link         | URL of the web-page         |
+| %:description  | The title of the web-page   |
+| %:initial / %i | Selected text.              |
+| %x             | Content of the X clipboard. |
 
 #+begin_src emacs-lisp
 (setq org-capture-templates

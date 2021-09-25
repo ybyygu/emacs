@@ -312,35 +312,36 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 ;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
 (use-package! org-noter
-  :config
-  (setq org-noter-default-notes-file-names '("annotation.note"))
+  :custom
+  (org-noter-default-notes-file-names '("annotation.note"))
   )
 
-(after! pdf-tools
+(use-package! pdf-tools
+  :custom
+  ;; 一页页看更方便
+  (pdf-view-continuous nil)
+  :config
+  ;; 容易被doom的pdf module中的设置覆盖, 以下直接在pdf/config.el中修改
+  ;; (setq-default pdf-view-display-size 'fit-width)
+
   (map! :map pdf-view-mode-map
+        ;; 鼠标操作
+        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
+        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
+        [mouse-9] (cmd! (pdf-view-previous-page-command))
+        [mouse-8] (cmd! (pdf-view-next-page-command))
+        ;; 方便标注, 按d直接高亮选中文本
+        :v "d" #'pdf-annot-add-highlight-markup-annotation
+        ;; 方便单手操作
+        :n "d" #'pdf-view-scroll-up-or-next-page
+        :n "a" #'pdf-view-scroll-down-or-previous-page
+        ;; org-noter很好用
         :localleader
         (:prefix ("n" . "org-noter")
          "n" #'org-noter
          "i" #'org-noter-insert-note
          "I" #'org-noter-insert-precise-note
-         )
-        )
-  ;; 方便标注
-  (map! :map pdf-view-mode-map
-        :leader
-        ("d" #'pdf-annot-add-highlight-markup-annotation)
-        :localleader
-        ("h" #'pdf-annot-add-highlight-markup-annotation))
-
-  (map! :map pdf-view-mode-map
-        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
-        [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
-        [mouse-9] (cmd! (pdf-view-previous-page-command))
-        [mouse-8] (cmd! (pdf-view-next-page-command))
-        )
-  ;; 一页页看更方便
-  (setq pdf-view-continuous nil)
-  (setq-default pdf-view-display-size 'fit-width))
+         )))
 ;; org-noter/pdf-view:1 ends here
 
 ;; [[file:../../doom.note::*narrow][narrow:1]]

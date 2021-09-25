@@ -10,6 +10,7 @@ install: stow
 	rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/rust ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/config/default ~/.doom.d/modules/gwp/
+	rsync -rav ./doom-hacks/modules/tools/pdf ~/.doom.d/modules/gwp/
 uninstall:
 	stow --verbose --target ~/ --delete pkg
 

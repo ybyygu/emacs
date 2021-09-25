@@ -2565,7 +2565,6 @@ github支持, 减慢速度.
 #+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el :tangle no
 (package! company-ctags)
 #+end_src
-
 ** keyfreq
 [[https://github.com/dacap/keyfreq][dacap/keyfreq: Track Emacs commands frequency]]
 #+begin_src elisp
@@ -2697,28 +2696,6 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
       (incf arg)))
   (up-list arg))
 
-;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-(defun gwp/extend-selection (arg &optional incremental)
-  "Select the current word.
-Subsequent calls expands the selection to larger semantic unit."
-  (interactive (list (prefix-numeric-value current-prefix-arg)
-                     (or (and transient-mark-mode mark-active)
-                         (eq last-command this-command))))
-  (if incremental
-      (progn
-        (semnav-up (- arg))
-        (forward-sexp)
-        (mark-sexp -1))
-    (if (> arg 1)
-        (extend-selection (1- arg) t)
-      (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
-          (goto-char (match-end 0))
-        (unless (memq (char-before) '(?\) ?\"))
-          (forward-sexp)))
-      (mark-sexp -1))))
-
-;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
-
 (defun gwp/select-text-in-quote ()
   "Select text between the nearest left and right delimiters.
 Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
@@ -2787,6 +2764,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   (setq evil-multiedit-follow-matches t)
   )
 #+end_src
+
 ** bibtex
 用于搜索zotero导出的bibtex文献. bibtex中keywords对应zotero中的tags
 #+begin_src elisp
@@ -2801,6 +2779,61 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   "Find a file under `~/.cache/notes', recursively."
   (interactive) (doom-project-find-file "~/.cache/notes"))
 #+end_src
+
+** hydra
+*** window
+方便快速调整窗口大小
+#+begin_src elisp
+(defhydra gwp/hydra-resize-window ()
+  "resize-window"
+  ("h" evil-window-decrease-width "decrease width")
+  ("j" evil-window-decrease-height "decrease height")
+  ("k" evil-window-increase-height "increase height")
+  ("l" evil-window-increase-width "increase width")
+  ("q" nil "quit")
+  )
+#+end_src
+
+*** select text
+#+begin_src elisp
+(defhydra gwp/hydra-select-text ()
+  "select text"
+  ("p" er/mark-paragraph "select paragraph")
+  ("c" er/mark-org-code-block "select org-code block")
+  ("b" gwp/select-none-blank-text "select non blank")
+  ("t" gwp/select-text-in-quote "select quoted")
+  ("q" nil "quit")
+  )
+#+end_src
+*** parens
+#+begin_src elisp
+(defhydra gwp/hydra-smartparens (:hint nil)
+  ("v" evil-visual-char)
+  ("u" evil-undo)
+  ("h" evil-backward-char)
+  ("l" evil-forward-char)
+  ("j" evil-next-line)
+  ("k" evil-previous-line)
+  ("(" sp-wrap-round "wrap in (round)")
+  ("[" sp-wrap-square)
+  ("{" sp-wrap-curly)
+  ("'"  (lambda (&optional arg) (interactive "P") (sp-wrap-with-pair "'")))
+  ("\""  (lambda (&optional arg) (interactive "P") (sp-wrap-with-pair "\"")))
+  ("d" sp-unwrap-sexp "unwrap pair")
+  ("q" nil "quit")
+  )
+#+end_src
+
+*** bindings
+#+begin_src elisp
+(map! :leader
+      (:prefix-map ("d" . "hydra")
+       :desc "resize window" "w" #'gwp/hydra-resize-window/body
+       :desc "select text"   "s" #'gwp/hydra-select-text/body
+       :desc "smart parents" "p" #'gwp/hydra-smartparens/body
+       ))
+#+end_src
+
 
 * develop.el
 :PROPERTIES:

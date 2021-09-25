@@ -21,6 +21,11 @@
         try-complete-lisp-symbol
         ))
 
+(after! company
+  (setq company-idle-delay 1.5
+        company-minimum-prefix-length 2))
+
+;; 2021-09-19: 没用起来
 ;; ;; https://github.com/redguardtoo/company-ctags
 ;; (use-package company-ctags
 ;;   :after (company)
@@ -132,28 +137,6 @@
       (incf arg)))
   (up-list arg))
 
-;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-(defun gwp/extend-selection (arg &optional incremental)
-  "Select the current word.
-Subsequent calls expands the selection to larger semantic unit."
-  (interactive (list (prefix-numeric-value current-prefix-arg)
-                     (or (and transient-mark-mode mark-active)
-                         (eq last-command this-command))))
-  (if incremental
-      (progn
-        (semnav-up (- arg))
-        (forward-sexp)
-        (mark-sexp -1))
-    (if (> arg 1)
-        (extend-selection (1- arg) t)
-      (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
-          (goto-char (match-end 0))
-        (unless (memq (char-before) '(?\) ?\"))
-          (forward-sexp)))
-      (mark-sexp -1))))
-
-;; (global-set-key (kbd "<f5> v") 'gwp/extend-selection)
-
 (defun gwp/select-text-in-quote ()
   "Select text between the nearest left and right delimiters.
 Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
@@ -233,3 +216,52 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   "Find a file under `~/.cache/notes', recursively."
   (interactive) (doom-project-find-file "~/.cache/notes"))
 ;; find notes:1 ends here
+
+;; [[file:../../doom.note::*window][window:1]]
+(defhydra gwp/hydra-resize-window ()
+  "resize-window"
+  ("h" evil-window-decrease-width "decrease width")
+  ("j" evil-window-decrease-height "decrease height")
+  ("k" evil-window-increase-height "increase height")
+  ("l" evil-window-increase-width "increase width")
+  ("q" nil "quit")
+  )
+;; window:1 ends here
+
+;; [[file:../../doom.note::*select text][select text:1]]
+(defhydra gwp/hydra-select-text ()
+  "select text"
+  ("p" er/mark-paragraph "select paragraph")
+  ("c" er/mark-org-code-block "select org-code block")
+  ("b" gwp/select-none-blank-text "select non blank")
+  ("t" gwp/select-text-in-quote "select quoted")
+  ("q" nil "quit")
+  )
+;; select text:1 ends here
+
+;; [[file:../../doom.note::*parens][parens:1]]
+(defhydra gwp/hydra-smartparens (:hint nil)
+  ("v" evil-visual-char)
+  ("u" evil-undo)
+  ("h" evil-backward-char)
+  ("l" evil-forward-char)
+  ("j" evil-next-line)
+  ("k" evil-previous-line)
+  ("(" sp-wrap-round "wrap in (round)")
+  ("[" sp-wrap-square)
+  ("{" sp-wrap-curly)
+  ("'"  (lambda (&optional arg) (interactive "P") (sp-wrap-with-pair "'")))
+  ("\""  (lambda (&optional arg) (interactive "P") (sp-wrap-with-pair "\"")))
+  ("d" sp-unwrap-sexp "unwrap pair")
+  ("q" nil "quit")
+  )
+;; parens:1 ends here
+
+;; [[file:../../doom.note::*bindings][bindings:1]]
+(map! :leader
+      (:prefix-map ("d" . "hydra")
+       :desc "resize window" "w" #'gwp/hydra-resize-window/body
+       :desc "select text"   "s" #'gwp/hydra-select-text/body
+       :desc "smart parents" "p" #'gwp/hydra-smartparens/body
+       ))
+;; bindings:1 ends here

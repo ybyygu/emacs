@@ -120,6 +120,42 @@
   )
 ;; join next line:1 ends here
 
+;; [[file:../../doom.note::*disable mouse][disable mouse:1]]
+;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
+(define-minor-mode disable-mouse-mode
+  "A minor-mode that disables all mouse keybinds."
+  :global t
+  :lighter " 🐭"
+  :keymap (make-sparse-keymap))
+
+(dolist (type '(mouse
+                down-mouse
+                drag-mouse
+                double-mouse
+                triple-mouse))
+  (dolist (prefix '("" C- M- S- M-S- C-M- C-S- C-M-S-))
+    ;; Yes, I actually HAD to go up to 7 here.
+    (dotimes (n 7)
+      (let ((k (format "%s%s-%s" prefix type n)))
+        (define-key disable-mouse-mode-map
+          (vector (intern k)) #'ignore)))))
+
+(map! :leader
+      (:prefix-map ("t" . "toggle")
+       :desc "禁用鼠标" "m" #'disable-mouse-mode
+       ))
+
+(defun turn-off-disable-mouse-mode ()
+  (disable-mouse-mode -1))
+
+(defun turn-on-disable-mouse-mode ()
+  (disable-mouse-mode 1))
+
+;; 在insert状态下禁用鼠标, 避免误碰触控板
+(add-hook! 'evil-insert-state-entry-hook #'turn-on-disable-mouse-mode)
+(add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
+;; disable mouse:1 ends here
+
 ;; [[file:../../doom.note::*advanced selection][advanced selection:1]]
 ;; expand selection
 ;; http://xahlee.org/emacs/modernization_mark-word.html

@@ -6,6 +6,11 @@
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
+* Tasks [0/3]
+- [ ] autosave空格丢失问题
+- [ ] org-capture clipboard不成常
+- [ ] 使用 transient 重写cargo (tangle)
+
 * 配置参考
 - [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
@@ -21,14 +26,61 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [34/46]
+* Memo [35/48]
+** DONE [2021-09-28 Tue] 切换禁用鼠标模式
+- State "DONE"       from "TODO"       [2021-09-28 Tue 20:38]
+笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
+
+- [[https://stackoverflow.com/questions/4906534/disable-mouse-clicks-in-emacs/4906698#4906698][Disable mouse clicks in Emacs - Stack Overflow]]
+- [[https://endlessparentheses.com/disable-mouse-only-inside-emacs.html][Disable Mouse only inside Emacs · Endless Parentheses]]
+
+** TODO [2021-09-28 Tue] 改进cargo几个命令组按键
+transient可以根据当前的mode来显示特定的命令, 比如tangle仅在org-mode里显示
+
 ** TODO [2021-09-25 Sat] 研究下文本选择功能, 比如expand-region等
+查看evil-visual-state-map帮助
+
 evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内容
+- vi: 比如选择括号内的内容
+- va: 比如选择包含括号的内容
+- vS => 插入包围操作
+
+大写文字: U, 小写文字: u
+
+按缩进层次选择文本:
+- vii
+
+改变选中数字大小:
+- g+或g=, g-
+
+
+z开头的命令:
+- zc, zo关闭或打开所在headline
+- zn/zN: 切换查看当前headline (indirect buffer)
+- zi: 切换image显示
+
+Z开头的命令
+- ZQ: evil-quit
+- ZX: 保存并关闭当前buffer
+
+org headline跳转
+- gk, gj
+- gh, gl, gH
+
+resume相关命令
+- gi: evil-insert-resume
+- gv: evil-visual-restore
+
+multi-cursor: 同时操作多个光标
+- gzz
+- gzc
 
 ** TODO [2021-09-24 Fri] 使用hydra改进窗口大小调整按键
 
 ** TODO [2021-09-24 Fri] clipbaord出问题了?
 org-capture中用的是 primary clipboard中的内容
+
+也许和org的autoload加载次序有关?
 
 ** DONE [2021-09-18 Sat] 研究下自动补全系统
 - State "DONE"       from "TODO"       [2021-09-24 Fri 14:20]
@@ -203,6 +255,7 @@ K : Korean
 : Ctrl-o, o
 
 ** TODO [2021-08-01 Sun] 试用org-roam2
+[2021-09-28 Tue] 总觉得没多大的用呢?
 org-roam-server改为org-roam-ui
 
 org-roam-ui用不起来. 弃
@@ -2681,6 +2734,43 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 (after! evil
   (advice-remove #'evil-join #'+evil-join-a)
   )
+#+end_src
+
+** disable mouse
+#+begin_src elisp
+;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
+(define-minor-mode disable-mouse-mode
+  "A minor-mode that disables all mouse keybinds."
+  :global t
+  :lighter " 🐭"
+  :keymap (make-sparse-keymap))
+
+(dolist (type '(mouse
+                down-mouse
+                drag-mouse
+                double-mouse
+                triple-mouse))
+  (dolist (prefix '("" C- M- S- M-S- C-M- C-S- C-M-S-))
+    ;; Yes, I actually HAD to go up to 7 here.
+    (dotimes (n 7)
+      (let ((k (format "%s%s-%s" prefix type n)))
+        (define-key disable-mouse-mode-map
+          (vector (intern k)) #'ignore)))))
+
+(map! :leader
+      (:prefix-map ("t" . "toggle")
+       :desc "禁用鼠标" "m" #'disable-mouse-mode
+       ))
+
+(defun turn-off-disable-mouse-mode ()
+  (disable-mouse-mode -1))
+
+(defun turn-on-disable-mouse-mode ()
+  (disable-mouse-mode 1))
+
+;; 在insert状态下禁用鼠标, 避免误碰触控板
+(add-hook! 'evil-insert-state-entry-hook #'turn-on-disable-mouse-mode)
+(add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
 #+end_src
 
 ** TODO advanced selection

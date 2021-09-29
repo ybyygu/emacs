@@ -71,24 +71,20 @@
     (compile (format "cargo.sh \"%s\" %s" old-directory args))
     ))
 
-(defun gwp/rust-cargo-watch-check (arg)
+(defun gwp/rust-cargo-watch-check ()
   "Compile using `cargo watch and check`
-If the universal prefix argument is used then org src will be tangled first.
+The org src will be tangled first before compiling.
 "
-  (interactive "P")
-  (when (equal arg '(4))                  ; C-u
-    (gwp/org-babel-tangle-dwim)
-    )
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
   (gwp/cargo-compile "check -q"))
 
-(defun gwp/rust-cargo-watch-test (arg)
+(defun gwp/rust-cargo-watch-test ()
   "Compile using `cargo watch and test`
-If the universal prefix argument is used then org src will be tangled first.
+The org src will be tangled first before compiling.
 "
-  (interactive "P")
-  (when (equal arg '(4))                  ; C-u
-    (gwp/org-babel-tangle-dwim)
-    )
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
   (gwp/cargo-compile "d")
   )
 
@@ -114,12 +110,16 @@ If the universal prefix argument is used then org src will be tangled first.
 (require 'transient)
 (transient-define-prefix gwp/rust-cargo-transient ()
   "rust development tools"
+  [["compile org src:"
+    :if org-in-src-block-p
+    ("b" "tangle src only" gwp/org-babel-tangle-dwim)
+    ("c" "tangle src & cargo check" gwp/rust-cargo-watch-check)
+    ("t" "tangle src & cargo test" gwp/rust-cargo-watch-test)
+    ]]
   [["compile rust project:"
-    ("c" "cargo check" gwp/rust-cargo-watch-check)
-    ("t" "cargo test" gwp/rust-cargo-watch-test)
+    ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("u" "cargo update" gwp/rust-cargo-update)
     ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
-    ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("r" "recompile" recompile)
     ]]
   )

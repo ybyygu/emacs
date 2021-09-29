@@ -26,16 +26,13 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [35/48]
+* Memo [36/47]
 ** DONE [2021-09-28 Tue] 切换禁用鼠标模式
 - State "DONE"       from "TODO"       [2021-09-28 Tue 20:38]
 笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
 
 - [[https://stackoverflow.com/questions/4906534/disable-mouse-clicks-in-emacs/4906698#4906698][Disable mouse clicks in Emacs - Stack Overflow]]
 - [[https://endlessparentheses.com/disable-mouse-only-inside-emacs.html][Disable Mouse only inside Emacs · Endless Parentheses]]
-
-** TODO [2021-09-28 Tue] 改进cargo几个命令组按键
-transient可以根据当前的mode来显示特定的命令, 比如tangle仅在org-mode里显示
 
 ** TODO [2021-09-25 Sat] 研究下文本选择功能, 比如expand-region等
 查看evil-visual-state-map帮助
@@ -75,8 +72,10 @@ multi-cursor: 同时操作多个光标
 - gzz
 - gzc
 
-** TODO [2021-09-24 Fri] 使用hydra改进窗口大小调整按键
+** DONE [2021-09-24 Fri] 使用hydra改进窗口大小调整按键
+space-d-w
 
+- State "DONE"       from "TODO"       [2021-09-29 Wed 15:21]
 ** TODO [2021-09-24 Fri] clipbaord出问题了?
 org-capture中用的是 primary clipboard中的内容
 
@@ -151,6 +150,7 @@ evil-emacs-state, evil-exit-emacs-state
 - State "DONE"       from "TODO"       [2021-09-05 Sun 18:00]
 如何可避免使用emacs-module, 改进容错.
 
+- [[https://magit.vc/manual/transient/][Transient User and Developer Manual]]
 - [[https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/][Anyone have good examples for Transient? : emacs]]
 
 #+begin_src elisp
@@ -159,17 +159,18 @@ evil-emacs-state, evil-exit-emacs-state
    (list (transient-args 'test-transient)))
   (message "args %s" args))
 
-(define-infix-argument test-transient:--message ()
+(transient-define-infix test-transient:--message ()
   :description "Message"
   :class 'transient-option
   :shortarg "-m"
   :argument "--message=")
 
-(define-transient-command test-transient ()
+(transient-define-prefix test-transient ()
   "Test Transient Title"
   ["Arguments"
    ("-s" "Switch" "--switch")
    ("-a" "Another switch" "--another")
+   ("-d" "Another switch" "4")
    (test-transient:--message)]
   ["Actions"
    ("d" "Action d" test-function)])
@@ -177,8 +178,9 @@ evil-emacs-state, evil-exit-emacs-state
 (test-transient)
 #+end_src
 
-#+RESULTS:
-| transient--resume-which-key-mode |
+*** DONE [2021-09-28 Tue] 改进cargo几个命令组按键
+- State "DONE"       from "TODO"       [2021-09-29 Wed 16:03]
+transient可以根据当前的mode来显示特定的命令, 比如tangle仅在org-mode里显示
 
 
 ** DONE [2021-08-25 Wed] 改进字体设置                                   :ATTACH:
@@ -3072,24 +3074,20 @@ cargo $@
     (compile (format "cargo.sh \"%s\" %s" old-directory args))
     ))
 
-(defun gwp/rust-cargo-watch-check (arg)
+(defun gwp/rust-cargo-watch-check ()
   "Compile using `cargo watch and check`
-If the universal prefix argument is used then org src will be tangled first.
+The org src will be tangled first before compiling.
 "
-  (interactive "P")
-  (when (equal arg '(4))                  ; C-u
-    (gwp/org-babel-tangle-dwim)
-    )
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
   (gwp/cargo-compile "check -q"))
 
-(defun gwp/rust-cargo-watch-test (arg)
+(defun gwp/rust-cargo-watch-test ()
   "Compile using `cargo watch and test`
-If the universal prefix argument is used then org src will be tangled first.
+The org src will be tangled first before compiling.
 "
-  (interactive "P")
-  (when (equal arg '(4))                  ; C-u
-    (gwp/org-babel-tangle-dwim)
-    )
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
   (gwp/cargo-compile "d")
   )
 
@@ -3115,12 +3113,16 @@ If the universal prefix argument is used then org src will be tangled first.
 (require 'transient)
 (transient-define-prefix gwp/rust-cargo-transient ()
   "rust development tools"
+  [["compile org src:"
+    :if org-in-src-block-p
+    ("b" "tangle src only" gwp/org-babel-tangle-dwim)
+    ("c" "tangle src & cargo check" gwp/rust-cargo-watch-check)
+    ("t" "tangle src & cargo test" gwp/rust-cargo-watch-test)
+    ]]
   [["compile rust project:"
-    ("c" "cargo check" gwp/rust-cargo-watch-check)
-    ("t" "cargo test" gwp/rust-cargo-watch-test)
+    ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("u" "cargo update" gwp/rust-cargo-update)
     ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
-    ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("r" "recompile" recompile)
     ]]
   )

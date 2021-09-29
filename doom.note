@@ -26,7 +26,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [37/47]
+* Memo [39/47]
 ** DONE [2021-09-28 Tue] 切换禁用鼠标模式
 - State "DONE"       from "TODO"       [2021-09-28 Tue 20:38]
 笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
@@ -42,10 +42,13 @@
 space-d-w
 
 - State "DONE"       from "TODO"       [2021-09-29 Wed 15:21]
-** TODO [2021-09-24 Fri] clipbaord出问题了?
+** DONE [2021-09-24 Fri] clipbaord出问题了?
+- State "DONE"       from "TODO"       [2021-09-29 Wed 20:28]
 org-capture中用的是 primary clipboard中的内容
 
-也许和org的autoload加载次序有关?
+也许和org的autoload加载次序有关? ([2021-09-29 Wed] 无关)
+
+根据 [[https://github.com/emacsmirror/org/blob/d70f2806788dce06871287ef02c88ee08076dffc/lisp/org-capture.el#L1579][这里]], org默认从primary clipboard中取内容.
 
 ** DONE [2021-09-18 Sat] 研究下自动补全系统
 - State "DONE"       from "TODO"       [2021-09-24 Fri 14:20]
@@ -102,15 +105,15 @@ redgaurdtoo: "代码自动完成和代码自动导航我推荐基于ctags的方�
 #+attr_odt: :width 10
 [[attachment:2021-09-16_09-57-54_screenshot.png]]
 
-** TODO [2021-09-09 Thu] 几个按键问题
+** DONE [2021-09-09 Thu] 几个按键问题
+- State "DONE"       from "TODO"       [2021-09-29 Wed 20:30]
 - State "DONE"       from "TODO"       [2021-09-09 Thu 19:23]
   
-space-j, mode-line: ctrl-k
+space-j, mini-buffer: ctrl-k
 
 Ctrl-z suspend-frame
 
 evil-emacs-state, evil-exit-emacs-state
-
 
 ** DONE [2021-09-03 Fri] 使用magit transient来调用命令行程序?
 - State "DONE"       from "TODO"       [2021-09-05 Sun 18:00]
@@ -192,8 +195,9 @@ K : Korean
 - [[id:dba75f6c-108f-4e84-a0ae-589065f572f6][JSON-RPC :: Better BibTeX for Zotero]]
 - [[https://github.com/tmalsburg/helm-bibtex/blob/master/ivy-bibtex.el][helm-bibtex/ivy-bibtex.el at master · tmalsburg/helm-bibtex]]
 
-不太满意
+不太满意, 有待改进:
 - [ ] 搜索时, keyword为空时响应非常慢.
+- [ ] 多种条件任意搜索
 - [ ] 无法先过滤, 然后再搜索(像zotero中, 先按tags或collection过虑过再搜索).
   ivy-bibtex可以选择多个item, 再执行统一的操作. 可以研究下. [[https://github.com/tmalsburg/helm-bibtex#apply-actions-to-multiple-entries][Apply actions to multiple entries]]
 - [X] 中英文混排不对齐
@@ -2142,27 +2146,31 @@ SPC-j-l
 (setq org-roam-directory "~/Notes/roam")
 (setq org-roam-file-extensions '("note" "org"))
 
-(after! org (load! "org"))
+;;
+(use-package! org
+  :config
+  (load! "org")
+  )
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 (use-package! websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package! org-roam-ui
-    :after org-roam ;; or :after org
-    :hook (org-roam . org-roam-ui-mode)
-    :config
-)
+  :after org-roam ;; or :after org
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+  )
 #+end_src
 
 *** re-open-current-file
 可以用revert-buffer SPC-b-r
 #+begin_src elisp :tangle no
-  (defun gwp/reopen-current-file ()
-    "Kill current buffer and re-open it again."
-    (interactive)
-    (call-interactively 'kill-current-buffer)
-    (call-interactively 'recentf-open-most-recent-file))
+(defun gwp/reopen-current-file ()
+  "Kill current buffer and re-open it again."
+  (interactive)
+  (call-interactively 'kill-current-buffer)
+  (call-interactively 'recentf-open-most-recent-file))
 #+end_src
 
 *** open-file-externally
@@ -4289,24 +4297,25 @@ file-exists-p函数对symlink的特殊性:
 
 ** capture & protocol
 占位符:
-| %:link         | URL of the web-page         |
-| %:description  | The title of the web-page   |
-| %:initial / %i | Selected text.              |
-| %x             | Content of the X clipboard. |
+| %:link                            | URL of the web-page                                  |
+| %:description                     | The title of the web-page                            |
+| %:initial / %i                    | Selected text.                                       |
+| %x                                | Content of the X clipboard.                          |
+| %(org-get-x-clipboard 'CLIPBOARD) | 强制使用X clipboard复制的内容, 而非primary clipboard |
 
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
         ("n" "Note" entry (file "~/Notes/refile.note")
-         "* %u %? %x\n  %:initial\n" :prepend t)
+         "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-         "* TODO %^T %? %x\n  %i" :prepend t)
+         "* TODO %^T %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i" :prepend t)
         ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
-         "* %u %? %x\n  %i\n" :prepend t)
+         "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("p" "Paper" entry (file+headline "~/Notes/research.note" "Literature")
-         "* TODO %u %? %x\n  %i\n" :prepend t)
+         "* TODO %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
-         "* %u %? %x\n  %i\n" :prepend t)
+         "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("N" "Note from protocol" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 #+end_src

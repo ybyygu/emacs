@@ -744,15 +744,15 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (setq org-capture-templates
       '(
         ("n" "Note" entry (file "~/Notes/refile.note")
-         "* %u %? %x\n  %:initial\n" :prepend t)
+         "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %:initial\n" :prepend t)
         ("t" "Task" entry (file+headline "~/Notes/life.note" "Tasks")
-         "* TODO %^T %? %x\n  %i" :prepend t)
+         "* TODO %^T %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i" :prepend t)
         ("r" "Research Memo" entry (file+headline "~/Notes/research.note" "Memo")
-         "* %u %? %x\n  %i\n" :prepend t)
+         "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("p" "Paper" entry (file+headline "~/Notes/research.note" "Literature")
-         "* TODO %u %? %x\n  %i\n" :prepend t)
+         "* TODO %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("j" "Life Journal" entry (file+headline "~/Notes/life.note" "Journals")
-         "* %u %? %x\n  %i\n" :prepend t)
+         "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("N" "Note from protocol" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 ;; capture & protocol:1 ends here

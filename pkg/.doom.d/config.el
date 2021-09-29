@@ -317,17 +317,21 @@
 (setq org-roam-directory "~/Notes/roam")
 (setq org-roam-file-extensions '("note" "org"))
 
-(after! org (load! "org"))
+;;
+(use-package! org
+  :config
+  (load! "org")
+  )
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 (use-package! websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package! org-roam-ui
-    :after org-roam ;; or :after org
-    :hook (org-roam . org-roam-ui-mode)
-    :config
-)
+  :after org-roam ;; or :after org
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+  )
 ;; org:1 ends here
 
 ;; [[file:../../doom.note::*open-file-externally][open-file-externally:1]]

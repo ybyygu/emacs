@@ -3084,22 +3084,34 @@ cargo $@
     (compile (format "cargo.sh \"%s\" %s" old-directory args))
     ))
 
-(defun gwp/rust-cargo-watch-check ()
+(defun gwp/rust-cargo-tangle-watch-check ()
   "Compile using `cargo watch and check`
 The org src will be tangled first before compiling.
 "
   (interactive)
   (gwp/org-babel-tangle-dwim)
+  (gwp/rust-cargo-watch-check))
+
+(defun gwp/rust-cargo-watch-check ()
+  "Compile using `cargo watch and check`
+"
+  (interactive)
   (gwp/cargo-compile "check -q"))
+
+(defun gwp/rust-cargo-tangle-watch-test ()
+  "Compile using `cargo watch and test`
+The org src will be tangled first before compiling.
+"
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
+  (gwp/rust-cargo-watch-test))
 
 (defun gwp/rust-cargo-watch-test ()
   "Compile using `cargo watch and test`
 The org src will be tangled first before compiling.
 "
   (interactive)
-  (gwp/org-babel-tangle-dwim)
-  (gwp/cargo-compile "d")
-  )
+  (gwp/cargo-compile "d"))
 
 (defun gwp/rust-cargo-update ()
   "Execute `cargo update` command"
@@ -3125,15 +3137,16 @@ The org src will be tangled first before compiling.
   "rust development tools"
   [["compile org src:"
     :if org-in-src-block-p
-    ("b" "tangle src only" gwp/org-babel-tangle-dwim)
-    ("c" "tangle src & cargo check" gwp/rust-cargo-watch-check)
-    ("t" "tangle src & cargo test" gwp/rust-cargo-watch-test)
+    ("o b" "tangle src only" gwp/org-babel-tangle-dwim)
+    ("o c" "tangle src & cargo check" gwp/rust-cargo-tangle-watch-check)
+    ("o t" "tangle src & cargo test" gwp/rust-cargo-tangle-watch-test)
     ]]
   [["compile rust project:"
+    ("c" "cargo check" gwp/rust-cargo-watch-check)
+    ("t" "cargo test" gwp/rust-cargo-watch-test)
     ("d" "cargo doc" gwp/rust-cargo-doc-open)
     ("u" "cargo update" gwp/rust-cargo-update)
     ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
-    ("r" "recompile" recompile)
     ]]
   )
 

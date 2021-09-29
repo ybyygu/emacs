@@ -26,7 +26,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [36/47]
+* Memo [37/47]
 ** DONE [2021-09-28 Tue] 切换禁用鼠标模式
 - State "DONE"       from "TODO"       [2021-09-28 Tue 20:38]
 笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
@@ -34,43 +34,9 @@
 - [[https://stackoverflow.com/questions/4906534/disable-mouse-clicks-in-emacs/4906698#4906698][Disable mouse clicks in Emacs - Stack Overflow]]
 - [[https://endlessparentheses.com/disable-mouse-only-inside-emacs.html][Disable Mouse only inside Emacs · Endless Parentheses]]
 
-** TODO [2021-09-25 Sat] 研究下文本选择功能, 比如expand-region等
-查看evil-visual-state-map帮助
+** DONE [2021-09-25 Sat] 研究下文本选择功能, 比如expand-region等
+- State "DONE"       from "TODO"       [2021-09-29 Wed 19:16]
 
-evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内容
-- vi: 比如选择括号内的内容
-- va: 比如选择包含括号的内容
-- vS => 插入包围操作
-
-大写文字: U, 小写文字: u
-
-按缩进层次选择文本:
-- vii
-
-改变选中数字大小:
-- g+或g=, g-
-
-
-z开头的命令:
-- zc, zo关闭或打开所在headline
-- zn/zN: 切换查看当前headline (indirect buffer)
-- zi: 切换image显示
-
-Z开头的命令
-- ZQ: evil-quit
-- ZX: 保存并关闭当前buffer
-
-org headline跳转
-- gk, gj
-- gh, gl, gH
-
-resume相关命令
-- gi: evil-insert-resume
-- gv: evil-visual-restore
-
-multi-cursor: 同时操作多个光标
-- gzz
-- gzc
 
 ** DONE [2021-09-24 Fri] 使用hydra改进窗口大小调整按键
 space-d-w
@@ -782,6 +748,7 @@ javascript:void function(){var a=window.getSelection();""==a%26%26(a=document.ti
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
+
 ** Swiper/Ivy notes
 | 命令                 | 功能                                   | Tips                                           |
 |----------------------+----------------------------------------+------------------------------------------------|
@@ -799,8 +766,11 @@ SPC-u, C-u
 ** 自动补全
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/completion/company/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 
-| C-x C-f | 补全文件名, 类vim |
-| C-x s   | 补全 yasnippet    |
+查看evil-insert-state-map中的绑定可知:
+
+| C-x C-f | company-files 补全文件名, 类vim   |
+| C-x C-s | company-yasnippet: 补全 yasnippet |
+| C-x C-l | +company/whole-lines 补全行       |
 
 ** 查看buffer major mode
 eval: major-mode
@@ -810,8 +780,44 @@ eval: major-mode
 | SPC-s-i         | imenu symbol           |
 | Alt-mouse-wheel | jump backward/foraward |
 
-** 编辑功能
+** evil功能
+查看evil-visual-state-map帮助
+
 选中文字后按S, 再按"(" 可在选中字符前后加括号.
+
+evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内容
+- vi: 比如选择括号内的内容
+- va: 比如选择包含括号的内容
+- vS => 插入包围操作
+
+大写文字: U, 小写文字: u
+
+按缩进层次选择文本:
+- vii
+
+改变选中数字大小:
+- g+或g=, g-
+
+z开头的命令:
+- zc, zo关闭或打开所在headline
+- zn/zN: 切换查看当前headline (indirect buffer)
+- zi: 切换image显示
+
+Z开头的命令
+- ZQ: evil-quit
+- ZX: 保存并关闭当前buffer
+
+org headline跳转
+- gk, gj
+- gh, gl, gH
+
+resume相关命令
+- gi: evil-insert-resume
+- gv: evil-visual-restore
+
+** multi-cursor: 同时操作多个光标
+- gzz
+- gzc
 
 ** dired-jump
 | SPC-f-j |
@@ -885,6 +891,7 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 
 ** 打开buffer文件所在目录
 ~SPC-u SPC-f-o~
+
 * TODO Roam research
 ** org-roam
 我觉得可以基于zotero来实现类似roam的组织方式. 在zotero中可以打标签, 也可以设置
@@ -2739,6 +2746,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 #+end_src
 
 ** disable mouse
+笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
 #+begin_src elisp
 ;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
 (define-minor-mode disable-mouse-mode
@@ -2754,7 +2762,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
                 triple-mouse))
   (dolist (prefix '("" C- M- S- M-S- C-M- C-S- C-M-S-))
     ;; Yes, I actually HAD to go up to 7 here.
-    (dotimes (n 7)
+    (dotimes (n 3)
       (let ((k (format "%s%s-%s" prefix type n)))
         (define-key disable-mouse-mode-map
           (vector (intern k)) #'ignore)))))
@@ -2870,6 +2878,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq bibtex-completion-pdf-field "file")
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 #+end_src
+
 ** find notes
 #+begin_src elisp
 (defun gwp/find-file-in-notes ()
@@ -2902,6 +2911,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("q" nil "quit")
   )
 #+end_src
+
 *** parens
 #+begin_src elisp
 (defhydra gwp/hydra-smartparens (:hint nil)

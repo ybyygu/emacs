@@ -3438,6 +3438,7 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
 - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][.emacs.d/setup-org.el at master · kaushalmodi/.emacs.d]]
 
 ** 基本设置
+#+name: b28b06dc
 #+begin_src elisp
 ;; treat .note files as org-mode
 (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
@@ -3725,20 +3726,20 @@ org-babel-expand-src-block (可以展开noweb macro)
 
 *** tangle
 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
+#+name: f1b57cf1
 #+begin_src elisp
 ;; tangle blocks for current file at point
 ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
 ;; call org-babel-tangle with C-u C-u
 (defun gwp/org-babel-tangle-blocks()
   (interactive)
+  ;; tangle blocks only for target file at point
   (let ((current-prefix-arg '(16)))
-    (call-interactively 'org-babel-tangle)
-    )
-  )
+    (call-interactively 'org-babel-tangle)))
 
 ;; narrow to subtree before calling org-babel-tangle
 (defun gwp/org-tangle-subtree()
-  "tange src blocks in current subtree"
+  "Tange src blocks in current subtree"
   (interactive)
   (org-narrow-to-subtree)
   (org-babel-tangle)
@@ -3747,40 +3748,63 @@ org-babel-expand-src-block (可以展开noweb macro)
 #+end_src
 
 如何在代码编辑窗口中tangle?
+#+name: 566a6ed9
 #+begin_src elisp
 (defun gwp/org-edit-save-and-tangle ()
-  "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+  "When in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
   (interactive)
-  (when (buffer-modified-p) (org-edit-src-save))
-  (org-edit-src-exit)
-  (call-interactively 'gwp/org-babel-tangle-blocks)
-  (org-edit-src-code)
-  )
+  (save-excursion
+    (org-edit-src-exit)
+    ;; insert an unique code block name
+    (gwp/org-src-insert-name)
+    (call-interactively 'gwp/org-babel-tangle-blocks)
+    (org-edit-src-code)))
 
 (defun gwp/org-babel-tangle-dwim()
-  "tangle current file at point whenever in a sub-editing buffer or not"
+  "Tangle current file at point whenever in a sub-editing buffer or not"
   (interactive)
   (if (org-src-edit-buffer-p)
-      (save-excursion
-        (call-interactively 'gwp/org-edit-save-and-tangle)
-        )
+      (gwp/org-edit-save-and-tangle)
     (if (eq 'src-block (org-element-type (org-element-at-point)))
-        (call-interactively 'gwp/org-babel-tangle-blocks)
-      (message "not in source block")
-      )
-    )
-  )
+        (progn
+          ;; insert an unique code block name
+          (gwp/org-src-insert-name)
+          (call-interactively 'gwp/org-babel-tangle-blocks))
+      (message "not in source block"))))
 #+end_src
 
-禁用当前代码块或整个headline. 还可以用 org-delete-property 删除 header-args
+禁用当前代码块或整个headline. 如果再次使用即取消插入的header args. 还可以用
+org-delete-property 删除 header-args
+#+name: 661f0512
 #+begin_src elisp
 (defun gwp/org-babel-tangle-no()
+  "Turn on or turn off tangling current code block"
   (interactive)
   (if (eq 'src-block (org-element-type (org-element-at-point)))
-    (org-babel-insert-header-arg "tangle" "no")
-    (org-set-property "header-args" ":tangle no")
-    )
-  )
+      (save-excursion
+        (org-babel-goto-src-block-head)
+        (if (re-search-forward ":tangle no" (line-end-position) t)
+            (delete-region (match-beginning 0) (match-end 0))
+          (org-babel-insert-header-arg "tangle" "no")))
+    (org-set-property "header-args" ":tangle no")))
+#+end_src
+
+插入一个唯一的block name, 方便跳转
+#+name: 1a4b128e
+#+begin_src elisp
+(defun gwp/org-src-insert-name ()
+  "If it doesn't have a NAME property then assign it an unique name."
+  (interactive)
+  (let ((element (org-element-at-point)))
+    (if (eq 'src-block (org-element-type element))
+        (if (not (org-element-property :name element))
+            (save-excursion
+              (goto-char (org-babel-where-is-src-block-head))
+              (let ((i (current-indentation)))
+                (save-excursion (insert "#+name: " (substring (org-id-new) 0 8) "\n"))
+                (indent-to i)))
+          (message "source block alread named"))
+      (message "not in source block"))))
 #+end_src
 
 *** template
@@ -4701,6 +4725,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+end_src
 
 ** bindings
+#+name: 21ae7ae2
 #+begin_src elisp
 (map! :map org-mode-map
       :localleader
@@ -4715,6 +4740,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
         :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
         :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
         :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
         )
       (:prefix ("l" . "links")

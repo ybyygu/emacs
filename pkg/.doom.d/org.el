@@ -1,4 +1,4 @@
-;; [[file:../../doom.note::*基本设置][基本设置:1]]
+;; [[file:../../doom.note::b28b06dc][b28b06dc]]
 ;; treat .note files as org-mode
 (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
@@ -23,7 +23,7 @@
 
 ;; 避免误编辑
 (setq org-catch-invisible-edits 'show-and-error)
-;; 基本设置:1 ends here
+;; b28b06dc ends here
 
 ;; [[file:../../doom.note::*按键行为][按键行为:1]]
 (defun gwp/new-memo (arg)
@@ -224,61 +224,78 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     (error "Cannot open tangle file %S" file)))))
 ;; jump:1 ends here
 
-;; [[file:../../doom.note::*tangle][tangle:1]]
+;; [[file:../../doom.note::f1b57cf1][f1b57cf1]]
 ;; tangle blocks for current file at point
 ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
 ;; call org-babel-tangle with C-u C-u
 (defun gwp/org-babel-tangle-blocks()
   (interactive)
+  ;; tangle blocks only for target file at point
   (let ((current-prefix-arg '(16)))
-    (call-interactively 'org-babel-tangle)
-    )
-  )
+    (call-interactively 'org-babel-tangle)))
 
 ;; narrow to subtree before calling org-babel-tangle
 (defun gwp/org-tangle-subtree()
-  "tange src blocks in current subtree"
+  "Tange src blocks in current subtree"
   (interactive)
   (org-narrow-to-subtree)
   (org-babel-tangle)
   (widen)
   )
-;; tangle:1 ends here
+;; f1b57cf1 ends here
 
-;; [[file:../../doom.note::*tangle][tangle:2]]
+;; [[file:../../doom.note::566a6ed9][566a6ed9]]
 (defun gwp/org-edit-save-and-tangle ()
-  "when in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
+  "When in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
   (interactive)
-  (when (buffer-modified-p) (org-edit-src-save))
-  (org-edit-src-exit)
-  (call-interactively 'gwp/org-babel-tangle-blocks)
-  (org-edit-src-code)
-  )
+  (save-excursion
+    (org-edit-src-exit)
+    ;; insert an unique code block name
+    (gwp/org-src-insert-name)
+    (call-interactively 'gwp/org-babel-tangle-blocks)
+    (org-edit-src-code)))
 
 (defun gwp/org-babel-tangle-dwim()
-  "tangle current file at point whenever in a sub-editing buffer or not"
+  "Tangle current file at point whenever in a sub-editing buffer or not"
   (interactive)
   (if (org-src-edit-buffer-p)
-      (save-excursion
-        (call-interactively 'gwp/org-edit-save-and-tangle)
-        )
+      (gwp/org-edit-save-and-tangle)
     (if (eq 'src-block (org-element-type (org-element-at-point)))
-        (call-interactively 'gwp/org-babel-tangle-blocks)
-      (message "not in source block")
-      )
-    )
-  )
-;; tangle:2 ends here
+        (progn
+          ;; insert an unique code block name
+          (gwp/org-src-insert-name)
+          (call-interactively 'gwp/org-babel-tangle-blocks))
+      (message "not in source block"))))
+;; 566a6ed9 ends here
 
-;; [[file:../../doom.note::*tangle][tangle:3]]
+;; [[file:../../doom.note::661f0512][661f0512]]
 (defun gwp/org-babel-tangle-no()
+  "Turn on or turn off tangling current code block"
   (interactive)
   (if (eq 'src-block (org-element-type (org-element-at-point)))
-    (org-babel-insert-header-arg "tangle" "no")
-    (org-set-property "header-args" ":tangle no")
-    )
-  )
-;; tangle:3 ends here
+      (save-excursion
+        (org-babel-goto-src-block-head)
+        (if (re-search-forward ":tangle no" (line-end-position) t)
+            (delete-region (match-beginning 0) (match-end 0))
+          (org-babel-insert-header-arg "tangle" "no")))
+    (org-set-property "header-args" ":tangle no")))
+;; 661f0512 ends here
+
+;; [[file:../../doom.note::1a4b128e][1a4b128e]]
+(defun gwp/org-src-insert-name ()
+  "If it doesn't have a NAME property then assign it an unique name."
+  (interactive)
+  (let ((element (org-element-at-point)))
+    (if (eq 'src-block (org-element-type element))
+        (if (not (org-element-property :name element))
+            (save-excursion
+              (goto-char (org-babel-where-is-src-block-head))
+              (let ((i (current-indentation)))
+                (save-excursion (insert "#+name: " (substring (org-id-new) 0 8) "\n"))
+                (indent-to i)))
+          (message "source block alread named"))
+      (message "not in source block"))))
+;; 1a4b128e ends here
 
 ;; [[file:../../doom.note::*template][template:1]]
 (with-eval-after-load 'ob
@@ -779,36 +796,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (search-forward "[[file:" (line-end-position))
     (if (org-in-regexp org-bracket-link-regexp 1)
         (org-link-unescape (match-string-no-properties 1)))))
-
-(defun gwp/enter-to-read-state()
-  "evoke external shell script when entering READ state"
-  (when (equal org-state "READ")
-    (setq file (gwp/get-org-file-link-path))
-    (if file
-        (progn
-          (setq cmd (concat "org-to-read.sh " (shell-quote-argument file)))
-          (message cmd)
-          (shell-command cmd))))
-  (when (equal org-last-state "READ")
-    (message "try to remove READ state")
-    (setq file (gwp/get-org-file-link-path))
-    (if file
-        (progn
-          (setq cmd (concat "org-read-done.sh " (shell-quote-argument file)))
-          (message cmd)
-          (shell-command cmd)))))
-(add-hook 'org-after-todo-state-change-hook 'gwp/enter-to-read-state)
-
-;; show a sparse-tree in READ keyword
-(defun gwp/org-show-read-tree ()
-  "show a sparse-tree in READ keyword"
-  (interactive)
-
-  (let ((base-vector [?\C-u ?\M-x ?o ?r ?g ?- ?s ?h ?o ?w ?- ?t ?o ?d ?o ?- ?t ?r ?e ?e return ?R ?E ?A ?D return]))
-    ;; create new macro of the form
-    ;; C-u M-x org-show-todo-tree RET READ RET
-    (execute-kbd-macro (vconcat base-vector
-                                (vector 'return)))))
 ;; refile:1 ends here
 
 ;; [[file:../../doom.note::*agenda][agenda:1]]
@@ -976,7 +963,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (setq org-fontify-emphasized-text nil)
 ;; misc:2 ends here
 
-;; [[file:../../doom.note::*bindings][bindings:1]]
+;; [[file:../../doom.note::21ae7ae2][21ae7ae2]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("b" . "org-babel")
@@ -990,6 +977,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
         :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
         :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
         :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
         )
       (:prefix ("l" . "links")
@@ -1038,7 +1026,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
         )
       )
-;; bindings:1 ends here
+;; 21ae7ae2 ends here
 
 ;; [[file:../../doom.note::*bindings][bindings:2]]
 (map! :map org-sidebar-tree-map

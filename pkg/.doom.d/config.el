@@ -336,9 +336,9 @@
 
 ;; [[file:../../doom.note::*desktop][desktop:1]]
 (map! :leader
-      (:prefix-map ("o" . "open")
+      (:prefix-map ("e" . "external")
        :desc "程序窗口管理" "w" #'counsel-wmctrl
-       :desc "启动桌面程序" "l" #'counsel-linux-app
+       :desc "启动桌面程序" "a" #'counsel-linux-app
        ))
 ;; desktop:1 ends here
 

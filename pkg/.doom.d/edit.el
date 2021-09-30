@@ -49,11 +49,12 @@
 
 ;; [[file:../../doom.note::*auto-save][auto-save:1]]
 (setq
+ ;; doom里已默认为true
  auto-save-default t
- ;; auto-save-list-file-prefix  (concat doom-cache-dir "auto-save-list/.saves-")
- ;; auto-save-list-file-name (concat doom-cache-dir "autosave")
- )
+ ;; 默认为5秒. 这里改大一些, 避免编辑时自动保存太快, 光标前的空格被吞掉
+ auto-save-visited-interval 30)
 
+;; 自动保存至当前文件名, 而临时文件
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
 

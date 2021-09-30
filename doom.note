@@ -64,7 +64,7 @@ hippie-expand默认会使用dabbrev-expand的补全项, 因此可替代之(需�
 redgaurdtoo: "代码自动完成和代码自动导航我推荐基于ctags的方案，缺点当然是智能程度不高。但是速
 度快，支持正则表达式定制，通吃所有语言。在我眼里优点远远压倒了缺点。"
 
-[2021-09-30 Thu] 新发现的一个
+[2021-09-30 Thu] 新发现的一个, 可跳转至定义, 很不错
 - [[https://emacs-china.org/t/citre-ctags/17604][Citre: 先进的 Ctags 前端 - Emacs-general - Emacs China]]
 
 [2021-09-24 Fri] 试了下, 有难度, 没用起来.
@@ -2679,6 +2679,12 @@ github支持, 减慢速度.
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
 ** completion
+关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
+: M-n, M-p: Next/prev line.
+: M-N, M-P: Next/prev definition.
+: M-l j: Jump to the definition.
+: C-g: Close the peek window.
+
 #+begin_src elisp
 ;; Use hippie-expand instead of dabbrev-expand
 ;; (global-set-key (kbd "M-/") #'dabbrev-expand)
@@ -2706,26 +2712,27 @@ github支持, 减慢速度.
   (setq company-idle-delay 1.5
         company-minimum-prefix-length 2))
 
-;; 2021-09-19: 没用起来
-;; ;; https://github.com/redguardtoo/company-ctags
-;; (use-package company-ctags
-;;   :after (company)
-;;   :init
-;;   (setq company-ctags-everywhere t
-;;         company-ctags-fuzzy-match-p t)
-;;   :config
-;;   (company-ctags-auto-setup)
-;;   (message "Init company-ctags"))
-
-;; ;; for rust completion
-;; ;; https://github.com/dan-t/rusty-tags
-;; (setq company-ctags-tags-file-name "rusty-tags.emacs")
+(use-package! citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  (require 'ob-tangle)
+  (map! :leader
+        (:prefix-map ("j" . "jump")
+         :desc "jump to org src"                             "o" #'org-babel-tangle-jump-to-org
+         (:prefix-map ("c" . "citre")
+          :desc "citre jump to definition"                    "d" #'citre-jump
+          :desc "citre jump back"                             "b" #'citre-jump-back
+          :desc "citre peek"                                  "p" #'citre-peek
+          ))))
 #+end_src
 
 安装对应的包
-#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el :tangle no
-(package! company-ctags)
+#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
+(package! citre)
 #+end_src
+
 ** keyfreq
 [[https://github.com/dacap/keyfreq][dacap/keyfreq: Track Emacs commands frequency]]
 #+begin_src elisp
@@ -4439,7 +4446,13 @@ refile流程:
     (search-forward "[[file:" (line-end-position))
     (if (org-in-regexp org-bracket-link-regexp 1)
         (org-link-unescape (match-string-no-properties 1)))))
-
+#+END_SRC
+** read/done
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+基本弃用. 有待改进.
+#+begin_src elisp
 (defun gwp/enter-to-read-state()
   "evoke external shell script when entering READ state"
   (when (equal org-state "READ")
@@ -4469,7 +4482,7 @@ refile流程:
     ;; C-u M-x org-show-todo-tree RET READ RET
     (execute-kbd-macro (vconcat base-vector
                                 (vector 'return)))))
-#+END_SRC
+#+end_src
 
 ** agenda
 基本设置

@@ -25,20 +25,20 @@
   (setq company-idle-delay 1.5
         company-minimum-prefix-length 2))
 
-;; 2021-09-19: 没用起来
-;; ;; https://github.com/redguardtoo/company-ctags
-;; (use-package company-ctags
-;;   :after (company)
-;;   :init
-;;   (setq company-ctags-everywhere t
-;;         company-ctags-fuzzy-match-p t)
-;;   :config
-;;   (company-ctags-auto-setup)
-;;   (message "Init company-ctags"))
-
-;; ;; for rust completion
-;; ;; https://github.com/dan-t/rusty-tags
-;; (setq company-ctags-tags-file-name "rusty-tags.emacs")
+(use-package! citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  (require 'ob-tangle)
+  (map! :leader
+        (:prefix-map ("j" . "jump")
+         :desc "jump to org src"                             "o" #'org-babel-tangle-jump-to-org
+         (:prefix-map ("c" . "citre")
+          :desc "citre jump to definition"                    "d" #'citre-jump
+          :desc "citre jump back"                             "b" #'citre-jump-back
+          :desc "citre peek"                                  "p" #'citre-peek
+          ))))
 ;; completion:1 ends here
 
 ;; [[file:../../doom.note::*keyfreq][keyfreq:1]]

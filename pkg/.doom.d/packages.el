@@ -104,9 +104,9 @@
            :branch "main"
            :files ("*.el")))
 
-;; [[file:../../doom.note::*disable mouse][disable mouse:1]]
-(package! disable-mouse)
-;; disable mouse:1 ends here
+;; [[file:../../doom.note::*completion][completion:2]]
+(package! citre)
+;; completion:2 ends here
 
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)

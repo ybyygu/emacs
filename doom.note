@@ -26,7 +26,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [39/47]
+* Memo [40/47]
 ** DONE [2021-09-28 Tue] 切换禁用鼠标模式
 - State "DONE"       from "TODO"       [2021-09-28 Tue 20:38]
 笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
@@ -121,6 +121,7 @@ evil-emacs-state, evil-exit-emacs-state
 
 - [[https://magit.vc/manual/transient/][Transient User and Developer Manual]]
 - [[https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/][Anyone have good examples for Transient? : emacs]]
+- [[https://github.com/sheijk/org-menu/blob/main/org-menu.el][org-menu.el]]
 
 #+begin_src elisp
 (defun test-function (&optional args)
@@ -315,7 +316,8 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 : -;;; lang/org/autoload/org-link.el -*- lexical-binding: t; -*-
 : +;;; ~/.doom.d/modules/gwp/org/autoload/org-link.el -*- lexical-binding: t; -*-
 
-** TODO [2020-03-22 Sun] workspace保存时经常出错的问题
+** DONE [2020-03-22 Sun] workspace保存时经常出错的问题
+- State "DONE"       from "TODO"       [2021-09-29 Wed 20:32]
 [2021-09-12 Sun] 最近正常
 无法确定问题的根源, 有时成功, 有时失败. 成功案例:
 - Cu-u SPC-l-s, 失败后再用SPC-l-s
@@ -1035,6 +1037,21 @@ pdf-view快捷键
 - 重要的tangle参数已在配置文件中做全局设置, 比如: ~padline~ ~mkdirp~ ~comments~
 
 * TODO scripts
+** dired.sh
+[[https://gist.github.com/alphapapa/9c4eea0f204f865d37e8c99963feb922][Standalone Dired launcher]]
+
+#+begin_src shell
+# Launch Dired in a plain Emacs configuration.
+
+# Arguments are passed to Emacs, e.g. "-nw" works as expected.
+
+emacs -q "$@" \
+      --eval "(dired default-directory)" \
+      --eval "(defun kill-window-or-emacs () (interactive) (if (one-window-p) (kill-emacs) (delete-window)))" \
+      --eval "(setq dired-dwim-target t delete-by-moving-to-trash t)" \
+      --eval "(define-key dired-mode-map (kbd \"q\") #'kill-window-or-emacs)"
+#+end_src
+
 ** org-archive.py
 :PROPERTIES:
 :header-args: :tangle pkg/.local/bin/org-archive.py :comments link :padline yes :mkdirp yes :shebang #! /usr/bin/env python2
@@ -1305,6 +1322,56 @@ path="$dir_read"/$(basename "${1#file:}")
 #+END_SRC
 
 * TODO desktop integration
+** TODO emacs daemon
+- [[https://www.taingram.org/blog/emacs-client.html][Emacsclient Setup with Desktop Integration]]
+
+** DONE app launcher (替代krunner, gnome-do等)                          :ATTACH:
+:PROPERTIES:
+:ID:       c616356a-c1cf-450e-83e3-0e42afa72ebb
+:END:
+- State "DONE"       from "TODO"       [2021-09-30 Thu 09:52]
+[2021-09-30 Thu] 以下emacs脚本时灵时不灵的. 可在KDE下为emacs程序设置窗口快捷键,
+比如win-u, 按键时直达emacs, 然后再调用 counsel-linux-app, counsel-wmctrl等命令即
+可.
+
+#+caption: KDE设置界面
+#+name: fig:394ff428
+#+attr_org: :width 800
+#+attr_odt: :width 10
+[[attachment:2021-09-30_09-50-27_screenshot.png]]
+
+
+程序调用
+- [[https://oremacs.com/2016/03/16/counsel-linux-app/][Emacs completion for launching Linux desktop apps.]]
+- [[https://lchsk.com/launching-applications-from-emacs.html][Launching applications from Emacs]]
+- [[https://github.com/mathiasdahl/emacs-launcher][emacs-launcher]]
+- [[https://www.mattduck.com/emacs-fuzzy-launcher.html][Emacs as a fuzzy launcher and Alfred-replacement]]
+
+  #+begin_src shell :tangle ~/.local/bin/counsel-linux-app.py :shebang #! /usr/bin/env python3
+  import subprocess
+  # wnd_id = subprocess.check_output(["xdotool", "search", "--name", "emacs"]).decode().split("\n")[-2]
+  # subprocess.call(["wmctrl", "-ia", wnd_id])
+  subprocess.call(["wmctrl", "-a", "emacs"])
+  subprocess.call(["emacsclient", "--eval", "(counsel-linux-app)"])
+  #+end_src
+
+ 切换窗口
+- [[https://github.com/flexibeast/ewmctrl][Use wmctrl to manage desktop windows]]
+  : wmctrl -a firefox
+  : wmctrl -a emacs
+
+- [[https://github.com/abo-abo/oremacs/blob/github/etc/bin/counsel-wmctrl.sh][oremacs/etc/bin/counsel-wmctrl.sh ]]
+  : counsel-wmctrl
+
+  #+begin_src shell :tangle ~/.local/bin/counsel-wmctrl.py :shebang #! /usr/bin/env python3
+  import subprocess
+  # wnd_id = subprocess.check_output(["xdotool", "search", "--name", "emacs"]).decode().split("\n")[-1]
+  # subprocess.call(["wmctrl", "-ia", wnd_id])
+  subprocess.call(["wmctrl", "-a", "emacs"])
+  subprocess.call(["emacsclient", "--eval", "(counsel-wmctrl)"])
+  #+end_src
+
+
 ** emacsclient-open
 可用于打开.note和.pdf文件
 #+begin_src text :tangle pkg/.local/share/applications/gwp-emacsclient.desktop :mkdirp yes :comments no
@@ -2162,6 +2229,14 @@ SPC-j-l
   :config
   )
 #+end_src
+*** desktop
+#+begin_src elisp
+(map! :leader
+      (:prefix-map ("o" . "open")
+       :desc "程序窗口管理" "w" #'counsel-wmctrl
+       :desc "启动桌面程序" "l" #'counsel-linux-app
+       ))
+#+end_src
 
 *** re-open-current-file
 可以用revert-buffer SPC-b-r
@@ -2259,7 +2334,7 @@ deadgrep与doom有冲突, 不能用了.
 
 *** develop
 #+begin_src emacs-lisp
-  (load! "develop")
+(load! "develop")
 #+end_src
 
 *** recent files
@@ -2273,6 +2348,7 @@ deadgrep与doom有冲突, 不能用了.
 (add-to-list 'recentf-exclude "\.svg$")
 (add-to-list 'recentf-exclude "\.odt$")
 #+end_src
+
 *** fcitx
 自动中英文切换, 解决vim模式下的一大痛点.
 #+BEGIN_SRC emacs-lisp
@@ -3599,6 +3675,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 *** jump
 从org文件跳转到tangled file
+- [ ] 这个包可用于与compile等跳转配合使用 [[https://github.com/EricCrosson/help-find-org-mode][help-find-org-mode]]
+
 #+begin_src elisp
 ;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
 (defun gwp/org-babel-tangle-jump-to-file ()
@@ -3677,13 +3755,13 @@ org-babel-expand-src-block (可以展开noweb macro)
 
 禁用当前代码块或整个headline. 还可以用 org-delete-property 删除 header-args
 #+begin_src elisp
-  (defun gwp/org-babel-tangle-no()
-    (interactive)
-    (if (eq 'src-block (org-element-type (org-element-at-point)))
-      (org-babel-insert-header-arg "tangle" "no")
-      (org-set-property "header-args" ":tangle no")
-      )
+(defun gwp/org-babel-tangle-no()
+  (interactive)
+  (if (eq 'src-block (org-element-type (org-element-at-point)))
+    (org-babel-insert-header-arg "tangle" "no")
+    (org-set-property "header-args" ":tangle no")
     )
+  )
 #+end_src
 
 *** template

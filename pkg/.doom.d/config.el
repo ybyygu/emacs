@@ -334,6 +334,14 @@
   )
 ;; org:1 ends here
 
+;; [[file:../../doom.note::*desktop][desktop:1]]
+(map! :leader
+      (:prefix-map ("o" . "open")
+       :desc "程序窗口管理" "w" #'counsel-wmctrl
+       :desc "启动桌面程序" "l" #'counsel-linux-app
+       ))
+;; desktop:1 ends here
+
 ;; [[file:../../doom.note::*open-file-externally][open-file-externally:1]]
 (defun spacemacs/open-in-external-app (file-path)
   "Open `file-path' in external application."

@@ -185,7 +185,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 ;; toml:1 ends here
 
-;; [[file:../../doom.note::*edit][edit:1]]
+;; [[file:../../doom.note::84623fc4][84623fc4]]
 ;; 用于激活 localleader
 (add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
 
@@ -205,24 +205,36 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       :leader
       ";" #'org-edit-src-exit
       )
-;; edit:1 ends here
+;; 84623fc4 ends here
 
-;; [[file:../../doom.note::*jump][jump:1]]
-;; https://emacs.stackexchange.com/questions/50649/jumping-from-a-source-block-to-the-tangled-file
+;; [[file:../../doom.note::fa928b1c][fa928b1c]]
 (defun gwp/org-babel-tangle-jump-to-file ()
   "Jump to tangle file for the source block at point."
   (interactive)
-  (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
-    (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
-                         (setq file filename)))
-          ((symbol-function 'delete-file) #'ignore))
-      (org-babel-tangle '(4)))
-    (when file
-      (setq file (expand-file-name file))
-      (if (file-readable-p file)
-      (find-file file)
-    (error "Cannot open tangle file %S" file)))))
-;; jump:1 ends here
+  (let (
+        (mid (point))
+        (element (org-element-at-point))
+        (body-start (org-babel-where-is-src-block-head))
+        (tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
+        offset)
+    (if tangle-file
+        (let ((block-name (org-element-property :name element))
+              (tangle-file (expand-file-name tangle-file)))
+          (if (file-readable-p tangle-file)
+              (progn
+                ;; open tangled file
+                (find-file tangle-file)
+                ;; if code block has a name, we jump to that block
+                (when block-name
+                  (beginning-of-buffer)   ; if point restored, the searching could fail
+                  (when (search-forward (format "::%s" block-name) nil t)
+                    (beginning-of-line)
+                    (setq offset (- mid body-start))
+                    (forward-char offset)
+                    )))
+            (error "Cannot open tangle file %S" tangle-file)))
+      (message "not in source block"))))
+;; fa928b1c ends here
 
 ;; [[file:../../doom.note::f1b57cf1][f1b57cf1]]
 ;; tangle blocks for current file at point

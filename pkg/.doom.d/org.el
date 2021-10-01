@@ -297,14 +297,14 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       (message "not in source block"))))
 ;; 1a4b128e ends here
 
-;; [[file:../../doom.note::*template][template:1]]
+;; [[file:../../doom.note::e9fca5dc][e9fca5dc]]
 (with-eval-after-load 'ob
-    (setq org-structure-template-alist
-          '(
-            ("py" . "src python :results output")
-            ("rs" . "src rust")
-            ("el" . "src emacs-lisp")
-            ("sh" . "src sh")
+  (setq org-structure-template-alist
+        '(
+          ("py" . "src python :results output")
+          ("rs" . "src rust")
+          ("el" . "src emacs-lisp")
+          ("sh" . "src sh")
           ))
 
   (defun gwp/org-babel-edit-structure-in-place (arg)
@@ -312,9 +312,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     (interactive "P")
     (call-interactively 'org-insert-structure-template)
     (call-interactively 'org-edit-src-code)
-    )
- )
-;; template:1 ends here
+    ))
+;; e9fca5dc ends here
 
 ;; [[file:../../doom.note::*auto time-stamp][auto time-stamp:1]]
 (with-eval-after-load "ob-tangle"

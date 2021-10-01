@@ -1,4 +1,4 @@
-;; [[file:../../doom.note::*orig][orig:1]]
+;; [[file:../../doom.note::b70e7222][b70e7222]]
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -41,13 +41,13 @@
 ;;
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
-;; orig:1 ends here
+;; b70e7222 ends here
 
-;; [[file:../../doom.note::*scratch][scratch:1]]
-(setq doom-scratch-initial-major-mode 'org-mode)
-;; scratch:1 ends here
+;; [[file:../../doom.note::11b27926][11b27926]]
+(setq doom-scratch-initial-major-mode 'emacs-lisp)
+;; 11b27926 ends here
 
-;; [[file:../../doom.note::*workspace][workspace:1]]
+;; [[file:../../doom.note::6b10b827][6b10b827]]
 (setq persp-auto-save-opt 0)
 
 (defun gwp/workspace/load-or-switch (name)
@@ -64,7 +64,7 @@
         (+workspace-error (format "Couldn't load workspace %s" name))
       (+workspace/switch-to name)))
   (+workspace/display))
-;; workspace:1 ends here
+;; 6b10b827 ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390

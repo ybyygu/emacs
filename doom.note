@@ -1821,6 +1821,7 @@ gwp-merge:
 :header-args: :tangle pkg/.doom.d/config.el
 :END:
 *** orig
+#+name: b70e7222
 #+BEGIN_SRC emacs-lisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
@@ -1865,13 +1866,17 @@ gwp-merge:
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 #+END_SRC
+
 *** scratch
+[2021-10-01 Fri] 还是elisp更方便些.
+#+name: 11b27926
 #+begin_src elisp
-(setq doom-scratch-initial-major-mode 'org-mode)
+(setq doom-scratch-initial-major-mode 'emacs-lisp)
 #+end_src
 
 *** workspace
 禁止workspace在退出emacs时自动保存, 避免不同机器同步冲突
+#+name: 6b10b827
 #+begin_src elisp
 (setq persp-auto-save-opt 0)
 
@@ -3721,6 +3726,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 : org-babel-detangle
 
 还有一个https://github.com/mtekman/org-tanglesync.el. 但使用上有限制 [[https://github.com/mtekman/org-tanglesync.el/issues/13][issue 13]].
+
 *** noweb
 org-babel-expand-src-block (可以展开noweb macro)
 
@@ -3810,14 +3816,15 @@ org-delete-property 删除 header-args
 *** template
 - http://orgmode.org/manual/Languages.html
 
+#+name: e9fca5dc
 #+begin_src emacs-lisp
 (with-eval-after-load 'ob
-    (setq org-structure-template-alist
-          '(
-            ("py" . "src python :results output")
-            ("rs" . "src rust")
-            ("el" . "src emacs-lisp")
-            ("sh" . "src sh")
+  (setq org-structure-template-alist
+        '(
+          ("py" . "src python :results output")
+          ("rs" . "src rust")
+          ("el" . "src emacs-lisp")
+          ("sh" . "src sh")
           ))
 
   (defun gwp/org-babel-edit-structure-in-place (arg)
@@ -3825,8 +3832,7 @@ org-delete-property 删除 header-args
     (interactive "P")
     (call-interactively 'org-insert-structure-template)
     (call-interactively 'org-edit-src-code)
-    )
- )
+    ))
 #+end_src
 
 *** auto time-stamp

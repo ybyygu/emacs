@@ -121,7 +121,7 @@
   )
 ;; join next line:1 ends here
 
-;; [[file:../../doom.note::*disable mouse][disable mouse:1]]
+;; [[file:../../doom.note::7628d03d][7628d03d]]
 ;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
 (define-minor-mode disable-mouse-mode
   "A minor-mode that disables all mouse keybinds."
@@ -155,7 +155,7 @@
 ;; 在insert状态下禁用鼠标, 避免误碰触控板
 (add-hook! 'evil-insert-state-entry-hook #'turn-on-disable-mouse-mode)
 (add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
-;; disable mouse:1 ends here
+;; 7628d03d ends here
 
 ;; [[file:../../doom.note::be09bc09][be09bc09]]
 ;; expand selection

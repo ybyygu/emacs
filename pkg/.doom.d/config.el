@@ -389,16 +389,15 @@ If two universal prefix arguments are used, then prompt for command to use."
     ))
 ;; open in terminal:1 ends here
 
-;; [[file:../../doom.note::*ripgrep][ripgrep:2]]
+;; [[file:../../doom.note::4971b464][4971b464]]
 ;;;###autoload
-(defun gwp/search-all-notes (arg)
+(defun gwp/search-all-notes ()
   "search all notes in ~/.cache/notes"
-  (interactive "P")
-
+  (interactive)
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
   (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
     (counsel-rg "" "~/.cache/notes")))
-;; ripgrep:2 ends here
+;; 4971b464 ends here
 
 ;; [[file:../../doom.note::*develop][develop:1]]
 (load! "develop")

@@ -4,6 +4,9 @@
 历史设置
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
+
+* Portal
+- note @emacs
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
 * Tasks [3/3]
@@ -26,7 +29,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [41/49]
+* Memo [43/49]
 ** DONE [2021-10-01 Fri] 如何选择中英文混录文字中的中文或英文呢?
 - State "DONE"       from "TODO"       [2021-10-02 Sat 11:56]
 ** TODO [2021-09-30 Thu] org插入screenshot时会访问wikipedia
@@ -73,11 +76,11 @@ redgaurdtoo: "代码自动完成和代码自动导航我推荐基于ctags的方�
 - [[https://github.com/redguardtoo/company-ctags][Fastest auto-completion using Company and Ctags]]
 
 
-** TODO [2021-09-16 Thu] 最近关于笔记管理的好文 [[https://index.pmthinking.com/3a8c5d77b5be42c58719d174bfbfa935][何谓渐进式总结]]          :ATTACH:
+** DONE [2021-09-16 Thu] 最近关于笔记管理的好文 [[https://index.pmthinking.com/3a8c5d77b5be42c58719d174bfbfa935][何谓渐进式总结]]          :ATTACH:
 :PROPERTIES:
 :ID:       71394edd-0d8b-4d34-b49e-e0c7e8ade4c1
 :END:
-
+- State "DONE"       from "TODO"       [2021-10-02 Sat 21:34]
 - 适当的压缩信息（这个系列便是如此）能更利于我们记忆
 - 知识的挑战不在于获取知识, 而在于将部分知识跨时距传递(在需要的时候)
 - 笔记系统要平衡可发现性和可理解性
@@ -343,7 +346,8 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 - 多次使用 org-tree-to-indirect-buffer时切换narrow和widden状态.
 - 使用C-u调用时, 可以同时开多个narrow buffer.
 
-** TODO [2020-03-13 Fri] smartparens学习
+** DONE [2020-03-13 Fri] smartparens学习
+- State "DONE"       from "TODO"       [2021-10-02 Sat 21:43]
 - [[https://ebzzry.io/en/emacs-pairs/][Emacs and Pairs]]
 - [[https://gist.github.com/pvik/8eb5755cc34da0226e3fc23a320a3c95][A Cheatsheet for Emacs Smarparens example configuration]]
 
@@ -352,10 +356,7 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 ** TODO [2020-03-13 Fri] vterm-toggle [[https://github.com/jixiuf/vterm-toggle][jixiuf/vterm-toggle: toggles between the vterm buffer and whatever buffer you are editing.]]
 这个可以自定义的地方更多.
 
-** TODO [2020-03-01 Sun] doom evil学习                                  :ATTACH:
-:PROPERTIES:
-:ID:       bc618f17-00a0-4e52-9236-3447cf7f72a1
-:END:
+** TODO [2020-03-01 Sun] doom evil学习
 - [X] [[https://github.com/noctuid/evil-guide][noctuid/evil-guide: Draft of a guide for using emacs with evil]]
 - [ ] 这个和regex-align有点像 https://github.com/edkolev/evil-lion
 - [ ] [[https://noelwelsh.com/posts/doom-emacs/][Noel Welsh: Doom Emacs Workflows]]
@@ -780,7 +781,6 @@ SPC-u, C-u
 | org-kill-note-or-show-branches | C-c C-k | 查看headlines, 当前上下文TAB键无效时有用 |
 | org-edit-special               | C-c '   | 默认按键难按, 改为SPC-M-;                |
 
-
 ** 自动补全
 - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/completion/company/README.org][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 
@@ -913,8 +913,17 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 ** 打开buffer文件所在目录
 ~SPC-u SPC-f-o~
 
-* TODO Roam research
-** org-roam
+* TODO Note management
+- 火花笔记, fleeting note, slip-box: 这些用org-capture就很好, 关键是快, 电光石火
+- 永久笔记, permanent note: 这些可放置在zotero里. 使用zotero数据库, 可实现条目的
+  永久链接, 不受笔记路径变化的影响.
+
+搜索所有.note笔记名
+- SPC-n-f (gwp/find-file-in-notes)
+全文搜索所有.note笔记
+- SPC-s-n (gwp/search-all-notes)
+
+** roam research/org-roam
 我觉得可以基于zotero来实现类似roam的组织方式. 在zotero中可以打标签, 也可以设置
 related items. 同时zotero中的items也是平级组织, 统一命名, 使用zotero uri可以在
 org文档中自由引用跳转. 现在唯一欠缺的时像org-roam-server那样可以交互式的展现关联
@@ -927,11 +936,6 @@ org-roam-capture
 org-roam-node-find
 org-roam-node-insert
 org-roam-buffer-toggle
-
-** TODO 笔记管理系统思考
-- 火花笔记, fleeting note, slip-box: 这些用org-capture就很好, 关键是快, 电光石火
-- 永久笔记, permanent note: 这些可放置在zotero里. 使用zotero数据库, 可实现条目的
-  永久链接, 不受笔记路径变化的影响.
 
 关键功能:
 - 双向链接 backlinks
@@ -951,7 +955,12 @@ org-roam-buffer-toggle
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
 - 以上按键在org代码块中也可直接执行, org-babel-do-key-sequence-in-edit-buffer
-- rust-promote-module-into-dir
+- (citre-jump-back): 需要定义tag文件, 支持跳转至函数定义, 很帅
+- cargo compile功能: (gwp/rust-cargo-transient)
+- 在org中编辑代码, 选择当前代码, (gwp/org-babel-tangle-dwim)后可将代码所tangle至的目标文件及所有blocks都导出.
+- 由org code block跳转至tangled src: (gwp/org-babel-tangle-jump-to-file)
+- 由tangled src跳转至org文件: (org-babel-tangle-jump-to-org)
+- 可能用得上: rust-promote-module-into-dir
 
 * TODO Python scripting
 - 使用tmux开一终端, 打开ipython
@@ -2330,13 +2339,12 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 exit 0
 #+end_src
 
-
+#+name: 4971b464
 #+begin_src emacs-lisp
 ;;;###autoload
-(defun gwp/search-all-notes (arg)
+(defun gwp/search-all-notes ()
   "search all notes in ~/.cache/notes"
-  (interactive "P")
-
+  (interactive)
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
   (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
     (counsel-rg "" "~/.cache/notes")))
@@ -2861,6 +2869,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 
 ** disable mouse
 笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
+#+name: 7628d03d
 #+begin_src elisp
 ;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
 (define-minor-mode disable-mouse-mode
@@ -3714,7 +3723,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 从org文件跳转到tangled file
 - [ ] 这个包可用于与compile等跳转配合使用 [[https://github.com/EricCrosson/help-find-org-mode][help-find-org-mode]]
 
-
 #+name: fa928b1c
 #+begin_src elisp
 (defun gwp/org-babel-tangle-jump-to-file ()
@@ -3949,7 +3957,10 @@ doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一�
 #+end_src
 
 ** narrow
+[2021-10-02 Sat] 目前不明白以下这个和org-tree-to-indirect-buffer有什么区别
+
 [[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/][Finally solving the lack of a tree-view navigation window in Org : orgmode]]
+
 #+begin_src elisp
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.

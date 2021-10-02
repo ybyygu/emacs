@@ -157,7 +157,7 @@
 (add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
 ;; disable mouse:1 ends here
 
-;; [[file:../../doom.note::*advanced selection][advanced selection:1]]
+;; [[file:../../doom.note::be09bc09][be09bc09]]
 ;; expand selection
 ;; http://xahlee.org/emacs/modernization_mark-word.html
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
@@ -178,60 +178,75 @@
   "Select text between the nearest left and right delimiters.
 Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   (interactive)
-  (let (b1 b2)
+  (let (b1)
     (skip-chars-backward "^<>(“{[「«\"‘")
     (setq b1 (point))
     (skip-chars-forward "^<>)”}]」»\"’")
-    (setq b2 (point))
-    (set-mark b1)
-    )
-  )
+    (point)
+    (set-mark (- b1 1))))
 
 (defun gwp/select-none-blank-text ()
-  "Select none blank chars near the point in current line"
+  "选择光标下非空格文字"
   (interactive)
-  (let (b1 b2)
+  (let (b1)
     (skip-chars-backward "^ \n")
     (setq b1 (point))
     (skip-chars-forward "^ \n")
-    (setq b2 (point))
-    (set-mark b1)
-    )
-  )
+    (backward-char 1)
+    (point)
+    (set-mark b1)))
 
-(defun gwp/select-word ()
-  "Select none blank chars near the point in current line"
+(defun gwp/select-word-dwim ()
+  "选择连续的英文字词(不包括汉字)"
   (interactive)
-  (let (b1 b2)
-    (backward-word)
-    (setq b1 (point))
-    (forward-word)
-    (setq b2 (point))
-    (set-mark b1)
-    )
-  )
-
-(defun gwp/select-line ()
-  "Select current line"
-  (interactive)
-  (let (b1 b2)
-    (move-beginning-of-line nil)
-    (setq b1 (point))
-    (move-end-of-line nil)
-    (setq b2 (point))
-    (set-mark b1)
-    )
-  )
-
-;; (global-set-key (kbd "M-*") 'select-text-in-quote)
-;; (global-set-key (kbd "M-6") 'select-line)
-;; (global-set-key (kbd "M-4") 'select-word)
-(global-set-key (kbd "M-5") 'gwp/select-none-blank-text)
+  (let ((regexp "[\.-_A-Za-z0-9]") b1)
+    (when (or (looking-at regexp)
+              (er/looking-back-on-line regexp))
+      (skip-chars-backward regexp)
+      (setq b1 (point))
+      (skip-chars-forward regexp)
+      (backward-char)
+      (point)
+      (set-mark b1))))
 
 ;; https://github.com/magnars/expand-region.el
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
-;; advanced selection:1 ends here
+
+(require 'transient)
+(transient-define-prefix gwp/advanced-selection ()
+  "Advanced selection"
+  [["常规选择"
+    ("p" "select paragraph" er/mark-paragraph)
+    ("c" "select comment" er/mark-comment)
+    ("b" "select none blank" gwp/select-none-blank-text)
+    ("t" "select text in quote" gwp/select-text-in-quote)
+    ("w" "select word" gwp/select-word-dwim)
+    ]]
+  [["特殊选择"
+    ("u" "mark url" er/mark-url)
+    ("e" "mark email" er/mark-email)
+    ]]
+  )
+;; be09bc09 ends here
+
+;; [[file:../../doom.note::*advanced selection][advanced selection:2]]
+;; https://stackoverflow.com/a/22418983
+(defmacro define-and-bind-text-object (key start-regex end-regex)
+  (let ((inner-name (make-symbol "inner-name"))
+        (outer-name (make-symbol "outer-name")))
+    `(progn
+       (evil-define-text-object ,inner-name (count &optional beg end type)
+         (evil-select-paren ,start-regex ,end-regex beg end type count nil))
+       (evil-define-text-object ,outer-name (count &optional beg end type)
+         (evil-select-paren ,start-regex ,end-regex beg end type count t))
+       (define-key evil-inner-text-objects-map ,key (quote ,inner-name))
+       (define-key evil-outer-text-objects-map ,key (quote ,outer-name)))))
+
+; between pipe characters:
+(define-and-bind-text-object "|" "|" "|")
+(define-and-bind-text-object "d" "\"" "\"")
+;; advanced selection:2 ends here
 
 ;; [[file:../../doom.note::*multiedit][multiedit:1]]
 (use-package evil-multiedit
@@ -265,17 +280,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 ;; window:1 ends here
 
-;; [[file:../../doom.note::*select text][select text:1]]
-(defhydra gwp/hydra-select-text ()
-  "select text"
-  ("p" er/mark-paragraph "select paragraph")
-  ("c" er/mark-org-code-block "select org-code block")
-  ("b" gwp/select-none-blank-text "select non blank")
-  ("t" gwp/select-text-in-quote "select quoted")
-  ("q" nil "quit")
-  )
-;; select text:1 ends here
-
 ;; [[file:../../doom.note::*parens][parens:1]]
 (defhydra gwp/hydra-smartparens (:hint nil)
   ("v" evil-visual-char)
@@ -296,9 +300,9 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 ;; [[file:../../doom.note::*bindings][bindings:1]]
 (map! :leader
-      (:prefix-map ("d" . "hydra")
+      (:prefix-map ("d" . "mine")
+       :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/hydra-resize-window/body
-       :desc "select text"   "s" #'gwp/hydra-select-text/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
        ))
 ;; bindings:1 ends here

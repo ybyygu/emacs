@@ -2861,6 +2861,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 
 [[https://github.com/hlissner/doom-emacs/commit/40cf6139ed53b635fec37ce623c4b1093c78a11e][Make evil-join remove comment delimiters · hlissner/doom-emacs@40cf613]]
 
+#+name: 2286a7d2
 #+begin_src elisp
 (after! evil
   (advice-remove #'evil-join #'+evil-join-a)
@@ -2868,7 +2869,9 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 #+end_src
 
 ** disable mouse
-笔记本输入时容易误碰触控板, 禁用鼠标可避免这一问题.
+笔记本输入时大拇指容易误碰触控板, 禁用鼠标可避免这一问题.
+*** 方案1: disable mouse event
+以下代码仍有问题, evil中仍能点击鼠标. 为简易见, 在KDE中禁用touchpad的tap功能.
 #+name: 7628d03d
 #+begin_src elisp
 ;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
@@ -2876,19 +2879,19 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
   "A minor-mode that disables all mouse keybinds."
   :global t
   :lighter " 🐭"
-  :keymap (make-sparse-keymap))
+  :keymap (make-sparse-keymap)
 
-(dolist (type '(mouse
-                down-mouse
-                drag-mouse
-                double-mouse
-                triple-mouse))
-  (dolist (prefix '("" C- M- S- M-S- C-M- C-S- C-M-S-))
-    ;; Yes, I actually HAD to go up to 7 here.
-    (dotimes (n 3)
-      (let ((k (format "%s%s-%s" prefix type n)))
-        (define-key disable-mouse-mode-map
-          (vector (intern k)) #'ignore)))))
+  (dolist (type '(mouse
+                  down-mouse
+                  drag-mouse
+                  double-mouse
+                  triple-mouse))
+    (dolist (prefix '("" C- M- S- M-S- C-M- C-S- C-M-S-))
+      ;; Yes, I actually HAD to go up to 7 here.
+      (dotimes (n 3)
+        (let ((k (format "%s%s-%s" prefix type n)))
+          (define-key disable-mouse-mode-map
+            (vector (intern k)) #'ignore))))))
 
 (map! :leader
       (:prefix-map ("t" . "toggle")
@@ -2904,6 +2907,65 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 ;; 在insert状态下禁用鼠标, 避免误碰触控板
 (add-hook! 'evil-insert-state-entry-hook #'turn-on-disable-mouse-mode)
 (add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
+#+end_src
+
+*** 方案2: disable-mouse package
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+以下代码可彻底禁用鼠标事件, 但evil得重启后才能重新启用, 无法动态切换. 这个问题比
+较复杂, 不好解决. [[https://github.com/purcell/disable-mouse/issues/7][requiring restart #7]]
+#+name: a791c065
+#+begin_src elisp
+(defun gwp/disable-mouse ()
+  (interactive)
+  (require 'disable-mouse)
+  (global-disable-mouse-mode)
+  (mapc #'disable-mouse-in-keymap
+        (list evil-motion-state-map
+              evil-normal-state-map
+              evil-visual-state-map
+              evil-insert-state-map))
+  )
+#+end_src
+
+#+name: c9348c51
+#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
+(package! disable-mouse)
+#+end_src
+
+*** 方案3: xinput
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+[[https://www.reddit.com/r/emacs/comments/38o0tr/i_have_to_share_this_switch_your_touchpad_off/][I have to share this: Switch your touchpad off when emacs gets focus and on again when she loses focus. : emacs]]
+
+需要xinput命令
+: pac -S xorg-xinput
+: xinput list
+: xinput enable "SYNA2393:00 06CB:CD48 Touchpad"
+: xinput disable "SYNA2393:00 06CB:CD48 Touchpad"
+
+#+begin_src elisp
+(defun gwp/turn-off-touchpad (&optional frame)
+  (interactive)
+  (let ((inhibit-message t) (default-directory "~"))
+    (shell-command "xinput disable \"SYNA2393:00 06CB:CD48 Touchpad\""))
+  (message "touchpad disabled.")
+  )
+
+(defun gwp/turn-on-touchpad (&optional frame)
+  (interactive)
+  (let ((inhibit-message t) (default-directory "~"))
+    (shell-command "xinput enable \"SYNA2393:00 06CB:CD48 Touchpad\""))
+  (message "touchpad enabled.")
+  )
+
+(map! :leader
+      (:prefix-map ("t" . "toggle")
+       :desc "禁用鼠标" "m" #'gwp/turn-off-touchpad
+       :desc "禁用鼠标" "M" #'gwp/turn-on-touchpad
+       ))
 #+end_src
 
 ** advanced selection

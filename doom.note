@@ -2096,6 +2096,7 @@ gwp-merge:
 #+end_src
 
 安装对应的包
+#+name: e61c257c
 #+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
 (package! golden-ratio)
 #+end_src
@@ -2329,38 +2330,6 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
     ))
 #+end_src
 
-*** ripgrep
-搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
-我们使用自定义脚本ripgrep, 强制命令退出码为0. 注意~/.local/bin应在PATH变量中.
-
-#+begin_src shell :tangle ~/.local/bin/ripgrep :shebang #! /bin/bash
-/usr/bin/rg $@
-
-exit 0
-#+end_src
-
-#+name: 4971b464
-#+begin_src emacs-lisp
-;;;###autoload
-(defun gwp/search-all-notes ()
-  "search all notes in ~/.cache/notes"
-  (interactive)
-  ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
-    (counsel-rg "" "~/.cache/notes")))
-#+end_src
-
-deadgrep与doom有冲突, 不能用了.
-#+begin_src emacs-lisp :tangle no
-(defun gwp/return-default-notes-dir ()
-  "~/.cache/notes"
-  )
-(use-package! deadgrep
-              :config
-              (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
-              )
-#+end_src
-
 *** develop
 #+begin_src emacs-lisp
 (load! "develop")
@@ -2534,7 +2503,10 @@ Argument E is a mouse event used by `mouse-set-point'."
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el :comments nil
 :END:
-*** orig
+注意, 为了方便有些设置(package!)分散在不同的headline下, 如果仅tangle该subtree可
+能会丢失重要的设置. 可在下面某代码块中tangle该文件所有的code blocks.
+*** doc/header
+#+name: ad772025
 #+begin_src elisp
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
@@ -2588,9 +2560,10 @@ Argument E is a mouse event used by `mouse-set-point'."
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 #+end_src
+
 *** 由于网络原因, 暂时过渡
+#+name: fbd6e323
 #+begin_src elisp
-;; (package! org-bullets)
 (package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
 (package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 #+end_src
@@ -2603,8 +2576,8 @@ Argument E is a mouse event used by `mouse-set-point'."
   - 改小org-heading字体的scaling系数
   - 调整TODO, DONE的调色, 别那么刺眼
 
+#+name: d8f41362
 #+begin_src elisp
-;; (package! cnfonts)
 (package! fcitx)
 
 ;; 五笔输入法
@@ -2672,7 +2645,6 @@ github支持, 减慢速度.
 (package! ws-butler :disable t)
 #+end_src
 
-
 *** 测试
 #+begin_src elisp
 (package! dired-sidebar)
@@ -2736,10 +2708,8 @@ github支持, 减慢速度.
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
-  (require 'ob-tangle)
   (map! :leader
         (:prefix-map ("j" . "jump")
-         :desc "jump to org src"                             "o" #'org-babel-tangle-jump-to-org
          (:prefix-map ("c" . "citre")
           :desc "citre jump to definition"                    "d" #'citre-jump
           :desc "citre jump back"                             "b" #'citre-jump-back
@@ -2823,14 +2793,23 @@ unwrap
 (setq evil-want-fine-undo t)
 #+end_src
 
-** better jumper
+** jump
 使用鼠标滚轮来跳转位置
 - [[https://github.com/gilbertw1/better-jumper][gilbertw1/better-jumper: A configurable jump list implementation for Emacs]]
+
+还有以两个字符为搜索依据的, 比如avy-goto-char-2
+#+name: 6ded2bf1
 #+begin_src elisp
 (map! :nm
       [M-mouse-4] #'better-jumper-jump-backward
-      [M-mouse-5] #'better-jumper-jump-forward
-      )
+      [M-mouse-5] #'better-jumper-jump-forward)
+
+(map! :leader
+      (:prefix-map ("j" . "jump")
+       (:prefix-map ("a" . "avy")
+        :desc "Search and jump"                 "s" #'avy-goto-char-2
+        :desc "jump to line"                    "l" #'avy-goto-line
+        )))
 #+end_src
 
 ** insert date
@@ -2930,7 +2909,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 #+end_src
 
 #+name: c9348c51
-#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el :tangle no
 (package! disable-mouse)
 #+end_src
 
@@ -3080,13 +3059,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
       '("~/Data/zotero/my.bib"))
 (setq bibtex-completion-pdf-field "file")
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
-#+end_src
-
-** find notes
-#+begin_src elisp
-(defun gwp/find-file-in-notes ()
-  "Find a file under `~/.cache/notes', recursively."
-  (interactive) (doom-project-find-file "~/.cache/notes"))
 #+end_src
 
 ** hydra
@@ -3963,6 +3935,16 @@ org-delete-property 删除 header-args
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+end_src
 
+*** bindings
+#+name: 8e7620fa
+#+begin_src elisp
+(map! :leader
+      (:prefix-map ("j" . "jump")
+       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
+       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
+       ))
+#+end_src
+
 ** org-noter/pdf-view
 pdf-view-fit-width-to-window
 #+begin_src elisp
@@ -4823,6 +4805,46 @@ org-open-file调用pdf-tools打开PDF文件
 #+begin_src elisp
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 #+end_src
+** my .note files
+*** search all notes
+搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
+我们使用自定义脚本ripgrep, 强制命令退出码为0. 注意~/.local/bin应在PATH变量中.
+
+#+begin_src shell :tangle ~/.local/bin/ripgrep :shebang #! /bin/bash
+/usr/bin/rg $@
+
+exit 0
+#+end_src
+
+#+name: 4971b464
+#+begin_src emacs-lisp
+;;;###autoload
+(defun gwp/search-all-notes ()
+  "search all notes in ~/.cache/notes"
+  (interactive)
+  ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
+  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
+    (counsel-rg "" "~/.cache/notes")))
+#+end_src
+
+deadgrep与doom有冲突, 不能用了.
+#+begin_src emacs-lisp :tangle no
+(defun gwp/return-default-notes-dir ()
+  "~/.cache/notes"
+  )
+(use-package! deadgrep
+              :config
+              (setq deadgrep-project-root-function #'gwp/return-default-notes-dir)
+              )
+#+end_src
+
+*** find notes
+#+name: 05419467
+#+begin_src elisp
+(defun gwp/find-file-in-notes ()
+  "Find a file under `~/.cache/notes', recursively."
+  (interactive) (doom-project-find-file "~/.cache/notes"))
+#+end_src
 
 ** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
@@ -4853,21 +4875,21 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (map! :map org-mode-map
       :localleader
       (:prefix ("b" . "org-babel")
-        :desc "check src block headers"    "c" #'org-babel-check-src-block
-        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
-        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
-        :desc "demarcate block"            "d" #'org-babel-demarcate-block
-        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
-        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
-        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
-        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
-        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
-        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-        )
+       :desc "check src block headers"    "c" #'org-babel-check-src-block
+       :desc "insert header argument"     "i" #'org-babel-insert-header-arg
+       :desc "view header arguments"      "I" #'org-babel-view-src-block-info
+       :desc "demarcate block"            "d" #'org-babel-demarcate-block
+       :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
+       :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+       :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
+       :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
+       :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
+       :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+       :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
+       :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+       )
       (:prefix ("l" . "links")
-        "D" #'gwp/org-delete-link-file)
+       "D" #'gwp/org-delete-link-file)
       )
 
 (map! :map org-mode-map
@@ -4892,25 +4914,25 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :localleader
       ;; FIXME: 与doom/org定义有冲突
       (:prefix ("s" . "Subtree")
-        :desc "Demote" "l" #'org-demote-subtree
-        :desc "Promote" "h" #'org-promote-subtree
-        :desc "Archive" "A" #'org-archive-subtree
-        ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-        :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
-        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-        )
+       :desc "Demote" "l" #'org-demote-subtree
+       :desc "Promote" "h" #'org-promote-subtree
+       :desc "Archive" "A" #'org-archive-subtree
+       ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+       :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
+       :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+       )
       (:prefix ("SPC" . "Special")
-        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-        )
+       :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+       :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
+       )
       )
 (map! :map org-mode-map
       :localleader
       (:prefix ("g" . "Goto")
-        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
-        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-        )
+       :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+       :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
+       :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+       )
       )
 #+end_src
 

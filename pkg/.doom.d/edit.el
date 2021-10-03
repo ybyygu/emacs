@@ -33,7 +33,7 @@
   (require 'ob-tangle)
   (map! :leader
         (:prefix-map ("j" . "jump")
-         :desc "jump to org src"                             "o" #'org-babel-tangle-jump-to-org
+         :desc "jump to org src"                              "o" #'org-babel-tangle-jump-to-org
          (:prefix-map ("c" . "citre")
           :desc "citre jump to definition"                    "d" #'citre-jump
           :desc "citre jump back"                             "b" #'citre-jump-back
@@ -87,12 +87,18 @@
 (setq evil-want-fine-undo t)
 ;; doom tuning:1 ends here
 
-;; [[file:../../doom.note::*better jumper][better jumper:1]]
+;; [[file:../../doom.note::6ded2bf1][6ded2bf1]]
 (map! :nm
       [M-mouse-4] #'better-jumper-jump-backward
-      [M-mouse-5] #'better-jumper-jump-forward
-      )
-;; better jumper:1 ends here
+      [M-mouse-5] #'better-jumper-jump-forward)
+
+(map! :leader
+      (:prefix-map ("j" . "jump")
+       (:prefix-map ("a" . "avy")
+        :desc "Search and jump"                 "s" #'avy-goto-char-2
+        :desc "jump to line"                    "l" #'avy-goto-line
+        )))
+;; 6ded2bf1 ends here
 
 ;; [[file:../../doom.note::*insert date][insert date:1]]
 (defun gwp/insert-date (arg)
@@ -262,12 +268,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq bibtex-completion-pdf-field "file")
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 ;; bibtex:1 ends here
-
-;; [[file:../../doom.note::*find notes][find notes:1]]
-(defun gwp/find-file-in-notes ()
-  "Find a file under `~/.cache/notes', recursively."
-  (interactive) (doom-project-find-file "~/.cache/notes"))
-;; find notes:1 ends here
 
 ;; [[file:../../doom.note::*window][window:1]]
 (defhydra gwp/hydra-resize-window ()

@@ -1,6 +1,9 @@
-;; [[file:../../doom.note::*放大当前窗口][放大当前窗口:2]]
+;; [[file:../../doom.note::e61c257c][e61c257c]]
 (package! golden-ratio)
-;; 放大当前窗口:2 ends here
+;; e61c257c ends here
+
+(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
+(package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
@@ -54,11 +57,6 @@
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 
-;; (package! org-bullets)
-(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
-(package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
-
-;; (package! cnfonts)
 (package! fcitx)
 
 ;; 五笔输入法

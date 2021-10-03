@@ -338,6 +338,14 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
+;; [[file:../../doom.note::8e7620fa][8e7620fa]]
+(map! :leader
+      (:prefix-map ("j" . "jump")
+       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
+       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
+       ))
+;; 8e7620fa ends here
+
 ;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
 (use-package! org-noter
   :custom
@@ -966,6 +974,22 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 ;; fix tab:1 ends here
 
+;; [[file:../../doom.note::4971b464][4971b464]]
+;;;###autoload
+(defun gwp/search-all-notes ()
+  "search all notes in ~/.cache/notes"
+  (interactive)
+  ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
+  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
+    (counsel-rg "" "~/.cache/notes")))
+;; 4971b464 ends here
+
+;; [[file:../../doom.note::05419467][05419467]]
+(defun gwp/find-file-in-notes ()
+  "Find a file under `~/.cache/notes', recursively."
+  (interactive) (doom-project-find-file "~/.cache/notes"))
+;; 05419467 ends here
+
 ;; [[file:../../doom.note::*misc][misc:1]]
 ;; (require 'org-man)
 ;; misc:1 ends here
@@ -978,21 +1002,21 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (map! :map org-mode-map
       :localleader
       (:prefix ("b" . "org-babel")
-        :desc "check src block headers"    "c" #'org-babel-check-src-block
-        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
-        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
-        :desc "demarcate block"            "d" #'org-babel-demarcate-block
-        :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
-        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
-        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
-        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-        :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
-        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
-        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
-        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-        )
+       :desc "check src block headers"    "c" #'org-babel-check-src-block
+       :desc "insert header argument"     "i" #'org-babel-insert-header-arg
+       :desc "view header arguments"      "I" #'org-babel-view-src-block-info
+       :desc "demarcate block"            "d" #'org-babel-demarcate-block
+       :desc "edit src codes in place"    "s" #'gwp/org-babel-edit-structure-in-place
+       :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
+       :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
+       :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
+       :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
+       :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
+       :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
+       :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+       )
       (:prefix ("l" . "links")
-        "D" #'gwp/org-delete-link-file)
+       "D" #'gwp/org-delete-link-file)
       )
 
 (map! :map org-mode-map
@@ -1017,25 +1041,25 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :localleader
       ;; FIXME: 与doom/org定义有冲突
       (:prefix ("s" . "Subtree")
-        :desc "Demote" "l" #'org-demote-subtree
-        :desc "Promote" "h" #'org-promote-subtree
-        :desc "Archive" "A" #'org-archive-subtree
-        ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-        :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
-        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-        )
+       :desc "Demote" "l" #'org-demote-subtree
+       :desc "Promote" "h" #'org-promote-subtree
+       :desc "Archive" "A" #'org-archive-subtree
+       ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
+       :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
+       :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+       )
       (:prefix ("SPC" . "Special")
-        :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-        :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-        )
+       :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
+       :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
+       )
       )
 (map! :map org-mode-map
       :localleader
       (:prefix ("g" . "Goto")
-        :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-        :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
-        :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-        )
+       :desc "Goto the previous position"  "p" #'org-mark-ring-goto
+       :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
+       :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
+       )
       )
 ;; 21ae7ae2 ends here
 

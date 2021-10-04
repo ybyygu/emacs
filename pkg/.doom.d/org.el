@@ -211,10 +211,14 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (defun gwp/org-babel-tangle-jump-to-file ()
   "Jump to tangle file for the source block at point."
   (interactive)
-  (let (
-        (mid (point))
+  (let ((mid (point))
         (element (org-element-at-point))
-        (body-start (org-babel-where-is-src-block-head))
+        (body-start (save-excursion
+                      (progn
+                        (org-babel-goto-src-block-head)
+                        (next-line)
+                        (point)
+                        )))
         (tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
         offset)
     (if tangle-file
@@ -228,13 +232,70 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
                 (when block-name
                   (beginning-of-buffer)   ; if point restored, the searching could fail
                   (when (search-forward (format "::%s" block-name) nil t)
+                    (next-line)
                     (beginning-of-line)
                     (setq offset (- mid body-start))
                     (forward-char offset)
+                    (recenter)
                     )))
             (error "Cannot open tangle file %S" tangle-file)))
       (message "not in source block"))))
 ;; fa928b1c ends here
+
+;; [[file:../../doom.note::9b40c7cf][9b40c7cf]]
+(defun gwp/org-babel-tangle-jump-to-org ()
+  "Jump from a tangled code file to the related Org mode file."
+
+  (require 'ol)
+  (interactive)
+  (let ((mid (point))
+	start body-start end target-buffer target-char link block-name body)
+    (save-window-excursion
+      (save-excursion
+	(while (and (re-search-backward org-link-bracket-re nil t)
+		    (not ; ever wider searches until matching block comments
+		     (and (setq start (line-beginning-position))
+			  (setq body-start (line-beginning-position 2))
+			  (setq link (match-string 0))
+			  (setq block-name (match-string 2))
+			  (save-excursion
+			    (save-match-data
+			      (re-search-forward
+			       (concat " " (regexp-quote block-name)
+				       " ends here")
+			       nil t)
+			      (setq end (line-beginning-position))))))))
+	(unless (and start (< start mid) (< mid end))
+	  (error "Not in tangled code"))
+        (setq body (buffer-substring body-start end)))
+      ;; Go to the beginning of the relative block in Org file.
+      (org-link-open-from-string link)
+      (message "%s" link)
+      (setq target-buffer (current-buffer))
+      ;; (search-forward body)
+      (if (string-match "[^ \t\n\r]:\\([[:digit:]]+\\)" block-name)
+          (let ((n (string-to-number (match-string 1 block-name))))
+            (if (org-before-first-heading-p) (goto-char (point-min))
+              (org-back-to-heading t))
+            ;; Do not skip the first block if it begins at point min.
+            (cond ((or (org-at-heading-p)
+                       (not (eq (org-element-type (org-element-at-point))
+                		'src-block)))
+                   (org-babel-next-src-block n))
+                  ((= n 1))
+                  (t (org-babel-next-src-block (1- n)))))
+        (org-babel-goto-named-src-block block-name))
+      (goto-char (org-babel-where-is-src-block-head))
+      (forward-line 1)
+      ;; Try to preserve location of point within the source code in
+      ;; tangled code file.
+      (let ((offset (- mid body-start)))
+        (when (< end (+ offset (point))) ; ybyygu hacked here
+          (forward-char offset)))
+      (setq target-char (point)))
+    (org-src-switch-to-buffer target-buffer t)
+    (goto-char target-char)))
+;; 9b40c7cf ends here
 
 ;; [[file:../../doom.note::f1b57cf1][f1b57cf1]]
 ;; tangle blocks for current file at point
@@ -1020,7 +1081,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; [[file:../../doom.note::21ae7ae2][21ae7ae2]]
 (map! :leader
       (:prefix ("j" . "jump")
-       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
+       :desc "jump to org src"                "o" #'gwp/org-babel-tangle-jump-to-org
        :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
        )
       (:prefix ("o" . "open")

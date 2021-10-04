@@ -338,14 +338,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
-;; [[file:../../doom.note::8e7620fa][8e7620fa]]
-(map! :leader
-      (:prefix-map ("j" . "jump")
-       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
-       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
-       ))
-;; 8e7620fa ends here
-
 ;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
 (use-package! org-noter
   :custom
@@ -998,7 +990,45 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (setq org-fontify-emphasized-text nil)
 ;; misc:2 ends here
 
+;; [[file:../../doom.note::917381e9][917381e9]]
+;; 定义一些特别常用的命令
+(defun gwp/org-mode-keys-hook ()
+  (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
+  (evil-local-set-key 'normal (kbd "SPC o b") 'gwp/org-babel-tangle-dwim)
+  )
+(add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
+
+(use-package! evil-org
+  :config
+  (map! :map evil-org-mode-map
+        :n "zi"  #'org-toggle-inline-images
+        :n "zl"  #'org-latex-preview
+        :n "zn"  #'ap/org-tree-to-indirect-buffer
+        ))
+
+;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
+;; (map! :mode org-mode
+;;       :leader
+;;       ;; :when (equal major-mode 'org-mode)
+;;       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
+;;       ;; :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+;;       ;; :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+;;       :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
+;;       )
+;; 917381e9 ends here
+
 ;; [[file:../../doom.note::21ae7ae2][21ae7ae2]]
+(map! :leader
+      (:prefix ("j" . "jump")
+       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
+       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
+       )
+      (:prefix ("o" . "open")
+       :desc "org-agenda"                 "n" (cmd! (org-agenda nil "gt"))
+       :desc "org-capture"                "c" #'org-capture
+       ))
+
+;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
       (:prefix ("b" . "org-babel")
@@ -1030,14 +1060,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :desc "Move to prev link"           [backtab]   #'org-previous-link)
 
 (map! :map org-mode-map
-      :leader
-      :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
-      :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
-      :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
-      :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
-      )
-
-(map! :map org-mode-map
       :localleader
       ;; FIXME: 与doom/org定义有冲突
       (:prefix ("s" . "Subtree")
@@ -1063,10 +1085,10 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       )
 ;; 21ae7ae2 ends here
 
-;; [[file:../../doom.note::*bindings][bindings:2]]
+;; [[file:../../doom.note::*bindings][bindings:3]]
 (map! :map org-sidebar-tree-map
       :localleader
       :n "RET" #'org-sidebar-tree-jump
       :n [return] #'org-sidebar-tree-jump
       )
-;; bindings:2 ends here
+;; bindings:3 ends here

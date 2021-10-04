@@ -2807,7 +2807,8 @@ unwrap
 (map! :leader
       (:prefix-map ("j" . "jump")
        (:prefix-map ("a" . "avy")
-        :desc "Search and jump"                 "s" #'avy-goto-char-2
+        :desc "Search and jump (pinyin)"        "c" #'evil-avy-goto-char-2
+        :desc "Search and jump"                 "s" #'evil-avy-goto-char-timer
         :desc "jump to line"                    "l" #'avy-goto-line
         )))
 #+end_src
@@ -3935,16 +3936,6 @@ org-delete-property 删除 header-args
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+end_src
 
-*** bindings
-#+name: 8e7620fa
-#+begin_src elisp
-(map! :leader
-      (:prefix-map ("j" . "jump")
-       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
-       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
-       ))
-#+end_src
-
 ** org-noter/pdf-view
 pdf-view-fit-width-to-window
 #+begin_src elisp
@@ -4001,7 +3992,8 @@ doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一�
 #+end_src
 
 ** narrow
-[2021-10-02 Sat] 目前不明白以下这个和org-tree-to-indirect-buffer有什么区别
+[2021-10-02 Sat] 和org-tree-to-indirect-buffer相比, 以下代码功能类似, 但是先生成
+整个indirect buffer再narrow, kill-buffer时不影响原buffer.
 
 [[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/][Finally solving the lack of a tree-view navigation window in Org : orgmode]]
 
@@ -4870,8 +4862,48 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+end_src
 
 ** bindings
+#+name: 917381e9
+#+begin_src elisp
+;; 定义一些特别常用的命令
+(defun gwp/org-mode-keys-hook ()
+  (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
+  (evil-local-set-key 'normal (kbd "SPC o b") 'gwp/org-babel-tangle-dwim)
+  )
+(add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
+
+(use-package! evil-org
+  :config
+  (map! :map evil-org-mode-map
+        :n "zi"  #'org-toggle-inline-images
+        :n "zl"  #'org-latex-preview
+        :n "zn"  #'ap/org-tree-to-indirect-buffer
+        ))
+
+;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
+;; (map! :mode org-mode
+;;       :leader
+;;       ;; :when (equal major-mode 'org-mode)
+;;       :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
+;;       ;; :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
+;;       ;; :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
+;;       :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
+;;       )
+#+end_src
+
+
 #+name: 21ae7ae2
 #+begin_src elisp
+(map! :leader
+      (:prefix ("j" . "jump")
+       :desc "jump to org src"                "o" #'org-babel-tangle-jump-to-org
+       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
+       )
+      (:prefix ("o" . "open")
+       :desc "org-agenda"                 "n" (cmd! (org-agenda nil "gt"))
+       :desc "org-capture"                "c" #'org-capture
+       ))
+
+;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
       (:prefix ("b" . "org-babel")
@@ -4901,14 +4933,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "Move to prev link"           "C-p"   #'org-previous-link
       :desc "Move to next link"           [tab]   #'org-next-link
       :desc "Move to prev link"           [backtab]   #'org-previous-link)
-
-(map! :map org-mode-map
-      :leader
-      :desc "tangle blocks at point"      "o b" #'gwp/org-babel-tangle-dwim
-      :desc "execute in edit buffer"      "SPC" #'org-babel-do-key-sequence-in-edit-buffer
-      :desc "org-babel"                   "a"   org-babel-map;  换个容易按的键位
-      :desc "Enter-dwim"                  "RET" #'+org/dwim-at-point
-      )
 
 (map! :map org-mode-map
       :localleader
@@ -4947,10 +4971,9 @@ org-sidebar
 
 * modules/hack
 新思路:
-- fork doom-emacs, 仅做必要的修改. 将其中的org module更名后, 放到pkg下载入?
-- 这样易于跟踪官方进度?
+- fork doom-emacs, 仅做必要的修改. 将其中的org module更名后, 放到pkg下载入. 这样易于跟踪官方进度.
 - 新的gwp/org会覆盖lang/org中的设置
-- 注意修改文件首行的路径, 特别是autoloads, 否则不能正常加载:
+- 注意修改文件首行的路径, 特别是autoloads, 否则不能正常加载([2021-10-03 Sun] 似乎已不需要?):
   : -;;; lang/org/autoload/org-link.el -*- lexical-binding: t; -*-
   : +;;; ~/.doom.d/modules/gwp/org/autoload/org-link.el -*- lexical-binding: t; -*-
 - 注意修改makefile中的stow相关内容, 以将对应的module安装至 ~/.doom.d/modules/gwp

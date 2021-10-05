@@ -51,6 +51,11 @@
 ;; (load! "bindings")
 ;; movement:2 ends here
 
+;; [[file:../../doom.note::2d76b8e4][2d76b8e4]]
+(map! :leader
+      :desc "save buffer" "SPC" #'save-buffer)
+;; 2d76b8e4 ends here
+
 ;; [[file:../../doom.note::19c9e88c][19c9e88c]]
 (map! :leader
       (:prefix-map ("b" . "Buffer/bookmark")
@@ -109,6 +114,7 @@
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/hydra-resize-window/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
+       :desc "tangle codes at point" "d" #'gwp/org-babel-tangle-dwim
        ))
 ;; 5e265fdb ends here
 
@@ -273,7 +279,8 @@
        :desc "Browse notes"                 "F" #'+default/browse-notes
        :desc "Org store link"               "l" #'org-store-link
        :desc "Tags search"                  "m" #'org-tags-view
-       :desc "Org capture"                  "n" #'org-capture
+       :desc "Org capture"                  "c" #'org-capture
+       :desc "org-agenda"                   "n" (cmd! (org-agenda nil "gt"))
        :desc "Goto capture"                 "N" #'org-capture-goto-target
        :desc "Todo list"                    "t" #'org-todo-list
        :desc "Search notes"                 "s" #'+default/org-notes-search
@@ -285,9 +292,9 @@
 ;; [[file:../../doom.note::fc304196][fc304196]]
 (map! :leader
       (:prefix-map ("o" . "Org/open")
-       :desc "Agenda"                "a" #'org-agenda
+       :desc "Org attachment"        "a" #'org-attach
        :desc "Todo list"             "t" #'org-todo-list
-       :desc "org-agenda"            "n" (cmd! (org-agenda nil "gt"))
+       :desc "org-agenda (GTD)"      "n" (cmd! (org-agenda nil "gt"))
        :desc "org-capture"           "c" #'org-capture
        :desc "Tags search"           "m" #'org-tags-view
        :desc "View search"           "v" #'org-search-view
@@ -306,8 +313,11 @@
        :desc "Open bookmarks"        "b" #'counsel-bookmark
        :desc "Resume last search"    "l" #'ivy-resume
        :desc "Evil registers"        "e" #'counsel-register
-       :desc "Evil marks"            "m" #'counsel-evil-marks
-       :desc "Last change"           "c" #'goto-last-change
+       :desc "Evil mark ring"        "r" #'counsel-mark-ring
+       :desc "Evil markers"          "m" #'counsel-evil-marks
+       :desc "Restore selection"     "v" #'evil-visual-restore
+       :desc "Restore insert point"  "i" #'evil-insert-resume
+       :desc "Last change"           "c" #'gwp/hydra-last-change/body
        :desc "Jump list"             "j" #'+ivy/jump-list
        ))
 ;; 1c637dc8 ends here
@@ -355,6 +365,14 @@
        :desc "Zen mode (fullscreen)"      "Z" #'+zen/toggle-fullscreen
        ))
 ;; 95d4be8a ends here
+
+;; [[file:../../doom.note::d2dc925d][d2dc925d]]
+(map! :leader
+      (:prefix-map ("v" . "Visual")
+       :desc "expand region" "v" #'er/expand-region
+       :desc "select text"   "s" #'gwp/advanced-selection
+       ))
+;; d2dc925d ends here
 
 ;; [[file:../../doom.note::011dce65][011dce65]]
 (map! :leader

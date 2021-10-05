@@ -2,9 +2,6 @@
 (package! golden-ratio)
 ;; e61c257c ends here
 
-(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
-(package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
-
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -56,6 +53,9 @@
 ;; This is required for some packages whose default branch isn't 'master' (which
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
+
+(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
+(package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 
 (package! fcitx)
 
@@ -110,11 +110,11 @@
 (package! vterm-toggle)
 ;; vterm:1 ends here
 
-;; [[file:../../doom.note::*packages][packages:1]]
+;; [[file:../../doom.note::e86dc54d][e86dc54d]]
 (package! cargo)
 (package! racer)
 (package! rust-mode)
-;; packages:1 ends here
+;; e86dc54d ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:2]]
 (package! org-download)

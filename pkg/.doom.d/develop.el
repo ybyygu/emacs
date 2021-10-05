@@ -1,30 +1,21 @@
-;; [[file:../../doom.note::*magit][magit:1]]
+;; [[file:../../doom.note::4bae51e2][4bae51e2]]
 (after! magit
   ;;禁用magit中的gravatars支持, 响应能快一些.
-  (setq magit-revision-show-gravatars nil)
+  (setq magit-revision-show-gravatars nil))
+;; 4bae51e2 ends here
 
-  (map! :map doom-leader-git-map "s" #'magit-status)
-  )
-;; magit:1 ends here
-
-;; [[file:../../doom.note::*vc commit][vc commit:1]]
+;; [[file:../../doom.note::3ac9a958][3ac9a958]]
 (use-package vc
   :init
-  (progn
-    (add-hook 'vc-before-checkin-hook #'time-stamp)
-    )
-  )
+  (add-hook 'vc-before-checkin-hook #'time-stamp))
 
 (use-package vc-hooks
   :init
-  (progn
-    ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
-    (setq vc-follow-symlinks t)
-    )
-  )
-;; vc commit:1 ends here
+  ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
+  (setq vc-follow-symlinks t))
+;; 3ac9a958 ends here
 
-;; [[file:../../doom.note::*yadm \[\[https:/github.com/TheLocehiliosan/yadm/blob/master/yadm.md\]\[yadm/yadm.md at master · TheLocehiliosan/yadm\]\]][yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]:1]]
+;; [[file:../../doom.note::0717be82][0717be82]]
 ;; (magit-status  "/yadm::")
 (after! tramp
   (add-to-list 'tramp-methods
@@ -34,7 +25,7 @@
                (tramp-login-env (("SHELL") ("/bin/sh")))
                (tramp-remote-shell "/bin/sh")
                (tramp-remote-shell-args ("-c")))))
-;; yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]:1 ends here
+;; 0717be82 ends here
 
 ;; [[file:../../doom.note::*edit][edit:1]]
 (after! smartparens

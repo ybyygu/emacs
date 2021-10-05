@@ -56,34 +56,21 @@
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
 
-;; [[file:../../doom.note::*ctrl-z][ctrl-z:1]]
+;; [[file:../../doom.note::9edb7f25][9edb7f25]]
 (after! evil
   ;; 如何误入evil-emacs-state, 按ESC返回normal state
-  (define-key evil-emacs-state-map [escape] 'evil-normal-state)
-  ;; (map! :nvim "C-z" #'undo)
-  )
-;; ctrl-z:1 ends here
+  (define-key evil-emacs-state-map [escape] 'evil-normal-state))
+;; 9edb7f25 ends here
 
-;; [[file:../../doom.note::*smartparens][smartparens:1]]
-(map! :leader
-      :nvi
-      "DEL" #'sp-backward-kill-sexp     ; BACKSPACE
-      [deletechar] #'sp-kill-sexp       ; DELETE
-      [right] #'sp-forward-slurp-sexp   ; Array right ==>
-      [left]  #'sp-backward-slurp-sexp  ; Array left  <==
-      "C-k"   #'sp-unwrap-sexp
-      )
-;; smartparens:1 ends here
+;; [[file:../../doom.note::b9054953][b9054953]]
+(map! :ni "M-u" #'upcase-dwim
+      :ni "M-l" #'downcase-dwim
+      :ni "M-c" #'capitalize-dwim)
+;; b9054953 ends here
 
-;; [[file:../../doom.note::*expand region][expand region:1]]
-(use-package expand-region :after evil :config
-  (map! :leader :v "v"
-        (function er/expand-region)))
-;; expand region:1 ends here
-
-;; [[file:../../doom.note::*doom tuning][doom tuning:1]]
+;; [[file:../../doom.note::470755a6][470755a6]]
 (setq evil-want-fine-undo t)
-;; doom tuning:1 ends here
+;; 470755a6 ends here
 
 ;; [[file:../../doom.note::6ded2bf1][6ded2bf1]]
 (map! :nm
@@ -98,6 +85,11 @@
         :desc "jump to line"                    "l" #'avy-goto-line
         )))
 ;; 6ded2bf1 ends here
+
+;; [[file:../../doom.note::339cd9e4][339cd9e4]]
+(setq global-mark-ring-max 99
+      mark-ring-max 99)
+;; 339cd9e4 ends here
 
 ;; [[file:../../doom.note::*insert date][insert date:1]]
 (defun gwp/insert-date (arg)
@@ -217,22 +209,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; https://github.com/magnars/expand-region.el
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
-
-(require 'transient)
-(transient-define-prefix gwp/advanced-selection ()
-  "Advanced selection"
-  [["常规选择"
-    ("p" "select paragraph" er/mark-paragraph)
-    ("c" "select comment" er/mark-comment)
-    ("b" "select none blank" gwp/select-none-blank-text)
-    ("t" "select text in quote" gwp/select-text-in-quote)
-    ("w" "select word" gwp/select-word-dwim)
-    ]]
-  [["特殊选择"
-    ("u" "mark url" er/mark-url)
-    ("e" "mark email" er/mark-email)
-    ]]
-  )
 ;; be09bc09 ends here
 
 ;; [[file:../../doom.note::*advanced selection][advanced selection:2]]
@@ -252,6 +228,29 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (define-and-bind-text-object "|" "|" "|")
 (define-and-bind-text-object "d" "\"" "\"")
 ;; advanced selection:2 ends here
+
+;; [[file:../../doom.note::8fac8bf1][8fac8bf1]]
+;; (use-package expand-region :after evil :config
+;;   (map! :leader :v "v"
+;;         (function er/expand-region)))
+
+(require 'transient)
+(transient-define-prefix gwp/advanced-selection ()
+  "Advanced selection"
+  [["常规选择"
+    ("p" "select paragraph" er/mark-paragraph)
+    ("c" "select comment" er/mark-comment)
+    ("b" "select none blank" gwp/select-none-blank-text)
+    ("t" "select text in quote" gwp/select-text-in-quote)
+    ("w" "select word" gwp/select-word-dwim)
+    ]]
+  [["特殊选择"
+    ("u" "mark url" er/mark-url)
+    ("c" "mark org code block" er/mark-org-code-block)
+    ("e" "mark email" er/mark-email)
+    ]]
+  )
+;; 8fac8bf1 ends here
 
 ;; [[file:../../doom.note::*multiedit][multiedit:1]]
 (use-package evil-multiedit
@@ -296,3 +295,12 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("q" nil "quit")
   )
 ;; 9786fedc ends here
+
+;; [[file:../../doom.note::1c79ba79][1c79ba79]]
+(defhydra gwp/hydra-last-change ()
+  ("p" goto-last-change "last change")
+  ("n" goto-last-change-reverse "previous change")
+  ("c" recenter "recenter")
+  ("q" nil "quit")
+  )
+;; 1c79ba79 ends here

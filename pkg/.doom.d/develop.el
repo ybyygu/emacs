@@ -158,7 +158,7 @@ The org src will be tangled first before compiling.
     ))
 ;; racer:1 ends here
 
-;; [[file:../../doom.note::*rust-format][rust-format:1]]
+;; [[file:../../doom.note::151a16d0][151a16d0]]
 (map! :map rust-mode-map
       :localleader
       "f" #'rust-format-buffer
@@ -171,8 +171,10 @@ The org src will be tangled first before compiling.
 
 (defun gwp/override-doom-format-buffer ()
   (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
+  ;; 无效
+  ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
   )
-;; rust-format:1 ends here
+;; 151a16d0 ends here
 
 ;; [[file:../../doom.note::*python.el][python.el:2]]
 (defun gwp/tmux-ipython-paste-region (beg end &optional region)

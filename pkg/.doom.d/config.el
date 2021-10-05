@@ -389,16 +389,6 @@ If two universal prefix arguments are used, then prompt for command to use."
     ))
 ;; open in terminal:1 ends here
 
-;; [[file:../../doom.note::4971b464][4971b464]]
-;;;###autoload
-(defun gwp/search-all-notes ()
-  "search all notes in ~/.cache/notes"
-  (interactive)
-  ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
-    (counsel-rg "" "~/.cache/notes")))
-;; 4971b464 ends here
-
 ;; [[file:../../doom.note::*develop][develop:1]]
 (load! "develop")
 ;; develop:1 ends here
@@ -426,60 +416,11 @@ If two universal prefix arguments are used, then prompt for command to use."
     ))
 ;; fcitx:1 ends here
 
-;; [[file:../../doom.note::*bindings][bindings:1]]
-(map! :nvim "C-a" nil)
-;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
-(map! :nvim "C-e" nil)
-(map! :nvim "C-d" nil)
-(map! :nvim "C-k" nil)
-(map! :nvim "C-n" nil)
-(map! :nvim "C-p" nil)
-(map! :nvim "C-u" nil)                  ; universal argument
-
-(map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
-
-;; evil默认为quoted-insert, 可以 ctrl-q代替
-(map! :i "C-v" #'yank)
-(map! :i "C-y" nil)
-
-;; evil里也得设置, 不然无效
-(after! evil-org
-        (map! :map evil-org-mode-map
-              :nivm "C-d" nil
-              :nivm "C-k" nil
-              :i "M-l" nil))
-;; bindings:1 ends here
-
-;; [[file:../../doom.note::*bindings][bindings:2]]
-;; Make M-x harder to miss
-(define-key! 'override
-  "M-x" #'execute-extended-command
-  "A-x" #'execute-extended-command)
-
-;; A Doom convention where C-s on popups and interactive searches will invoke
-;; ivy/helm for their superior filtering.
-(define-key! :keymaps +default-minibuffer-maps
-  "C-s" (if (featurep! :completion ivy)
-            #'counsel-minibuffer-history
-          #'helm-minibuffer-history))
-
-;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
-;; Pressing it again will send you to the true bol. Same goes for C-e, except
-;; it will ignore comments+trailing whitespace before jumping to eol.
-(map! :gi "C-a" #'doom/backward-to-bol-or-indent
-      :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
-      ;; Standardizes the behavior of modified RET to match the behavior of
-      ;; other editors, particularly Atom, textedit, textmate, and vscode, in
-      ;; which ctrl+RET will add a new "item" below the current one
-      :gn [C-return]    #'+default/newline-below
-      :gn [C-S-return]  #'+default/newline-above
-      )
-
-;; 2021-08-31: 现在gwp/default下修改
-;; (load! "bindings")
-;; bindings:2 ends here
-
 ;; [[file:../../doom.note::*dired-sidebar][dired-sidebar:1]]
 (use-package dired-sidebar
   :commands (dired-sidebar-toggle-sidebar))
 ;; dired-sidebar:1 ends here
+
+;; [[file:../../doom.note::24c9210c][24c9210c]]
+(load! "bindings")
+;; 24c9210c ends here

@@ -1079,16 +1079,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; 917381e9 ends here
 
 ;; [[file:../../doom.note::21ae7ae2][21ae7ae2]]
-(map! :leader
-      (:prefix ("j" . "jump")
-       :desc "jump to org src"                "o" #'gwp/org-babel-tangle-jump-to-org
-       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
-       )
-      (:prefix ("o" . "open")
-       :desc "org-agenda"                 "n" (cmd! (org-agenda nil "gt"))
-       :desc "org-capture"                "c" #'org-capture
-       ))
-
 ;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader

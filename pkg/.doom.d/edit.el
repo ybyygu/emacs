@@ -279,7 +279,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 ;; window:1 ends here
 
-;; [[file:../../doom.note::*parens][parens:1]]
+;; [[file:../../doom.note::9786fedc][9786fedc]]
 (defhydra gwp/hydra-smartparens (:hint nil)
   ("v" evil-visual-char)
   ("u" evil-undo)
@@ -295,13 +295,4 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("d" sp-unwrap-sexp "unwrap pair")
   ("q" nil "quit")
   )
-;; parens:1 ends here
-
-;; [[file:../../doom.note::*bindings][bindings:1]]
-(map! :leader
-      (:prefix-map ("d" . "mine")
-       :desc "select text"   "s" #'gwp/advanced-selection
-       :desc "resize window" "w" #'gwp/hydra-resize-window/body
-       :desc "smart parents" "p" #'gwp/hydra-smartparens/body
-       ))
-;; bindings:1 ends here
+;; 9786fedc ends here

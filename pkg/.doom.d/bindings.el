@@ -73,6 +73,7 @@
        :desc "Switch to last buffer"       "l"   #'evil-switch-to-windows-last-buffer
        :desc "New empty buffer"            "N"   #'evil-buffer-new
        :desc "ibuffer"                     "i"   #'ibuffer
+       :desc "Open in new frame"           "o"   #'gwp/display-current-buffer-other-frame
        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
        :desc "Save all buffers"            "S"   #'evil-write-all
        :desc "Save buffer as root"         "u"   #'doom/sudo-save-buffer
@@ -353,6 +354,7 @@
       (:prefix-map ("t" . "Toggle")
        :desc "切换终端(vterm)"            "t" #'vterm-toggle
        :desc "Big mode"                   "b" #'doom-big-font-mode
+       :desc "Debug on error"             "d" #'toggle-debug-on-error
        :desc "Flycheck"                   "f" #'flycheck-mode
        :desc "Frame fullscreen"           "F" #'toggle-frame-fullscreen
        :desc "Indent style"               "I" #'doom/toggle-indent-style

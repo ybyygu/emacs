@@ -29,7 +29,13 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [43/54]
+* Memo [42/55]
+** TODO [2021-10-06 Wed] Rust编辑优化
+参考rust-mode中dbg!设置, 实现:
+: Option<Molecule> => Molecule
+: Molecule => Result<Molecule>
+: Molecule => Option<Molecule>
+
 ** TODO [2021-10-06 Wed] 优化按键布局
  516081    6.94%  evil-next-visual-line                                   g <down>
  479565    6.45%  evil-backward-char                                      DEL, <left>, h
@@ -457,9 +463,10 @@ pacman -S fd
 
 ~/.emacs.d/bin/doom install
 
-** DONE [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
+** TODO [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
 - State "DONE"       from "TODO"       [2021-02-08 Mon 14:20]
 fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用emacs内置的pyim输入法
+
 可以较好的解决这个问题.
 
 现在有的特性:
@@ -970,6 +977,8 @@ javascript:void function(){var a=window.getSelection();""==a%26%26(a=document.ti
 SPC-u, C-u
 
 ** Swiper/Ivy notes
+[[https://github.com/condy0919/emacs-newbie/blob/master/introduction-to-ivy.md][ivy 新手教程]]
+
 | 命令                          | 功能                                   | Tips                            |
 |-------------------------------+----------------------------------------+---------------------------------|
 | counsel-recentf               | 打开最近文件列表                       | 按C-o,f可强制在新的frame打开    |
@@ -978,7 +987,12 @@ SPC-u, C-u
 | ivy-occur                     | 将ivy candidates界面变成可交互的buffer | 支持wgrep, 比如c-x-c-q          |
 | counsel-org-tag               | 用于打标签. (SPC-m-q)                  | 当ctrl-c ctrl-c不好用是可用这个 |
 | swiper-isearch-thing-at-point | 搜索光标下内容                         | 可预告选择要搜索的内容          |
-| ivy-next-history-element      | 在mini-buffer中切换历史搜索项          | M-n/M-p                         |
+| ivy-next-history-element      | 在minibuffer中切换历史搜索项           | M-n/M-p                         |
+| swiper-avy                    | 在swiper搜索结果中进行avy跳转          | C-'或M-;                        |
+| ivy-occur                     | 将candidates变为独立的可操作的buffer   | C-c C-o                         |
+| ivy-toggle-regexp-quote       | 在minibuffer中切换regexp特殊字符转义   | M-r, 比如搜索"."时              |
+
+更多按键可查看: ivy-minibuffer-map
 
 ** org-mode
 | org-kill-note-or-show-branches | C-c C-k | 查看headlines, 当前上下文TAB键无效时有用 |
@@ -1032,6 +1046,11 @@ evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内
 - vS => 插入包围操作
 
 大写文字: U, 小写文字: u
+
+快速搜索
+- f: 搜索单个字符
+- s: 搜索两个字符
+其后按";"或重复操作.
 
 按缩进层次选择文本:
 - vii
@@ -1105,9 +1124,11 @@ resume相关命令
 - 在magit status窗口, 可以直接使用dired访问文件: magit-dired-jump (C-M-i)
 - 使用yadm管理dotfiles, SPC-g-.
 
-| magit-status          |                             |
-| magit-stage-file      |                             |
+| magit-status          | SPC-g-g                     |
+| magit-stage-file      | s                           |
+| magit-file-dispatch   | SPC-g-.                     |
 | magit-log-buffer-file | Show log for current buffer |
+| magit-delete-thing    | 按x, 可删除光标前文件       |
 
 : reset: O
 : discard: x
@@ -2977,6 +2998,24 @@ mark-ring用于保存上次标记或选择的位置, 用于跳转很有用.
 #+begin_src elisp
 (setq global-mark-ring-max 99
       mark-ring-max 99)
+#+end_src
+
+** ivy
+swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下一条. 这里用avy来跳转就方便了.
+
+- 可用 ivy-restrict-to-matches进行二次过滤, 默认按键为S-SPC.
+- ivy-avy用于快速跳转, 默认按键为C-', 得换个好按一些的.
+
+#+name: dde3ee55
+#+begin_src elisp
+(map! :map ivy-minibuffer-map
+      ;; 修改后的命令会报错, 原按键可以. 原因不明.
+      ;; "C-c ;" #'ivy-avy
+      :desc "二次过滤" "C-c r" (general-simulate-key "S-SPC")
+      :desc "avy跳转" "C-c ;" (general-simulate-key "C-'")
+      :desc "上一页" "C-c C-p" #'ivy-scroll-down-command
+      :desc "下一页" "C-c C-n" #'ivy-scroll-up-command
+      )
 #+end_src
 
 

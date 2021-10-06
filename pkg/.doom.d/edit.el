@@ -91,6 +91,17 @@
       mark-ring-max 99)
 ;; 339cd9e4 ends here
 
+;; [[file:../../doom.note::dde3ee55][dde3ee55]]
+(map! :map ivy-minibuffer-map
+      ;; 修改后的命令会报错, 原按键可以. 原因不明.
+      ;; "C-c ;" #'ivy-avy
+      :desc "二次过滤" "C-c r" (general-simulate-key "S-SPC")
+      :desc "avy跳转" "C-c ;" (general-simulate-key "C-'")
+      :desc "上一页" "C-c C-p" #'ivy-scroll-down-command
+      :desc "下一页" "C-c C-n" #'ivy-scroll-up-command
+      )
+;; dde3ee55 ends here
+
 ;; [[file:../../doom.note::*insert date][insert date:1]]
 (defun gwp/insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."

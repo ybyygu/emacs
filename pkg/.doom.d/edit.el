@@ -91,6 +91,25 @@
       mark-ring-max 99)
 ;; 339cd9e4 ends here
 
+;; [[file:../../doom.note::08a09ddb][08a09ddb]]
+(map! :map isearch-mode-map
+      :desc "avy跳转" "C-c ;" #'avy-isearch
+      )
+;; 08a09ddb ends here
+
+;; [[file:../../doom.note::0ed10c98][0ed10c98]]
+(defun gwp/evil-ex-search-avy-jump ()
+  (interactive)
+  (when evil-ex-search-pattern
+    (let ((regex (car evil-ex-search-pattern)))
+      (avy-jump regex)
+      (evil-ex-search-stop-session))))
+
+;; (map! :map evil-ex-search-keymap
+;;       :desc "avy jump" "C-c ;" #'gwp/evil-ex-search-avy-jump)
+;;
+;; 0ed10c98 ends here
+
 ;; [[file:../../doom.note::dde3ee55][dde3ee55]]
 (map! :map ivy-minibuffer-map
       ;; 修改后的命令会报错, 原按键可以. 原因不明.

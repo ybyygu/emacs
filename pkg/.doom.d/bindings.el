@@ -234,13 +234,14 @@
        ))
 ;; 4a4573c2 ends here
 
-;; [[file:../../doom.note::*j: jump][j: jump:1]]
+;; [[file:../../doom.note::6ea0d271][6ea0d271]]
 (map! :leader
       (:prefix ("j" . "Jump")
        :desc "jump to org src"                "o" #'gwp/org-babel-tangle-jump-to-org
        :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
+       :desc "Jump to search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
        ))
-;; j: jump:1 ends here
+;; 6ea0d271 ends here
 
 ;; [[file:../../doom.note::2598d642][2598d642]]
 (map! :leader
@@ -342,6 +343,7 @@
        :desc "Search other project"         "P" #'+default/search-other-project
        :desc "Jump to mark"                 "r" #'evil-show-marks
        :desc "Search buffer"                "s" #'+default/search-buffer
+       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
        (:prefix-map ("h" . "highlight")
         :desc "highlight symbol at point"         "." #'highlight-symbol-at-point

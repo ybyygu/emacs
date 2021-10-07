@@ -29,7 +29,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [43/55]
+* Memo [43/56]
+** TODO [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
+
 ** TODO [2021-10-06 Wed] 优化按键布局
  516081    6.94%  evil-next-visual-line                                   g <down>
  479565    6.45%  evil-backward-char                                      DEL, <left>, h
@@ -225,7 +227,7 @@
 - [[https://emacs-china.org/t/topic/18006][一个支持多词典的翻译插件(目前仅支持单词)]]
 
 ** TODO [2021-10-05 Tue] 几个有用的hydra命令
-hydra-apropos/body
+hydra-apropos/body, 比如按value搜索variable
 +hydra/text-zoom/body
 +hydra/window-nav/body
 
@@ -1026,6 +1028,17 @@ eval: major-mode
 | gv              | evil-visual-resume       |
 | SPC-s-i         | imenu symbol             |
 | Alt-mouse-wheel | jump backward/foraward   |
+
+行内跳转
+- f: 向行尾搜索单字母(evil-snipe-f)
+- ?: 向行始搜索单字母(evil-ex-search-backward)
+
+搜索跳转:
+- 搜索单字母: avy-goto-char
+- 搜索双字母: avy-goto-char-2
+- 搜索任意字符: isearch + avy-search
+- swiper + ivy-avy
+- 在evil中按*或/键搜索当前word或任意词, 再SPC-j-j 启用avy jump
 
 ** evil功能
 查看evil-visual-state-map帮助
@@ -3013,6 +3026,29 @@ mark-ring用于保存上次标记或选择的位置, 用于跳转很有用.
       mark-ring-max 99)
 #+end_src
 
+可以用isearch(C-s)时, 调用avy实现侯选项跳转.
+#+name: 08a09ddb
+#+begin_src elisp
+(map! :map isearch-mode-map
+      :desc "avy跳转" "C-c ;" #'avy-isearch
+      )
+#+end_src
+
+也可以在evil用"/"搜索后再jump
+#+name: 0ed10c98
+#+begin_src elisp
+(defun gwp/evil-ex-search-avy-jump ()
+  (interactive)
+  (when evil-ex-search-pattern
+    (let ((regex (car evil-ex-search-pattern)))
+      (avy-jump regex)
+      (evil-ex-search-stop-session))))
+
+;; (map! :map evil-ex-search-keymap
+;;       :desc "avy jump" "C-c ;" #'gwp/evil-ex-search-avy-jump)
+;;
+#+end_src
+
 ** ivy
 swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下一条. 这里用avy来跳转就方便了.
 
@@ -3336,6 +3372,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("q" nil "quit")
   )
 #+end_src
+
 
 * develop.el
 :PROPERTIES:
@@ -5576,11 +5613,13 @@ org-sidebar
 #+end_src
 
 *** j: jump
+#+name: 6ea0d271
 #+begin_src elisp
 (map! :leader
       (:prefix ("j" . "Jump")
        :desc "jump to org src"                "o" #'gwp/org-babel-tangle-jump-to-org
        :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
+       :desc "Jump to search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
        ))
 #+end_src
 
@@ -5696,6 +5735,7 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
        :desc "Search other project"         "P" #'+default/search-other-project
        :desc "Jump to mark"                 "r" #'evil-show-marks
        :desc "Search buffer"                "s" #'+default/search-buffer
+       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
        (:prefix-map ("h" . "highlight")
         :desc "highlight symbol at point"         "." #'highlight-symbol-at-point

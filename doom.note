@@ -4100,6 +4100,31 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 #+end_src
 
+*** jump to org blocks/links
+#+name: 8aa4aca8
+#+begin_src elisp
+(defhydra gwp/org-jump-block ()
+  "jump to org blocks"
+  ("n" org-next-block "next block")
+  ("p" org-previous-block "prev block")
+  ("q" nil "quit")
+  )
+
+(defhydra gwp/org-jump-link ()
+  "jump to org links"
+  ("n" org-next-link "next link")
+  ("p" org-previous-link "prev link")
+  ("q" nil "quit")
+  )
+
+(map! :map org-mode-map
+      :localleader
+      (:prefix-map ("j" . "org jump")
+       "b"   #'gwp/org-jump-block/body
+       "l"   #'gwp/org-jump-link/body
+       ))
+#+end_src
+
 *** jump to file
 从org文件跳转到tangled file
 - 这个包可用于与compile等跳转配合使用 [[https://github.com/EricCrosson/help-find-org-mode][help-find-org-mode]]

@@ -207,6 +207,29 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 ;; 84623fc4 ends here
 
+;; [[file:../../doom.note::8aa4aca8][8aa4aca8]]
+(defhydra gwp/org-jump-block ()
+  "jump to org blocks"
+  ("n" org-next-block "next block")
+  ("p" org-previous-block "prev block")
+  ("q" nil "quit")
+  )
+
+(defhydra gwp/org-jump-link ()
+  "jump to org links"
+  ("n" org-next-link "next link")
+  ("p" org-previous-link "prev link")
+  ("q" nil "quit")
+  )
+
+(map! :map org-mode-map
+      :localleader
+      (:prefix-map ("j" . "org jump")
+       "b"   #'gwp/org-jump-block/body
+       "l"   #'gwp/org-jump-link/body
+       ))
+;; 8aa4aca8 ends here
+
 ;; [[file:../../doom.note::fa928b1c][fa928b1c]]
 (defun gwp/org-babel-tangle-jump-to-file ()
   "Jump to tangle file for the source block at point."

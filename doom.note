@@ -29,13 +29,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [42/55]
-** TODO [2021-10-06 Wed] Rust编辑优化
-参考rust-mode中dbg!设置, 实现:
-: Option<Molecule> => Molecule
-: Molecule => Result<Molecule>
-: Molecule => Option<Molecule>
-
+* Memo [43/55]
 ** TODO [2021-10-06 Wed] 优化按键布局
  516081    6.94%  evil-next-visual-line                                   g <down>
  479565    6.45%  evil-backward-char                                      DEL, <left>, h
@@ -213,12 +207,20 @@
     377    0.01%  org-metadown                                            M-j, <insert-state> M-j, <visual-state> M-j, <normal-state> M-j, <M-down>, ESC <down>, <menu-bar> <Table> <Row> <Move Row Down>, <menu-bar> <Org> <Edit Structure> <Move Subtree Down>
     377    0.01%  doom/backward-to-bol-or-indent                          C-a
 
+** DONE [2021-10-06 Wed] Rust编辑优化
+- State "DONE"       from "TODO"       [2021-10-07 Thu 09:22]
+参考rust-mode中dbg!设置, 实现:
+: Option<Molecule> => Molecule
+: Molecule => Result<Molecule>
+: Molecule => Option<Molecule>
+
 ** TODO [2021-10-04 Mon] 也许这个可用于编辑rustdoc? [[https://github.com/twlz0ne/separedit.el#edit-heredoc][twlz0ne/separedit.el: Edit comment or string/docstring or code block inside them in separate buffer with your favorite mode]]
 - [[https://emacs-china.org/t/separedit-el-docstring/11196][separedit.el: 在单独的缓冲区编辑注释、docstring 或其中的代码块]]
 - [[https://github.com/phillord/lentic][phillord/lentic: Create views of the same content in two Emacs buffers]]
 
 ** TODO [2021-10-06 Wed] 修复refile问题
 如果有多个Memo headline, 会选择最低的那个
+
 ** TODO [2021-10-06 Wed] 鼓捣一下 [[https://github.com/stardiviner/goldendict.el][stardiviner/goldendict.el]]
 - [[https://emacs-china.org/t/topic/18006][一个支持多词典的翻译插件(目前仅支持单词)]]
 
@@ -3667,27 +3669,66 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
   ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
   )
 #+end_src
+
 *** edit
-#+begin_src elisp :tangle no
-(defun gwp/rust-insert-option ()
+#+name: 72f0d377
+#+begin_src elisp
+(defun gwp/rust-insert-option (&optional result)
   "Insert the Option type."
-  (cond ((region-active-p)
-         (when (< (mark) (point))
-           (exchange-point-and-mark))
-         (let ((old-point (point)))
-           (insert-parentheses)
-           (goto-char old-point)))
-        (t
-         (when (rust-in-str)
-           (up-list -1 t t))
-         (insert "<")
-         (forward-sexp)
-         (insert ">")
-         (backward-sexp)))
-  (insert "Option"))
+  (interactive)
+
+  (when (region-active-p)
+    (sp-wrap-with-pair "<")
+    (backward-char)
+    (insert (or result "Option"))
+    ))
+
+(defun gwp/rust-unwrap-option (&optional result)
+  "Remove Option type wrapper"
+  (interactive)
+
+  (when (region-active-p)
+    (when (> (mark) (point))
+      (exchange-point-and-mark))
+    (sp-unwrap-sexp)
+    (when (search-backward (or result "Option") (line-beginning-position) t)
+      (delete-region (match-beginning 0) (match-end 0))
+      )))
+
+(defun gwp/rust-insert-result ()
+  (interactive)
+  (gwp/rust-insert-option "Result"))
+
+(defun gwp/rust-unwrap-result ()
+  (interactive)
+  (gwp/rust-unwrap-option "Result"))
+
+(transient-define-prefix gwp/rust-edit-transient ()
+  "rust development tools"
+  [["Result"
+    ("o" "Wrap in Option" gwp/rust-insert-option)
+    ("u" "Unwrap Option" gwp/rust-unwrap-option)
+    ]]
+  [["Result"
+    ("r" "Wrap in Result" gwp/rust-insert-result)
+    ("k" "Unwrap Result" gwp/rust-unwrap-result)
+    ]]
+  )
+
+;; (defhydra gwp/rust-edit-hydra ()
+;;   ("o" gwp/rust-insert-option "wrap with Option")
+;;   ("u" gwp/rust-unwrap-option "unwrap Option")
+;;   ("q" nil "quit")
+;;   )
+
+(map! :map rust-mode-map
+      :localleader
+      "e" #'gwp/rust-edit-transient
+      :desc "select inner type" "m" (general-simulate-key "vi<")
+      )
 #+end_src
 
-xx => Option<xx>
+xx <=> Option<xx>
 
 ** rustic-mode
 :PROPERTIES:

@@ -167,6 +167,62 @@ The org src will be tangled first before compiling.
   )
 ;; 151a16d0 ends here
 
+;; [[file:../../doom.note::72f0d377][72f0d377]]
+(defun gwp/rust-insert-option (&optional result)
+  "Insert the Option type."
+  (interactive)
+
+  (when (region-active-p)
+    (sp-wrap-with-pair "<")
+    (backward-char)
+    (insert (or result "Option"))
+    ))
+
+(defun gwp/rust-unwrap-option (&optional result)
+  "Remove Option type wrapper"
+  (interactive)
+
+  (when (region-active-p)
+    (when (> (mark) (point))
+      (exchange-point-and-mark))
+    (sp-unwrap-sexp)
+    (when (search-backward (or result "Option") (line-beginning-position) t)
+      (delete-region (match-beginning 0) (match-end 0))
+      )))
+
+(defun gwp/rust-insert-result ()
+  (interactive)
+  (gwp/rust-insert-option "Result"))
+
+(defun gwp/rust-unwrap-result ()
+  (interactive)
+  (gwp/rust-unwrap-option "Result"))
+
+(transient-define-prefix gwp/rust-edit-transient ()
+  "rust development tools"
+  [["Result"
+    ("o" "Wrap in Option" gwp/rust-insert-option)
+    ("u" "Unwrap Option" gwp/rust-unwrap-option)
+    ]]
+  [["Result"
+    ("r" "Wrap in Result" gwp/rust-insert-result)
+    ("k" "Unwrap Result" gwp/rust-unwrap-result)
+    ]]
+  )
+
+;; (defhydra gwp/rust-edit-hydra ()
+;;   ("o" gwp/rust-insert-option "wrap with Option")
+;;   ("u" gwp/rust-unwrap-option "unwrap Option")
+;;   ("q" nil "quit")
+;;   )
+
+(map! :map rust-mode-map
+      :localleader
+      "e" #'gwp/rust-edit-transient
+      :desc "select inner type" "m" (general-simulate-key "vi<")
+      )
+;; 72f0d377 ends here
+
 ;; [[file:../../doom.note::*python.el][python.el:2]]
 (defun gwp/tmux-ipython-paste-region (beg end &optional region)
   "Execute \"%paste\" in tmux session"

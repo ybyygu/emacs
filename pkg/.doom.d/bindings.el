@@ -113,7 +113,7 @@
 (map! :leader
       (:prefix-map ("d" . "DoDo")
        :desc "select text"   "s" #'gwp/advanced-selection
-       :desc "resize window" "w" #'gwp/hydra-resize-window/body
+       :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
        :desc "tangle codes at point" "d" #'gwp/org-babel-tangle-dwim
        ))

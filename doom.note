@@ -29,7 +29,10 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [43/56]
+* Memo [43/57]
+** TODO [2021-10-07 Thu] 解决rust编程中在comment环境中开新行的问题
+默认的容易与org中的冲突
+
 ** TODO [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
 
 ** TODO [2021-10-06 Wed] 优化按键布局
@@ -2609,10 +2612,7 @@ github支持, 减慢速度.
         ))
 #+end_src
 
-*** 放大当前窗口
-: SPC-w-o
-: doom/window-enlarge
-
+*** 放大窗口
 自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候命令手
 动开启.
 - https://github.com/hlissner/doom-emacs/issues/2225
@@ -2632,40 +2632,61 @@ github支持, 减慢速度.
 (package! golden-ratio)
 #+end_src
 
-- [2020-04-12 Sun] golden-ratio更好用一些
-- [[https://github.com/cyrus-and/zoom][cyrus-and/zoom: Fixed and automatic balanced window layout for Emacs]]
-#+begin_src emacs-lisp :tangle no
-(use-package! zoom
-              :config
-              (custom-set-variables
-               '(zoom-size '(0.618 . 0.618)))
-              (map! :map evil-window-map
-                    "z" #'zoom))
+doom内置了几个命令:
+- 水平放大: SPC-w-m-s
+- 垂直放大: SPC-w-m-v
+
+#+name: 9f0e3550
+#+begin_src elisp
+(map! :map evil-window-map
+      "1"       #'doom/window-maximize-buffer
+      "o"       #'doom/window-maximize-buffer ;show "only"
+      "t"       #'doom/window-maximize-vertically ;show top
+      )
 #+end_src
 
-*** window切换
+新建frame时最大化窗口
+#+name: 9a32eb12
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
+*** 窗口管理
+[[https://github.com/abo-abo/ace-window][abo-abo/ace-window: Quickly switch windows in Emacs]]
+
 用avy在多个窗口下跳转也很方便
 
-SPC-j-l
-#+BEGIN_SRC elisp
+#+name: 19f082d3
+#+begin_src elisp
 (use-package! avy
-              :config
-              (setq avy-all-windows t))
+  :config
+  (setq avy-all-windows t))
 
 ;; 替代 SPC-w-w
-(global-set-key [remap evil-window-next] #'ace-window)
-#+END_SRC
+;; (global-set-key [remap evil-window-next] #'ace-window)
+;; (map! [remap evil-window-next] #'ace-window)
 
-切换至之前buffer window, evil-window-mru
+(map! :map evil-window-map
+      "w" #'ace-window
+      "r" #'ace-swap-window             ; rotate
+      "c" #'ace-delete-window           ; close
+      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float)
+      )
+#+end_src
+
+切换至前一个最近访问的buffer所在的window, evil-window-mru
 : SPC-w-p
 
-*** 弹出窗口管理
+撤消或恢复之前的窗口布局
+: SPC-w-u, SPC-w C-r
+
+*** 弹出窗口
 打开doom popup窗口, 默认仅在normal state下可用.
 #+begin_src emacs-lisp
 (map! :i "C-`" #'+popup/toggle)
 #+end_src
 
-*** 窗口大小调整
+*** 窗口大小
 使用滚轮来修改窗口大小. Ctrl-Alt-scroll-up, Ctrl-Alt-scroll-down
 #+begin_src elisp
 (map! :nvi
@@ -2681,11 +2702,22 @@ SPC-j-l
 (setq split-width-threshold 200)        ; default is 160
 #+end_src
 
-新建frame时最大化窗口
+hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
+#+name: f07dc327
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-#+end_src
+(defhydra gwp/adjust-window-size ()
+  "resize-window"
+  ("h" evil-window-decrease-width "decrease width")
+  ("j" evil-window-decrease-height "decrease height")
+  ("k" evil-window-increase-height "increase height")
+  ("l" evil-window-increase-width "increase width")
+  ("q" nil "quit")
+  )
 
+(map! :map evil-window-map
+      "a"       #'gwp/adjust-window-size/body ; adjust
+      )
+#+end_src
 
 *** 新开frame
 #+name: 19e08aef
@@ -3328,19 +3360,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 ** hydra
 特别适合需要重复按键来完成的操作, 比如调整窗口大小.
-*** window
-方便快速调整窗口大小
-#+begin_src elisp
-(defhydra gwp/hydra-resize-window ()
-  "resize-window"
-  ("h" evil-window-decrease-width "decrease width")
-  ("j" evil-window-decrease-height "decrease height")
-  ("k" evil-window-increase-height "increase height")
-  ("l" evil-window-increase-width "increase width")
-  ("q" nil "quit")
-  )
-#+end_src
-
 *** parens
 #+name: 9786fedc
 #+begin_src elisp
@@ -5485,7 +5504,7 @@ org-sidebar
 (map! :leader
       (:prefix-map ("d" . "DoDo")
        :desc "select text"   "s" #'gwp/advanced-selection
-       :desc "resize window" "w" #'gwp/hydra-resize-window/body
+       :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
        :desc "tangle codes at point" "d" #'gwp/org-babel-tangle-dwim
        ))

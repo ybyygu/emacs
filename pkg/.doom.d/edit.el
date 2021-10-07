@@ -297,17 +297,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 ;; bibtex:1 ends here
 
-;; [[file:../../doom.note::*window][window:1]]
-(defhydra gwp/hydra-resize-window ()
-  "resize-window"
-  ("h" evil-window-decrease-width "decrease width")
-  ("j" evil-window-decrease-height "decrease height")
-  ("k" evil-window-increase-height "increase height")
-  ("l" evil-window-increase-width "increase width")
-  ("q" nil "quit")
-  )
-;; window:1 ends here
-
 ;; [[file:../../doom.note::9786fedc][9786fedc]]
 (defhydra gwp/hydra-smartparens (:hint nil)
   ("v" evil-visual-char)

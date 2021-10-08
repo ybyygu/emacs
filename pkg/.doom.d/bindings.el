@@ -10,6 +10,9 @@
 
 (map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
 
+(map! :n "q" #'evil-forward-paragraph)
+(map! :n "Q" #'evil-backward-paragraph)
+
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
 (map! :i "C-y" nil)

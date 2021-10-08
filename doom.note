@@ -29,13 +29,19 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [43/57]
+* Memo [43/58]
+** TODO [2021-10-08 Fri] 解决window layout保存问题
+[[https://stackoverflow.com/questions/2572950/preserve-window-layout-in-emacs][Preserve window layout in Emacs - Stack Overflow]]
+
 ** TODO [2021-10-07 Thu] 解决rust编程中在comment环境中开新行的问题
 默认的容易与org中的冲突
 
 ** TODO [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
 
 ** TODO [2021-10-06 Wed] 优化按键布局
+可以考虑去掉q命令, 很少用, 还经常错按. 可以用evil-forward-*之类的代替?
+evil-forward-paragraph
+
  516081    6.94%  evil-next-visual-line                                   g <down>
  479565    6.45%  evil-backward-char                                      DEL, <left>, h
  329382    4.43%  evil-previous-visual-line                               g <up>
@@ -4120,8 +4126,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (map! :map org-mode-map
       :localleader
       (:prefix-map ("j" . "org jump")
-       "b"   #'gwp/org-jump-block/body
-       "l"   #'gwp/org-jump-link/body
+       :desc "跳转至代码块" "b"   #'gwp/org-jump-block/body
+       :desc "跳转至链接"   "l"   #'gwp/org-jump-link/body
        ))
 #+end_src
 
@@ -5412,6 +5418,9 @@ org-sidebar
 (map! :nvim "C-u" nil)                  ; universal argument
 
 (map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
+
+(map! :n "q" #'evil-forward-paragraph)
+(map! :n "Q" #'evil-backward-paragraph)
 
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)

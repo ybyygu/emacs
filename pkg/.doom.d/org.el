@@ -225,8 +225,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (map! :map org-mode-map
       :localleader
       (:prefix-map ("j" . "org jump")
-       "b"   #'gwp/org-jump-block/body
-       "l"   #'gwp/org-jump-link/body
+       :desc "跳转至代码块" "b"   #'gwp/org-jump-block/body
+       :desc "跳转至链接"   "l"   #'gwp/org-jump-link/body
        ))
 ;; 8aa4aca8 ends here
 

@@ -40,7 +40,7 @@
       "w" #'ace-window
       "r" #'ace-swap-window             ; rotate
       "c" #'ace-delete-window           ; close
-      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float)
+      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float, move to new frame)
       )
 ;; 19f082d3 ends here
 

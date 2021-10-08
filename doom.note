@@ -29,7 +29,32 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [44/58]
+* Memo [47/60]
+** DONE [2021-10-08 Fri] 解决matebook打开url慢的问题
+- State "DONE"       from "TODO"       [2021-10-08 Fri 19:45]
+browse-url函数慢
+browse-url-xdg-open
+
+在emacs中运行如下shell命令后发现问题所在:
+#+begin_src shell :tangle no
+#! /usr/bin/env bash
+
+strace -f -s 1000 -tt xdg-open http://www.baidu.com &>/tmp/a.log
+#+end_src
+
+#+begin_src text
+[pid 15914] 19:23:16.378907 futex(0x7f4f40246ac8, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+[pid 15914] 19:23:16.378935 openat(AT_FDCWD, "/run/systemd/machines/tower7820", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+[pid 15914] 19:23:16.378973 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+#+end_src
+
+原来环境变量的问题:
+: ~/.emacs.d> rg --no-ignore --hidden tower7820
+: .local/env
+: 82: "SESSION_MANAGER=local/tower7820:@/tmp/.ICE-unix/3651,unix/tower7820:/tmp/.ICE-unix/3651"
+
+删除 ~/.emacs.d/local/env 文件, 重启后问题解决.
+
 ** TODO [2021-10-08 Fri] 解决window layout保存问题
 [[https://stackoverflow.com/questions/2572950/preserve-window-layout-in-emacs][Preserve window layout in Emacs - Stack Overflow]]
 
@@ -39,7 +64,12 @@
 
 用ctrl-j代替
 
-** TODO [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
+** DONE [2021-08-26 Thu] dolphin在emacs中无法正常打开
+- State "DONE"       from "TODO"       [2021-10-08 Fri 19:46] \\
+  是~/.emacs.d/local/env文件惹的祸
+
+** DONE [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
+- State "DONE"       from "TODO"       [2021-10-08 Fri 18:40]
 应先进入org-src-edit模式后再处理
 
 ** TODO [2021-10-06 Wed] 优化按键布局
@@ -2706,7 +2736,7 @@ doom内置了几个命令:
       "w" #'ace-window
       "r" #'ace-swap-window             ; rotate
       "c" #'ace-delete-window           ; close
-      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float)
+      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float, move to new frame)
       )
 #+end_src
 
@@ -2962,8 +2992,6 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ;; C-x C-o
 (map! :leader :ni "C-o" #'delete-blank-lines)
 #+end_src
-
-(delete-trailing-whitespace)
 
 删除字符或选定区域, 但不经过kill-ring
 : delete-char (C-d, DELETE), delete-backward-char (BACKSPACE)
@@ -3997,6 +4025,7 @@ xx <=> Option<xx>
 
 *** open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
+#+name: 2f61258f
 #+begin_src elisp
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
@@ -4008,6 +4037,17 @@ xx <=> Option<xx>
     (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
       (org-open-at-point)
       (golden-ratio))))
+
+;; 注释代码时, 在org code block下特殊处理. 不然光标会跳开很远.
+(defun gwp/comment-or-uncomment-dwim ()
+  (interactive)
+  (save-excursion
+    (if (org-in-src-block-p)
+        (progn
+          (org-edit-src-code)
+          (call-interactively 'evilnc-comment-or-uncomment-lines)
+          (org-edit-src-exit))
+      (call-interactively 'evilnc-comment-or-uncomment-lines))))
 
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
@@ -5381,6 +5421,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
   (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
 (add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
+(defun gwp/org-src-mode-keys-hook ()
+  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
+(add-hook 'org-src-mode-hook 'gwp/org-mode-keys-hook)
 
 ;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
 ;; (map! :mode org-mode
@@ -5615,7 +5658,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (map! :leader
       (:prefix-map ("c" . "Code/compile")
        :desc "Align the current region regexp"       "a"   #'align-regexp
-       :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
+       :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
        :desc "indent region"                         "TAB" #'indent-region ; 有用
        :desc "indent region"                         [tab] #'indent-region ; 有用

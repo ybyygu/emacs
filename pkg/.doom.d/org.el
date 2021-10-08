@@ -69,7 +69,7 @@
   )
 ;; view:1 ends here
 
-;; [[file:../../doom.note::*open-at-point][open-at-point:1]]
+;; [[file:../../doom.note::2f61258f][2f61258f]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
 (defun gwp/org-open-at-point-dwim (&optional arg)
@@ -81,11 +81,22 @@
       (org-open-at-point)
       (golden-ratio))))
 
+;; 注释代码时, 在org code block下特殊处理. 不然光标会跳开很远.
+(defun gwp/comment-or-uncomment-dwim ()
+  (interactive)
+  (save-excursion
+    (if (org-in-src-block-p)
+        (progn
+          (org-edit-src-code)
+          (call-interactively 'evilnc-comment-or-uncomment-lines)
+          (org-edit-src-exit))
+      (call-interactively 'evilnc-comment-or-uncomment-lines))))
+
 (map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
       "o" #'gwp/org-open-at-point-dwim)
-;; open-at-point:1 ends here
+;; 2f61258f ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
@@ -1081,6 +1092,9 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
   (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
 (add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
+(defun gwp/org-src-mode-keys-hook ()
+  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
+(add-hook 'org-src-mode-hook 'gwp/org-mode-keys-hook)
 
 ;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
 ;; (map! :mode org-mode

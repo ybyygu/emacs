@@ -893,7 +893,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         (org-link-unescape (match-string-no-properties 1)))))
 ;; refile:1 ends here
 
-;; [[file:../../doom.note::*agenda][agenda:1]]
+;; [[file:../../doom.note::43fd72e2][43fd72e2]]
 (with-eval-after-load 'org-agenda
   ;; 2013-01-20: less is more
   ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
@@ -920,7 +920,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
   ;; do not include todo items
   (setq org-agenda-include-all-todo nil))
-;; agenda:1 ends here
+;; 43fd72e2 ends here
 
 ;; [[file:../../doom.note::*agenda][agenda:2]]
 (setq org-agenda-skip-deadline-if-done t)
@@ -1075,20 +1075,12 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; misc:2 ends here
 
 ;; [[file:../../doom.note::917381e9][917381e9]]
-;; 定义一些特别常用的命令
+;; 定义一些特别常用的命令, 仅在org-mode中显示
 (defun gwp/org-mode-keys-hook ()
   (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
-  (evil-local-set-key 'normal (kbd "SPC o b") 'gwp/org-babel-tangle-dwim)
-  )
+  (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
+  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
 (add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
-
-(use-package! evil-org
-  :config
-  (map! :map evil-org-mode-map
-        :n "zi"  #'org-toggle-inline-images
-        :n "zl"  #'org-latex-preview
-        :n "zn"  #'ap/org-tree-to-indirect-buffer
-        ))
 
 ;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
 ;; (map! :mode org-mode
@@ -1101,11 +1093,21 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;;       )
 ;; 917381e9 ends here
 
+;; [[file:../../doom.note::bfe4f470][bfe4f470]]
+(map! :map org-mode-map
+      :localleader
+      "-" #'org-ctrl-c-minus            ; toggle item (-)
+      "*" #'org-ctrl-c-star             ; toggle headline (*)
+      )
+;; bfe4f470 ends here
+
 ;; [[file:../../doom.note::21ae7ae2][21ae7ae2]]
 ;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
-      (:prefix ("b" . "org-babel")
+      :desc "previous block" "C-p" #'org-previous-block
+      :desc "next block" "C-n" #'org-next-block
+      (:prefix ("b" . "Babel")
        :desc "check src block headers"    "c" #'org-babel-check-src-block
        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
@@ -1118,51 +1120,56 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-       )
-      (:prefix ("l" . "links")
-       "D" #'gwp/org-delete-link-file)
-      )
+       ))
+;; 21ae7ae2 ends here
 
+;; [[file:../../doom.note::a02d9b1f][a02d9b1f]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("g" . "Goto")
+       :desc "previous position"  "p" #'org-mark-ring-goto
+       :desc "Jump to org heading"  "g" #'counsel-org-goto
+       ))
+;; a02d9b1f ends here
+
+;; [[file:../../doom.note::32a3b56a][32a3b56a]]
+(map! :map org-mode-map
+      :localleader
+      :desc "next link"           [tab]   #'org-next-link
+      :desc "prev link"           [backtab]   #'org-previous-link
+      (:prefix ("l" . "links")
+       "D" #'gwp/org-delete-link-file
+       ))
+;; 32a3b56a ends here
+
+;; [[file:../../doom.note::a393f96d][a393f96d]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix-map ("s" . "Subtree/Search")
+       :desc "Demote" "l" #'org-demote-subtree
+       :desc "Promote" "h" #'org-promote-subtree
+       :desc "Archive" "A" #'org-archive-subtree
+       :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
+       ;; 仿SPC-s-s
+       :desc "Goto" "s" #'counsel-org-goto
+       :desc "Goto (all)" "S" #'counsel-org-goto-all
+       :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+       )
+      )
+;; a393f96d ends here
+
+;; [[file:../../doom.note::3d7188a4][3d7188a4]]
+(map! :map org-mode-map
+      :localleader
+      :desc "new memo entry" "M" #'gwp/new-memo ; 简化操作
+      )
+;; 3d7188a4 ends here
+
+;; [[file:../../doom.note::1e605e7a][1e605e7a]]
 (map! :map org-mode-map
       :localleader
       :desc "preview inline images"       "I"     #'org-toggle-inline-images
       :desc "preview latex fragments"     "L"     #'org-latex-preview
       :desc "Paste image from clipboard"  "C-v"   #'org-download-clipboard
-      :desc "Move to next link"           "C-n"   #'org-next-link
-      :desc "Move to prev link"           "C-p"   #'org-previous-link
-      :desc "Move to next link"           [tab]   #'org-next-link
-      :desc "Move to prev link"           [backtab]   #'org-previous-link)
-
-(map! :map org-mode-map
-      :localleader
-      ;; FIXME: 与doom/org定义有冲突
-      (:prefix ("s" . "Subtree")
-       :desc "Demote" "l" #'org-demote-subtree
-       :desc "Promote" "h" #'org-promote-subtree
-       :desc "Archive" "A" #'org-archive-subtree
-       ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-       :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
-       :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-       )
-      (:prefix ("SPC" . "Special")
-       :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-       :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-       )
       )
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("g" . "Goto")
-       :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-       :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
-       :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-       )
-      )
-;; 21ae7ae2 ends here
-
-;; [[file:../../doom.note::*bindings][bindings:3]]
-(map! :map org-sidebar-tree-map
-      :localleader
-      :n "RET" #'org-sidebar-tree-jump
-      :n [return] #'org-sidebar-tree-jump
-      )
-;; bindings:3 ends here
+;; 1e605e7a ends here

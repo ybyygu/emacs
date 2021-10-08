@@ -16,6 +16,9 @@
 (map! :n "e" #'evil-forward-sentence-begin)
 (map! :n "E" #'evil-backward-sentence-begin)
 
+(map! :n "w" #'evil-forward-word-begin)
+(map! :n "W" #'evil-backward-word-begin)
+
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
 (map! :i "C-y" nil)
@@ -121,7 +124,6 @@
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
-       :desc "tangle codes at point" "d" #'gwp/org-babel-tangle-dwim
        ))
 ;; 5e265fdb ends here
 
@@ -243,9 +245,9 @@
 ;; [[file:../../doom.note::6ea0d271][6ea0d271]]
 (map! :leader
       (:prefix ("j" . "Jump")
-       :desc "jump to org src"                "o" #'gwp/org-babel-tangle-jump-to-org
-       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
-       :desc "Jump to search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
+       :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
+       :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
+       :desc "avy line"               "l" #'evil-avy-goto-line
        ))
 ;; 6ea0d271 ends here
 
@@ -390,3 +392,16 @@
       :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
       )
 ;; 011dce65 ends here
+
+;; [[file:../../doom.note::bc190292][bc190292]]
+(map! :leader
+      (:prefix-map ("y" . "Yank")
+       :desc "Snippet"                       "s"   #'yas-insert-snippet
+       :desc "From clipboard"                "y"   #'+default/yank-pop
+       :desc "Current file name"             "f"   #'+default/insert-file-path
+       :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
+       :desc "Evil ex path"                  "p"   (cmd! (evil-ex "R!echo "))
+       :desc "From evil register"            "r"   #'evil-ex-registers
+       :desc "Unicode"                       "u"   #'insert-char
+       ))
+;; bc190292 ends here

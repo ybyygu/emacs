@@ -81,7 +81,7 @@
   (display-buffer-other-frame (current-buffer)))
 ;; 19e08aef ends here
 
-;; [[file:../../doom.note::*input method][input method:1]]
+;; [[file:../../doom.note::15078428][15078428]]
 (use-package! pyim
   :config
   (setq default-input-method "pyim")
@@ -123,15 +123,15 @@
   ;; 与 pyim-probe-dynamic-english 配合，方便切换至中文模式
   :bind
   (
-   ("<f2> SPC" . pyim-convert-string-at-point)
-   ("M-SPC" . toggle-input-method)
+   ;; ("<f2> SPC" . pyim-convert-string-at-point)
+   ;; ("M-SPC" . toggle-input-method)
    (:map pyim-mode-map
     ;; ("<f2> TAB" . pyim-toggle-assistant-scheme)
     ("/" . pyim-toggle-assistant-scheme)
     ("_" . pyim-toggle-input-ascii)
     ("\\" . pyim-toggle-input-ascii)
     )))
-;; input method:1 ends here
+;; 15078428 ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390

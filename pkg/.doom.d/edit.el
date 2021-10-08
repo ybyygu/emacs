@@ -13,6 +13,10 @@
 
 ;; 删除到行尾
 (map! :i "C-k"  #'kill-line)
+
+;; 删除多余空行, 仅保留一行
+;; C-x C-o
+(map! :leader :ni "C-o" #'delete-blank-lines)
 ;; 69dc0b95 ends here
 
 ;; [[file:../../doom.note::1a0721e0][1a0721e0]]
@@ -158,9 +162,9 @@
 
 ;; [[file:../../doom.note::f75f80bd][f75f80bd]]
 (setq show-trailing-whitespace t)
+;; 保留时会自动清理, 以下已不必要
 ;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
-;; make sure this always work
-(global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 ;; f75f80bd ends here
 
 ;; [[file:../../doom.note::2286a7d2][2286a7d2]]

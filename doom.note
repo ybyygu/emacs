@@ -1,4 +1,4 @@
-#+TITLE: Private config based on doom-emacs
+#+TITLE: 个人文本操作系统(based on doom-emacs)
 #+SETUPFILE: ~/Notes/common.org
 
 历史设置
@@ -15,12 +15,12 @@
 - [X] org-capture clipboard不正常
 
 * 配置参考
+- [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][doom-emacs/getting_started.org]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-    
 - https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
 - [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
 - [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
@@ -40,6 +40,7 @@
 用ctrl-j代替
 
 ** TODO [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
+应先进入org-src-edit模式后再处理
 
 ** TODO [2021-10-06 Wed] 优化按键布局
 可以考虑去掉q命令, 很少用, 还经常错按. 可以用evil-forward-*之类的代替?
@@ -334,7 +335,7 @@ redgaurdtoo: "代码自动完成和代码自动导航我推荐基于ctags的方�
 ** DONE [2021-09-09 Thu] 几个按键问题
 - State "DONE"       from "TODO"       [2021-09-29 Wed 20:30]
 - State "DONE"       from "TODO"       [2021-09-09 Thu 19:23]
-  
+
 space-j, mini-buffer: ctrl-k
 
 Ctrl-z suspend-frame
@@ -416,7 +417,7 @@ K : Korean
 
 参考
 - [[https://manateelazycat.github.io/emacs/2020/04/02/org-font.html][Org-Mode 表格对齐设置]]
-  
+
 ** TODO [2021-08-20 Fri] 实现zotero管理界面
 - [[https://github.com/chenyanming/calibredb.el/blob/master/calibredb-ivy.el][calibredb.el/calibredb-ivy.el at master · chenyanming/calibredb.el · GitHub]]
 - [[https://oremacs.com/swiper/#actions][Ivy User Manual]]
@@ -474,10 +475,16 @@ pacman -S fd
 
 ** TODO [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
 - State "DONE"       from "TODO"       [2021-02-08 Mon 14:20]
-fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用emacs内置的pyim输入法
+fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用emacs内置的输入法可以
+较好的解决这个问题.
 
-可以较好的解决这个问题.
+*** rime
+- [[https://sunyour.org/post/emacs-%E5%86%85%E7%BD%AE%E8%BE%93%E5%85%A5%E6%B3%95%E6%AD%A3%E5%BC%8F%E6%94%B9%E7%94%A8-emacs-rime/][我的 emacs 内置输入法正式改用 emacs-rime - 凡·记 - 墩墩家的幸福生活]]
+- [[https://manateelazycat.github.io/emacs/2020/03/22/emacs-rime.html][折腾emacs-rime]]
+- [[https://blindwith.science/2020/12/460.html/][从 pyim 换到 emacs-rime 了 - Blind with Science]]
+- [[https://sunyour.org/post/%E7%BB%99-emacs-rime-%E5%A2%9E%E5%8A%A0%E7%B1%BB%E4%BC%BC-pyim-%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%BD%93%E5%89%8D%E8%8B%B1%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%BA%E4%B8%AD%E6%96%87%E7%9A%84%E5%8A%9F%E8%83%BD/][给 emacs-rime 增加类似 pyim 的转换当前英文字符串为中文的功能 - 凡·记 - 墩墩家的幸福生活]]
 
+*** pyim输入法
 现在有的特性:
 - 使用Ctrl-\按键切换pyim输入法.
 - 尽量和fcitx输入保持一致, 默认使用英文标点.
@@ -490,7 +497,7 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 : (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 
 [[https://github.com/hlissner/doom-emacs/issues/2775][TAB key is not behaving properly in org-mode when #+SETUPFILE keyword is present · Issue #2775 · hlissner/doom-emacs]]
- 
+
 ** DONE [2021-01-09 Sat] 解决join-line命令异常的问题
 - State "DONE"       from "TODO"       [2021-01-09 Sat 10:33]
 [[https://github.com/hlissner/doom-emacs/commit/40cf6139ed53b635fec37ce623c4b1093c78a11e][Make evil-join remove comment delimiters · hlissner/doom-emacs@40cf613]]
@@ -1205,7 +1212,7 @@ org-roam-buffer-toggle
 : rustup toolchain add nightly
 : rustup component add rust-src
 : cargo +nightly install racer
-: racer complete std::io::B 
+: racer complete std::io::B
 
 - 使用 "Ctrl-c Ctrl-d" 可以自动添加或删除dbg!
 - 使用 "Ctrl-c Ctrl-f" rustfmt格式化buffer
@@ -1218,7 +1225,7 @@ org-roam-buffer-toggle
 * TODO Python scripting
 - 使用tmux开一终端, 打开ipython
 - 在emacs中写代码, 使用 +tmux/send-region来发送代码到ipython窗口
- 
+
 * TODO Research Writing Workflow
 ** 基本流程
 - 使用org-mode来完成文字, 图片, 表格, 公式等内容.
@@ -1265,16 +1272,16 @@ References
 ** 使用org-noter批注PDF
 - [2021-08-19 Thu] org-noter也很长时间没有更新了
 - [2020-01-01 Wed] org-noter比interleave功能更强.
-  
+
 将pdf文件关联到emacs, 使用pdf-tools打开(pdf-view-mode)
 - 进入org-noter界面(SPC-n-n), 按提示将 annotation.note放到PDF所在目录
 - 使用org-noter插入笔记
-  
+
 优点:
 - Note和PDF直接关联, 不需要写任何代码. 方便易用.
 - 原始zotero数据库中的为父本, 不同Note中的批注的有不同的副本.
 需要更新.cache/notes列表.
-  
+
 流程:
 - 在zotero界面, 选中待批注的PDF, "copy attachment path"
 - 在普通的org文件中将zotero中的PDF列为附件.
@@ -1679,7 +1686,7 @@ Terminal=false
 MimeType=x-scheme-handler/org-protocol;
 #+END_SRC
 
-: xdg-open 'org-protocol://store-link?url=https%3A%2F%2Forgmode.org%2Fworg%2Forg-contrib%2Forg-protocol.html' 
+: xdg-open 'org-protocol://store-link?url=https%3A%2F%2Forgmode.org%2Fworg%2Forg-contrib%2Forg-protocol.html'
 : xdg-open 'org-protocol:///capture?template=n&url=http://www.baidu.com'
 
 ** firefox
@@ -1890,6 +1897,7 @@ gwp-merge:
 
 *** doom-dirs
 设置到非syncthing共享目录下, 避免共享冲突
+#+name: ec526f44
 #+begin_src elisp
 ;;; init.el -*- lexical-binding: t; -*-
 
@@ -2136,6 +2144,25 @@ gwp-merge:
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 #+END_SRC
+
+*** leader key
+默认的alt leader key为 M-SPC, 与KDE中的krunner有冲突. 现改为F2, 更方便. 注意: alt leader key仅在insert状态下有效.
+
+#+name: 56a9b4bd
+#+begin_src elisp
+;; 屏蔽掉emacs默认的f2功能, 避免在normal state下按f2误操作
+(global-unset-key (kbd "<f2>"))
+
+(setq doom-leader-key "SPC"
+      doom-leader-alt-key "<f2>"        ; 仅在insert state下有效
+      doom-localleader-key ","
+      doom-localleader-alt-key "M-,")   ; 仅在insert state下有效
+
+;; (setq-default doom-leader-key "SPC"
+;;               doom-leader-alt "<f13>"
+;;               doom-localleader-key ""
+;;               doom-localleader-alt-key "<M-f13>")
+#+end_src
 
 *** scratch
 [2021-10-01 Fri] 还是elisp更方便些.
@@ -2756,6 +2783,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 [[https://tumashu.github.io/pyim/][A Chinese input method which support quanpin, shuangpin, wubi and cangjie. - pyim]]
 
 默认使用 Ctrl-\ 切换输入法
+#+name: 15078428
 #+begin_src elisp
 (use-package! pyim
   :config
@@ -2798,8 +2826,8 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   ;; 与 pyim-probe-dynamic-english 配合，方便切换至中文模式
   :bind
   (
-   ("<f2> SPC" . pyim-convert-string-at-point)
-   ("M-SPC" . toggle-input-method)
+   ;; ("<f2> SPC" . pyim-convert-string-at-point)
+   ;; ("M-SPC" . toggle-input-method)
    (:map pyim-mode-map
     ;; ("<f2> TAB" . pyim-toggle-assistant-scheme)
     ("/" . pyim-toggle-assistant-scheme)
@@ -2912,6 +2940,34 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+** core
+#+name: 69dc0b95
+#+begin_src elisp
+;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
+(map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
+(defun gwp::ctrl-w-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'kill-region)
+    (call-interactively #'backward-kill-word)
+    ))
+
+;; 默认为set-face之类的东西
+(map! "M-o" #'just-one-space)
+
+;; 删除到行尾
+(map! :i "C-k"  #'kill-line)
+
+;; 删除多余空行, 仅保留一行
+;; C-x C-o
+(map! :leader :ni "C-o" #'delete-blank-lines)
+#+end_src
+
+(delete-trailing-whitespace)
+
+删除字符或选定区域, 但不经过kill-ring
+: delete-char (C-d, DELETE), delete-backward-char (BACKSPACE)
+
 ** newline
 在注释环境下更容易使用, 用ctrl-enter容易误按.
 #+name: 1a0721e0
@@ -2995,7 +3051,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 #+end_src
 
 ** ctrl-z
-默认切换为emacs-state, 经常按错. 
+默认切换为emacs-state, 经常按错.
 #+name: 9edb7f25
 #+begin_src elisp
 (after! evil
@@ -3132,11 +3188,12 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
 #+end_src
 
 ** white space
+#+name: f75f80bd
 #+begin_src emacs-lisp
 (setq show-trailing-whitespace t)
-(global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
-;; make sure this always work
-(global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+;; 保留时会自动清理, 以下已不必要
+;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 #+end_src
 
 ** join next line
@@ -3960,7 +4017,7 @@ xx <=> Option<xx>
 
 ** screenshot
 - org-contrib: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-screenshot.el][org-screenshot.el]]
-  
+
 目前最佳方案: 使用org-download来实现屏幕截图的功能
 - 在firefox或screenshot等截图后复制到X11剪贴板.
 - 调用org-download-clipboard完成图片插入操作.
@@ -4994,7 +5051,7 @@ refile流程:
 - 检查其中的条目, 找到可能的合适的归档note文件, 打开之.
 - SPC-m-r-r, org-refile
 - SPC-u SPC-m-r-r: 跳转至refile targets
- 
+
 #+BEGIN_SRC emacs-lisp
 (defun gwp/org-get-refile-targets ()
   "Return the list of files currently opened in emacs"
@@ -5058,6 +5115,7 @@ refile流程:
 
 ** agenda
 基本设置
+#+name: 43fd72e2
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'org-agenda
   ;; 2013-01-20: less is more
@@ -5248,6 +5306,7 @@ org-open-file调用pdf-tools打开PDF文件
 #+begin_src elisp
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 #+end_src
+
 ** my .note files
 *** search all notes
 搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
@@ -5313,22 +5372,15 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+end_src
 
 ** bindings
+*** core
 #+name: 917381e9
 #+begin_src elisp
-;; 定义一些特别常用的命令
+;; 定义一些特别常用的命令, 仅在org-mode中显示
 (defun gwp/org-mode-keys-hook ()
   (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
-  (evil-local-set-key 'normal (kbd "SPC o b") 'gwp/org-babel-tangle-dwim)
-  )
+  (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
+  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
 (add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
-
-(use-package! evil-org
-  :config
-  (map! :map evil-org-mode-map
-        :n "zi"  #'org-toggle-inline-images
-        :n "zl"  #'org-latex-preview
-        :n "zn"  #'ap/org-tree-to-indirect-buffer
-        ))
 
 ;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
 ;; (map! :mode org-mode
@@ -5341,13 +5393,25 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 ;;       )
 #+end_src
 
+*** edit
+#+name: bfe4f470
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      "-" #'org-ctrl-c-minus            ; toggle item (-)
+      "*" #'org-ctrl-c-star             ; toggle headline (*)
+      )
+#+end_src
 
+*** babel
 #+name: 21ae7ae2
 #+begin_src elisp
 ;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
-      (:prefix ("b" . "org-babel")
+      :desc "previous block" "C-p" #'org-previous-block
+      :desc "next block" "C-n" #'org-next-block
+      (:prefix ("b" . "Babel")
        :desc "check src block headers"    "c" #'org-babel-check-src-block
        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
@@ -5360,49 +5424,74 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
-       )
-      (:prefix ("l" . "links")
-       "D" #'gwp/org-delete-link-file)
-      )
+       ))
+#+end_src
 
+*** goto
+#+name: a02d9b1f
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("g" . "Goto")
+       :desc "previous position"  "p" #'org-mark-ring-goto
+       :desc "Jump to org heading"  "g" #'counsel-org-goto
+       ))
+#+end_src
+
+*** link
+#+name: 32a3b56a
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      :desc "next link"           [tab]   #'org-next-link
+      :desc "prev link"           [backtab]   #'org-previous-link
+      (:prefix ("l" . "links")
+       "D" #'gwp/org-delete-link-file
+       ))
+#+end_src
+
+*** subtree/search
+#+name: a393f96d
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix-map ("s" . "Subtree/Search")
+       :desc "Demote" "l" #'org-demote-subtree
+       :desc "Promote" "h" #'org-promote-subtree
+       :desc "Archive" "A" #'org-archive-subtree
+       :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
+       ;; 仿SPC-s-s
+       :desc "Goto" "s" #'counsel-org-goto
+       :desc "Goto (all)" "S" #'counsel-org-goto-all
+       :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
+       )
+      )
+#+end_src
+
+*** new momo
+#+name: 3d7188a4
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      :desc "new memo entry" "M" #'gwp/new-memo ; 简化操作
+      )
+#+end_src
+
+*** toggle
+#+name: 1e605e7a
+#+begin_src elisp
 (map! :map org-mode-map
       :localleader
       :desc "preview inline images"       "I"     #'org-toggle-inline-images
       :desc "preview latex fragments"     "L"     #'org-latex-preview
       :desc "Paste image from clipboard"  "C-v"   #'org-download-clipboard
-      :desc "Move to next link"           "C-n"   #'org-next-link
-      :desc "Move to prev link"           "C-p"   #'org-previous-link
-      :desc "Move to next link"           [tab]   #'org-next-link
-      :desc "Move to prev link"           [backtab]   #'org-previous-link)
-
-(map! :map org-mode-map
-      :localleader
-      ;; FIXME: 与doom/org定义有冲突
-      (:prefix ("s" . "Subtree")
-       :desc "Demote" "l" #'org-demote-subtree
-       :desc "Promote" "h" #'org-promote-subtree
-       :desc "Archive" "A" #'org-archive-subtree
-       ;; :desc "Narrow" "n" #'org-tree-to-indirect-buffer ; 比org-toggle-narrow-to-subtree更好用些
-       :desc "Narrow" "n" #'ap/org-tree-to-indirect-buffer
-       :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-       )
-      (:prefix ("SPC" . "Special")
-       :desc "org-ctrl-c-star" "s" #'org-ctrl-c-star ; 方便盲按
-       :desc "Insert new memo entry" "m" #'gwp/new-memo ; 简化操作
-       )
-      )
-(map! :map org-mode-map
-      :localleader
-      (:prefix ("g" . "Goto")
-       :desc "Goto the previous position"  "p" #'org-mark-ring-goto
-       :desc "Jump to org heading"  "j" #'counsel-org-goto ; 默认绑定更好按: SPC-m .
-       :desc "Goto named src block" "b" #'org-babel-goto-named-src-block
-       )
       )
 #+end_src
 
-org-sidebar
-#+begin_src elisp
+*** org-sidebar
+用的不多
+#+name: 1a561e81
+#+begin_src elisp :tangle no
 (map! :map org-sidebar-tree-map
       :localleader
       :n "RET" #'org-sidebar-tree-jump
@@ -5427,11 +5516,16 @@ org-sidebar
 (map! :nvim "C-p" nil)
 (map! :nvim "C-u" nil)                  ; universal argument
 
-(map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
-
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.
 (map! :n "q" #'evil-forward-paragraph)
 (map! :n "Q" #'evil-backward-paragraph)
+
+;; 默认为word-end类移动
+(map! :n "e" #'evil-forward-sentence-begin)
+(map! :n "E" #'evil-backward-sentence-begin)
+
+(map! :n "w" #'evil-forward-word-begin)
+(map! :n "W" #'evil-backward-word-begin)
 
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
@@ -5439,10 +5533,10 @@ org-sidebar
 
 ;; evil里也得设置, 不然无效
 (after! evil-org
-        (map! :map evil-org-mode-map
-              :nivm "C-d" nil
-              :nivm "C-k" nil
-              :i "M-l" nil))
+  (map! :map evil-org-mode-map
+        :nivm "C-d" nil
+        :nivm "C-k" nil
+        :i "M-l" nil))
 #+end_src
 
 默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
@@ -5476,7 +5570,7 @@ org-sidebar
 ;; (load! "bindings")
 #+end_src
 
-** doom leader
+** leader/global
 注意的键位变量为 doom-leader-<xx>-map, 其中xx为"prefix-map"后所定义的内容, 比如 "doom-leader-workspace-map".
 *** leader
 #+name: 2d76b8e4
@@ -5484,7 +5578,7 @@ org-sidebar
 (map! :leader
       :desc "save buffer" "SPC" #'save-buffer)
 #+end_src
-
+*** a: ??
 *** b: buffer
 #+name: 19c9e88c
 #+begin_src elisp
@@ -5550,7 +5644,6 @@ org-sidebar
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
-       :desc "tangle codes at point" "d" #'gwp/org-babel-tangle-dwim
        ))
 #+end_src
 
@@ -5680,9 +5773,9 @@ org-sidebar
 #+begin_src elisp
 (map! :leader
       (:prefix ("j" . "Jump")
-       :desc "jump to org src"                "o" #'gwp/org-babel-tangle-jump-to-org
-       :desc "jump to tangled file"           "t" #'gwp/org-babel-tangle-jump-to-file
-       :desc "Jump to search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
+       :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
+       :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
+       :desc "avy line"               "l" #'evil-avy-goto-line
        ))
 #+end_src
 
@@ -5845,7 +5938,21 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
       )
 #+end_src
 
-*** y: ???
+*** y: Yank/paste
+#+name: bc190292
+#+begin_src elisp
+(map! :leader
+      (:prefix-map ("y" . "Yank")
+       :desc "Snippet"                       "s"   #'yas-insert-snippet
+       :desc "From clipboard"                "y"   #'+default/yank-pop
+       :desc "Current file name"             "f"   #'+default/insert-file-path
+       :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
+       :desc "Evil ex path"                  "p"   (cmd! (evil-ex "R!echo "))
+       :desc "From evil register"            "r"   #'evil-ex-registers
+       :desc "Unicode"                       "u"   #'insert-char
+       ))
+#+end_src
+
 *** z: ???
 
 * modules/hack

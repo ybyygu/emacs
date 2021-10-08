@@ -29,12 +29,15 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [43/58]
+* Memo [44/58]
 ** TODO [2021-10-08 Fri] 解决window layout保存问题
 [[https://stackoverflow.com/questions/2572950/preserve-window-layout-in-emacs][Preserve window layout in Emacs - Stack Overflow]]
 
-** TODO [2021-10-07 Thu] 解决rust编程中在comment环境中开新行的问题
-默认的容易与org中的冲突
+** DONE [2021-10-07 Thu] 解决rust编程中在comment环境中开新行的问题
+- State "DONE"       from "TODO"       [2021-10-08 Fri 10:58]
+默认的容易与org中的冲突.
+
+用ctrl-j代替
 
 ** TODO [2021-10-07 Thu] 修复evilnc-comment-or-uncomment-lines在org src blocks里乱跳的问题
 
@@ -2909,6 +2912,13 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+** newline
+在注释环境下更容易使用, 用ctrl-enter容易误按.
+#+name: 1a0721e0
+#+begin_src elisp
+(map! :ni  "C-j"           #'+default/newline-below)
+#+end_src
+
 ** completion
 关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
 : M-n, M-p: Next/prev line.
@@ -5419,6 +5429,7 @@ org-sidebar
 
 (map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
 
+;; 默认q为macro键, 我很少用. 改为快速移动类按键.
 (map! :n "q" #'evil-forward-paragraph)
 (map! :n "Q" #'evil-backward-paragraph)
 
@@ -5467,7 +5478,6 @@ org-sidebar
 
 ** doom leader
 注意的键位变量为 doom-leader-<xx>-map, 其中xx为"prefix-map"后所定义的内容, 比如 "doom-leader-workspace-map".
-
 *** leader
 #+name: 2d76b8e4
 #+begin_src elisp

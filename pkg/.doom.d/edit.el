@@ -1,3 +1,7 @@
+;; [[file:../../doom.note::1a0721e0][1a0721e0]]
+(map! :ni  "C-j"           #'+default/newline-below)
+;; 1a0721e0 ends here
+
 ;; [[file:../../doom.note::*completion][completion:1]]
 ;; Use hippie-expand instead of dabbrev-expand
 ;; (global-set-key (kbd "M-/") #'dabbrev-expand)

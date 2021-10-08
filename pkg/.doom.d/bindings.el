@@ -10,6 +10,7 @@
 
 (map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
 
+;; 默认q为macro键, 我很少用. 改为快速移动类按键.
 (map! :n "q" #'evil-forward-paragraph)
 (map! :n "Q" #'evil-backward-paragraph)
 

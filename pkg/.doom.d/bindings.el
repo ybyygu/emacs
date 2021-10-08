@@ -8,11 +8,13 @@
 (map! :nvim "C-p" nil)
 (map! :nvim "C-u" nil)                  ; universal argument
 
-(map! :vi "C-w" #'kill-region)          ; cut, copy: Alt-w
-
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.
 (map! :n "q" #'evil-forward-paragraph)
 (map! :n "Q" #'evil-backward-paragraph)
+
+;; 默认为word-end类移动
+(map! :n "e" #'evil-forward-sentence-begin)
+(map! :n "E" #'evil-backward-sentence-begin)
 
 ;; evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
@@ -20,10 +22,10 @@
 
 ;; evil里也得设置, 不然无效
 (after! evil-org
-        (map! :map evil-org-mode-map
-              :nivm "C-d" nil
-              :nivm "C-k" nil
-              :i "M-l" nil))
+  (map! :map evil-org-mode-map
+        :nivm "C-d" nil
+        :nivm "C-k" nil
+        :i "M-l" nil))
 ;; fc887e83 ends here
 
 ;; [[file:../../doom.note::*movement][movement:2]]

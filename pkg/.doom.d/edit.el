@@ -1,3 +1,20 @@
+;; [[file:../../doom.note::69dc0b95][69dc0b95]]
+;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
+(map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
+(defun gwp::ctrl-w-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'kill-region)
+    (call-interactively #'backward-kill-word)
+    ))
+
+;; 默认为set-face之类的东西
+(map! "M-o" #'just-one-space)
+
+;; 删除到行尾
+(map! :i "C-k"  #'kill-line)
+;; 69dc0b95 ends here
+
 ;; [[file:../../doom.note::1a0721e0][1a0721e0]]
 (map! :ni  "C-j"           #'+default/newline-below)
 ;; 1a0721e0 ends here
@@ -139,12 +156,12 @@
 (map! :i "C-c i" #'gwp/insert-date)
 ;; insert date:1 ends here
 
-;; [[file:../../doom.note::*white space][white space:1]]
+;; [[file:../../doom.note::f75f80bd][f75f80bd]]
 (setq show-trailing-whitespace t)
-(global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
 ;; make sure this always work
 (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
-;; white space:1 ends here
+;; f75f80bd ends here
 
 ;; [[file:../../doom.note::2286a7d2][2286a7d2]]
 (after! evil

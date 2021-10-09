@@ -29,7 +29,13 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [49/61]
+* Memo [50/62]
+** DONE [2021-10-09 Sat] magit-status启动后隐藏 untracked files列表, 每次跳开要浪费不少时间
+- State "DONE"       from "TODO"       [2021-10-09 Sat 19:48]
+[[https://emacs.stackexchange.com/questions/27271/how-do-i-toggle-magit-enumerating-untracked-files][How do I toggle Magit enumerating untracked files? - Emacs Stack Exchange]]
+
+magit-section-initial-visibility-alist
+
 ** DONE [2021-10-09 Sat] 使用rime做为默认的输入法
 - State "DONE"       from "TODO"       [2021-10-09 Sat 19:31]
 优点:
@@ -103,16 +109,12 @@ strace -f -s 1000 -tt xdg-open http://www.baidu.com &>/tmp/a.log
 evil-forward-paragraph
 
  516081    6.94%  evil-next-visual-line                                   g <down>
- 479565    6.45%  evil-backward-char                                      DEL, <left>, h
  329382    4.43%  evil-previous-visual-line                               g <up>
   62733    0.84%  save-buffer                                             SPC SPC, SPC f s, <motion-state> SPC SPC, <visual-state> SPC SPC, <normal-state> SPC SPC, <emacs-state> M-SPC SPC, <insert-state> M-SPC SPC, <motion-state> SPC f s, <visual-state> SPC f s, <normal-state> SPC f s, <emacs-state> M-SPC f s, <insert-state> M-SPC f s, C-x C-s, <menu-bar> <file> <save-buffer>
-  44239    0.59%  evil-delete-backward-char-and-join
   30436    0.41%  evil-mouse-drag-region                                  <down-mouse-1>
   23408    0.31%  gwp/org-babel-tangle-dwim                               SPC d d, SPC o b, SPC m b b, <motion-state> SPC d d, <visual-state> SPC d d, <normal-state> SPC d d, <emacs-state> M-SPC d d, <insert-state> M-SPC d d, <insert-state> M-SPC m b b, <emacs-state> M-SPC m b b, <motion-state> SPC m b b, <visual-state> SPC m b b, <normal-state> SPC m b b
   22998    0.31%  ivy-next-line
   19272    0.26%  org-up-element                                          g h, <motion-state> g h, C-c C-^, <normal-state> g h
-  18722    0.25%  mouse-drag-region
-  17920    0.24%  evil-org-delete-char                                    x, <normal-state> x
   17401    0.23%  org-edit-src-exit                                       SPC ;, <motion-state> SPC ;, <visual-state> SPC ;, <normal-state> SPC ;, <emacs-state> M-SPC ;, <insert-state> M-SPC ;
   15148    0.20%  doom/forward-to-last-non-comment-or-eol                 C-e
   15108    0.20%  evil-delete-char                                        <deletechar>
@@ -126,14 +128,11 @@ evil-forward-paragraph
   11140    0.15%  evil-org-delete                                         d, <normal-state> d
   11072    0.15%  +magit/quit
   10785    0.15%  magit-status                                            SPC g g, <motion-state> SPC g g, <visual-state> SPC g g, <normal-state> SPC g g, <emacs-state> M-SPC g g, <insert-state> M-SPC g g, C-x g
-  10400    0.14%  evil-delete
    9645    0.13%  org-end-of-line                                         C-e
    9361    0.13%  evil-change                                             c
    9197    0.12%  evil-visual-line                                        V
-   8782    0.12%  ivy-done
    8741    0.12%  evil-paste-after                                        p
    8741    0.12%  evil-append                                             a
-   8489    0.11%  magit-stage
    7517    0.10%  evil-ex-search-next                                     n
    7492    0.10%  newline-and-indent
    7045    0.09%  handle-switch-frame                                     <switch-frame>
@@ -142,14 +141,11 @@ evil-forward-paragraph
    6242    0.08%  backward-kill-word                                      <C-backspace>, M-DEL
    5892    0.08%  evil-goto-first-line                                    g g
    5680    0.08%  evil-collection-pdf-view-next-line-or-next-page
-   5548    0.07%  ivy-backward-delete-char
    5457    0.07%  doom/escape                                             C-g
-   5339    0.07%  vterm--self-insert
    5135    0.07%  minibuffer-keyboard-quit
    5085    0.07%  mouse-drag-mode-line                                    <bottom-divider> <down-mouse-1>, <mode-line> <down-mouse-1>
    4997    0.07%  kill-current-buffer                                     SPC b k, SPC b d, z x, <motion-state> SPC b k, <motion-state> SPC b d, <visual-state> SPC b k, <visual-state> SPC b d, <normal-state> SPC b k, <normal-state> SPC b d, <emacs-state> M-SPC b k, <emacs-state> M-SPC b d, <insert-state> M-SPC b k, <insert-state> M-SPC b d
    4942    0.07%  evil-replace                                            r
-   4857    0.07%  forward-char
    4228    0.06%  gwp/dwim-at-point
    3927    0.05%  evil-window-left                                        SPC w C-h, SPC w h, C-w C-h, C-w h, <motion-state> SPC w C-h, <motion-state> SPC w h, <visual-state> SPC w C-h, <visual-state> SPC w h, <normal-state> SPC w C-h, <normal-state> SPC w h, <emacs-state> M-SPC w C-h, <emacs-state> M-SPC w h, <insert-state> M-SPC w C-h, <insert-state> M-SPC w h
    3926    0.05%  org-yank                                                <S-insertchar>, <S-insert>, <menu-bar> <edit> <paste>
@@ -186,16 +182,12 @@ evil-forward-paragraph
    1845    0.02%  magit-log-current
    1773    0.02%  magit-commit-extend
    1737    0.02%  gwp/org-open-at-point-dwim                              SPC m o, C-c C-o, <insert-state> M-SPC m o, <emacs-state> M-SPC m o, <motion-state> SPC m o, <visual-state> SPC m o, <normal-state> SPC m o
-   1672    0.02%  backward-char
-   1647    0.02%  company-ignore
    1636    0.02%  scroll-up-command                                       <next>
-   1621    0.02%  org-delete-char                                         C-d
    1588    0.02%  with-editor-finish
    1549    0.02%  backward-button
    1548    0.02%  counsel-recentf                                         SPC f r, <motion-state> SPC f r, <visual-state> SPC f r, <normal-state> SPC f r, <emacs-state> M-SPC f r, <insert-state> M-SPC f r
    1431    0.02%  evil-ret
    1429    0.02%  +dired/quit-all
-   1428    0.02%  left-char
    1424    0.02%  ace-window                                              SPC w C-w, C-w C-w, <motion-state> SPC w C-w, <visual-state> SPC w C-w, <normal-state> SPC w C-w, <emacs-state> M-SPC w C-w, <insert-state> M-SPC w C-w, C-x o, SPC w w, C-w w, <motion-state> SPC w w, <visual-state> SPC w w, <normal-state> SPC w w, <emacs-state> M-SPC w w, <insert-state> M-SPC w w
    1404    0.02%  org-ctrl-c-ctrl-c                                       C-c C-c, <menu-bar> <Table> <Align>
    1372    0.02%  dired-up-directory
@@ -655,6 +647,7 @@ buffer, 可以同时浏览多个narrowed subtree, 互不影响.
 - [X] 各种注释相关操作: [[https://github.com/redguardtoo/evil-nerd-commenter][redguardtoo/evil-nerd-commenter: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim]]
 - [X] gd: 跳转到函数定义位置. 并不总是灵光.
 - Ctrl-h b: 显示所有按键 which-key-show-keymap Ctrl-h b m
+- 这里有evil默认按键绑定 [[file:doom-emacs/.local/straight/repos/evil/evil-maps.el][evil-maps.el]]
 
 ** DONE [2020-03-06 Fri] 使用 custom-set-faces!来修改theme
 - State "DONE"       from "TODO"       [2020-04-25 Sat 09:07]
@@ -1052,6 +1045,13 @@ javascript:void function(){var a=window.getSelection();""==a%26%26(a=document.ti
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
+** 统计字符数
+g C-g
+: count-words
+
+** 拼写检查
+z=
+: flyspell-correct-at-point
 
 ** Swiper/Ivy notes
 [[https://github.com/condy0919/emacs-newbie/blob/master/introduction-to-ivy.md][ivy 新手教程]]
@@ -1122,7 +1122,47 @@ eval: major-mode
 
 ** evil功能
 查看evil-visual-state-map帮助
+*** 快速移动
+跳转至某行(G):
+: evil-goto-line
 
+^
+: evil-first-non-blank
+
+至行首(0, g0)
+: evil-beginning-of-line
+
+至行尾($)
+: evil-end-of-line
+
+将光标移动到窗口底部(L)
+: evil-window-bottom
+
+将光标移动到窗口顶部(H)
+: evil-window-top
+
+首行(gg)
+: evil-goto-first-line
+
+尾行(G)
+: evil-goto-line
+
+跳至之前的行('')
+: evil-goto-mark-line
+
+跳至之前的位置(``)
+: evil-goto-mark
+
+至成对(%)
+: evil-jump-item
+
+g;
+: goto-last-change
+
+g,
+: goto-last-change-reverse
+
+*** 文本选择
 选中文字后按S, 再按"(" 可在选中字符前后加括号.
 
 evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内容
@@ -1133,21 +1173,42 @@ evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内
   - vio: 文字块, 不含括号
 - vS => 插入包围操作
 
-大写文字: U, 小写文字: u
+*** 编辑功能
+大小写互换: ~, 大写文字: U, 小写文字: u
 
-快速搜索
-- f: 搜索单个字符
-- s: 搜索两个字符
-其后按";"或重复操作.
+
+*** 复制粘贴
+- y (evil-yank): copy region
+- Y (evil-yank-line): 复制到行尾
+
+*** 快速搜索
+/
+: evil-search-forward
+
+*
+: evil-search-word-forward
+
+?
+: evil-search-backward
+
+n/N
+: evil-search-next
+: evil-search-previous
+
+- f/F: 搜索单个字符
+- s/S: 搜索两个字符
+- t/T: 搜索行内的一个字符
+
+其后按","或";"重复之前的搜索操作(evil-repeat-find-char).
 
 按缩进层次选择文本:
 - vii
-NOTE: 选择文字区域后可按o键exchange-point-and-mark, 再由上或由下扩选范围.
+NOTE: 选择文字区域后可按"o"键exchange-point-and-mark, 再由上或由下扩选范围.
 
 改变选中数字大小:
 - g+或g=, g-
 
-z开头的命令:
+*** z开头的命令:
 - zc, zo关闭或打开所在headline
 - zn/zN: 切换查看当前headline (indirect buffer)
 - zi: 切换image显示
@@ -1156,13 +1217,42 @@ Z开头的命令
 - ZQ: evil-quit
 - ZX: 保存并关闭当前buffer
 
-org headline跳转
+*** org headline跳转
 - gk, gj
 - gh, gl, gH
 
-resume相关命令
+*** resume相关命令
 - gi: evil-insert-resume
 - gv: evil-visual-restore
+
+*** 找到光标下的文件
+gf
+: evil-find-file-at-point-visual
+
+*** 转换开关
+emacs相关
+\
+: evil-execute-in-emacs-state
+
+C-z
+: evil-emacs-state
+
+在insert state下按C-o可在normal state下执行命令. 这样就没必要定义doom-leader-alt-key了?
+: evil-execute-in-normal-state
+
+*** ex命令
+比如以":"进行ex命令:
+: :g/evil/d
+以上命令搜索evil开头的行, 并删除之.
+
+: :v/evil/d
+删除不包括evil的行
+
+:m 挪至行号
+
+:! 执行shell命令
+: evil-shell-command
+
 
 ** multi-cursor: 同时操作多个光标
 - gzz
@@ -2857,7 +2947,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ** input method
 默认使用 Ctrl-\ 切换输入法
 *** rime
-可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点.
+可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点. 在输入过程中, 按z键临时拼音模式.
 
 #+name: 155b72b3
 #+begin_src elisp
@@ -3581,7 +3671,10 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ** magit
 #+name: 4bae51e2
 #+begin_src elisp
-(after! magit
+(use-package magit
+  :config
+  ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
+  (setq magit-section-initial-visibility-alist (quote ((untracked . hide))))
   ;;禁用magit中的gravatars支持, 响应能快一些.
   (setq magit-revision-show-gravatars nil))
 #+end_src
@@ -5162,7 +5255,7 @@ file-exists-p函数对symlink的特殊性:
 ** refile
 refile流程:
 - 打开refile.note
-- 检查其中的条目, 找到可能的合适的归档note文件, 打开之.
+- 检查其中的条目, 找到可能的合适的归档.note文件, 打开之.
 - SPC-m-r-r, org-refile
 - SPC-u SPC-m-r-r: 跳转至refile targets
 
@@ -5178,7 +5271,7 @@ refile流程:
                 (buffer-list))))
 
 ;;(setq org-refile-targets '((gwp/org-get-refile-targets :tag . "Incoming")))
-(setq org-refile-targets '((gwp/org-get-refile-targets :regexp . "Memo")))
+(setq org-refile-targets '((gwp/org-get-refile-targets :regexp . "^* Memo")))
 (setq org-refile-use-outline-path nil)
 
 (setq org-reverse-note-order t)
@@ -6050,8 +6143,8 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
 #+name: 011dce65
 #+begin_src elisp
 (map! :leader
-      :desc "window"                "w"    evil-window-map
-      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
+      :desc "window"                "w"    evil-window-map ; 默认为C-w
+      :desc "frame"                 "W"    ctl-x-5-map     ; 换个容易按的键位
       )
 #+end_src
 

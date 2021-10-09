@@ -97,7 +97,7 @@
 (map! :leader
       (:prefix-map ("c" . "Code/compile")
        :desc "Align the current region regexp"       "a"   #'align-regexp
-       :desc "Comment or uncomment lines"            "l"   #'evilnc-comment-or-uncomment-lines
+       :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
        :desc "indent region"                         "TAB" #'indent-region ; 有用
        :desc "indent region"                         [tab] #'indent-region ; 有用
@@ -388,8 +388,8 @@
 
 ;; [[file:../../doom.note::011dce65][011dce65]]
 (map! :leader
-      :desc "window"                "w"    evil-window-map
-      :desc "frame"                 "W"    ctl-x-5-map ; 换个容易按的键位
+      :desc "window"                "w"    evil-window-map ; 默认为C-w
+      :desc "frame"                 "W"    ctl-x-5-map     ; 换个容易按的键位
       )
 ;; 011dce65 ends here
 

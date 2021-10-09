@@ -48,12 +48,12 @@
 (map! :i "C-`" #'+popup/toggle)
 ;; 弹出窗口:1 ends here
 
-;; [[file:../../doom.note::*窗口大小][窗口大小:1]]
+;; [[file:../../doom.note::032e71c0][032e71c0]]
 (map! :nvi
       [C-M-mouse-4] #'evil-window-increase-width
       [C-M-mouse-5] #'evil-window-decrease-width
       )
-;; 窗口大小:1 ends here
+;; 032e71c0 ends here
 
 ;; [[file:../../doom.note::*窗口大小][窗口大小:2]]
 (setq split-width-threshold 200)        ; default is 160
@@ -81,57 +81,30 @@
   (display-buffer-other-frame (current-buffer)))
 ;; 19e08aef ends here
 
-;; [[file:../../doom.note::15078428][15078428]]
-(use-package! pyim
+;; [[file:../../doom.note::155b72b3][155b72b3]]
+(use-package! rime
+  :custom
+  (default-input-method "rime")
   :config
-  (setq default-input-method "pyim")
-
-  ;; 我使用五笔
-  (use-package! pyim-wbdict
-    :config (pyim-wbdict-v98-enable))
-  (setq pyim-default-scheme 'wubi)
-
-  ;; 启用拼音大词库，方便忘词用拼音反查
-  (use-package pyim-basedict
-    :config (pyim-basedict-enable))
-  ;; 如果用户在使用五笔输入法的过程中，忘记了某个字的五笔码，可以按 TAB(F2-TAB)键临时切换到辅助输入法来输入，选词完成之后自动退出。
-  (setq pyim-assistant-scheme 'quanpin)
-
-  ;; 全角半角
-  (setq-default pyim-punctuation-half-width-functions
-                '(pyim-probe-punctuation-line-beginning
-                  pyim-probe-punctuation-after-punctuation))
-
-  ;; 不使用中文标点, 如需输入可切换至fcitx.
-  ;; (delete '("/" "、")  pyim-punctuation-dict)
-  ;; (add-to-list 'pyim-punctuation-dict '("\\" "、"))
-  (setq pyim-punctuation-dict nil)
-
-  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
-  ;; 我自己使用的中英文动态切换规则是：
-  ;; 1. 光标只有在注释里面时，才可以输入中文。
-  ;; 2. 光标前是汉字字符时，才能输入中文。
-  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
-  ;; (setq-default pyim-english-input-switch-functions
-  ;;               '(
-  ;;                 ;; pyim-probe-dynamic-english
-  ;;                 pyim-probe-isearch-mode
-  ;;                 pyim-probe-program-mode
-  ;;                 pyim-probe-org-structure-template
-  ;;                 ))
-
-  ;; 与 pyim-probe-dynamic-english 配合，方便切换至中文模式
-  :bind
-  (
-   ;; ("<f2> SPC" . pyim-convert-string-at-point)
-   ;; ("M-SPC" . toggle-input-method)
-   (:map pyim-mode-map
-    ;; ("<f2> TAB" . pyim-toggle-assistant-scheme)
-    ("/" . pyim-toggle-assistant-scheme)
-    ("_" . pyim-toggle-input-ascii)
-    ("\\" . pyim-toggle-input-ascii)
-    )))
-;; 15078428 ends here
+  (setq rime-user-data-dir "~/.local/share/fcitx5/rime")
+  ;;; support shift-l, shift-r, control-l, control-r
+  (setq rime-inline-ascii-trigger 'shift-l)
+  ;; 添加C-.快捷键, 方便切换中英文标点(需要在rime输入时有效)
+  (setq rime-translate-keybindings
+        '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
+  ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
+  (map! :ni "C-SPC" 'toggle-input-method)
+  ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
+  (map! :map rime-active-mode-map [tab] 'rime-inline-ascii)
+  ;; (setq rime-posframe-properties
+  ;;       (list :background-color "#333333"
+  ;;             :foreground-color "#dcdccc"
+  ;;             :font "WenQuanYi Micro Hei Mono-14"
+  ;;             :internal-border-width 10))
+  ;; (setq default-input-method "rime"
+  ;;       rime-show-candidate 'posframe)
+  )
+;; 155b72b3 ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390

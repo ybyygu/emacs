@@ -85,9 +85,9 @@
 (load! "ui")
 ;; e9e282a0 ends here
 
-;; [[file:../../doom.note::*edit][edit:1]]
+;; [[file:../../doom.note::bbcdc054][bbcdc054]]
 (load! "edit")
-;; edit:1 ends here
+;; bbcdc054 ends here
 
 ;; [[file:../../doom.note::*dired][dired:1]]
 (use-package dired
@@ -220,7 +220,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (load! "develop")
 ;; develop:1 ends here
 
-;; [[file:../../doom.note::*recent files][recent files:1]]
+;; [[file:../../doom.note::493c2a26][493c2a26]]
 (require 'recentf)
 ;; the default is only 20
 (setq recentf-max-saved-items 1000)
@@ -229,19 +229,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (add-to-list 'recentf-exclude "\.pdf$")
 (add-to-list 'recentf-exclude "\.svg$")
 (add-to-list 'recentf-exclude "\.odt$")
-;; recent files:1 ends here
-
-;; [[file:../../doom.note::*fcitx][fcitx:1]]
-(use-package! fcitx
-  :after evil
-  :config
-  (when (executable-find "fcitx-remote")
-    ;; (fcitx-prefix-keys-add "M-m")
-    ;; 影响搜索界面, 不应该开
-    ;; (setq fcitx-use-dbus t)
-    (fcitx-aggressive-setup)
-    ))
-;; fcitx:1 ends here
+;; 493c2a26 ends here
 
 ;; [[file:../../doom.note::*dired-sidebar][dired-sidebar:1]]
 (use-package dired-sidebar

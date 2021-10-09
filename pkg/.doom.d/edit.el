@@ -23,7 +23,7 @@
 (map! :ni  "C-j"           #'+default/newline-below)
 ;; 1a0721e0 ends here
 
-;; [[file:../../doom.note::*completion][completion:1]]
+;; [[file:../../doom.note::d28bc89a][d28bc89a]]
 ;; Use hippie-expand instead of dabbrev-expand
 ;; (global-set-key (kbd "M-/") #'dabbrev-expand)
 (global-set-key (kbd "M-/") #'hippie-expand)
@@ -62,7 +62,7 @@
           :desc "citre jump back"                             "b" #'citre-jump-back
           :desc "citre peek"                                  "p" #'citre-peek
           ))))
-;; completion:1 ends here
+;; d28bc89a ends here
 
 ;; [[file:../../doom.note::*keyfreq][keyfreq:1]]
 (require 'keyfreq)

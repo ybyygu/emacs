@@ -1,7 +1,3 @@
-;; [[file:../../doom.note::e61c257c][e61c257c]]
-(package! golden-ratio)
-;; e61c257c ends here
-
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -58,9 +54,11 @@
 (package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 
 (package! fcitx)
+(package! rime)
+(package! citre)
 
 ;; 五笔输入法
-(package! pyim-wbdict)
+;; (package! pyim-wbdict)
 
 ;; (package! berrys-theme)
 ;; (package! material-theme)
@@ -77,6 +75,7 @@
 (package! nix-mode)
 
 (disable-packages! pangu-spacing)
+(disable-packages! pyim)
 
 (package! doom-snippets :ignore t)
 
@@ -102,9 +101,9 @@
            :branch "main"
            :files ("*.el")))
 
-;; [[file:../../doom.note::*completion][completion:2]]
-(package! citre)
-;; completion:2 ends here
+;; [[file:../../doom.note::e61c257c][e61c257c]]
+(package! golden-ratio)
+;; e61c257c ends here
 
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)

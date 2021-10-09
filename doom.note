@@ -6,7 +6,7 @@
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 
 * Portal
-- note @emacs
+- note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
 * Tasks [3/3]
@@ -29,7 +29,33 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [47/60]
+* Memo [49/61]
+** DONE [2021-10-09 Sat] 使用rime做为默认的输入法
+- State "DONE"       from "TODO"       [2021-10-09 Sat 19:31]
+优点:
+- 相比于fcitx table不再有掉字的问题.
+- 可以配合emacs-rime这个包来精细调整, 实现更佳的输入体验.
+
+思路
+- emacs启动时, 禁用掉fcitx相关的变量, 这样可实现ctrl-space自动调用emacs-rime. 与
+  桌面其它习惯保持一致.
+- 副作用: 在emacs中调用的程序可能无法正常使用fcitx来输入中文.
+
+rime的安装
+: sudo pacman -S fcitx-rime5 librime
+: pac -S manjaro-asian-input-support-fcitx5
+
+rime数据在 ~/.local/share/fcitx5/rime下.
+: ~/.local/share/fcitx5/rime/default.custom.yaml
+
+五笔98码表设置文件:
+- [[https://github.com/yanhuacuo/98wubi-tables][yanhuacuo/98wubi-tables: 98五笔基础码表]]
+- [[https://github.com/thep0y/rime-98][thep0y/rime-98]]
+
+在fcitx-rime中切换中英文挺麻烦的, 可在rime中禁用英文(ascii_composer得保留, 不然
+无法在emacs中切换临时英文):
+- [[https://github.com/rime/squirrel/issues/221][如何删除 鼠须管 的英文模式？ #221]]
+
 ** DONE [2021-10-08 Fri] 解决matebook打开url慢的问题
 - State "DONE"       from "TODO"       [2021-10-08 Fri 19:45]
 browse-url函数慢
@@ -503,7 +529,8 @@ pacman -S fd
 
 ~/.emacs.d/bin/doom install
 
-** TODO [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
+** DONE [2021-02-03 Wed] 解决fcitx输入汉字掉字的问题
+- State "DONE"       from "TODO"       [2021-10-09 Sat 09:27]
 - State "DONE"       from "TODO"       [2021-02-08 Mon 14:20]
 fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用emacs内置的输入法可以
 较好的解决这个问题.
@@ -513,6 +540,10 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 - [[https://manateelazycat.github.io/emacs/2020/03/22/emacs-rime.html][折腾emacs-rime]]
 - [[https://blindwith.science/2020/12/460.html/][从 pyim 换到 emacs-rime 了 - Blind with Science]]
 - [[https://sunyour.org/post/%E7%BB%99-emacs-rime-%E5%A2%9E%E5%8A%A0%E7%B1%BB%E4%BC%BC-pyim-%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%BD%93%E5%89%8D%E8%8B%B1%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%BA%E4%B8%AD%E6%96%87%E7%9A%84%E5%8A%9F%E8%83%BD/][给 emacs-rime 增加类似 pyim 的转换当前英文字符串为中文的功能 - 凡·记 - 墩墩家的幸福生活]]
+- [[https://wiki.archlinux.org/title/Rime][Rime - ArchWiki]]
+- [[https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md][Rime_collections/Rime_description.md at master · LEOYoon-Tsaw/Rime_collections]]
+
+用fcitx rime不会掉字? 也许直接用fcitx5-rime就可以了?
 
 *** pyim输入法
 现在有的特性:
@@ -1637,14 +1668,21 @@ path="$dir_read"/$(basename "${1#file:}")
 #+END_SRC
 
 * TODO desktop integration
+** emacs (no fcitx)
+屏蔽掉fcitx, 只用emacs自带的emacs-rime, 来实现更佳输入体验
+#+name: 73cd85b7
+#+begin_src shell :tangle ~/.local/bin/emacs :shebang #! /usr/bin/env bash
+unset GTK_IM_MODULE XMODIFIERS
+/usr/bin/emacs $@
+#+end_src
+
 ** TODO emacs daemon
 - [[https://www.taingram.org/blog/emacs-client.html][Emacsclient Setup with Desktop Integration]]
 
-** DONE app launcher (替代krunner, gnome-do等)                          :ATTACH:
+** app launcher (替代krunner, gnome-do等)                          :ATTACH:
 :PROPERTIES:
 :ID:       c616356a-c1cf-450e-83e3-0e42afa72ebb
 :END:
-- State "DONE"       from "TODO"       [2021-09-30 Thu 09:52]
 [2021-09-30 Thu] 以下emacs脚本时灵时不灵的. 可在KDE下为emacs程序设置窗口快捷键,
 比如win-u, 按键时直达emacs, 然后再调用 counsel-linux-app, counsel-wmctrl等命令即
 可.
@@ -2230,6 +2268,7 @@ gwp-merge:
 #+end_src
 
 *** edit
+#+name: bbcdc054
 #+begin_src emacs-lisp
 (load! "edit")
 #+end_src
@@ -2387,6 +2426,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 #+end_src
 
 *** recent files
+#+name: 493c2a26
 #+begin_src emacs-lisp
 (require 'recentf)
 ;; the default is only 20
@@ -2400,7 +2440,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 
 *** fcitx
 自动中英文切换, 解决vim模式下的一大痛点.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package! fcitx
   :after evil
   :config
@@ -2578,9 +2618,11 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+name: d8f41362
 #+begin_src elisp
 (package! fcitx)
+(package! rime)
+(package! citre)
 
 ;; 五笔输入法
-(package! pyim-wbdict)
+;; (package! pyim-wbdict)
 
 ;; (package! berrys-theme)
 ;; (package! material-theme)
@@ -2618,8 +2660,10 @@ org-noter
 *** 需要禁用的包
 pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 
+#+name: 7448ee80
 #+begin_src elisp
 (disable-packages! pangu-spacing)
+(disable-packages! pyim)
 #+end_src
 
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
@@ -2754,6 +2798,7 @@ doom内置了几个命令:
 
 *** 窗口大小
 使用滚轮来修改窗口大小. Ctrl-Alt-scroll-up, Ctrl-Alt-scroll-down
+#+name: 032e71c0
 #+begin_src elisp
 (map! :nvi
       [C-M-mouse-4] #'evil-window-increase-width
@@ -2810,9 +2855,42 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 #+end_src
 
 ** input method
-[[https://tumashu.github.io/pyim/][A Chinese input method which support quanpin, shuangpin, wubi and cangjie. - pyim]]
-
 默认使用 Ctrl-\ 切换输入法
+*** rime
+可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点.
+
+#+name: 155b72b3
+#+begin_src elisp
+(use-package! rime
+  :custom
+  (default-input-method "rime")
+  :config
+  (setq rime-user-data-dir "~/.local/share/fcitx5/rime")
+  ;;; support shift-l, shift-r, control-l, control-r
+  (setq rime-inline-ascii-trigger 'shift-l)
+  ;; 添加C-.快捷键, 方便切换中英文标点(需要在rime输入时有效)
+  (setq rime-translate-keybindings
+        '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
+  ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
+  (map! :ni "C-SPC" 'toggle-input-method)
+  ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
+  (map! :map rime-active-mode-map [tab] 'rime-inline-ascii)
+  ;; (setq rime-posframe-properties
+  ;;       (list :background-color "#333333"
+  ;;             :foreground-color "#dcdccc"
+  ;;             :font "WenQuanYi Micro Hei Mono-14"
+  ;;             :internal-border-width 10))
+  ;; (setq default-input-method "rime"
+  ;;       rime-show-candidate 'posframe)
+  )
+#+end_src
+
+*** pyim
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+- [[https://tumashu.github.io/pyim/][A Chinese input method which support quanpin, shuangpin, wubi and cangjie. - pyim]]
+
 #+name: 15078428
 #+begin_src elisp
 (use-package! pyim
@@ -3010,6 +3088,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 : M-l j: Jump to the definition.
 : C-g: Close the peek window.
 
+#+name: d28bc89a
 #+begin_src elisp
 ;; Use hippie-expand instead of dabbrev-expand
 ;; (global-set-key (kbd "M-/") #'dabbrev-expand)
@@ -3049,11 +3128,6 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
           :desc "citre jump back"                             "b" #'citre-jump-back
           :desc "citre peek"                                  "p" #'citre-peek
           ))))
-#+end_src
-
-安装对应的包
-#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
-(package! citre)
 #+end_src
 
 ** keyfreq

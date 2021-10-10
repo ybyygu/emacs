@@ -338,7 +338,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (defun gwp/org-babel-tangle-blocks()
   (interactive)
   ;; tangle blocks only for target file at point
-  (let ((current-prefix-arg '(16)))
+  (let ((current-prefix-arg '(16)))     ; C-u C-u
     (call-interactively 'org-babel-tangle)))
 
 ;; narrow to subtree before calling org-babel-tangle
@@ -365,6 +365,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (defun gwp/org-babel-tangle-dwim()
   "Tangle current file at point whenever in a sub-editing buffer or not"
   (interactive)
+  ;; 标记当前位置
+  (gwp::mark-current-position)
   (if (org-src-edit-buffer-p)
       (gwp/org-edit-save-and-tangle)
     (if (eq 'src-block (org-element-type (org-element-at-point)))
@@ -880,7 +882,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 ;; capture & protocol:1 ends here
 
-;; [[file:../../doom.note::*refile][refile:1]]
+;; [[file:../../doom.note::568eea25][568eea25]]
 (defun gwp/org-get-refile-targets ()
   "Return the list of files currently opened in emacs"
   (delq nil
@@ -892,7 +894,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                 (buffer-list))))
 
 ;;(setq org-refile-targets '((gwp/org-get-refile-targets :tag . "Incoming")))
-(setq org-refile-targets '((gwp/org-get-refile-targets :regexp . "Memo")))
+(setq org-refile-targets '((gwp/org-get-refile-targets :regexp . "^* Memo")))
 (setq org-refile-use-outline-path nil)
 
 (setq org-reverse-note-order t)
@@ -902,7 +904,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (search-forward "[[file:" (line-end-position))
     (if (org-in-regexp org-bracket-link-regexp 1)
         (org-link-unescape (match-string-no-properties 1)))))
-;; refile:1 ends here
+;; 568eea25 ends here
 
 ;; [[file:../../doom.note::43fd72e2][43fd72e2]]
 (with-eval-after-load 'org-agenda

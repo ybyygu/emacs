@@ -1,68 +1,12 @@
-;; [[file:../../doom.note::fc887e83][fc887e83]]
-(map! :nvim "C-a" nil)
-;; 禁用evil中的ctrl-e, 默认为向上滚动, 不太习惯.
-(map! :nvim "C-e" nil)
-(map! :nvim "C-d" nil)
-(map! :nvim "C-k" nil)
-(map! :nvim "C-n" nil)
-(map! :nvim "C-p" nil)
-(map! :nvim "C-u" nil)                  ; universal argument
-
-;; 默认q为macro键, 我很少用. 改为快速移动类按键.
-(map! :n "q" #'evil-forward-paragraph)
-(map! :n "Q" #'evil-backward-paragraph)
-
-;; 默认为word-end类移动
-(map! :n "e" #'evil-forward-sentence-begin)
-(map! :n "E" #'evil-backward-sentence-begin)
-
-(map! :n "w" #'evil-forward-word-begin)
-(map! :n "W" #'evil-backward-word-begin)
-
-;; evil默认为quoted-insert, 可以 ctrl-q代替
-(map! :i "C-v" #'yank)
-(map! :i "C-y" nil)
-
-;; evil里也得设置, 不然无效
-(after! evil-org
-  (map! :map evil-org-mode-map
-        :nivm "C-d" nil
-        :nivm "C-k" nil
-        :i "M-l" nil))
-;; fc887e83 ends here
-
-;; [[file:../../doom.note::*movement][movement:2]]
-;; Make M-x harder to miss
-(define-key! 'override
-  "M-x" #'execute-extended-command
-  "A-x" #'execute-extended-command)
-
-;; A Doom convention where C-s on popups and interactive searches will invoke
-;; ivy/helm for their superior filtering.
-(define-key! :keymaps +default-minibuffer-maps
-  "C-s" (if (featurep! :completion ivy)
-            #'counsel-minibuffer-history
-          #'helm-minibuffer-history))
-
-;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
-;; Pressing it again will send you to the true bol. Same goes for C-e, except
-;; it will ignore comments+trailing whitespace before jumping to eol.
-(map! :gi "C-a" #'doom/backward-to-bol-or-indent
-      :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
-      ;; Standardizes the behavior of modified RET to match the behavior of
-      ;; other editors, particularly Atom, textedit, textmate, and vscode, in
-      ;; which ctrl+RET will add a new "item" below the current one
-      :gn [C-return]    #'+default/newline-below
-      :gn [C-S-return]  #'+default/newline-above
-      )
-
-;; 2021-08-31: 现在gwp/default下修改
-;; (load! "bindings")
-;; movement:2 ends here
-
 ;; [[file:../../doom.note::2d76b8e4][2d76b8e4]]
+(defun gwp::mark-and-save-buffer()
+  "标记光标所在位置, 并保存buffer"
+  (interactive)
+  (call-interactively #'gwp::mark-current-position)
+  (save-buffer))
+
 (map! :leader
-      :desc "save buffer" "SPC" #'save-buffer)
+      :desc "save buffer" "SPC" #'gwp::mark-and-save-buffer)
 ;; 2d76b8e4 ends here
 
 ;; [[file:../../doom.note::19c9e88c][19c9e88c]]
@@ -248,6 +192,7 @@
        :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
        :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
        :desc "avy line"               "l" #'evil-avy-goto-line
+       :desc "emacs mark ring"        "m" #'gwp::hydra-mark-ring-pop/body
        ))
 ;; 6ea0d271 ends here
 

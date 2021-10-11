@@ -1,4 +1,4 @@
-#+TITLE: 个人文本操作系统(based on doom-emacs)
+#+TITLE: 个人文本交互系统(based on doom-emacs)
 #+SETUPFILE: ~/Notes/common.org
 
 历史设置
@@ -29,7 +29,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [51/62]
+* Memo [51/63]
+** TODO [2021-10-10 Sun] [[https://emacs-china.org/t/package-symbol-overlay-symbol/7706][[推销package] symbol-overlay，同时高亮多个symbol - Emacs-general - Emacs China]]
+
 ** DONE [2021-10-09 Sat] magit-status启动后隐藏 untracked files列表, 每次跳开要浪费不少时间
 - State "DONE"       from "TODO"       [2021-10-09 Sat 19:48]
 [[https://emacs.stackexchange.com/questions/27271/how-do-i-toggle-magit-enumerating-untracked-files][How do I toggle Magit enumerating untracked files? - Emacs Stack Exchange]]
@@ -287,6 +289,8 @@ evil-forward-paragraph
 
 ** TODO [2021-10-06 Wed] 鼓捣一下 [[https://github.com/stardiviner/goldendict.el][stardiviner/goldendict.el]]
 - [[https://emacs-china.org/t/topic/18006][一个支持多词典的翻译插件(目前仅支持单词)]]
+
+goldendict就是命令调用, 非常简单
 
 ** TODO [2021-10-05 Tue] 几个有用的hydra命令
 hydra-apropos/body, 比如按value搜索variable
@@ -1045,6 +1049,7 @@ javascript:void function(){var a=window.getSelection();""==a%26%26(a=document.ti
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
+
 ** 统计字符数
 g C-g
 : count-words
@@ -1108,6 +1113,7 @@ eval: major-mode
 | gv              | evil-visual-resume       |
 | SPC-s-i         | imenu symbol             |
 | Alt-mouse-wheel | jump backward/foraward   |
+| SPC-j-m         | emacs mark ring          |
 
 行内跳转
 - f: 向行尾搜索单字母(evil-snipe-f)
@@ -1119,6 +1125,12 @@ eval: major-mode
 - 搜索任意字符: isearch + avy-search
 - swiper + ivy-avy
 - 在evil中按*或/键搜索当前word或任意词, 再SPC-j-j 启用avy jump
+
+marking ring跳转
+- 不同buffer: SPC-`
+- 同一buffer: ``
+- 同一buffer或不同buffer, 更远的位置:
+  - emacs mark ring: SPC-j-m
 
 ** evil功能
 查看evil-visual-state-map帮助
@@ -1175,7 +1187,6 @@ evil下按v再按a有不少对应的功能, 比如"va[" 选中方括号中的内
 
 *** 编辑功能
 大小写互换: ~, 大写文字: U, 小写文字: u
-
 
 *** 复制粘贴
 - y (evil-yank): copy region
@@ -1262,16 +1273,16 @@ C-z
 | SPC-f-j |
 
 ** window/frame
-| SPC w v   | vertical split                 |
-| SPC w s   | horizontally split             |
-| SPC w d   | remove window                  |
-| SPC w r   | swap windows                   |
-| SPC w f   | follow mode                    |
-| SPC w o   | 最大化popup                    |
-| SPC w z   | 自动将当前window放大至合格大小 |
-| SPC w m m | 最大化当前窗口                 |
-| SPC w u   | 撤销窗口改动                   |
-| SPC o f   | 新开窗口, make-frame           |
+| SPC w v   | vertical split                       |
+| SPC w s   | horizontally split                   |
+| SPC w d   | remove window                        |
+| SPC w r   | swap windows                         |
+| SPC w f   | tear off window, float window 很有用 |
+| SPC w o   | 最大化popup                          |
+| SPC w z   | 自动将当前window放大至合格大小       |
+| SPC w m m | 最大化当前窗口                       |
+| SPC w u   | 撤销窗口改动                         |
+| SPC o f   | 新开窗口, make-frame                 |
 
 ** 调试emacs
 真好用.
@@ -2867,9 +2878,10 @@ doom内置了几个命令:
 
 (map! :map evil-window-map
       "w" #'ace-window
-      "r" #'ace-swap-window             ; rotate
-      "c" #'ace-delete-window           ; close
-      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float, move to new frame)
+      "r" #'ace-swap-window   ; rotate
+      "c" #'ace-delete-window ; close
+      "f" #'tear-off-window   ; 类似于firefox中的标签变窗口 (float, move to new frame)
+      "F" #'follow-mode       ; 同步滚动窗口, 可用于双窗口内容对比等
       )
 #+end_src
 
@@ -2957,6 +2969,8 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (setq rime-user-data-dir "~/.local/share/fcitx5/rime")
   ;;; support shift-l, shift-r, control-l, control-r
   (setq rime-inline-ascii-trigger 'shift-l)
+  ;; 临时英文中阻止标点直接上屏
+  (setq rime-inline-ascii-holder ?x)      ; Any single character that not trigger auto commit
   ;; 添加C-.快捷键, 方便切换中英文标点(需要在rime输入时有效)
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
@@ -3376,6 +3390,8 @@ C-x C-@: 这是轮换全局 mark
 C-u C-@: 这是轮换当前的 mark ring
 
 - [[https://stackoverflow.com/questions/3393834/how-to-move-forward-and-backward-in-emacs-mark-ring][How to move forward and backward in Emacs' mark ring - Stack Overflow]]
+- https://github.com/rolandwalker/back-button/blob/master/back-button.el
+- [[https://github.com/slewsys/emacs-extensions/blob/main/mark-navigation.el][emacs-extensions/mark-navigation.el]]
 
 *** core
 #+name: e4fc036b
@@ -3401,6 +3417,7 @@ C-u C-@: 这是轮换当前的 mark ring
 #+end_src
 
 *** global mark ring
+#+name: e48dc36a
 #+begin_src elisp
 ;; https://stackoverflow.com/a/27661338
 (defun marker-is-point-p (marker)
@@ -3572,139 +3589,6 @@ C-u C-@: 这是轮换当前的 mark ring
   (setq mark-ring nil))
 #+end_src
 
-*** mark-navigation.el
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-这个备用吧
-- [[https://github.com/slewsys/emacs-extensions/blob/main/mark-navigation.el][emacs-extensions/mark-navigation.el]]
-
-#+begin_src elisp
-;;; mark-navigation.el --- mark navigation commands   -*- lexical-binding: t -*-
-;;
-;; -*- coding: utf-8 -*-
-;;
-;; Copyright © 2016 Andrew L. Moore
-
-;; Author: Andrew L. Moore <alm@gnu.org>
-;; Keywords: editing, languages, lisp
-;; URL: https://github.com/slewsys/emacs-extensions
-
-;; This file is not part of GNU Emacs.
-
-;;; Commentary:
-;;
-;; `mark-navigation-mode' is a minor mode that provides bindings for
-;; forward and backward traversal of local and global mark rings.
-
-;;; Installation:
-;;
-;;   (require 'mark-navigation)
-;;
-;; To enable `mark-navigation-mode' globally:
-;;
-;;   (mark-navigation-mode)
-;;
-;; To enable locally - per major mode only, .e.g, `elisp-mode' - use instead:
-;;
-;;   (add-hook 'elisp-mode-hook #'mark-navigation-local-mode)
-;;
-;; To enable globally with some major mode exceptions, e.g., `elisp-mode', use:
-;;
-;;   (mark-navigation-mode)
-;;   (add-hook 'elisp-mode-hook
-;;             (lambda ()
-;;               (mark-navigation-local-mode -1)))
-;;
-
-(defvar mark-navigation-ring-order 'backward
-  "The order in which marks in the current buffer's mark-ring are visited,
-   either `forward' or `backward', the default.")
-(make-variable-buffer-local 'mark-ring-traversal)
-(put 'mark-ring-traversal 'permanent-local t)
-
-(defvar mark-navigation-global-ring-order 'backward
-  "The order in which marks in the global-mark-ring are visited,
-   either `forward' or `backward', the default.")
-
-(defun init-mark-navigation-map (bindings-sym)
-  "Initialize keymap for `mark-navigation-mode'."
-  (let ((map (make-sparse-keymap))
-        (i 0))
-    (mapc
-     (lambda (binding)
-       (if (= (setq i (lognot i)) 0)
-           (define-key map binding 'mark-navigation-next-mark)
-         (define-key map binding 'mark-navigation-previous-mark)))
-     (symbol-value bindings-sym))
-    map))
-
-(defmacro mark-navigation-set-mark (ring ring-order direction kth)
-  "Visit `kth' mark in `ring' in `ring-order', which is set to `direction'."
-  `(progn
-     (setq this-command 'set-mark-command)
-     (when (not (equal ,ring-order ,direction))
-       (setq ,ring-order ,direction)
-       (setq ,ring (reverse ,ring))
-       (setq ,kth (+ ,kth 2)))
-     (let ((mark-ring-p (eq ,ring mark-ring))
-           (set-mark-command-repeat-pop t))
-       (dotimes (i ,kth)
-         (set-mark-command mark-ring-p)))))
-
-(defun mark-navigation-pop-mark (direction kth)
-  "Jump to `kth' next or previous mark, depending on whether `direction'
-   is `forward' or `backward', respectively."
-  (if (eq last-command 'pop-global-mark)
-      (mark-navigation-set-mark global-mark-ring
-                                mark-navigation-global-ring-order direction kth)
-    (mark-navigation-set-mark mark-ring
-                              mark-navigation-ring-order direction kth)))
-
-(defun mark-navigation-pop-again-mark (kth)
-  "Go to current mark, push it onto mark-ring and pop previous
-   mark. With prefix argument, `kth', go to kth previous mark. For
-   full description, see `set-mark-command' command."
-  (interactive "p")
-  (mark-navigation-pop-mark mark-navigation-ring-order kth))
-
-(defun mark-navigation-previous-mark (kth)
-  "Go to current mark, push it onto mark-ring and pop previous
-   mark. With prefix argument, `kth', go to kth previous mark. For
-   full description, see `set-mark-command' command."
-  (interactive "p")
-  (mark-navigation-pop-mark 'backward kth))
-
-(defun mark-navigation-next-mark (kth)
-  "Go to current mark, push it onto mark-ring and pop next mark.
-   With prefix argument, `kth', go to kth next mark. For full
-   description, see `set-mark-command' command."
-  (interactive "p")
-  (mark-navigation-pop-mark 'forward kth))
-
-;;; FIXME: Prevent mark duplication.
-(defun mark-navigation-clear-mark (&optional global)
-  "Clear mark from local mark ring. With prefix argument, clear
-mark from global mark ring."
-  (interactive "P")
-  ;; (if global (setq global-mark-ring (cdr global-mark-ring))
-  ;;   (setq global-mark-ring (cdr global-mark-ring)))
-  ;; (push-mark-command nil t)
-  (when mark-active (force-mode-line-update))
-  (set-marker (mark-marker) nil (current-buffer))
-  (setq mark-active nil))
-
-(defun mark-navigation-clear-marks (&optional global)
-  "Deactivate mark and clear local mark ring.
-   With prefix argument, clear global mark ring."
-  (interactive "P")
-  (if global (setq global-mark-ring nil)
-    (progn
-      (setq mark-ring nil)
-      (when mark-active (force-mode-line-update))
-      (set-marker (mark-marker) nil (current-buffer))
-      (setq mark-active nil))))
-#+end_src
 *** hydra
 #+name: 00b43976
 #+begin_src elisp
@@ -6173,6 +6057,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 
 ** leader/global
 注意的键位变量为 doom-leader-<xx>-map, 其中xx为"prefix-map"后所定义的内容, 比如 "doom-leader-workspace-map".
+
+常用命令
+- regexp-builder
+- apropos-value
+
 *** leader
 保存文件同时标记当前位置, 方便随后跳回.
 #+name: 2d76b8e4
@@ -6362,6 +6251,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
          :desc "Pull request"              "p"   #'forge-create-pullreq)))
       )
 #+end_src
+
+*** TODO h: help
+帮助系统
+- apropos-value
+
 *** i: insert
 #+name: 4a4573c2
 #+begin_src elisp
@@ -6419,6 +6313,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Switch to final workspace" "0"   #'+workspace/switch-to-final
        ))
 #+end_src
+
+*** m: my? memo?
 
 *** n: note/next
 #+name: 1ad72c87
@@ -6481,13 +6377,17 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
 #+end_src
 
 *** s: search
+SPC-s-s和SPC-s-b有什么区别?
 #+name: 321efaf0
 #+begin_src elisp
 (map! :leader
       (:prefix-map ("s" . "Search")
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
-       :desc "Search buffer"                "b" #'swiper
+       :desc "Search buffer"                "s" #'+default/search-buffer ; 走isearch路线, 可一行多个匹配
+       :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
+       :desc "Search buffer"                "b" #'swiper ; 一行仅一个匹配?
        :desc "Search all open buffers"      "B" #'swiper-all
+       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "Search current directory"     "d" #'+default/search-cwd
        :desc "Search other directory"       "D" #'+default/search-other-cwd
        :desc "Search .emacs.d"              "e" #'+default/search-emacsd
@@ -6500,9 +6400,6 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
        :desc "Search project"               "p" #'+default/search-project
        :desc "Search other project"         "P" #'+default/search-other-project
        :desc "Jump to mark"                 "r" #'evil-show-marks
-       :desc "Search buffer"                "s" #'+default/search-buffer
-       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
-       :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
        (:prefix-map ("h" . "highlight")
         :desc "highlight symbol at point"         "." #'highlight-symbol-at-point
         :desc "highlight REGEXP"                  "h" #'highlight-regexp
@@ -6529,13 +6426,15 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
        :desc "Zen mode (fullscreen)"      "Z" #'+zen/toggle-fullscreen
        ))
 #+end_src
+
 *** v: visual selection
 #+name: d2dc925d
 #+begin_src elisp
 (map! :leader
       (:prefix-map ("v" . "Visual")
-       :desc "expand region" "v" #'er/expand-region
-       :desc "select text"   "s" #'gwp/advanced-selection
+       :desc "expand region"           "v" #'er/expand-region
+       :desc "select text"             "s" #'gwp/advanced-selection
+       :desc "jump to emacs mark ring" "j" #'gwp::hydra-mark-ring-pop/body
        ))
 #+end_src
 

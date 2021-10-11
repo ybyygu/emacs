@@ -38,9 +38,10 @@
 
 (map! :map evil-window-map
       "w" #'ace-window
-      "r" #'ace-swap-window             ; rotate
-      "c" #'ace-delete-window           ; close
-      "f" #'tear-off-window             ; 类似于firefox中的标签变窗口 (float, move to new frame)
+      "r" #'ace-swap-window   ; rotate
+      "c" #'ace-delete-window ; close
+      "f" #'tear-off-window   ; 类似于firefox中的标签变窗口 (float, move to new frame)
+      "F" #'follow-mode       ; 同步滚动窗口, 可用于双窗口内容对比等
       )
 ;; 19f082d3 ends here
 
@@ -89,6 +90,8 @@
   (setq rime-user-data-dir "~/.local/share/fcitx5/rime")
   ;;; support shift-l, shift-r, control-l, control-r
   (setq rime-inline-ascii-trigger 'shift-l)
+  ;; 临时英文中阻止标点直接上屏
+  (setq rime-inline-ascii-holder ?x)      ; Any single character that not trigger auto commit
   ;; 添加C-.快捷键, 方便切换中英文标点(需要在rime输入时有效)
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))

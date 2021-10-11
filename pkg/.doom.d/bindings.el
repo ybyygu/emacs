@@ -281,8 +281,11 @@
 (map! :leader
       (:prefix-map ("s" . "Search")
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
-       :desc "Search buffer"                "b" #'swiper
+       :desc "Search buffer"                "s" #'+default/search-buffer ; 走isearch路线, 可一行多个匹配
+       :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
+       :desc "Search buffer"                "b" #'swiper ; 一行仅一个匹配?
        :desc "Search all open buffers"      "B" #'swiper-all
+       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "Search current directory"     "d" #'+default/search-cwd
        :desc "Search other directory"       "D" #'+default/search-other-cwd
        :desc "Search .emacs.d"              "e" #'+default/search-emacsd
@@ -295,9 +298,6 @@
        :desc "Search project"               "p" #'+default/search-project
        :desc "Search other project"         "P" #'+default/search-other-project
        :desc "Jump to mark"                 "r" #'evil-show-marks
-       :desc "Search buffer"                "s" #'+default/search-buffer
-       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
-       :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
        (:prefix-map ("h" . "highlight")
         :desc "highlight symbol at point"         "." #'highlight-symbol-at-point
         :desc "highlight REGEXP"                  "h" #'highlight-regexp
@@ -326,8 +326,9 @@
 ;; [[file:../../doom.note::d2dc925d][d2dc925d]]
 (map! :leader
       (:prefix-map ("v" . "Visual")
-       :desc "expand region" "v" #'er/expand-region
-       :desc "select text"   "s" #'gwp/advanced-selection
+       :desc "expand region"           "v" #'er/expand-region
+       :desc "select text"             "s" #'gwp/advanced-selection
+       :desc "jump to emacs mark ring" "j" #'gwp::hydra-mark-ring-pop/body
        ))
 ;; d2dc925d ends here
 

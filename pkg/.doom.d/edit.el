@@ -171,7 +171,7 @@
       mark-ring-max 99)
 ;; e4fc036b ends here
 
-;; [[file:../../doom.note::*global mark ring][global mark ring:1]]
+;; [[file:../../doom.note::e48dc36a][e48dc36a]]
 ;; https://stackoverflow.com/a/27661338
 (defun marker-is-point-p (marker)
   "test if marker is current point"
@@ -203,7 +203,7 @@
     (call-interactively 'pop-global-mark))
   (call-interactively 'pop-global-mark)
   (setq global-mark-ring (nreverse global-mark-ring)))
-;; global mark ring:1 ends here
+;; e48dc36a ends here
 
 ;; [[file:../../doom.note::ebb32bb1][ebb32bb1]]
 ;; https://github.com/deestan/emacs/blob/master/emacs-goodies-el/marker-visit.el

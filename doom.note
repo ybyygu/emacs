@@ -29,8 +29,9 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [51/65]
-** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
+* Memo [52/65]
+** DONE [2021-10-11 Mon] org-toggle-heading后会跳一下
+- State "DONE"       from "TODO"       [2021-10-11 Mon 19:56]
 是doom中org module的锅, 禁用就可以了.
 
 *** 需要导入的配置
@@ -2310,7 +2311,7 @@ gwp-merge:
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type nil)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -2827,6 +2828,23 @@ github支持, 减慢速度.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/ui.el
 :END:
+** line numbers
+如果能显示相对行号, avy-goto-line可能就没必要了?
+#+name: 885c9fa9
+#+begin_src elisp
+(defun gwp::display-line-numbers ()
+  (setq display-line-numbers 'relative))
+
+;; NOTE: org-mode在折叠状态下, 相对行号显示的是实际数目, 而非折叠后的, 这对编辑操作没多大帮助了.
+;; ;; (add-hook 'org-mode-hook #'gwp::display-line-numbers)
+(add-hook 'org-src-mode-hook #'gwp::display-line-numbers)
+;; (add-hook 'prog-mode-hook #'gwp::display-line-numbers)
+(add-hook 'rust-mode-hook #'gwp::display-line-numbers)
+
+;; 全局设置
+;; (setq display-line-numbers-type 'relative)
+#+end_src
+
 ** window/frame
 *** 修改 frame 标题 方便 gnome-shell 桌面切换
 #+begin_src elisp
@@ -2992,9 +3010,15 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
   ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-  (map! :ni "C-SPC" 'toggle-input-method)
+  (map! :nie "C-SPC" 'toggle-input-method)
+  ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
+  ;; ivy-call-and-recenter
+  (after! ivy
+    (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method))
+
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
-  (map! :map rime-active-mode-map [tab] 'rime-inline-ascii)
+  (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
+  ;; NOTE: 以下有时会让emacs crash
   ;; (setq rime-posframe-properties
   ;;       (list :background-color "#333333"
   ;;             :foreground-color "#dcdccc"
@@ -3146,12 +3170,6 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   '(solaire-hl-line-face :background "#37474f")
   '(region :background "#555555")
   )
-#+end_src
-
-** line number
-默认不显示行号
-#+begin_src emacs-lisp
-(setq display-line-numbers-type nil)
 #+end_src
 
 ** misc
@@ -5114,11 +5132,11 @@ org-delete-property 删除 header-args
 
 ** org-noter/pdf-view
 pdf-view-fit-width-to-window
+#+name: 37fef008
 #+begin_src elisp
 (use-package! org-noter
   :custom
-  (org-noter-default-notes-file-names '("annotation.note"))
-  )
+  (org-noter-default-notes-file-names '("annotation.note")))
 
 (use-package! pdf-tools
   :custom
@@ -6150,6 +6168,28 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
        )
       )
+#+end_src
+*** todo
+#+name: ebc6075d
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("t" . "todo/toggle/tag")
+       "t" #'org-todo
+       "h" #'org-toggle-heading
+       "i" #'org-toggle-item
+       "s" #'counsel-org-tag
+       ))
+#+end_src
+
+*** refile
+#+name: f4447dfb
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("r" . "refile")
+       "r" #'org-refile
+       ))
 #+end_src
 
 *** insert

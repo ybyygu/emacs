@@ -575,11 +575,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
-;; [[file:../../doom.note::*org-noter/pdf-view][org-noter/pdf-view:1]]
+;; [[file:../../doom.note::37fef008][37fef008]]
 (use-package! org-noter
   :custom
-  (org-noter-default-notes-file-names '("annotation.note"))
-  )
+  (org-noter-default-notes-file-names '("annotation.note")))
 
 (use-package! pdf-tools
   :custom
@@ -607,7 +606,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
          "i" #'org-noter-insert-note
          "I" #'org-noter-insert-precise-note
          )))
-;; org-noter/pdf-view:1 ends here
+;; 37fef008 ends here
 
 ;; [[file:../../doom.note::*narrow][narrow:1]]
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
@@ -1322,6 +1321,25 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        )
       )
 ;; a393f96d ends here
+
+;; [[file:../../doom.note::ebc6075d][ebc6075d]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("t" . "todo/toggle/tag")
+       "t" #'org-todo
+       "h" #'org-toggle-heading
+       "i" #'org-toggle-item
+       "s" #'counsel-org-tag
+       ))
+;; ebc6075d ends here
+
+;; [[file:../../doom.note::f4447dfb][f4447dfb]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("r" . "refile")
+       "r" #'org-refile
+       ))
+;; f4447dfb ends here
 
 ;; [[file:../../doom.note::3d7188a4][3d7188a4]]
 (map! :map org-mode-map

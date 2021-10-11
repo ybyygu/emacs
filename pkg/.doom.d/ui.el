@@ -1,3 +1,17 @@
+;; [[file:../../doom.note::885c9fa9][885c9fa9]]
+(defun gwp::display-line-numbers ()
+  (setq display-line-numbers 'relative))
+
+;; NOTE: org-mode在折叠状态下, 相对行号显示的是实际数目, 而非折叠后的, 这对编辑操作没多大帮助了.
+;; ;; (add-hook 'org-mode-hook #'gwp::display-line-numbers)
+(add-hook 'org-src-mode-hook #'gwp::display-line-numbers)
+;; (add-hook 'prog-mode-hook #'gwp::display-line-numbers)
+(add-hook 'rust-mode-hook #'gwp::display-line-numbers)
+
+;; 全局设置
+;; (setq display-line-numbers-type 'relative)
+;; 885c9fa9 ends here
+
 ;; [[file:../../doom.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
@@ -96,9 +110,15 @@
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
   ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-  (map! :ni "C-SPC" 'toggle-input-method)
+  (map! :nie "C-SPC" 'toggle-input-method)
+  ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
+  ;; ivy-call-and-recenter
+  (after! ivy
+    (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method))
+
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
-  (map! :map rime-active-mode-map [tab] 'rime-inline-ascii)
+  (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
+  ;; NOTE: 以下有时会让emacs crash
   ;; (setq rime-posframe-properties
   ;;       (list :background-color "#333333"
   ;;             :foreground-color "#dcdccc"
@@ -183,10 +203,6 @@
   '(region :background "#555555")
   )
 ;; theme:1 ends here
-
-;; [[file:../../doom.note::*line number][line number:1]]
-(setq display-line-numbers-type nil)
-;; line number:1 ends here
 
 ;; [[file:../../doom.note::6013493c][6013493c]]
 ;; View images inside Emacs

@@ -175,7 +175,7 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp                ; 自定义模块
-       (org +roam2)
+       ;; (org +roam2)
        magit
        (default +smartparents +bindings)
        pdf

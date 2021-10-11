@@ -110,7 +110,7 @@
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
   ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-  (map! :nie "C-SPC" 'toggle-input-method)
+  (map! :nieg "C-SPC" 'toggle-input-method)
   ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
   ;; ivy-call-and-recenter
   (after! ivy

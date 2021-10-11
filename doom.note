@@ -3010,7 +3010,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
   ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-  (map! :nie "C-SPC" 'toggle-input-method)
+  (map! :nieg "C-SPC" 'toggle-input-method)
   ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
   ;; ivy-call-and-recenter
   (after! ivy
@@ -3629,12 +3629,12 @@ C-u C-@: 这是轮换当前的 mark ring
 #+begin_src elisp
 (defhydra gwp::hydra-mark-ring-pop ()
   "goto last location"
-  ("SPC" gwp::jump-to-previous-mark "prev mark")
+  ("SPC" gwp::jump-to-previous-mark "prev mark")  ; 在org中可自动打开折叠的内容
   ("n" marker-visit-next "next mark")
-  ("p" marker-visit-prev "prev mark")
+  ("p" marker-visit-prev "prev mark")             ; NOTE: org折叠的内容不会打开
   ("P" backward-global-mark "prev mark (global)") ;
   ("N" forward-global-mark "next mark (global)")  ;
-  ("o" +org/open-fold "open fold")                ; 在org时: 跳转到被折叠的headline中很有用
+  ("o" org-show-all "open fold")                  ; 在org时: 跳转到被折叠的headline中很有用
   ("q" nil "quit"))
 #+end_src
 
@@ -4477,16 +4477,15 @@ xx <=> Option<xx>
 #+end_src
 
 ** 按键行为
+#+name: d3c71916
 #+begin_src elisp
 (defun gwp/new-memo (arg)
   "Insert a new org-mode memo entry under heading at point."
-
   (interactive "P")
   (call-interactively 'evil-open-below)
-  (insert "** ")
+  (call-interactively 'org-insert-subheading)
   (call-interactively 'org-time-stamp-inactive)
-  (insert " ")
-  )
+  (insert " "))
 
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
@@ -6100,8 +6099,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (map! :map org-mode-map
       :localleader
       (:prefix ("a" . "attach/agenda")
-       :desc "Org attachment" "a" #'org-attach
-       :desc "Org agenda"     "n" #'org-agenda
+       :desc "attachment" "a" #'org-attach
+       :desc "agenda (next)"     "n" #'org-agenda
        ))
 #+end_src
 
@@ -6128,6 +6127,15 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
        ))
 #+end_src
+*** edit
+#+name: 8d8e9273
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("d" . "do")
+       :desc "sort list" "s" #'org-sort-list ; 可用于给列表排序, 默认为C-c ^
+       ))
+#+end_src
 
 *** goto
 #+name: a02d9b1f
@@ -6136,6 +6144,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :localleader
       (:prefix ("g" . "goto")
        :desc "previous position"  "p" #'org-mark-ring-goto
+       :desc "标记位置"  "m" #'org-mark-ring-push
        :desc "Jump to org heading"  "g" #'counsel-org-goto
        ))
 #+end_src
@@ -6148,6 +6157,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "next link"           [tab]   #'org-next-link
       :desc "prev link"           [backtab]   #'org-previous-link
       (:prefix ("l" . "links")
+       "l" #'org-insert-link
        "D" #'gwp/org-delete-link-file
        ))
 #+end_src
@@ -6166,20 +6176,29 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Goto" "s" #'counsel-org-goto
        :desc "Goto (all)" "S" #'counsel-org-goto-all
        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-       )
-      )
+       ))
 #+end_src
-*** todo
+
+*** todo/toggle
 #+name: ebc6075d
 #+begin_src elisp
+(defun gwp::org-toggle-checkbox ()
+  (interactive)
+  (unless (org-at-item-p)
+    (call-interactively #'org-toggle-item)
+    )
+  (let ((current-prefix-arg '(4)))     ; C-u
+    (call-interactively #'org-toggle-checkbox)))
+
 (map! :map org-mode-map
       :localleader
       (:prefix ("t" . "todo/toggle/tag")
-       "t" #'org-todo
-       "h" #'org-toggle-heading
-       "i" #'org-toggle-item
-       "s" #'counsel-org-tag
-       ))
+       :desc "TODO" "t" #'org-todo
+       :desc "heading" "h" #'org-toggle-heading
+       :desc "item" "i" #'org-toggle-item
+       :desc "tag" "s" #'counsel-org-tag
+       :desc "fixed-width markup (:)" "f" #'org-toggle-fixed-width
+       "c" #'gwp::org-toggle-checkbox))
 #+end_src
 
 *** refile
@@ -6188,7 +6207,17 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (map! :map org-mode-map
       :localleader
       (:prefix ("r" . "refile")
-       "r" #'org-refile
+       :desc "refile entry" "r" #'org-refile
+       :desc "refile but preserve subtree" "c" #'org-refile-copy))
+#+end_src
+
+*** export
+#+name: d7c4714d
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("e" . "export")
+       :desc "export dispatch" "e" #'org-export-dispatch
        ))
 #+end_src
 
@@ -6199,6 +6228,12 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :localleader
       (:prefix ("i" . "insert")
        :desc "new memo entry" "m" #'gwp/new-memo ; 简化操作
+       :desc "inactive time-stamp" "t" #'org-time-stamp-inactive
+       :desc "active time-stamp" "." #'org-time-stamp
+       :desc "stored link" "l" #'org-insert-last-stored-link
+       :desc "schedule" "s" #'org-schedule
+       :desc "deadline" "d" #'org-deadline
+       :desc "note" "n" #'org-add-note
        ))
 #+end_src
 

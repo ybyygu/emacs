@@ -25,16 +25,14 @@
 (setq org-catch-invisible-edits 'show-and-error)
 ;; b28b06dc ends here
 
-;; [[file:../../doom.note::*按键行为][按键行为:1]]
+;; [[file:../../doom.note::d3c71916][d3c71916]]
 (defun gwp/new-memo (arg)
   "Insert a new org-mode memo entry under heading at point."
-
   (interactive "P")
   (call-interactively 'evil-open-below)
-  (insert "** ")
+  (call-interactively 'org-insert-subheading)
   (call-interactively 'org-time-stamp-inactive)
-  (insert " ")
-  )
+  (insert " "))
 
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
@@ -47,7 +45,7 @@
       :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
       :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
       )
-;; 按键行为:1 ends here
+;; d3c71916 ends here
 
 ;; [[file:../../doom.note::*view][view:1]]
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
@@ -1260,8 +1258,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (map! :map org-mode-map
       :localleader
       (:prefix ("a" . "attach/agenda")
-       :desc "Org attachment" "a" #'org-attach
-       :desc "Org agenda"     "n" #'org-agenda
+       :desc "attachment" "a" #'org-attach
+       :desc "agenda (next)"     "n" #'org-agenda
        ))
 ;; c09b236a ends here
 
@@ -1287,11 +1285,20 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; 21ae7ae2 ends here
 
+;; [[file:../../doom.note::8d8e9273][8d8e9273]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("d" . "do")
+       :desc "sort list" "s" #'org-sort-list ; 可用于给列表排序, 默认为C-c ^
+       ))
+;; 8d8e9273 ends here
+
 ;; [[file:../../doom.note::a02d9b1f][a02d9b1f]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("g" . "goto")
        :desc "previous position"  "p" #'org-mark-ring-goto
+       :desc "标记位置"  "m" #'org-mark-ring-push
        :desc "Jump to org heading"  "g" #'counsel-org-goto
        ))
 ;; a02d9b1f ends here
@@ -1302,6 +1309,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :desc "next link"           [tab]   #'org-next-link
       :desc "prev link"           [backtab]   #'org-previous-link
       (:prefix ("l" . "links")
+       "l" #'org-insert-link
        "D" #'gwp/org-delete-link-file
        ))
 ;; 32a3b56a ends here
@@ -1318,34 +1326,56 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        :desc "Goto" "s" #'counsel-org-goto
        :desc "Goto (all)" "S" #'counsel-org-goto-all
        :desc "Toggle org-sidebar-tree" "t" #'org-sidebar-tree-toggle
-       )
-      )
+       ))
 ;; a393f96d ends here
 
 ;; [[file:../../doom.note::ebc6075d][ebc6075d]]
+(defun gwp::org-toggle-checkbox ()
+  (interactive)
+  (unless (org-at-item-p)
+    (call-interactively #'org-toggle-item)
+    )
+  (let ((current-prefix-arg '(4)))     ; C-u
+    (call-interactively #'org-toggle-checkbox)))
+
 (map! :map org-mode-map
       :localleader
       (:prefix ("t" . "todo/toggle/tag")
-       "t" #'org-todo
-       "h" #'org-toggle-heading
-       "i" #'org-toggle-item
-       "s" #'counsel-org-tag
-       ))
+       :desc "TODO" "t" #'org-todo
+       :desc "heading" "h" #'org-toggle-heading
+       :desc "item" "i" #'org-toggle-item
+       :desc "tag" "s" #'counsel-org-tag
+       :desc "fixed-width markup (:)" "f" #'org-toggle-fixed-width
+       "c" #'gwp::org-toggle-checkbox))
 ;; ebc6075d ends here
 
 ;; [[file:../../doom.note::f4447dfb][f4447dfb]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("r" . "refile")
-       "r" #'org-refile
-       ))
+       :desc "refile entry" "r" #'org-refile
+       :desc "refile but preserve subtree" "c" #'org-refile-copy))
 ;; f4447dfb ends here
+
+;; [[file:../../doom.note::d7c4714d][d7c4714d]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("e" . "export")
+       :desc "export dispatch" "e" #'org-export-dispatch
+       ))
+;; d7c4714d ends here
 
 ;; [[file:../../doom.note::3d7188a4][3d7188a4]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("i" . "insert")
        :desc "new memo entry" "m" #'gwp/new-memo ; 简化操作
+       :desc "inactive time-stamp" "t" #'org-time-stamp-inactive
+       :desc "active time-stamp" "." #'org-time-stamp
+       :desc "stored link" "l" #'org-insert-last-stored-link
+       :desc "schedule" "s" #'org-schedule
+       :desc "deadline" "d" #'org-deadline
+       :desc "note" "n" #'org-add-note
        ))
 ;; 3d7188a4 ends here
 

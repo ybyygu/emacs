@@ -343,12 +343,12 @@
 ;; [[file:../../doom.note::00b43976][00b43976]]
 (defhydra gwp::hydra-mark-ring-pop ()
   "goto last location"
-  ("SPC" gwp::jump-to-previous-mark "prev mark")
+  ("SPC" gwp::jump-to-previous-mark "prev mark")  ; 在org中可自动打开折叠的内容
   ("n" marker-visit-next "next mark")
-  ("p" marker-visit-prev "prev mark")
+  ("p" marker-visit-prev "prev mark")             ; NOTE: org折叠的内容不会打开
   ("P" backward-global-mark "prev mark (global)") ;
   ("N" forward-global-mark "next mark (global)")  ;
-  ("o" +org/open-fold "open fold")                ; 在org时: 跳转到被折叠的headline中很有用
+  ("o" org-show-all "open fold")                  ; 在org时: 跳转到被折叠的headline中很有用
   ("q" nil "quit"))
 ;; 00b43976 ends here
 

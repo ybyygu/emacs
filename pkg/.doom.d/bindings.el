@@ -313,7 +313,7 @@
        :desc "Flycheck"                   "f" #'flycheck-mode
        :desc "Frame fullscreen"           "F" #'toggle-frame-fullscreen
        :desc "Indent style"               "I" #'doom/toggle-indent-style
-       :desc "Line numbers"               "l" #'doom/toggle-line-numbers
+       :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
        :desc "Spell checker"              "s" #'spell-fu-mode
        :desc "Spell checker"              "s" #'flyspell-mode

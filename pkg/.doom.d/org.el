@@ -16,7 +16,7 @@
 ;; https://orgmode.org/manual/Clean-view.html
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
 (with-eval-after-load 'org-indent
-  (setq org-indent-indentation-per-level 1)) ;Default = 2
+  (setq org-indent-indentation-per-level 1)) ;; default = 2
 
 ;; 对齐headline中的TAGs
 (setq org-tags-column -80)
@@ -47,25 +47,33 @@
       )
 ;; d3c71916 ends here
 
-;; [[file:../../doom.note::*view][view:1]]
+;; [[file:../../doom.note::7341aa84][7341aa84]]
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
 (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
 
 ;; 避免切换时闪烁
 ;; (setq org-startup-indented nil)
-;(remove-hook! 'org-mode-hook #'org-indent-mode)
+;; (remove-hook! 'org-mode-hook #'org-indent-mode)
 
 ;; 避免显示subtree之间多余的空行
 (setq org-cycle-separator-lines 0)
 
+;; toggle outline时隐藏properties drawer. 不太管用
+;;
+;; (setq org-startup-folded nil)
+;; (setq org-hide-block-startup t)
+;; (after! org
+;;   (add-hook 'org-cycle-hook 'org-cycle-hide-drawers)
+;;   )
+
 (use-package org-superstar
   :init
-  ;; » ◇ ▶
-  (setq org-superstar-headline-bullets-list '("◉" "○" "»" "»"))
+  ;; ◉ ○ ◆ » ◇ ▶ ▷
+  (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   )
-;; view:1 ends here
+;; 7341aa84 ends here
 
 ;; [[file:../../doom.note::fbbec921][fbbec921]]
 ;; 取自doom org moudle
@@ -1269,7 +1277,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :localleader
       :desc "previous block" "C-p" #'org-previous-block
       :desc "next block" "C-n" #'org-next-block
-      (:prefix ("b" . "babel")
+      (:prefix ("b" . "babel/buffer")
        :desc "check src block headers"    "c" #'org-babel-check-src-block
        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
@@ -1278,10 +1286,10 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-       :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+       :desc "switch org buffer"          "b" #'org-switchb ; 仿SPC-b-b
        ))
 ;; 21ae7ae2 ends here
 

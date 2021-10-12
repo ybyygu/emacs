@@ -33,7 +33,9 @@
 ** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
 是doom中org module的锅, 禁用就可以了.
 
-*** TODO toggle headline时, 应隐藏 properties
+*** DONE toggle headline时, 应隐藏 properties
+- State "DONE"       from "TODO"       [2021-10-12 Tue 19:31]
+看起来不好搞定. 放弃.
 *** TODO org-protocol设置有问题, daemon没开启?
 
 *** 需要导入的配置
@@ -2834,6 +2836,15 @@ github支持, 减慢速度.
 如果能显示相对行号, avy-goto-line可能就没必要了?
 #+name: 885c9fa9
 #+begin_src elisp
+;; 方便绑定到 SPC-t-l
+;;
+;; 仅切换relative和none两种状态, doom的要切三种
+(defun gwp::toggle-line-numbers ()
+  (interactive)
+  (if display-line-numbers
+      (setq display-line-numbers 'nil)
+    (setq display-line-numbers 'relative)))
+
 (defun gwp::display-line-numbers ()
   (setq display-line-numbers 'relative))
 
@@ -4469,7 +4480,7 @@ xx <=> Option<xx>
 ;; https://orgmode.org/manual/Clean-view.html
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
 (with-eval-after-load 'org-indent
-  (setq org-indent-indentation-per-level 1)) ;Default = 2
+  (setq org-indent-indentation-per-level 1)) ;; default = 2
 
 ;; 对齐headline中的TAGs
 (setq org-tags-column -80)
@@ -4503,6 +4514,7 @@ xx <=> Option<xx>
 #+end_src
 
 ** view
+#+name: 7341aa84
 #+begin_src elisp
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
@@ -4510,15 +4522,23 @@ xx <=> Option<xx>
 
 ;; 避免切换时闪烁
 ;; (setq org-startup-indented nil)
-;(remove-hook! 'org-mode-hook #'org-indent-mode)
+;; (remove-hook! 'org-mode-hook #'org-indent-mode)
 
 ;; 避免显示subtree之间多余的空行
 (setq org-cycle-separator-lines 0)
 
+;; toggle outline时隐藏properties drawer. 不太管用
+;;
+;; (setq org-startup-folded nil)
+;; (setq org-hide-block-startup t)
+;; (after! org
+;;   (add-hook 'org-cycle-hook 'org-cycle-hide-drawers)
+;;   )
+
 (use-package org-superstar
   :init
-  ;; » ◇ ▶
-  (setq org-superstar-headline-bullets-list '("◉" "○" "»" "»"))
+  ;; ◉ ○ ◆ » ◇ ▶ ▷
+  (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   )
 #+end_src
@@ -6114,7 +6134,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :localleader
       :desc "previous block" "C-p" #'org-previous-block
       :desc "next block" "C-n" #'org-next-block
-      (:prefix ("b" . "babel")
+      (:prefix ("b" . "babel/buffer")
        :desc "check src block headers"    "c" #'org-babel-check-src-block
        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
        :desc "view header arguments"      "I" #'org-babel-view-src-block-info
@@ -6123,10 +6143,10 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "jump to tangled file"       "j" #'gwp/org-babel-tangle-jump-to-file
        :desc "insert header tangle no"    "n" #'gwp/org-babel-tangle-no
        :desc "execute in edit buffer"     "x" #'org-babel-do-key-sequence-in-edit-buffer
-       :desc "tangle blocks at point"     "b" #'gwp/org-babel-tangle-dwim
        :desc "tangle blocks in subtree"   "t" #'gwp/org-tangle-subtree
        :desc "name code block at point"   "SPC" #'gwp/org-src-insert-name
        :desc "tangle blocks in buffer"    "T" #'org-babel-tangle
+       :desc "switch org buffer"          "b" #'org-switchb ; 仿SPC-b-b
        ))
 #+end_src
 *** edit
@@ -6665,7 +6685,7 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "Flycheck"                   "f" #'flycheck-mode
        :desc "Frame fullscreen"           "F" #'toggle-frame-fullscreen
        :desc "Indent style"               "I" #'doom/toggle-indent-style
-       :desc "Line numbers"               "l" #'doom/toggle-line-numbers
+       :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
        :desc "Spell checker"              "s" #'spell-fu-mode
        :desc "Spell checker"              "s" #'flyspell-mode

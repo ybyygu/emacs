@@ -1,4 +1,13 @@
 ;; [[file:../../doom.note::885c9fa9][885c9fa9]]
+;; 方便绑定到 SPC-t-l
+;;
+;; 仅切换relative和none两种状态, doom的要切三种
+(defun gwp::toggle-line-numbers ()
+  (interactive)
+  (if display-line-numbers
+      (setq display-line-numbers 'nil)
+    (setq display-line-numbers 'relative)))
+
 (defun gwp::display-line-numbers ()
   (setq display-line-numbers 'relative))
 

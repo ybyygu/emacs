@@ -30,7 +30,7 @@
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
   (call-interactively 'evil-open-below)
-  (call-interactively 'org-insert-subheading)
+  (call-interactively 'org-insert-todo-subheading)
   (call-interactively 'org-time-stamp-inactive)
   (insert " "))
 

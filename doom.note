@@ -29,10 +29,12 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [52/65]
-** DONE [2021-10-11 Mon] org-toggle-heading后会跳一下
-- State "DONE"       from "TODO"       [2021-10-11 Mon 19:56]
+* Memo [51/65]
+** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
 是doom中org module的锅, 禁用就可以了.
+
+*** TODO toggle headline时, 应隐藏 properties
+*** TODO org-protocol设置有问题, daemon没开启?
 
 *** 需要导入的配置
 - RET: +org/dwim-at-point
@@ -4483,7 +4485,7 @@ xx <=> Option<xx>
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
   (call-interactively 'evil-open-below)
-  (call-interactively 'org-insert-subheading)
+  (call-interactively 'org-insert-todo-subheading)
   (call-interactively 'org-time-stamp-inactive)
   (insert " "))
 

@@ -38,7 +38,7 @@
 (map! :n "w" #'evil-forward-word-begin)
 (map! :n "W" #'evil-backward-word-begin)
 
-;; C-v: evil默认为quoted-insert, 可以 ctrl-q代替
+;; ;; C-v: evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
 (map! :i "C-y" #'yank)
 
@@ -56,6 +56,10 @@
         :nvim "C-d" #'gwp::ctrl-d-dwim
         :nvim "C-k" nil
         :i "M-l" nil))
+
+;; insert state下用emacs默认按键
+;; 2021-10-13: 设置无效
+;; (setq evil-disable-insert-state-bindings t)
 ;; 73388047 ends here
 
 ;; [[file:../../doom.note::9f41280c][9f41280c]]
@@ -343,12 +347,12 @@
 ;; [[file:../../doom.note::00b43976][00b43976]]
 (defhydra gwp::hydra-mark-ring-pop ()
   "goto last location"
-  ("SPC" gwp::jump-to-previous-mark "prev mark")  ; 在org中可自动打开折叠的内容
+  ("SPC" gwp::jump-to-previous-mark "prev mark")          ; 在org中可自动打开折叠的内容
   ("n" marker-visit-next "next mark")
-  ("p" marker-visit-prev "prev mark")             ; NOTE: org折叠的内容不会打开
-  ("P" backward-global-mark "prev mark (global)") ;
-  ("N" forward-global-mark "next mark (global)")  ;
-  ("o" org-show-all "open fold")                  ; 在org时: 跳转到被折叠的headline中很有用
+  ("p" marker-visit-prev "prev mark")                     ; NOTE: org折叠的内容不会打开
+  ("P" backward-global-mark "prev mark (global)")         ;
+  ("N" forward-global-mark "next mark (global)")          ;
+  ("o" gwp::org-show-context-at-point "org show context") ; 在org时: 跳转到被折叠的headline中很有用
   ("q" nil "quit"))
 ;; 00b43976 ends here
 

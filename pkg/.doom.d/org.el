@@ -73,6 +73,21 @@
   (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   )
+
+;; 显示光标所在处的headline
+(defun gwp::org-show-context-at-point ()
+  (interactive)
+  ;; 从下面的命令看来的
+  ;; (call-interactively 'org-mark-ring-goto)
+  ;; (org-show-context 'mark-goto)
+  (org-show-subtree)
+  (when (or (org-invisible-p) (org-invisible-p2)) (org-show-context 'mark-goto))
+  (call-interactively 'org-reveal))
+
+(map! :map org-mode-map
+      :ng "zo" #'gwp::org-show-context-at-point
+      :ng "zc" #'org-hide-entry
+      )
 ;; 7341aa84 ends here
 
 ;; [[file:../../doom.note::fbbec921][fbbec921]]

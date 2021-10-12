@@ -29,7 +29,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [51/65]
+* Memo [52/66]
 ** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
 是doom中org module的锅, 禁用就可以了.
 
@@ -49,6 +49,10 @@
 ;; (setq org-M-RET-may-split-line nil
 ;;       ;; insert new headings after current subtree rather than inside it
 ;;       org-insert-heading-respect-content t)
+
+** DONE [2021-10-12 Tue] 以前的一个痛点: org跳转到折叠的headline时, 如何展开光标下的内容?
+- State "DONE"       from "TODO"       [2021-10-12 Tue 20:07]
+可用org-show-contex来救急, 比org-reveal命令好用
 
 ** TODO [2021-10-11 Mon] org store link时, 如果在buffer顶部生成的链接无效
 
@@ -3022,13 +3026,6 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   ;; 添加C-.快捷键, 方便切换中英文标点(需要在rime输入时有效)
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
-  ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-  (map! :nieg "C-SPC" 'toggle-input-method)
-  ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
-  ;; ivy-call-and-recenter
-  (after! ivy
-    (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method))
-
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
   (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
   ;; NOTE: 以下有时会让emacs crash
@@ -3040,6 +3037,14 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   ;; (setq default-input-method "rime"
   ;;       rime-show-candidate 'posframe)
   )
+;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
+(map! :nieg "C-SPC" 'toggle-input-method)
+;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
+;; ivy-call-and-recenter
+;; 2021-10-13: 直接map不太有效, 时灵不灵的
+;; (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method)
+;; NOTE: 可用M-RET来预览选中条目, 而不退出ivy窗口
+(map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
 #+end_src
 
 *** pyim
@@ -3267,6 +3272,10 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
         :nvim "C-d" #'gwp::ctrl-d-dwim
         :nvim "C-k" nil
         :i "M-l" nil))
+
+;; insert state下用emacs默认按键
+;; 2021-10-13: 设置无效
+;; (setq evil-disable-insert-state-bindings t)
 #+end_src
 
 ** undo
@@ -3642,12 +3651,12 @@ C-u C-@: 这是轮换当前的 mark ring
 #+begin_src elisp
 (defhydra gwp::hydra-mark-ring-pop ()
   "goto last location"
-  ("SPC" gwp::jump-to-previous-mark "prev mark")  ; 在org中可自动打开折叠的内容
+  ("SPC" gwp::jump-to-previous-mark "prev mark")          ; 在org中可自动打开折叠的内容
   ("n" marker-visit-next "next mark")
-  ("p" marker-visit-prev "prev mark")             ; NOTE: org折叠的内容不会打开
-  ("P" backward-global-mark "prev mark (global)") ;
-  ("N" forward-global-mark "next mark (global)")  ;
-  ("o" org-show-all "open fold")                  ; 在org时: 跳转到被折叠的headline中很有用
+  ("p" marker-visit-prev "prev mark")                     ; NOTE: org折叠的内容不会打开
+  ("P" backward-global-mark "prev mark (global)")         ;
+  ("N" forward-global-mark "next mark (global)")          ;
+  ("o" gwp::org-show-context-at-point "org show context") ; 在org时: 跳转到被折叠的headline中很有用
   ("q" nil "quit"))
 #+end_src
 
@@ -4541,6 +4550,21 @@ xx <=> Option<xx>
   (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   )
+
+;; 显示光标所在处的headline
+(defun gwp::org-show-context-at-point ()
+  (interactive)
+  ;; 从下面的命令看来的
+  ;; (call-interactively 'org-mark-ring-goto)
+  ;; (org-show-context 'mark-goto)
+  (org-show-subtree)
+  (when (or (org-invisible-p) (org-invisible-p2)) (org-show-context 'mark-goto))
+  (call-interactively 'org-reveal))
+
+(map! :map org-mode-map
+      :ng "zo" #'gwp::org-show-context-at-point
+      :ng "zc" #'org-hide-entry
+      )
 #+end_src
 
 ** dwim
@@ -4615,7 +4639,7 @@ If on a:
                 (image-overlays
                  (cl-find-if (lambda (o) (overlay-get o 'org-image-overlay))
                              overlays)))
-           (+org--toggle-inline-images-in-subtree beg end)
+           ;; (+org--toggle-inline-images-in-subtree beg end)
            (if (or image-overlays latex-overlays)
                (org-clear-latex-preview beg end)
              (org--latex-preview-region beg end))))
@@ -4631,20 +4655,20 @@ If on a:
         ((or `planning `timestamp)
          (org-follow-timestamp-link))
 
-        ((or `table `table-row)
-         (if (org-at-TBLFM-p)
-             (org-table-calc-current-TBLFM)
-           (ignore-errors
-             (save-excursion
-               (goto-char (org-element-property :contents-begin context))
-               (org-call-with-arg 'org-table-recalculate (or arg t))))))
+        ;; ((or `table `table-row)
+        ;;  (if (org-at-TBLFM-p)
+        ;;      (org-table-calc-current-TBLFM)
+        ;;    (ignore-errors
+        ;;      (save-excursion
+        ;;        (goto-char (org-element-property :contents-begin context))
+        ;;        (org-call-with-arg 'org-table-recalculate (or arg t))))))
 
-        (`table-cell
-         (org-table-blank-field)
-         (org-table-recalculate arg)
-         (when (and (string-empty-p (string-trim (org-table-get-field)))
-                    (bound-and-true-p evil-local-mode))
-           (evil-change-state 'insert)))
+        ;; (`table-cell
+        ;;  (org-table-blank-field)
+        ;;  (org-table-recalculate arg)
+        ;;  (when (and (string-empty-p (string-trim (org-table-get-field)))
+        ;;             (bound-and-true-p evil-local-mode))
+        ;;    (evil-change-state 'insert)))
 
         (`babel-call
          (org-babel-lob-execute-maybe))
@@ -4664,10 +4688,11 @@ If on a:
                 (path (org-element-property :path lineage)))
            (if (or (equal (org-element-property :type lineage) "img")
                    (and path (image-type-from-file-name path)))
-               (+org--toggle-inline-images-in-subtree
-                (org-element-property :begin lineage)
-                (org-element-property :end lineage))
-             (org-open-at-point arg))))
+               ;; (+org--toggle-inline-images-in-subtree
+               ;;  (org-element-property :begin lineage)
+               ;;  (org-element-property :end lineage)
+               ;;  )
+               (org-open-at-point arg))))
 
         ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
          (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
@@ -4678,9 +4703,10 @@ If on a:
                  (org-in-regexp org-tsr-regexp-both nil  t)
                  (org-in-regexp org-link-any-re nil t))
              (call-interactively #'org-open-at-point)
-           (+org--toggle-inline-images-in-subtree
-            (org-element-property :begin context)
-            (org-element-property :end context))))))))
+           ;; (+org--toggle-inline-images-in-subtree
+           ;;  (org-element-property :begin context)
+           ;;  (org-element-property :end context))
+           ))))))
 
 (map! :map org-mode-map
       :n [return]   #'+org/dwim-at-point

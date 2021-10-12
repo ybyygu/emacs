@@ -118,13 +118,6 @@
   ;; 添加C-.快捷键, 方便切换中英文标点(需要在rime输入时有效)
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g" "C-."))
-  ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-  (map! :nieg "C-SPC" 'toggle-input-method)
-  ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
-  ;; ivy-call-and-recenter
-  (after! ivy
-    (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method))
-
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
   (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
   ;; NOTE: 以下有时会让emacs crash
@@ -136,6 +129,14 @@
   ;; (setq default-input-method "rime"
   ;;       rime-show-candidate 'posframe)
   )
+;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
+(map! :nieg "C-SPC" 'toggle-input-method)
+;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
+;; ivy-call-and-recenter
+;; 2021-10-13: 直接map不太有效, 时灵不灵的
+;; (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method)
+;; NOTE: 可用M-RET来预览选中条目, 而不退出ivy窗口
+(map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
 ;; 155b72b3 ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上

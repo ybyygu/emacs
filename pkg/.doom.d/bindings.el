@@ -47,6 +47,7 @@
        :desc "indent region"                         [tab] #'indent-region ; 有用
        :desc "Compile"                               "c"   #'compile
        :desc "Recompile"                             "C"   #'recompile
+       :desc "highlight"                             "h"   gwp::symbol-overlay-map
        :desc "Jump to definition"                    "d"   #'+lookup/definition
        :desc "Jump to references"                    "D"   #'+lookup/references
        :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region

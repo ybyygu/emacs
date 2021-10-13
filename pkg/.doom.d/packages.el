@@ -88,6 +88,7 @@
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
+(package! symbol-overlay)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来

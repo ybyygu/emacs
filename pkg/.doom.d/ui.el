@@ -1,3 +1,12 @@
+;; [[file:../../doom.note::a6f83332][a6f83332]]
+;; 默认不要显示折行
+(global-visual-line-mode -1)
+
+(defun gwp::turn-off-wrap-long-line()
+  (global-visual-line-mode -1))
+(add-hook 'org-mode-hook 'gwp::turn-off-wrap-long-line)
+;; a6f83332 ends here
+
 ;; [[file:../../doom.note::885c9fa9][885c9fa9]]
 ;; 方便绑定到 SPC-t-l
 ;;
@@ -213,6 +222,36 @@
   '(region :background "#555555")
   )
 ;; theme:1 ends here
+
+;; [[file:../../doom.note::fae9a6ea][fae9a6ea]]
+;; symbol-overlay
+;;;  a highlight-symbol replacement.
+(use-package symbol-overlay
+  :config
+  ;; 用 transient 不如下面的好. 下面的可以用"."命令来重做上次的操作.
+  (general-define-key :prefix-map 'gwp::symbol-overlay-map
+                      "h" 'symbol-overlay-put
+                      "r" 'symbol-overlay-rename
+                      "t" 'symbol-overlay-toggle-in-scope
+                      "n" 'symbol-overlay-switch-forward ; 当在高亮的字符外时, 可快速返回.
+                      "p" 'symbol-overlay-switch-backward
+                      "d" 'symbol-overlay-remove-all
+                      "R" 'symbol-overlay-query-replace)
+  ;; 等价设置; 备忘
+  ;; (setq symbol-overlay-map (make-sparse-keymap))
+  ;; (setq gwp::symbol-overlay-map (make-sparse-keymap))
+  ;; (define-key gwp::symbol-overlay-map (kbd "h") 'symbol-overlay-put)
+  ;; (define-key gwp::symbol-overlay-map (kbd "n") 'symbol-overlay-jump-next)
+  ;; (define-key gwp::symbol-overlay-map (kbd "p") 'symbol-overlay-jump-prev)
+  ;; (define-key gwp::symbol-overlay-map (kbd "w") 'symbol-overlay-save-symbol)
+  ;; (define-key gwp::symbol-overlay-map (kbd "t") 'symbol-overlay-toggle-in-scope)
+  ;; (define-key gwp::symbol-overlay-map (kbd "e") 'symbol-overlay-echo-mark)
+  ;; (define-key gwp::symbol-overlay-map (kbd "d") 'symbol-overlay-jump-to-definition)
+  ;; (define-key gwp::symbol-overlay-map (kbd "s") 'symbol-overlay-isearch-literally)
+  ;; (define-key gwp::symbol-overlay-map (kbd "q") 'symbol-overlay-query-replace)
+  ;; (define-key gwp::symbol-overlay-map (kbd "r") 'symbol-overlay-rename)
+  )
+;; fae9a6ea ends here
 
 ;; [[file:../../doom.note::6013493c][6013493c]]
 ;; View images inside Emacs

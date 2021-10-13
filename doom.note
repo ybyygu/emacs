@@ -29,7 +29,7 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [52/66]
+* Memo [54/66]
 ** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
 是doom中org module的锅, 禁用就可以了.
 
@@ -54,10 +54,20 @@
 - State "DONE"       from "TODO"       [2021-10-12 Tue 20:07]
 可用org-show-contex来救急, 比org-reveal命令好用
 
-** TODO [2021-10-11 Mon] org store link时, 如果在buffer顶部生成的链接无效
+** DONE [2021-10-11 Mon] org store link时, 如果在buffer顶部生成的链接无效
+- State "DONE"       from "TODO"       [2021-10-13 Wed 16:47]
+根据doc, 可以用C-u来调用.
 
-** TODO [2021-10-10 Sun] [[https://emacs-china.org/t/package-symbol-overlay-symbol/7706][[推销package] symbol-overlay，同时高亮多个symbol - Emacs-general - Emacs China]]
+#+begin_src text
+For some link types, a C-u prefix ARG is interpreted.  A single
+C-u negates org-context-in-file-links for file links or
+org-gnus-prefer-web-links for links to Usenet articles.
+#+end_src
 
+
+** DONE [2021-10-10 Sun] [[https://emacs-china.org/t/package-symbol-overlay-symbol/7706][[推销package] symbol-overlay，同时高亮多个symbol - Emacs-general - Emacs China]]
+
+- State "DONE"       from "TODO"       [2021-10-13 Wed 16:45]
 ** DONE [2021-10-09 Sat] magit-status启动后隐藏 untracked files列表, 每次跳开要浪费不少时间
 - State "DONE"       from "TODO"       [2021-10-09 Sat 19:48]
 [[https://emacs.stackexchange.com/questions/27271/how-do-i-toggle-magit-enumerating-untracked-files][How do I toggle Magit enumerating untracked files? - Emacs Stack Exchange]]
@@ -2815,10 +2825,12 @@ github支持, 减慢速度.
 #+end_src
 
 *** 测试
+#+name: 5dc509d3
 #+begin_src elisp
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
+(package! symbol-overlay)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来
@@ -2836,6 +2848,18 @@ github支持, 减慢速度.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/ui.el
 :END:
+** wrap long line
+更习惯手动折行
+#+name: a6f83332
+#+begin_src elisp
+;; 默认不要显示折行
+(global-visual-line-mode -1)
+
+(defun gwp::turn-off-wrap-long-line()
+  (global-visual-line-mode -1))
+(add-hook 'org-mode-hook 'gwp::turn-off-wrap-long-line)
+#+end_src
+
 ** line numbers
 如果能显示相对行号, avy-goto-line可能就没必要了?
 #+name: 885c9fa9
@@ -3187,6 +3211,44 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   '(hl-line :background "#37474f")
   '(solaire-hl-line-face :background "#37474f")
   '(region :background "#555555")
+  )
+#+end_src
+** highlight
+- [[https://emacs-china.org/t/package-symbol-overlay-symbol/7706][论坛讨论]]
+
+要点:
+- 光标置于symbol左右, symbol-overlay-put 可切换高亮状态. 切n/p可跳转至前后高亮的位置.
+- 可同时高亮多组symbols. 每组独立控制.
+- 当光标在symbol外时, 可用 symbol-overlay-switch-forward 来跳回到最近那组高亮的
+  symbols. 要跳回起跳位置可按e键.
+#+name: fae9a6ea
+#+begin_src elisp
+;; symbol-overlay
+;;;  a highlight-symbol replacement.
+(use-package symbol-overlay
+  :config
+  ;; 用 transient 不如下面的好. 下面的可以用"."命令来重做上次的操作.
+  (general-define-key :prefix-map 'gwp::symbol-overlay-map
+                      "h" 'symbol-overlay-put
+                      "r" 'symbol-overlay-rename
+                      "t" 'symbol-overlay-toggle-in-scope
+                      "n" 'symbol-overlay-switch-forward ; 当在高亮的字符外时, 可快速返回.
+                      "p" 'symbol-overlay-switch-backward
+                      "d" 'symbol-overlay-remove-all
+                      "R" 'symbol-overlay-query-replace)
+  ;; 等价设置; 备忘
+  ;; (setq symbol-overlay-map (make-sparse-keymap))
+  ;; (setq gwp::symbol-overlay-map (make-sparse-keymap))
+  ;; (define-key gwp::symbol-overlay-map (kbd "h") 'symbol-overlay-put)
+  ;; (define-key gwp::symbol-overlay-map (kbd "n") 'symbol-overlay-jump-next)
+  ;; (define-key gwp::symbol-overlay-map (kbd "p") 'symbol-overlay-jump-prev)
+  ;; (define-key gwp::symbol-overlay-map (kbd "w") 'symbol-overlay-save-symbol)
+  ;; (define-key gwp::symbol-overlay-map (kbd "t") 'symbol-overlay-toggle-in-scope)
+  ;; (define-key gwp::symbol-overlay-map (kbd "e") 'symbol-overlay-echo-mark)
+  ;; (define-key gwp::symbol-overlay-map (kbd "d") 'symbol-overlay-jump-to-definition)
+  ;; (define-key gwp::symbol-overlay-map (kbd "s") 'symbol-overlay-isearch-literally)
+  ;; (define-key gwp::symbol-overlay-map (kbd "q") 'symbol-overlay-query-replace)
+  ;; (define-key gwp::symbol-overlay-map (kbd "r") 'symbol-overlay-rename)
   )
 #+end_src
 
@@ -6413,6 +6475,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "indent region"                         [tab] #'indent-region ; 有用
        :desc "Compile"                               "c"   #'compile
        :desc "Recompile"                             "C"   #'recompile
+       :desc "highlight"                             "h"   gwp::symbol-overlay-map
        :desc "Jump to definition"                    "d"   #'+lookup/definition
        :desc "Jump to references"                    "D"   #'+lookup/references
        :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region

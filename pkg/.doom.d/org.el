@@ -157,7 +157,7 @@ If on a:
                 (image-overlays
                  (cl-find-if (lambda (o) (overlay-get o 'org-image-overlay))
                              overlays)))
-           (+org--toggle-inline-images-in-subtree beg end)
+           ;; (+org--toggle-inline-images-in-subtree beg end)
            (if (or image-overlays latex-overlays)
                (org-clear-latex-preview beg end)
              (org--latex-preview-region beg end))))
@@ -173,20 +173,20 @@ If on a:
         ((or `planning `timestamp)
          (org-follow-timestamp-link))
 
-        ((or `table `table-row)
-         (if (org-at-TBLFM-p)
-             (org-table-calc-current-TBLFM)
-           (ignore-errors
-             (save-excursion
-               (goto-char (org-element-property :contents-begin context))
-               (org-call-with-arg 'org-table-recalculate (or arg t))))))
+        ;; ((or `table `table-row)
+        ;;  (if (org-at-TBLFM-p)
+        ;;      (org-table-calc-current-TBLFM)
+        ;;    (ignore-errors
+        ;;      (save-excursion
+        ;;        (goto-char (org-element-property :contents-begin context))
+        ;;        (org-call-with-arg 'org-table-recalculate (or arg t))))))
 
-        (`table-cell
-         (org-table-blank-field)
-         (org-table-recalculate arg)
-         (when (and (string-empty-p (string-trim (org-table-get-field)))
-                    (bound-and-true-p evil-local-mode))
-           (evil-change-state 'insert)))
+        ;; (`table-cell
+        ;;  (org-table-blank-field)
+        ;;  (org-table-recalculate arg)
+        ;;  (when (and (string-empty-p (string-trim (org-table-get-field)))
+        ;;             (bound-and-true-p evil-local-mode))
+        ;;    (evil-change-state 'insert)))
 
         (`babel-call
          (org-babel-lob-execute-maybe))
@@ -206,10 +206,11 @@ If on a:
                 (path (org-element-property :path lineage)))
            (if (or (equal (org-element-property :type lineage) "img")
                    (and path (image-type-from-file-name path)))
-               (+org--toggle-inline-images-in-subtree
-                (org-element-property :begin lineage)
-                (org-element-property :end lineage))
-             (org-open-at-point arg))))
+               ;; (+org--toggle-inline-images-in-subtree
+               ;;  (org-element-property :begin lineage)
+               ;;  (org-element-property :end lineage)
+               ;;  )
+               (org-open-at-point arg))))
 
         ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
          (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
@@ -220,9 +221,10 @@ If on a:
                  (org-in-regexp org-tsr-regexp-both nil  t)
                  (org-in-regexp org-link-any-re nil t))
              (call-interactively #'org-open-at-point)
-           (+org--toggle-inline-images-in-subtree
-            (org-element-property :begin context)
-            (org-element-property :end context))))))))
+           ;; (+org--toggle-inline-images-in-subtree
+           ;;  (org-element-property :begin context)
+           ;;  (org-element-property :end context))
+           ))))))
 
 (map! :map org-mode-map
       :n [return]   #'+org/dwim-at-point

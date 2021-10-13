@@ -15,6 +15,9 @@
 - [X] org-capture clipboard不正常
 
 * 配置参考
+- [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
+- [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
+- [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
 - [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
   - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
@@ -30,6 +33,13 @@
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
 * Memo [54/66]
+** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个
+doom-emacs怕是难以长久. 问题
+- 依赖于straight, github, 装包太痛苦
+- 自定义设置太多, 难以尽如心意.
+
+[[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
+
 ** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
 是doom中org module的锅, 禁用就可以了.
 
@@ -1943,9 +1953,16 @@ xdg-desktop-menu install gwp-emacsclient.desktop
 - tangle时仅导出到当目录下或子目录下, 方便git管理.
 - stow再 "install" 到主目录下.
 
-** 使用chemacs做emacs双启动
+** 使用chemacs做emacs双启动 [[https://github.com/plexus/chemacs][plexus/chemacs: Emacs profile switcher]]
 - 进入chemacsk目录, 执行install.sh即可.
 - 修改 ~/.emacs-profiles.el
+
+#+name: 0fe5ff8e
+#+begin_src elisp :tangle ~/.emacs-profiles.el
+(("default" . ((user-emacs-directory . "~/Workspace/Programming/emacs/doom-emacs")
+               (env . (("DOOMDIR" . "~/.doom.d")))))
+ ("gwp" . ((user-emacs-directory . "~/Install/configs/emacs/gwp"))))
+#+end_src
 
 ** 安装doom-emacs
 - 进入doom-emacs目录, 执行:
@@ -2348,6 +2365,22 @@ gwp-merge:
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 #+END_SRC
+*** package
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+#+name: 2a8c4264
+#+begin_src elisp
+;; Emacs China ELPA
+(setq package-archives
+      '(("gnu"   . "https://elpa.emacs-china.org/gnu/")
+        ("melpa" . "https://elpa.emacs-china.org/melpa/")))
+
+;; ;; TNUA ELPA
+;; (setq package-archives
+;;       '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+;;         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+#+end_src
 
 *** leader key
 默认的alt leader key为 M-SPC, 与KDE中的krunner有冲突. 现改为F2, 更方便. 注意: alt leader key仅在insert状态下有效.
@@ -3266,6 +3299,12 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+** kill ring
+#+name: b5a74212
+#+begin_src elisp
+(setq kill-ring-max 999)
+#+end_src
+
 ** core
 #+name: 69dc0b95
 #+begin_src elisp
@@ -3300,6 +3339,12 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (if (region-active-p)
       (call-interactively #'delete-region)
     (call-interactively #'delete-char)))
+#+end_src
+** duplicate
+可用的
+- delete-duplicate-lines
+#+name: 974c9767
+#+begin_src elisp
 #+end_src
 
 ** evil
@@ -3785,15 +3830,14 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
 
 
 ** insert date
+#+name: ab440ea2
 #+begin_src emacs-lisp
 (defun gwp/insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."
   (interactive "P")
   (insert (format-time-string "%Y-%m-%d"))
   (when arg
-    (insert (format-time-string " %H:%M"))
-    )
-  )
+    (insert (format-time-string " %H:%M"))))
 
 ;; make it easier to update time-stamp
 (map! :i "C-c i" #'gwp/insert-date)
@@ -3816,8 +3860,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 #+name: 2286a7d2
 #+begin_src elisp
 (after! evil
-  (advice-remove #'evil-join #'+evil-join-a)
-  )
+  (advice-remove #'evil-join #'+evil-join-a))
 #+end_src
 
 ** disable mouse
@@ -4439,6 +4482,20 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
       (delete-region (match-beginning 0) (match-end 0))
       )))
 
+
+;; https://github.com/Wilfred/.emacs.d/blob/gh-pages/user-lisp/rust-customisations.el
+(defun gwp/rust-toggle-pub ()
+  "Toggle the public visibility of the function at point."
+  (interactive)
+  (save-excursion
+    ;; If we're already at the beginning of the function definition,
+    ;; `beginning-of-defun' moves to the previous function, so move elsewhere.
+    (end-of-line)
+    (beginning-of-defun)
+    (if (looking-at "pub ")
+        (delete-char 4)
+      (insert "pub "))))
+
 (defun gwp/rust-insert-result ()
   (interactive)
   (gwp/rust-insert-option "Result"))
@@ -4456,6 +4513,9 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
   [["Result"
     ("r" "Wrap in Result" gwp/rust-insert-result)
     ("k" "Unwrap Result" gwp/rust-unwrap-result)
+    ]]
+  [["Pub"
+    ("p" "toggle pub at point" gwp/rust-toggle-pub)
     ]]
   )
 
@@ -4587,9 +4647,15 @@ xx <=> Option<xx>
 ** view
 #+name: 7341aa84
 #+begin_src elisp
+;; 2021-10-13: 现不用doom中的org module了
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
-(remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+;; (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+
+;; 2021-10-13: FIXME: 改了也不行
+;; org默认设置有些问题: 光标在properties时不能展开
+;; See http://emacs.stackexchange.com/a/22540/304
+;; (remove-hook 'org-cycle-hook #'org-cycle-hide-drawers)
 
 ;; 避免切换时闪烁
 ;; (setq org-startup-indented nil)
@@ -4610,8 +4676,7 @@ xx <=> Option<xx>
   :init
   ;; ◉ ○ ◆ » ◇ ▶ ▷
   (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
-  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-  )
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
 ;; 显示光标所在处的headline
 (defun gwp::org-show-context-at-point ()
@@ -4625,8 +4690,7 @@ xx <=> Option<xx>
 
 (map! :map org-mode-map
       :ng "zo" #'gwp::org-show-context-at-point
-      :ng "zc" #'org-hide-entry
-      )
+      :ng "zc" #'org-hide-entry)
 #+end_src
 
 ** dwim

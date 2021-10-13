@@ -48,9 +48,15 @@
 ;; d3c71916 ends here
 
 ;; [[file:../../doom.note::7341aa84][7341aa84]]
+;; 2021-10-13: 现不用doom中的org module了
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
-(remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+;; (remove-hook! 'org-mode-hook #'+org-unfold-to-2nd-level-or-point-h)
+
+;; 2021-10-13: FIXME: 改了也不行
+;; org默认设置有些问题: 光标在properties时不能展开
+;; See http://emacs.stackexchange.com/a/22540/304
+;; (remove-hook 'org-cycle-hook #'org-cycle-hide-drawers)
 
 ;; 避免切换时闪烁
 ;; (setq org-startup-indented nil)
@@ -71,8 +77,7 @@
   :init
   ;; ◉ ○ ◆ » ◇ ▶ ▷
   (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
-  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-  )
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
 ;; 显示光标所在处的headline
 (defun gwp::org-show-context-at-point ()
@@ -86,8 +91,7 @@
 
 (map! :map org-mode-map
       :ng "zo" #'gwp::org-show-context-at-point
-      :ng "zc" #'org-hide-entry
-      )
+      :ng "zc" #'org-hide-entry)
 ;; 7341aa84 ends here
 
 ;; [[file:../../doom.note::fbbec921][fbbec921]]

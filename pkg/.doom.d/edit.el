@@ -1,3 +1,7 @@
+;; [[file:../../doom.note::b5a74212][b5a74212]]
+(setq kill-ring-max 999)
+;; b5a74212 ends here
+
 ;; [[file:../../doom.note::69dc0b95][69dc0b95]]
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
 (defun gwp::ctrl-w-dwim ()
@@ -26,6 +30,10 @@
     (call-interactively #'delete-char)))
 ;; 7d5caf69 ends here
 
+;; [[file:../../doom.note::974c9767][974c9767]]
+
+;; 974c9767 ends here
+
 ;; [[file:../../doom.note::73388047][73388047]]
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.
 (map! :n "q" #'evil-forward-paragraph)
@@ -38,7 +46,7 @@
 (map! :n "w" #'evil-forward-word-begin)
 (map! :n "W" #'evil-backward-word-begin)
 
-;; ;; C-v: evil默认为quoted-insert, 可以 ctrl-q代替
+;; C-v: evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
 (map! :i "C-y" #'yank)
 
@@ -400,19 +408,17 @@
       )
 ;; dde3ee55 ends here
 
-;; [[file:../../doom.note::*insert date][insert date:1]]
+;; [[file:../../doom.note::ab440ea2][ab440ea2]]
 (defun gwp/insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."
   (interactive "P")
   (insert (format-time-string "%Y-%m-%d"))
   (when arg
-    (insert (format-time-string " %H:%M"))
-    )
-  )
+    (insert (format-time-string " %H:%M"))))
 
 ;; make it easier to update time-stamp
 (map! :i "C-c i" #'gwp/insert-date)
-;; insert date:1 ends here
+;; ab440ea2 ends here
 
 ;; [[file:../../doom.note::f75f80bd][f75f80bd]]
 (setq show-trailing-whitespace t)
@@ -423,8 +429,7 @@
 
 ;; [[file:../../doom.note::2286a7d2][2286a7d2]]
 (after! evil
-  (advice-remove #'evil-join #'+evil-join-a)
-  )
+  (advice-remove #'evil-join #'+evil-join-a))
 ;; 2286a7d2 ends here
 
 ;; [[file:../../doom.note::7628d03d][7628d03d]]

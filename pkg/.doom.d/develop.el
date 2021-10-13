@@ -193,6 +193,20 @@ The org src will be tangled first before compiling.
       (delete-region (match-beginning 0) (match-end 0))
       )))
 
+
+;; https://github.com/Wilfred/.emacs.d/blob/gh-pages/user-lisp/rust-customisations.el
+(defun gwp/rust-toggle-pub ()
+  "Toggle the public visibility of the function at point."
+  (interactive)
+  (save-excursion
+    ;; If we're already at the beginning of the function definition,
+    ;; `beginning-of-defun' moves to the previous function, so move elsewhere.
+    (end-of-line)
+    (beginning-of-defun)
+    (if (looking-at "pub ")
+        (delete-char 4)
+      (insert "pub "))))
+
 (defun gwp/rust-insert-result ()
   (interactive)
   (gwp/rust-insert-option "Result"))
@@ -210,6 +224,9 @@ The org src will be tangled first before compiling.
   [["Result"
     ("r" "Wrap in Result" gwp/rust-insert-result)
     ("k" "Unwrap Result" gwp/rust-unwrap-result)
+    ]]
+  [["Pub"
+    ("p" "toggle pub at point" gwp/rust-toggle-pub)
     ]]
   )
 

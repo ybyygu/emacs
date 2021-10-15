@@ -177,7 +177,7 @@
        :gwp                ; 自定义模块
        ;; (org +roam2)
        magit
-       (default +smartparents +bindings)
+       (default +smartparents)
        pdf
        ;; (rust)
 

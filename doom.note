@@ -11,11 +11,11 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [3/5]
+* Tasks [4/4]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
-- [ ] tab不能cycle item及properties
+- [X] tab不能cycle item及properties
 
 * 配置参考
 - [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
@@ -35,22 +35,26 @@
 - [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
-* Memo [54/66]
-** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个
-doom-emacs怕是难以长久. 问题
+* Memo [55/67]
+** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
+doom-emacs问题
 - 依赖于straight, github, 装包太痛苦
 - 自定义设置太多, 难以尽如心意.
 
-[[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
+参考:
+- [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
+- [[https://www.reddit.com/r/emacs/comments/jzjtv0/doom_emacs_vs_vanilla_emacs/][Doom emacs vs vanilla emacs : emacs]]
 
 [2021-10-14 Thu] 试用了下Centaur, 有些失望.
 
-** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
+** DONE [2021-10-11 Mon] org-toggle-heading后会跳一下
+- State "DONE"       from "TODO"       [2021-10-15 Fri 15:57]
 是doom中org module的锅, 禁用就可以了.
 
 *** DONE toggle headline时, 应隐藏 properties
 - State "DONE"       from "TODO"       [2021-10-12 Tue 19:31]
-看起来不好搞定. 放弃.
+  是default module中bindings的原因, 彻底去掉就可以了.
+
 *** TODO org-protocol设置有问题, daemon没开启?
 
 *** 需要导入的配置
@@ -141,7 +145,9 @@ strace -f -s 1000 -tt xdg-open http://www.baidu.com &>/tmp/a.log
 删除 ~/.emacs.d/local/env 文件, 重启后问题解决.
 
 ** TODO [2021-10-08 Fri] 解决window layout保存问题
-[[https://stackoverflow.com/questions/2572950/preserve-window-layout-in-emacs][Preserve window layout in Emacs - Stack Overflow]]
+- [[https://www.reddit.com/r/emacs/comments/q5l4mv/do_you_use_ivypushpopview/][(2) Do you use ivy-push/pop-view? : emacs]]
+- [[https://stackoverflow.com/questions/2572950/preserve-window-layout-in-emacs][Preserve window layout in Emacs - Stack Overflow]]
+- [[https://github.com/alphapapa/burly.el][alphapapa/burly.el: Save and restore frames and windows with their buffers in Emacs]]
 
 ** DONE [2021-10-07 Thu] 解决rust编程中在comment环境中开新行的问题
 - State "DONE"       from "TODO"       [2021-10-08 Fri 10:58]
@@ -2337,7 +2343,7 @@ gwp-merge:
        :gwp                ; 自定义模块
        ;; (org +roam2)
        magit
-       (default +smartparents +bindings)
+       (default +smartparents)
        pdf
        ;; (rust)
 
@@ -2744,7 +2750,8 @@ Argument E is a mouse event used by `mouse-set-point'."
 :header-args: :tangle pkg/.doom.d/packages.el :comments nil
 :END:
 注意, 为了方便有些设置(package!)分散在不同的headline下, 如果仅tangle该subtree可
-能会丢失重要的设置. 可在下面某代码块中tangle该文件所有的code blocks.
+能会丢失重要的设置. 可在下面某代码块中tangle该文件所有的code blocks, 不要在
+narrowed buffer中tangle.
 *** doc/header
 #+name: ad772025
 #+begin_src elisp
@@ -2818,10 +2825,6 @@ Argument E is a mouse event used by `mouse-set-point'."
 
 #+name: d8f41362
 #+begin_src elisp
-(package! fcitx)
-(package! rime)
-(package! citre)
-
 ;; 五笔输入法
 ;; (package! pyim-wbdict)
 
@@ -2873,20 +2876,11 @@ pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 #+end_src
 
 github支持, 减慢速度.
+#+name: e5ee47b4
 #+begin_src emacs-lisp
 (package! forge :ignore t)
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
-#+end_src
-
-禁用which-key, 响应太慢(未知bug)
-#+begin_src elisp
-; (package! which-key :ignore t)
-#+end_src
-
-禁用自动空格清理包, 避免有编辑时丢失空格
-#+begin_src elisp :tangle no
-(package! ws-butler :disable t)
 #+end_src
 
 *** 测试
@@ -2895,7 +2889,6 @@ github支持, 减慢速度.
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
-(package! symbol-overlay)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来
@@ -3281,11 +3274,13 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ** highlight
 - [[https://emacs-china.org/t/package-symbol-overlay-symbol/7706][论坛讨论]]
 
-要点:
+非常好用. 要点:
 - 光标置于symbol左右, symbol-overlay-put 可切换高亮状态. 切n/p可跳转至前后高亮的位置.
 - 可同时高亮多组symbols. 每组独立控制.
 - 当光标在symbol外时, 可用 symbol-overlay-switch-forward 来跳回到最近那组高亮的
   symbols. 要跳回起跳位置可按e键.
+- symbol-overlay没法定义搜索的字符, 这时可用highlight-regexp命令来替代.
+
 #+name: fae9a6ea
 #+begin_src elisp
 ;; symbol-overlay
@@ -3326,6 +3321,16 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ;; set line space wider than default
 (setq-default line-spacing 4)
 #+end_src
+** packages
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/packages.el
+:END:
+#+name: d6a037d0
+#+begin_src elisp
+(package! fcitx)
+(package! rime)
+#+end_src
+
 
 * edit.el
 :PROPERTIES:
@@ -3457,53 +3462,11 @@ emacs默认搜索光标处的字词:
 
 #+end_src
 
-** completion
-关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
-: M-n, M-p: Next/prev line.
-: M-N, M-P: Next/prev definition.
-: M-l j: Jump to the definition.
-: C-g: Close the peek window.
-
-#+name: d28bc89a
+** hydra
+特别适合需要重复按键来完成的操作, 比如调整窗口大小.
+#+name: 356a926a
 #+begin_src elisp
-;; Use hippie-expand instead of dabbrev-expand
-;; (global-set-key (kbd "M-/") #'dabbrev-expand)
-(global-set-key (kbd "M-/") #'hippie-expand)
-;; the same behavior as the original `dabbrev-expand'
-(setq hippie-expand-dabbrev-skip-space t)
-
-;; adjust the list of functions that hippie-expand will try
-(setq hippie-expand-try-functions-list
-      '(
-        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
-        try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-complete-file-name-partially
-        try-complete-file-name
-        try-expand-line
-        try-expand-dabbrev-from-kill
-        ;; try-expand-all-abbrevs
-        ;; try-expand-list
-        try-complete-lisp-symbol-partially
-        try-complete-lisp-symbol
-        ))
-
-(after! company
-  (setq company-idle-delay 1.5
-        company-minimum-prefix-length 2))
-
-(use-package! citre
-  :defer t
-  :init
-  ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config)
-  (map! :leader
-        (:prefix-map ("j" . "jump")
-         (:prefix-map ("c" . "citre")
-          :desc "citre jump to definition"                    "d" #'citre-jump
-          :desc "citre jump back"                             "b" #'citre-jump-back
-          :desc "citre peek"                                  "p" #'citre-peek
-          ))))
+(use-package hydra)
 #+end_src
 
 ** keyfreq
@@ -3541,9 +3504,9 @@ emacs默认搜索光标处的字词:
 解决大小写, 首字母大写等问题. 在evil visual state中, 也可直接用u/U来实现相同功能.
 #+name: b9054953
 #+begin_src elisp
-(map! :ni "M-u" #'upcase-dwim
-      :ni "M-l" #'downcase-dwim
-      :ni "M-c" #'capitalize-dwim)
+(map! :vi "M-u" #'upcase-dwim
+      :vi "M-l" #'downcase-dwim
+      :vi "M-c" #'capitalize-dwim)
 #+end_src
 
 ** smartparens
@@ -3956,11 +3919,6 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
   )
 #+end_src
 
-#+name: c9348c51
-#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el :tangle no
-(package! disable-mouse)
-#+end_src
-
 *** 方案3: xinput
 :PROPERTIES:
 :header-args: :tangle no
@@ -4100,13 +4058,36 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+end_src
 
 ** multiedit
-使用M-d选中多个字词, 同步修改. 不需要的可用Enter取消掉.
+: SPC-v-m-m
+进行多点编辑模式, 选中当前symbol或选中的词. 按n/N选择下一个或前一个. 不需
+要的可用Enter取消掉. C-n/C-p跳到后一个match或前一个.
+: SPC-v-m-i
+进入多点编辑模式, 插入一个光标. 或M-i后再插入另一个.
+
+#+name: 4593181c
 #+begin_src elisp
 (use-package evil-multiedit
   :after evil
   :config
-  (setq evil-multiedit-follow-matches t)
-  )
+  (setq evil-multiedit-follow-matches t))
+
+(defhydra gwp::hydra-multiedit ()
+  "resize-window"
+  ("i" evil-multiedit-toggle-marker-here "insert cursor here")
+  ("m" evil-multiedit-match-and-next "match symbol at point")
+  ("r" evil-multiedit-restore "restore prev matches")
+  ("q" nil "quit"))
+
+(map!
+ (:after evil-multiedit
+  (:map evil-multiedit-state-map
+   "n"  #'evil-multiedit-match-and-next
+   "N"  #'evil-multiedit-match-and-prev
+   "M-i"  #'evil-multiedit-toggle-marker-here
+   "C-p"  #'evil-multiedit-prev
+   "C-n"  #'evil-multiedit-next
+   "RET"    #'evil-multiedit-toggle-or-restrict-region
+   [return] #'evil-multiedit-toggle-or-restrict-region)))
 #+end_src
 
 ** bibtex
@@ -4118,9 +4099,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 #+end_src
 
-** hydra
-特别适合需要重复按键来完成的操作, 比如调整窗口大小.
-*** parens
+** parens
 #+name: 9786fedc
 #+begin_src elisp
 (defhydra gwp/hydra-smartparens (:hint nil)
@@ -4140,18 +4119,25 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 #+end_src
 
-*** last changes
+** last changes
 快速跳转到修改的位置, 非常方便.
 #+name: 1c79ba79
 #+begin_src elisp
-(defhydra gwp/hydra-last-change ()
+(defhydra gwp::hydra-last-change ()
   ("p" goto-last-change "last change")
   ("n" goto-last-change-reverse "previous change")
   ("c" recenter "recenter")
   ("q" nil "quit")
   )
 #+end_src
-
+** packages
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/packages.el
+:END:
+#+name: 1dfc22ab
+#+begin_src elisp
+(package! symbol-overlay)
+#+end_src
 
 * develop.el
 :PROPERTIES:
@@ -4161,6 +4147,55 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
 (package! vterm-toggle)
+#+end_src
+
+** completion
+关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
+: M-n, M-p: Next/prev line.
+: M-N, M-P: Next/prev definition.
+: M-l j: Jump to the definition.
+: C-g: Close the peek window.
+
+#+name: d28bc89a
+#+begin_src elisp
+;; Use hippie-expand instead of dabbrev-expand
+;; (global-set-key (kbd "M-/") #'dabbrev-expand)
+(global-set-key (kbd "M-/") #'hippie-expand)
+;; the same behavior as the original `dabbrev-expand'
+(setq hippie-expand-dabbrev-skip-space t)
+
+;; adjust the list of functions that hippie-expand will try
+(setq hippie-expand-try-functions-list
+      '(
+        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-line
+        try-expand-dabbrev-from-kill
+        ;; try-expand-all-abbrevs
+        ;; try-expand-list
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol
+        ))
+
+(after! company
+  (setq company-idle-delay 1.5
+        company-minimum-prefix-length 2))
+
+(use-package! citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  (map! :leader
+        (:prefix-map ("j" . "jump")
+         (:prefix-map ("c" . "citre")
+          :desc "citre jump to definition"                    "d" #'citre-jump
+          :desc "citre jump back"                             "b" #'citre-jump-back
+          :desc "citre peek"                                  "p" #'citre-peek
+          ))))
 #+end_src
 
 ** magit
@@ -4610,6 +4645,7 @@ xx <=> Option<xx>
 (package! cargo)
 (package! racer)
 (package! rust-mode)
+(package! citre)
 #+end_src
 
 * org.el
@@ -6477,52 +6513,15 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/bindings.el
 :END:
-还是自定义更舒服些. 以后hack下default +evil-bindings.el仅用于取消某些不习惯的按键.
-** movement
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-[2021-10-10 Sun] 这里可以用不到了, 也备着
-
-默认config module中的+bindings flag有问题, 导至org-mode中TAB键异常. 这里摘取其中
-重要代码. 载入doom中的默认按键绑定: [[https://github.com/hlissner/doom-emacs/blob/develop/docs/api.org#load][load!用法]]
-#+begin_src elisp
-;; Make M-x harder to miss
-(define-key! 'override
-  "M-x" #'execute-extended-command
-  "A-x" #'execute-extended-command)
-
-;; A Doom convention where C-s on popups and interactive searches will invoke
-;; ivy/helm for their superior filtering.
-(define-key! :keymaps +default-minibuffer-maps
-  "C-s" (if (featurep! :completion ivy)
-            #'counsel-minibuffer-history
-          #'helm-minibuffer-history))
-
-;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
-;; Pressing it again will send you to the true bol. Same goes for C-e, except
-;; it will ignore comments+trailing whitespace before jumping to eol.
-(map! :gi "C-a" #'doom/backward-to-bol-or-indent
-      :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
-      ;; Standardizes the behavior of modified RET to match the behavior of
-      ;; other editors, particularly Atom, textedit, textmate, and vscode, in
-      ;; which ctrl+RET will add a new "item" below the current one
-      :gn [C-return]    #'+default/newline-below
-      :gn [C-S-return]  #'+default/newline-above
-      )
-
-;; 2021-08-31: 现在gwp/default下修改
-;; (load! "bindings")
-#+end_src
-
-** leader/global
-注意的键位变量为 doom-leader-<xx>-map, 其中xx为"prefix-map"后所定义的内容, 比如 "doom-leader-workspace-map".
+还是自定义更舒服些. 以后hack下default +evil-bindings.el仅用于取消某些不习惯的按
+键. 注意的键位变量为 doom-leader-<xx>-map, 其中xx为"prefix-map"后所定义的内容,
+比如 "doom-leader-workspace-map".
 
 常用命令
 - regexp-builder
 - apropos-value
 
-*** leader
+** core
 保存文件同时标记当前位置, 方便随后跳回.
 #+name: 2d76b8e4
 #+begin_src elisp
@@ -6533,15 +6532,22 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
   (save-buffer))
 
 (map! :leader
-      :desc "save buffer" "SPC" #'gwp::mark-and-save-buffer)
+      :desc "Save buffer" "SPC"         #'gwp::mark-and-save-buffer
+      :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
+      :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer)
+
+(map!
+ "C-`"                             #'+popup/toggle
+ "C-~"                             #'+popup/raise
+ "C-x p"                           #'+popup/other)
 #+end_src
 
-*** a: ??
-*** b: buffer
+** a: ??
+** b: buffer
 #+name: 19c9e88c
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("b" . "Buffer/bookmark")
+      (:prefix-map ("b" . "buffer/bookmark")
        :desc "Switch workspace buffer"     "b"   #'persp-switch-to-buffer
        :desc "Switch buffer"               "B"   #'switch-to-buffer
        :desc "Kill buffer"                 "d"   #'kill-current-buffer
@@ -6567,11 +6573,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** c: code
+** c: code
 #+name: e78a01dd
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("c" . "Code/compile")
+      (:prefix-map ("c" . "code/compile")
        :desc "Align the current region regexp"       "a"   #'align-regexp
        :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
@@ -6595,33 +6601,33 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** d: dodo
+** d: dodo
 #+name: 5e265fdb
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("d" . "DoDo")
+      (:prefix-map ("d" . "dodo")
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
        ))
 #+end_src
 
-*** e: external
+** e: external
 #+name: 6c75cff0
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("e" . "External")
+      (:prefix-map ("e" . "external")
        :desc "程序窗口管理" "w" #'counsel-wmctrl
        :desc "启动桌面程序" "a" #'counsel-linux-app
        ))
 #+end_src
 
-*** f: file/find
+** f: file/find
 #+name: 9ef458a0
 #+begin_src elisp
 (map! :leader
       ;; 注意 "file/find"特意与+evil-bindings.el中定义的不同, 用于覆盖原按键
-      (:prefix-map ("f" . "File/find")
+      (:prefix-map ("f" . "file/find")
        :desc "Open bookmarks"              "b"   #'counsel-bookmark ; 有用
        :desc "Jump to Dired buffer"        "j"   #'dired-jump ; 有用
        :desc "Find .note files"            "n"   #'gwp/find-file-in-notes
@@ -6646,11 +6652,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Yank file path from project" "Y"   #'+default/yank-buffer-path-relative-to-project)
       )
 #+end_src
-*** g: git
+** g: git
 #+name: ac7488a5
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("g" . "Git")
+      (:prefix-map ("g" . "git")
        :desc "Revert file"                 "R"   #'vc-revert
        :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill
        :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage
@@ -6713,15 +6719,22 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-*** TODO h: help
+** TODO h: help
 帮助系统
 - apropos-value
 
-*** i: insert
+#+name: e7792733
+#+begin_src elisp
+(map! :leader
+      :desc "help"                  "h"    help-map
+      )
+#+end_src
+
+** i: insert
 #+name: 4a4573c2
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("i" . "Insert")
+      (:prefix-map ("i" . "insert")
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'+default/yank-pop
        :desc "Current file name"             "f"   #'+default/insert-file-path
@@ -6732,11 +6745,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** j: jump
+** j: jump
 #+name: 6ea0d271
 #+begin_src elisp
 (map! :leader
-      (:prefix ("j" . "Jump")
+      (:prefix ("j" . "jump")
        :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
        :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
        :desc "avy line"               "l" #'evil-avy-goto-line
@@ -6744,11 +6757,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** l: load/workspace
+** l: load/workspace
 #+name: 2598d642
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("l" . "Load/workspace") ;; 用TAB不方便
+      (:prefix-map ("l" . "load/workspace") ;; 用tab不方便
        :desc "Load or witch workspace"   "l"   #'gwp/workspace/load-or-switch
        :desc "Switch workspace"          "TAB" #'+workspace/switch-to ; 调整下
        :desc "Switch to last workspace"  "b"   #'+workspace/other ; 换个好按的
@@ -6775,13 +6788,13 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** m: my? memo?
+** m: my? memo?
 
-*** n: note/next
+** n: note/next
 #+name: 1ad72c87
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("n" . "Note/next")
+      (:prefix-map ("n" . "note/next")
        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
        :desc "Org agenda"                   "a" #'org-agenda
        :desc "Find .note files"             "f" #'gwp/find-file-in-notes
@@ -6798,11 +6811,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** o: org/open
+** o: org/open
 #+name: fc304196
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("o" . "Org/open")
+      (:prefix-map ("o" . "org/open")
        :desc "Org attachment"        "a" #'org-attach
        :desc "Todo list"             "t" #'org-todo-list
        :desc "org-agenda (GTD)"      "n" (cmd! (org-agenda nil "gt"))
@@ -6818,13 +6831,32 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** r: resume/rings
+** p: quit/session
+#+name: 1f0c2364
+#+begin_src elisp
+(map! :leader
+      (:prefix-map ("q" . "quit/session")
+       :desc "Quit Emacs"                   "q" #'save-buffers-kill-terminal
+       :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
+       :desc "Restart Emacs"                "R" #'doom/restart
+       :desc "Delete frame"                 "f" #'delete-frame
+       :desc "Clear current frame"          "F" #'doom/kill-all-buffers
+       :desc "Kill Emacs (and daemon)"      "K" #'save-buffers-kill-emacs
+       :desc "Quit Emacs without saving"    "Q" #'evil-quit-all-with-error-code
+       :desc "Quick save current session"   "s" #'doom/quicksave-session
+       :desc "Restore last session"         "l" #'doom/quickload-session
+       :desc "Save session to file"         "S" #'doom/save-session
+       :desc "Restore session from file"    "L" #'doom/load-session
+       ))
+#+end_src
+
+** r: resume/rings
 emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-set-marke)手动设置位置记录, 然后随时跳转回来.
 
 #+name: 1c637dc8
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("r" . "Resume/rings")
+      (:prefix-map ("r" . "resume/rings")
        :desc "Open bookmarks"        "b" #'counsel-bookmark
        :desc "Resume last search"    "l" #'ivy-resume
        :desc "Evil registers"        "e" #'counsel-register
@@ -6832,17 +6864,17 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
        :desc "Evil markers"          "m" #'counsel-evil-marks
        :desc "Restore selection"     "v" #'evil-visual-restore
        :desc "Restore insert point"  "i" #'evil-insert-resume
-       :desc "Last change"           "c" #'gwp/hydra-last-change/body
+       :desc "Last change"           "c" #'gwp::hydra-last-change/body
        :desc "Jump list"             "j" #'+ivy/jump-list
        ))
 #+end_src
 
-*** s: search
+** s: search
 SPC-s-s和SPC-s-b有什么区别?
 #+name: 321efaf0
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("s" . "Search")
+      (:prefix-map ("s" . "search")
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
        :desc "Search buffer"                "s" #'+default/search-buffer ; 走isearch路线, 可一行多个匹配
        :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
@@ -6867,11 +6899,11 @@ SPC-s-s和SPC-s-b有什么区别?
         :desc "unhighlight regexp"                "u" #'unhighlight-regexp)))
 #+end_src
 
-*** t: toggle
+** t: toggle
 #+name: 95d4be8a
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("t" . "Toggle")
+      (:prefix-map ("t" . "toggle")
        :desc "切换终端(vterm)"            "t" #'vterm-toggle
        :desc "Big mode"                   "b" #'doom-big-font-mode
        :desc "Debug on error"             "d" #'toggle-debug-on-error
@@ -6888,18 +6920,18 @@ SPC-s-s和SPC-s-b有什么区别?
        ))
 #+end_src
 
-*** v: visual selection
+** v: visual selection
 #+name: d2dc925d
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("v" . "Visual")
-       :desc "expand region"           "v" #'er/expand-region
-       :desc "select text"             "s" #'gwp/advanced-selection
-       :desc "jump to emacs mark ring" "j" #'gwp::hydra-mark-ring-pop/body
-       ))
+      (:prefix-map ("v" . "visual")
+       :desc "expand region"            "v" #'er/expand-region
+       :desc "select text"              "s" #'gwp/advanced-selection
+       :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body
+       :desc "multi-cursor mode"        "m" #'gwp::hydra-multiedit/body))
 #+end_src
 
-*** w/W: window/frame
+** w/W: window/frame
 #+name: 011dce65
 #+begin_src elisp
 (map! :leader
@@ -6908,11 +6940,11 @@ SPC-s-s和SPC-s-b有什么区别?
       )
 #+end_src
 
-*** y: Yank/paste
+** y: Yank/paste
 #+name: bc190292
 #+begin_src elisp
 (map! :leader
-      (:prefix-map ("y" . "Yank")
+      (:prefix-map ("y" . "yank")
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'+default/yank-pop
        :desc "Current file name"             "f"   #'+default/insert-file-path
@@ -6923,7 +6955,7 @@ SPC-s-s和SPC-s-b有什么区别?
        ))
 #+end_src
 
-*** z: ???
+** z: ???
 
 * modules/hack
 新思路:

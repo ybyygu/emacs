@@ -92,46 +92,9 @@
 
 ;; search/replace:1 ends here
 
-;; [[file:../../doom.note::d28bc89a][d28bc89a]]
-;; Use hippie-expand instead of dabbrev-expand
-;; (global-set-key (kbd "M-/") #'dabbrev-expand)
-(global-set-key (kbd "M-/") #'hippie-expand)
-;; the same behavior as the original `dabbrev-expand'
-(setq hippie-expand-dabbrev-skip-space t)
-
-;; adjust the list of functions that hippie-expand will try
-(setq hippie-expand-try-functions-list
-      '(
-        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
-        try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-complete-file-name-partially
-        try-complete-file-name
-        try-expand-line
-        try-expand-dabbrev-from-kill
-        ;; try-expand-all-abbrevs
-        ;; try-expand-list
-        try-complete-lisp-symbol-partially
-        try-complete-lisp-symbol
-        ))
-
-(after! company
-  (setq company-idle-delay 1.5
-        company-minimum-prefix-length 2))
-
-(use-package! citre
-  :defer t
-  :init
-  ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config)
-  (map! :leader
-        (:prefix-map ("j" . "jump")
-         (:prefix-map ("c" . "citre")
-          :desc "citre jump to definition"                    "d" #'citre-jump
-          :desc "citre jump back"                             "b" #'citre-jump-back
-          :desc "citre peek"                                  "p" #'citre-peek
-          ))))
-;; d28bc89a ends here
+;; [[file:../../doom.note::356a926a][356a926a]]
+(use-package hydra)
+;; 356a926a ends here
 
 ;; [[file:../../doom.note::*keyfreq][keyfreq:1]]
 (require 'keyfreq)
@@ -157,9 +120,9 @@
 ;; 9edb7f25 ends here
 
 ;; [[file:../../doom.note::b9054953][b9054953]]
-(map! :ni "M-u" #'upcase-dwim
-      :ni "M-l" #'downcase-dwim
-      :ni "M-c" #'capitalize-dwim)
+(map! :vi "M-u" #'upcase-dwim
+      :vi "M-l" #'downcase-dwim
+      :vi "M-c" #'capitalize-dwim)
 ;; b9054953 ends here
 
 ;; [[file:../../doom.note::e4fc036b][e4fc036b]]
@@ -566,13 +529,30 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 ;; 8fac8bf1 ends here
 
-;; [[file:../../doom.note::*multiedit][multiedit:1]]
+;; [[file:../../doom.note::4593181c][4593181c]]
 (use-package evil-multiedit
   :after evil
   :config
-  (setq evil-multiedit-follow-matches t)
-  )
-;; multiedit:1 ends here
+  (setq evil-multiedit-follow-matches t))
+
+(defhydra gwp::hydra-multiedit ()
+  "resize-window"
+  ("i" evil-multiedit-toggle-marker-here "insert cursor here")
+  ("m" evil-multiedit-match-and-next "match symbol at point")
+  ("r" evil-multiedit-restore "restore prev matches")
+  ("q" nil "quit"))
+
+(map!
+ (:after evil-multiedit
+  (:map evil-multiedit-state-map
+   "n"  #'evil-multiedit-match-and-next
+   "N"  #'evil-multiedit-match-and-prev
+   "M-i"  #'evil-multiedit-toggle-marker-here
+   "C-p"  #'evil-multiedit-prev
+   "C-n"  #'evil-multiedit-next
+   "RET"    #'evil-multiedit-toggle-or-restrict-region
+   [return] #'evil-multiedit-toggle-or-restrict-region)))
+;; 4593181c ends here
 
 ;; [[file:../../doom.note::*bibtex][bibtex:1]]
 (setq bibtex-completion-bibliography
@@ -600,7 +580,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; 9786fedc ends here
 
 ;; [[file:../../doom.note::1c79ba79][1c79ba79]]
-(defhydra gwp/hydra-last-change ()
+(defhydra gwp::hydra-last-change ()
   ("p" goto-last-change "last change")
   ("n" goto-last-change-reverse "previous change")
   ("c" recenter "recenter")

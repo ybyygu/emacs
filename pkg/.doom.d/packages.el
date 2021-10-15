@@ -53,10 +53,6 @@
 (package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
 (package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 
-(package! fcitx)
-(package! rime)
-(package! citre)
-
 ;; 五笔输入法
 ;; (package! pyim-wbdict)
 
@@ -83,12 +79,9 @@
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
 
-; (package! which-key :ignore t)
-
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
-(package! symbol-overlay)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来
@@ -106,6 +99,15 @@
 (package! golden-ratio)
 ;; e61c257c ends here
 
+;; [[file:../../doom.note::d6a037d0][d6a037d0]]
+(package! fcitx)
+(package! rime)
+;; d6a037d0 ends here
+
+;; [[file:../../doom.note::1dfc22ab][1dfc22ab]]
+(package! symbol-overlay)
+;; 1dfc22ab ends here
+
 ;; [[file:../../doom.note::*vterm][vterm:1]]
 (package! vterm-toggle)
 ;; vterm:1 ends here
@@ -114,6 +116,7 @@
 (package! cargo)
 (package! racer)
 (package! rust-mode)
+(package! citre)
 ;; e86dc54d ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:2]]

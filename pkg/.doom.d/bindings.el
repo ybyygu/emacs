@@ -6,12 +6,19 @@
   (save-buffer))
 
 (map! :leader
-      :desc "save buffer" "SPC" #'gwp::mark-and-save-buffer)
+      :desc "Save buffer" "SPC"         #'gwp::mark-and-save-buffer
+      :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
+      :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer)
+
+(map!
+ "C-`"                             #'+popup/toggle
+ "C-~"                             #'+popup/raise
+ "C-x p"                           #'+popup/other)
 ;; 2d76b8e4 ends here
 
 ;; [[file:../../doom.note::19c9e88c][19c9e88c]]
 (map! :leader
-      (:prefix-map ("b" . "Buffer/bookmark")
+      (:prefix-map ("b" . "buffer/bookmark")
        :desc "Switch workspace buffer"     "b"   #'persp-switch-to-buffer
        :desc "Switch buffer"               "B"   #'switch-to-buffer
        :desc "Kill buffer"                 "d"   #'kill-current-buffer
@@ -39,7 +46,7 @@
 
 ;; [[file:../../doom.note::e78a01dd][e78a01dd]]
 (map! :leader
-      (:prefix-map ("c" . "Code/compile")
+      (:prefix-map ("c" . "code/compile")
        :desc "Align the current region regexp"       "a"   #'align-regexp
        :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
@@ -65,7 +72,7 @@
 
 ;; [[file:../../doom.note::5e265fdb][5e265fdb]]
 (map! :leader
-      (:prefix-map ("d" . "DoDo")
+      (:prefix-map ("d" . "dodo")
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
@@ -74,7 +81,7 @@
 
 ;; [[file:../../doom.note::6c75cff0][6c75cff0]]
 (map! :leader
-      (:prefix-map ("e" . "External")
+      (:prefix-map ("e" . "external")
        :desc "程序窗口管理" "w" #'counsel-wmctrl
        :desc "启动桌面程序" "a" #'counsel-linux-app
        ))
@@ -83,7 +90,7 @@
 ;; [[file:../../doom.note::9ef458a0][9ef458a0]]
 (map! :leader
       ;; 注意 "file/find"特意与+evil-bindings.el中定义的不同, 用于覆盖原按键
-      (:prefix-map ("f" . "File/find")
+      (:prefix-map ("f" . "file/find")
        :desc "Open bookmarks"              "b"   #'counsel-bookmark ; 有用
        :desc "Jump to Dired buffer"        "j"   #'dired-jump ; 有用
        :desc "Find .note files"            "n"   #'gwp/find-file-in-notes
@@ -111,7 +118,7 @@
 
 ;; [[file:../../doom.note::ac7488a5][ac7488a5]]
 (map! :leader
-      (:prefix-map ("g" . "Git")
+      (:prefix-map ("g" . "git")
        :desc "Revert file"                 "R"   #'vc-revert
        :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill
        :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage
@@ -174,9 +181,15 @@
       )
 ;; ac7488a5 ends here
 
+;; [[file:../../doom.note::e7792733][e7792733]]
+(map! :leader
+      :desc "help"                  "h"    help-map
+      )
+;; e7792733 ends here
+
 ;; [[file:../../doom.note::4a4573c2][4a4573c2]]
 (map! :leader
-      (:prefix-map ("i" . "Insert")
+      (:prefix-map ("i" . "insert")
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'+default/yank-pop
        :desc "Current file name"             "f"   #'+default/insert-file-path
@@ -189,7 +202,7 @@
 
 ;; [[file:../../doom.note::6ea0d271][6ea0d271]]
 (map! :leader
-      (:prefix ("j" . "Jump")
+      (:prefix ("j" . "jump")
        :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
        :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
        :desc "avy line"               "l" #'evil-avy-goto-line
@@ -199,7 +212,7 @@
 
 ;; [[file:../../doom.note::2598d642][2598d642]]
 (map! :leader
-      (:prefix-map ("l" . "Load/workspace") ;; 用TAB不方便
+      (:prefix-map ("l" . "load/workspace") ;; 用tab不方便
        :desc "Load or witch workspace"   "l"   #'gwp/workspace/load-or-switch
        :desc "Switch workspace"          "TAB" #'+workspace/switch-to ; 调整下
        :desc "Switch to last workspace"  "b"   #'+workspace/other ; 换个好按的
@@ -228,7 +241,7 @@
 
 ;; [[file:../../doom.note::1ad72c87][1ad72c87]]
 (map! :leader
-      (:prefix-map ("n" . "Note/next")
+      (:prefix-map ("n" . "note/next")
        :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
        :desc "Org agenda"                   "a" #'org-agenda
        :desc "Find .note files"             "f" #'gwp/find-file-in-notes
@@ -247,7 +260,7 @@
 
 ;; [[file:../../doom.note::fc304196][fc304196]]
 (map! :leader
-      (:prefix-map ("o" . "Org/open")
+      (:prefix-map ("o" . "org/open")
        :desc "Org attachment"        "a" #'org-attach
        :desc "Todo list"             "t" #'org-todo-list
        :desc "org-agenda (GTD)"      "n" (cmd! (org-agenda nil "gt"))
@@ -263,9 +276,26 @@
        ))
 ;; fc304196 ends here
 
+;; [[file:../../doom.note::1f0c2364][1f0c2364]]
+(map! :leader
+      (:prefix-map ("q" . "quit/session")
+       :desc "Quit Emacs"                   "q" #'save-buffers-kill-terminal
+       :desc "Restart & restore Emacs"      "r" #'doom/restart-and-restore
+       :desc "Restart Emacs"                "R" #'doom/restart
+       :desc "Delete frame"                 "f" #'delete-frame
+       :desc "Clear current frame"          "F" #'doom/kill-all-buffers
+       :desc "Kill Emacs (and daemon)"      "K" #'save-buffers-kill-emacs
+       :desc "Quit Emacs without saving"    "Q" #'evil-quit-all-with-error-code
+       :desc "Quick save current session"   "s" #'doom/quicksave-session
+       :desc "Restore last session"         "l" #'doom/quickload-session
+       :desc "Save session to file"         "S" #'doom/save-session
+       :desc "Restore session from file"    "L" #'doom/load-session
+       ))
+;; 1f0c2364 ends here
+
 ;; [[file:../../doom.note::1c637dc8][1c637dc8]]
 (map! :leader
-      (:prefix-map ("r" . "Resume/rings")
+      (:prefix-map ("r" . "resume/rings")
        :desc "Open bookmarks"        "b" #'counsel-bookmark
        :desc "Resume last search"    "l" #'ivy-resume
        :desc "Evil registers"        "e" #'counsel-register
@@ -273,14 +303,14 @@
        :desc "Evil markers"          "m" #'counsel-evil-marks
        :desc "Restore selection"     "v" #'evil-visual-restore
        :desc "Restore insert point"  "i" #'evil-insert-resume
-       :desc "Last change"           "c" #'gwp/hydra-last-change/body
+       :desc "Last change"           "c" #'gwp::hydra-last-change/body
        :desc "Jump list"             "j" #'+ivy/jump-list
        ))
 ;; 1c637dc8 ends here
 
 ;; [[file:../../doom.note::321efaf0][321efaf0]]
 (map! :leader
-      (:prefix-map ("s" . "Search")
+      (:prefix-map ("s" . "search")
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
        :desc "Search buffer"                "s" #'+default/search-buffer ; 走isearch路线, 可一行多个匹配
        :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
@@ -307,7 +337,7 @@
 
 ;; [[file:../../doom.note::95d4be8a][95d4be8a]]
 (map! :leader
-      (:prefix-map ("t" . "Toggle")
+      (:prefix-map ("t" . "toggle")
        :desc "切换终端(vterm)"            "t" #'vterm-toggle
        :desc "Big mode"                   "b" #'doom-big-font-mode
        :desc "Debug on error"             "d" #'toggle-debug-on-error
@@ -326,11 +356,11 @@
 
 ;; [[file:../../doom.note::d2dc925d][d2dc925d]]
 (map! :leader
-      (:prefix-map ("v" . "Visual")
-       :desc "expand region"           "v" #'er/expand-region
-       :desc "select text"             "s" #'gwp/advanced-selection
-       :desc "jump to emacs mark ring" "j" #'gwp::hydra-mark-ring-pop/body
-       ))
+      (:prefix-map ("v" . "visual")
+       :desc "expand region"            "v" #'er/expand-region
+       :desc "select text"              "s" #'gwp/advanced-selection
+       :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body
+       :desc "multi-cursor mode"        "m" #'gwp::hydra-multiedit/body))
 ;; d2dc925d ends here
 
 ;; [[file:../../doom.note::011dce65][011dce65]]
@@ -342,7 +372,7 @@
 
 ;; [[file:../../doom.note::bc190292][bc190292]]
 (map! :leader
-      (:prefix-map ("y" . "Yank")
+      (:prefix-map ("y" . "yank")
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'+default/yank-pop
        :desc "Current file name"             "f"   #'+default/insert-file-path

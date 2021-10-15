@@ -5,14 +5,17 @@
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 
+* 从零开始 [[file:~/Install/configs/emacs/gwp/gwp.note][gwp.note]]
+
 * Portal
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [3/3]
+* Tasks [3/5]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
+- [ ] tab不能cycle item及properties
 
 * 配置参考
 - [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
@@ -39,6 +42,8 @@ doom-emacs怕是难以长久. 问题
 - 自定义设置太多, 难以尽如心意.
 
 [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
+
+[2021-10-14 Thu] 试用了下Centaur, 有些失望.
 
 ** TODO [2021-10-11 Mon] org-toggle-heading后会跳一下
 是doom中org module的锅, 禁用就可以了.
@@ -1953,7 +1958,28 @@ xdg-desktop-menu install gwp-emacsclient.desktop
 - tangle时仅导出到当目录下或子目录下, 方便git管理.
 - stow再 "install" 到主目录下.
 
+** docker
+[[https://github.com/JAremko/docker-emacs][JAremko/docker-emacs: Dockerized Emacs (GUI)]]
+#+name: bec94355
+#+begin_src bash :tangle /tmp/run.sh
+ip=$(ifconfig enp0s31f6 | grep inet | awk '$1=="inet" {print $2}')
+xhost + $ip
+docker run -ti --name emacs\
+ -e DISPLAY=$ip:0\
+ -e UNAME="ybyygu"\
+ -e GNAME="ybyygu"\
+ -e UID="1000"\
+ -e GID="1000"\
+ # -v <path_to_your_.emacs.d>:/home/emacs/.emacs.d\
+ # -v <path_to_your_workspace>:/mnt/workspace\
+ centaur/emacs emacs
+#+end_src
+
 ** 使用chemacs做emacs双启动 [[https://github.com/plexus/chemacs][plexus/chemacs: Emacs profile switcher]]
+- [[https://github.com/plexus/chemacs2][plexus/chemacs2: Emacs version switcher, improved]]
+- [[https://github.com/Silex/docker-emacs][Silex/docker-emacs: Run Emacs in docker containers!]]
+
+使用
 - 进入chemacsk目录, 执行install.sh即可.
 - 修改 ~/.emacs-profiles.el
 
@@ -1961,7 +1987,13 @@ xdg-desktop-menu install gwp-emacsclient.desktop
 #+begin_src elisp :tangle ~/.emacs-profiles.el
 (("default" . ((user-emacs-directory . "~/Workspace/Programming/emacs/doom-emacs")
                (env . (("DOOMDIR" . "~/.doom.d")))))
- ("gwp" . ((user-emacs-directory . "~/Install/configs/emacs/gwp"))))
+ ("gwp" . ((user-emacs-directory . "~/Install/configs/emacs/gwp")))
+ ("centaur" . ((user-emacs-directory . "~/Install/configs/emacs/centaur/.emacs.d"))))
+#+end_src
+
+调用
+#+begin_src sh
+emacs --with-profile centaur
 #+end_src
 
 ** 安装doom-emacs
@@ -4623,14 +4655,6 @@ xx <=> Option<xx>
 ** 按键行为
 #+name: d3c71916
 #+begin_src elisp
-(defun gwp/new-memo (arg)
-  "Insert a new org-mode memo entry under heading at point."
-  (interactive "P")
-  (call-interactively 'evil-open-below)
-  (call-interactively 'org-insert-todo-subheading)
-  (call-interactively 'org-time-stamp-inactive)
-  (insert " "))
-
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
 
@@ -6398,10 +6422,26 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 *** insert
 #+name: 3d7188a4
 #+begin_src elisp
+(defun gwp/new-memo-time-stamp (arg)
+  "Insert a new org-mode memo entry under heading at point."
+  (interactive "P")
+  (call-interactively 'evil-open-below)
+  (call-interactively 'org-insert-todo-subheading)
+  (call-interactively 'org-time-stamp-inactive)
+  (insert " "))
+
+(defun gwp::new-item-time-stamp (arg)
+  (interactive "P")
+  (evil-first-non-blank)
+  (call-interactively 'org-insert-item)
+  (call-interactively 'org-time-stamp-inactive)
+  (insert " "))
+
 (map! :map org-mode-map
       :localleader
       (:prefix ("i" . "insert")
-       :desc "new memo entry" "m" #'gwp/new-memo ; 简化操作
+       :desc "new memo entry" "m" #'gwp::new-memo-time-stamp ; 简化操作
+       :desc "new item" "i" #'gwp::new-item-time-stamp
        :desc "inactive time-stamp" "t" #'org-time-stamp-inactive
        :desc "active time-stamp" "." #'org-time-stamp
        :desc "stored link" "l" #'org-insert-last-stored-link

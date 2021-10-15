@@ -26,14 +26,6 @@
 ;; b28b06dc ends here
 
 ;; [[file:../../doom.note::d3c71916][d3c71916]]
-(defun gwp/new-memo (arg)
-  "Insert a new org-mode memo entry under heading at point."
-  (interactive "P")
-  (call-interactively 'evil-open-below)
-  (call-interactively 'org-insert-todo-subheading)
-  (call-interactively 'org-time-stamp-inactive)
-  (insert " "))
-
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
 
@@ -1395,10 +1387,26 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; d7c4714d ends here
 
 ;; [[file:../../doom.note::3d7188a4][3d7188a4]]
+(defun gwp/new-memo-time-stamp (arg)
+  "Insert a new org-mode memo entry under heading at point."
+  (interactive "P")
+  (call-interactively 'evil-open-below)
+  (call-interactively 'org-insert-todo-subheading)
+  (call-interactively 'org-time-stamp-inactive)
+  (insert " "))
+
+(defun gwp::new-item-time-stamp (arg)
+  (interactive "P")
+  (evil-first-non-blank)
+  (call-interactively 'org-insert-item)
+  (call-interactively 'org-time-stamp-inactive)
+  (insert " "))
+
 (map! :map org-mode-map
       :localleader
       (:prefix ("i" . "insert")
-       :desc "new memo entry" "m" #'gwp/new-memo ; 简化操作
+       :desc "new memo entry" "m" #'gwp::new-memo-time-stamp ; 简化操作
+       :desc "new item" "i" #'gwp::new-item-time-stamp
        :desc "inactive time-stamp" "t" #'org-time-stamp-inactive
        :desc "active time-stamp" "." #'org-time-stamp
        :desc "stored link" "l" #'org-insert-last-stored-link

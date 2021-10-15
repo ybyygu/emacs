@@ -1327,7 +1327,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; d7c4714d ends here
 
 ;; [[file:../../doom.note::3d7188a4][3d7188a4]]
-(defun gwp/new-memo-time-stamp (arg)
+(defun gwp::new-memo-time-stamp (arg)
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
   (call-interactively 'evil-open-below)

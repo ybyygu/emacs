@@ -321,6 +321,7 @@
        :desc "Search current directory"     "d" #'+default/search-cwd
        :desc "Search other directory"       "D" #'+default/search-other-cwd
        :desc "Search .emacs.d"              "e" #'+default/search-emacsd
+       :desc "fd in current dir"            "f" #'find-file-in-project-by-selected ; 搜索文件名
        :desc "Jump to symbol"               "i" #'imenu
        :desc "Locate file"                  "l" #'counsel-locate
        :desc "Jump list"                    "j" #'evil-show-jumps

@@ -43,6 +43,11 @@
 ;; they are implemented.
 ;; b70e7222 ends here
 
+;; [[file:../../doom.note::af34cd47][af34cd47]]
+(setq gwp-emacs-directory "~/Workspace/Programming/emacs/")
+(push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)
+;; af34cd47 ends here
+
 ;; [[file:../../doom.note::56a9b4bd][56a9b4bd]]
 ;; 屏蔽掉emacs默认的f2功能, 避免在normal state下按f2误操作
 (global-unset-key (kbd "<f2>"))

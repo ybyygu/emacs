@@ -35,6 +35,8 @@
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
 * Memo [55/67]
+** TODO [2021-10-15 Fri] 实现当前目录下搜索文件名功能
+
 ** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
 doom-emacs问题
 - 依赖于straight, github, 装包太痛苦
@@ -2420,6 +2422,13 @@ gwp-merge:
 ;;       '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
 ;;         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 #+end_src
+*** load path
+自定义的el文件放在user-lisp下, 可自动加载
+#+name: af34cd47
+#+begin_src elisp
+(setq gwp-emacs-directory "~/Workspace/Programming/emacs/")
+(push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)
+#+end_src
 
 *** leader key
 默认的alt leader key为 M-SPC, 与KDE中的krunner有冲突. 现改为F2, 更方便. 注意: alt leader key仅在insert状态下有效.
@@ -2746,6 +2755,7 @@ Argument E is a mouse event used by `mouse-set-point'."
 (load! "bindings")
 #+end_src
 
+* gwp
 ** packages.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el :comments nil
@@ -2903,11 +2913,11 @@ github支持, 减慢速度.
            :branch "main"
            :files ("*.el")))
 #+end_src
-* ui.el
+** ui.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/ui.el
 :END:
-** wrap long line
+*** wrap long line
 更习惯手动折行
 #+name: a6f83332
 #+begin_src elisp
@@ -2919,7 +2929,7 @@ github支持, 减慢速度.
 (add-hook 'org-mode-hook 'gwp::turn-off-wrap-long-line)
 #+end_src
 
-** line numbers
+*** line numbers
 如果能显示相对行号, avy-goto-line可能就没必要了?
 #+name: 885c9fa9
 #+begin_src elisp
@@ -2945,8 +2955,8 @@ github支持, 减慢速度.
 ;; (setq display-line-numbers-type 'relative)
 #+end_src
 
-** window/frame
-*** 修改 frame 标题 方便 gnome-shell 桌面切换
+*** window/frame
+**** 修改 frame 标题 方便 gnome-shell 桌面切换
 #+begin_src elisp
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
@@ -2957,7 +2967,7 @@ github支持, 减慢速度.
         ))
 #+end_src
 
-*** 放大窗口
+**** 放大窗口
 自动放大当前窗口. 注意, 这类工具通过和doom的popup window有冲突. 需要的时候命令手
 动开启.
 - https://github.com/hlissner/doom-emacs/issues/2225
@@ -2996,7 +3006,7 @@ doom内置了几个命令:
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 
-*** 窗口管理
+**** 窗口管理
 [[https://github.com/abo-abo/ace-window][abo-abo/ace-window: Quickly switch windows in Emacs]]
 
 用avy在多个窗口下跳转也很方便
@@ -3026,13 +3036,13 @@ doom内置了几个命令:
 撤消或恢复之前的窗口布局
 : SPC-w-u, SPC-w C-r
 
-*** 弹出窗口
+**** 弹出窗口
 打开doom popup窗口, 默认仅在normal state下可用.
 #+begin_src emacs-lisp
 (map! :i "C-`" #'+popup/toggle)
 #+end_src
 
-*** 窗口大小
+**** 窗口大小
 使用滚轮来修改窗口大小. Ctrl-Alt-scroll-up, Ctrl-Alt-scroll-down
 #+name: 032e71c0
 #+begin_src elisp
@@ -3066,7 +3076,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
       )
 #+end_src
 
-*** 新开frame
+**** 新开frame
 #+name: 19e08aef
 #+begin_src elisp
 (defun gwp/display-current-buffer-other-frame ()
@@ -3075,7 +3085,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (display-buffer-other-frame (current-buffer)))
 #+end_src
 
-** big font mode
+*** big font mode
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -3090,9 +3100,9 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 (doom-big-font-mode -1)
 #+end_src
 
-** input method
+*** input method
 默认使用 Ctrl-\ 切换输入法
-*** rime
+**** rime
 可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点. 在输入过程中, 按z键临时拼音模式.
 
 #+name: 155b72b3
@@ -3130,7 +3140,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 (map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
 #+end_src
 
-*** pyim
+**** pyim
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -3189,7 +3199,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
     )))
 #+end_src
 
-** chinese fonts setup
+*** chinese fonts setup
 最早用cnfonts, 不过这个也比较麻烦. 现在用Sarasa之类的中英文等宽字体, 可较完美解
 决中英文表格对齐问题
 
@@ -3244,7 +3254,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   )
 #+end_src
 
-** theme
+*** theme
 #+begin_src elisp
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -3272,7 +3282,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   '(region :background "#555555")
   )
 #+end_src
-** highlight
+*** highlight
 - [[https://emacs-china.org/t/package-symbol-overlay-symbol/7706][论坛讨论]]
 
 非常好用. 要点:
@@ -3313,7 +3323,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   )
 #+end_src
 
-** misc
+*** misc
 #+name: 6013493c
 #+begin_src elisp
 ;; View images inside Emacs
@@ -3322,7 +3332,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ;; set line space wider than default
 (setq-default line-spacing 4)
 #+end_src
-** packages
+*** packages
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el
 :END:
@@ -3333,17 +3343,17 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 #+end_src
 
 
-* edit.el
+** edit.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
-** kill ring
+*** kill ring
 #+name: b5a74212
 #+begin_src elisp
 (setq kill-ring-max 999)
 #+end_src
 
-** core
+*** core
 #+name: 69dc0b95
 #+begin_src elisp
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
@@ -3396,14 +3406,14 @@ If a prefix argument is given, don't change the kill-ring."
 #+end_src
 
 
-** duplicate
+*** duplicate
 可用的
 - delete-duplicate-lines
 #+name: 974c9767
 #+begin_src elisp
 #+end_src
 
-** evil
+*** evil
 #+name: 73388047
 #+begin_src elisp
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.
@@ -3441,7 +3451,7 @@ If a prefix argument is given, don't change the kill-ring."
 ;; (setq evil-disable-insert-state-bindings t)
 #+end_src
 
-** undo
+*** undo
 感觉emacs的undo比evil的强
 
 默认绑定:
@@ -3464,14 +3474,14 @@ C-u C-/ 如果选中区域, 则仅撤销当前内容.
 (setq evil-want-fine-undo t)
 #+end_src
 
-** newline
+*** newline
 在注释环境下更容易使用, 用ctrl-enter容易误按.
 #+name: 1a0721e0
 #+begin_src elisp
 (map! :ni  "C-j"           #'+default/newline-below)
 #+end_src
 
-** search/replace
+*** search/replace
 emacs默认搜索光标处的字词:
 : C-s C-w
 按C-c ;后可跳转(avy)
@@ -3481,14 +3491,14 @@ emacs默认搜索光标处的字词:
 
 #+end_src
 
-** hydra
+*** hydra
 特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 #+name: 356a926a
 #+begin_src elisp
 (use-package hydra)
 #+end_src
 
-** keyfreq
+*** keyfreq
 [[https://github.com/dacap/keyfreq][dacap/keyfreq: Track Emacs commands frequency]]
 可用keyfreq-show查看按键统计排序
 #+begin_src elisp
@@ -3497,7 +3507,7 @@ emacs默认搜索光标处的字词:
 (keyfreq-autosave-mode 1)
 #+end_src
 
-** auto-save
+*** auto-save
 开启自动保存
 #+begin_src elisp
 (setq
@@ -3510,7 +3520,7 @@ emacs默认搜索光标处的字词:
 (auto-save-visited-mode +1)
 #+end_src
 
-** ctrl-z
+*** ctrl-z
 默认切换为emacs-state, 经常按错.
 #+name: 9edb7f25
 #+begin_src elisp
@@ -3519,7 +3529,7 @@ emacs默认搜索光标处的字词:
   (define-key evil-emacs-state-map [escape] 'evil-normal-state))
 #+end_src
 
-** upcase/downcase
+*** upcase/downcase
 解决大小写, 首字母大写等问题. 在evil visual state中, 也可直接用u/U来实现相同功能.
 #+name: b9054953
 #+begin_src elisp
@@ -3528,7 +3538,7 @@ emacs默认搜索光标处的字词:
       :vi "M-c" #'capitalize-dwim)
 #+end_src
 
-** smartparens
+*** smartparens
 [2021-10-05 Tue] 基本上没使用过, 禁用之
 #+begin_src elisp :tangle no
 (map! :leader
@@ -3556,7 +3566,7 @@ unwrap
 : |(foo bar baz)     -> |foo bar baz
 : (foo bar| baz)     -> foo bar| baz
 
-** mark ring
+*** mark ring
 mark-ring用于保存上次标记或选择的位置, 用于跳转很有用.
 
 emacs 的 mark ring [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Mark-Ring.html#Mark-Ring][doc]]. emacs 会自动记录标记, 称为 mark ring. 鼠标选择, shift 选
@@ -3571,7 +3581,7 @@ C-u C-@: 这是轮换当前的 mark ring
 - https://github.com/rolandwalker/back-button/blob/master/back-button.el
 - [[https://github.com/slewsys/emacs-extensions/blob/main/mark-navigation.el][emacs-extensions/mark-navigation.el]]
 
-*** core
+**** core
 #+name: e4fc036b
 #+begin_src elisp
 ;; 要保证 C-u C-@ 连续调用有效
@@ -3594,7 +3604,7 @@ C-u C-@: 这是轮换当前的 mark ring
       mark-ring-max 99)
 #+end_src
 
-*** global mark ring
+**** global mark ring
 #+name: e48dc36a
 #+begin_src elisp
 ;; https://stackoverflow.com/a/27661338
@@ -3630,7 +3640,7 @@ C-u C-@: 这是轮换当前的 mark ring
   (setq global-mark-ring (nreverse global-mark-ring)))
 #+end_src
 
-*** marker-visit.el
+**** marker-visit.el
 #+name: ebb32bb1
 #+begin_src elisp
 ;; https://github.com/deestan/emacs/blob/master/emacs-goodies-el/marker-visit.el
@@ -3767,7 +3777,7 @@ C-u C-@: 这是轮换当前的 mark ring
   (setq mark-ring nil))
 #+end_src
 
-*** hydra
+**** hydra
 #+name: 00b43976
 #+begin_src elisp
 (defhydra gwp::hydra-mark-ring-pop ()
@@ -3781,7 +3791,7 @@ C-u C-@: 这是轮换当前的 mark ring
   ("q" nil "quit"))
 #+end_src
 
-** jump
+*** jump
 使用鼠标滚轮来跳转位置
 - [[https://github.com/gilbertw1/better-jumper][gilbertw1/better-jumper: A configurable jump list implementation for Emacs]]
 
@@ -3824,7 +3834,7 @@ C-u C-@: 这是轮换当前的 mark ring
 ;;
 #+end_src
 
-** ivy
+*** ivy
 swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下一条. 这里用avy来跳转就方便了.
 
 - 可用 ivy-restrict-to-matches进行二次过滤, 默认按键为S-SPC.
@@ -3843,7 +3853,7 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
 #+end_src
 
 
-** insert date
+*** insert date
 #+name: ab440ea2
 #+begin_src emacs-lisp
 (defun gwp/insert-date (arg)
@@ -3857,7 +3867,7 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
 (map! :i "C-c i" #'gwp/insert-date)
 #+end_src
 
-** white space
+*** white space
 #+name: f75f80bd
 #+begin_src emacs-lisp
 (setq show-trailing-whitespace t)
@@ -3866,7 +3876,7 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
 ;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 #+end_src
 
-** join next line
+*** join next line
 doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 
 [[https://github.com/hlissner/doom-emacs/commit/40cf6139ed53b635fec37ce623c4b1093c78a11e][Make evil-join remove comment delimiters · hlissner/doom-emacs@40cf613]]
@@ -3877,9 +3887,9 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
   (advice-remove #'evil-join #'+evil-join-a))
 #+end_src
 
-** disable mouse
+*** disable mouse
 笔记本输入时大拇指容易误碰触控板, 禁用鼠标可避免这一问题.
-*** 方案1: disable mouse event
+**** 方案1: disable mouse event
 以下代码仍有问题, evil中仍能点击鼠标. 为简易见, 在KDE中禁用touchpad的tap功能.
 #+name: 7628d03d
 #+begin_src elisp
@@ -3918,7 +3928,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
 (add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
 #+end_src
 
-*** 方案2: disable-mouse package
+**** 方案2: disable-mouse package
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -3938,7 +3948,7 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
   )
 #+end_src
 
-*** 方案3: xinput
+**** 方案3: xinput
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -3971,8 +3981,8 @@ doom的引入的"改进"导致很诡异的行为, 应禁用掉.
        :desc "禁用鼠标" "M" #'gwp/turn-on-touchpad
        ))
 #+end_src
-** mark/selection
-*** advanced selection
+*** mark/selection
+**** advanced selection
 - [[https://stackoverflow.com/questions/18102004/emacs-evil-mode-how-to-create-a-new-text-object-to-select-words-with-any-non-sp][create a new text object in Evil]]
 
 #+name: be09bc09
@@ -4051,7 +4061,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (define-and-bind-text-object "d" "\"" "\"")
 #+end_src
 
-*** transient key
+**** transient key
 #+name: 8fac8bf1
 #+begin_src elisp
 ;; (use-package expand-region :after evil :config
@@ -4076,7 +4086,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 #+end_src
 
-** multiedit
+*** multiedit
 : SPC-v-m-m
 进行多点编辑模式, 选中当前symbol或选中的词. 按n/N选择下一个或前一个. 不需
 要的可用Enter取消掉. C-n/C-p跳到后一个match或前一个.
@@ -4109,7 +4119,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
    [return] #'evil-multiedit-toggle-or-restrict-region)))
 #+end_src
 
-** bibtex
+*** bibtex
 用于搜索zotero导出的bibtex文献. bibtex中keywords对应zotero中的tags
 #+begin_src elisp
 (setq bibtex-completion-bibliography
@@ -4118,7 +4128,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 #+end_src
 
-** parens
+*** parens
 #+name: 9786fedc
 #+begin_src elisp
 (defhydra gwp/hydra-smartparens (:hint nil)
@@ -4138,7 +4148,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 #+end_src
 
-** last changes
+*** last changes
 快速跳转到修改的位置, 非常方便.
 #+name: 1c79ba79
 #+begin_src elisp
@@ -4149,7 +4159,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("q" nil "quit")
   )
 #+end_src
-** packages
+*** packages
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el
 :END:
@@ -4158,17 +4168,17 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (package! symbol-overlay)
 #+end_src
 
-* develop.el
+** develop.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/develop.el
 :END:
-** vterm
+*** vterm
 安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
 (package! vterm-toggle)
 #+end_src
 
-** completion
+*** completion
 关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
 : M-n, M-p: Next/prev line.
 : M-N, M-P: Next/prev definition.
@@ -4216,8 +4226,17 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
           :desc "citre peek"                                  "p" #'citre-peek
           ))))
 #+end_src
+*** find file in project
+- [[https://github.com/redguardtoo/find-file-in-project][redguardtoo/find-file-in-project: Quick access to project files in Emacs]]
 
-** magit
+#+name: 81cb1ab5
+#+begin_src elisp
+(use-package find-file-in-project
+  :config
+  (setq ffip-use-rust-fd t))
+#+end_src
+
+*** magit
 #+name: 4bae51e2
 #+begin_src elisp
 (use-package magit
@@ -4238,7 +4257,7 @@ magit-todos已在magit modules定义.
 (package! magit-todos)
 #+end_src
 
-** vc commit
+*** vc commit
 自动更新时间戳
 #+name: 3ac9a958
 #+BEGIN_SRC emacs-lisp
@@ -4252,7 +4271,7 @@ magit-todos已在magit modules定义.
   (setq vc-follow-symlinks t))
 #+END_SRC
 
-** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
+*** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
 快捷键 SPC g y
 #+name: 0717be82
 #+begin_src emacs-lisp
@@ -4267,8 +4286,8 @@ magit-todos已在magit modules定义.
                (tramp-remote-shell-args ("-c")))))
 #+end_src
 
-** rust-mode
-*** docs
+*** rust-mode
+**** docs
 - 关于补全: lsp/rust-analyze太重了, racer更简单一些.
 - 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
 - https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
@@ -4278,7 +4297,7 @@ magit-todos已在magit modules定义.
 - rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
   (rustic-mode以后会是依赖于rust-mode的增强版 [[https://github.com/rust-lang/rust-mode/issues/405][Towards making rustic use rust-mode #405]])
 
-*** edit
+**** edit
 #+begin_src emacs-lisp
 (after! smartparens
   (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
@@ -4294,7 +4313,7 @@ magit-todos已在magit modules定义.
   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 #+end_src
 
-*** cargo/rust-mode
+**** cargo/rust-mode
 使用 rust-mode中的cargo
 - [[https://github.com/rust-lang/rust-mode/blob/master/rust-compile.el][rust-mode/rust-compile.el]]
 
@@ -4422,7 +4441,7 @@ The org src will be tangled first before compiling.
       )
 #+end_src
 
-*** cargo/cargo.el
+**** cargo/cargo.el
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -4509,7 +4528,7 @@ cargo命令如果使用C-u 调用, 可在minibuffer中修改cargo参数.
       )
 #+end_src
 
-*** racer
+**** racer
 用于自动补全, 比lsp更轻便些.
 #+begin_src elisp
 (use-package cargo
@@ -4522,7 +4541,7 @@ cargo命令如果使用C-u 调用, 可在minibuffer中修改cargo参数.
     ))
 #+end_src
 
-*** rust-format
+**** rust-format
 rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
 #+name: 151a16d0
 #+begin_src elisp
@@ -4543,7 +4562,7 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
   )
 #+end_src
 
-*** edit
+**** edit
 #+name: 72f0d377
 #+begin_src elisp
 (defun gwp/rust-insert-option (&optional result)
@@ -4620,7 +4639,7 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
 
 xx <=> Option<xx>
 
-** rustic-mode
+*** rustic-mode
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -4633,7 +4652,7 @@ xx <=> Option<xx>
   )
 #+end_src
 
-** python.el
+*** python.el
 [[file:doom-emacs/modules/tools/eval/README.org::+TITLE: tools/eval]]
 
 : SPC-o-r 打开repl
@@ -4654,7 +4673,7 @@ xx <=> Option<xx>
   (+tmux/run "%paste"))
 #+end_src
 
-** packages
+*** packages
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el
 :END:
@@ -4667,18 +4686,18 @@ xx <=> Option<xx>
 (package! citre)
 #+end_src
 
-* org.el
+** org.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/org.el
 :END:
-** docs
+*** docs
 这里放org配置相关的内容, 在config.el中以load!宏来加载.
 
 配置参考:
 - [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]
 - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][.emacs.d/setup-org.el at master · kaushalmodi/.emacs.d]]
 
-** 基本设置
+*** 基本设置
 #+name: b28b06dc
 #+begin_src elisp
 ;; treat .note files as org-mode
@@ -4707,7 +4726,7 @@ xx <=> Option<xx>
 (setq org-catch-invisible-edits 'show-and-error)
 #+end_src
 
-** 按键行为
+*** 按键行为
 #+name: d3c71916
 #+begin_src elisp
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
@@ -4723,7 +4742,7 @@ xx <=> Option<xx>
       )
 #+end_src
 
-** view
+*** view
 #+name: 7341aa84
 #+begin_src elisp
 ;; 2021-10-13: 现不用doom中的org module了
@@ -4772,8 +4791,8 @@ xx <=> Option<xx>
       :ng "zc" #'org-hide-entry)
 #+end_src
 
-** dwim
-*** enter-at-point
+*** dwim
+**** enter-at-point
 +org/dwim-at-point, 在org-src环境, 直接编辑代码, 而非执行
 
 #+name: fbbec921
@@ -4860,7 +4879,7 @@ If on a:
 #+end_src
 
 
-*** open-at-point
+**** open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
 #+name: 2f61258f
 #+begin_src elisp
@@ -4892,7 +4911,7 @@ If on a:
       "o" #'gwp::org-open-at-point-dwim)
 #+end_src
 
-** screenshot
+*** screenshot
 - org-contrib: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-screenshot.el][org-screenshot.el]]
 
 目前最佳方案: 使用org-download来实现屏幕截图的功能
@@ -4953,22 +4972,22 @@ If on a:
 (package! org-download)
 #+end_src
 
-** latex preview
+*** latex preview
 默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]).
 - [[https://emacs.stackexchange.com/questions/30309/latex-preview-on-hidpi-display/30318#30318][LaTeX preview on HiDPI display - Emacs Stack Exchange]]
 #+begin_src elisp
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 #+end_src
 
-** org-babel
-*** docs
+*** org-babel
+**** docs
 参考
 - [[https://org-babel.readthedocs.io/en/latest/][Org Babel reference card]]
 
 如何察看noweb展开后的代码:
 - C-c C-v v: org-babel-expand-src-block
 
-*** init
+**** init
 #+begin_src emacs-lisp
 ;; 不缩进org-src块中的代码.
 ;; 注意: 不直接设置为"org-src-preserve-indentation t",
@@ -4997,7 +5016,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 #+end_src
 
-*** enter
+**** enter
 #+begin_src emacs-lisp
 ;; 禁用代码着色, 影响速度
 ;; (setq org-src-fontify-natively nil)
@@ -5016,14 +5035,14 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 #+end_src
 
-*** toml
+**** toml
 方便写Cargo.toml, 指定为toml为conf-toml-mode, 而不用写全 "conf-toml".
 #+begin_src elisp
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 #+end_src
 
-*** edit
+**** edit
 - org-babel-demarcate-block: 可以用来将选中代码分割为不同的代码块.
 - org-babel-do-key-sequence-in-edit-buffer: 在当前代码下直接执行src code语境下的命令
 
@@ -5050,7 +5069,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 #+end_src
 
-*** jump to org blocks/links
+**** jump to org blocks/links
 #+name: 8aa4aca8
 #+begin_src elisp
 (defhydra gwp/org-jump-block ()
@@ -5075,7 +5094,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
        ))
 #+end_src
 
-*** jump to file
+**** jump to file
 从org文件跳转到tangled file
 - 这个包可用于与compile等跳转配合使用 [[https://github.com/EricCrosson/help-find-org-mode][help-find-org-mode]]
 
@@ -5140,7 +5159,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 : org-babel-detangle
 
 还有一个https://github.com/mtekman/org-tanglesync.el. 但使用上有限制 [[https://github.com/mtekman/org-tanglesync.el/issues/13][issue 13]].
-*** jump to org
+**** jump to org
 原版的似有bug, 不能精确复原光标位置.
 #+name: 9b40c7cf
 #+begin_src elisp
@@ -5198,10 +5217,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     (goto-char target-char)))
 #+end_src
 
-*** noweb
+**** noweb
 org-babel-expand-src-block (可以展开noweb macro)
 
-*** tangle
+**** tangle
 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
 #+name: f1b57cf1
 #+begin_src elisp
@@ -5286,7 +5305,7 @@ org-delete-property 删除 header-args
       (message "not in source block"))))
 #+end_src
 
-*** template
+**** template
 - http://orgmode.org/manual/Languages.html
 
 #+name: e9fca5dc
@@ -5308,7 +5327,7 @@ org-delete-property 删除 header-args
     ))
 #+end_src
 
-*** auto time-stamp
+**** auto time-stamp
 格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
 
 #+begin_src emacs-lisp
@@ -5322,7 +5341,7 @@ org-delete-property 删除 header-args
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+end_src
 
-** org-noter/pdf-view
+*** org-noter/pdf-view
 pdf-view-fit-width-to-window
 #+name: 37fef008
 #+begin_src elisp
@@ -5358,7 +5377,7 @@ pdf-view-fit-width-to-window
          )))
 #+end_src
 
-** pairs
+*** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
 (package! smartparens-org :ignore t)
@@ -5377,7 +5396,7 @@ doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一�
   )
 #+end_src
 
-** narrow
+*** narrow
 [2021-10-02 Sat] 和org-tree-to-indirect-buffer相比, 以下代码功能类似, 但是先生成
 整个indirect buffer再narrow, kill-buffer时不影响原buffer.
 
@@ -5413,7 +5432,7 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 #+end_src
 
-** zotero/ui                                                            :ATTACH:
+*** zotero/ui                                                           :ATTACH:
 :PROPERTIES:
 :ID:       0cbea3c4-ceef-44b4-9d07-250080801511
 :END:
@@ -5560,7 +5579,7 @@ selected instead of creating a new buffer."
       "O" #'gwp/org-open-zotero-attachments-at-point)
 #+end_src
 
-** zotero/link
+*** zotero/link
 #+begin_src elisp
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
@@ -5570,7 +5589,7 @@ selected instead of creating a new buffer."
   (browse-url url))
 #+end_src
 
-** zotero/export
+*** zotero/export
 支持 "zotero" 链接的点击行为及odt导出.
 
 bibtex更新了item link的格式.
@@ -5651,7 +5670,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 #+end_src
 
-** odt export
+*** odt export
 odt导出时, 图表默认以大纲级别来编号. 对于中文文档, 如果章节以中文一二三编号时,
 图表编号默认为一.1, 二.3. 这很古怪, 还是取消的好.
 
@@ -5712,7 +5731,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 #+end_src
 
-** encryption
+*** encryption
 #+begin_src emacs-lisp
 (require 'org-crypt)
 (require 'epa-file)
@@ -5727,13 +5746,13 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 (setq org-crypt-disable-auto-save nil)
 #+end_src
 
-** org-attach
-*** setup
+*** org-attach
+**** setup
 #+begin_src emacs-lisp
 (require 'org-attach)
 #+end_src
 
-*** copy & paste attachments
+**** copy & paste attachments
 #+begin_src emacs-lisp
 (setq org-attach-store-link-p 'attached)
 
@@ -5755,7 +5774,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
     (zotero-attach-txclip-paste-files current-dir)))
 #+end_src
 
-**** old
+***** old
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -5824,9 +5843,9 @@ file-exists-p函数对symlink的特殊性:
   )
 #+end_src
 
-*** take file link as attachment
+**** take file link as attachment
 [2020-03-21 Sat] org里有对应的功能: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-attach-embedded-images.el][org-attach-embedded-images.el]]
-**** 从当前位置文件链接提取文件名.
+***** 从当前位置文件链接提取文件名.
 #+begin_src emacs-lisp
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
@@ -5847,7 +5866,7 @@ file-exists-p函数对symlink的特殊性:
        ))))
 #+end_src
 
-**** 使用org-attach将文件move到当到附录中并更新文件链接
+***** 使用org-attach将文件move到当到附录中并更新文件链接
 #+begin_src emacs-lisp
 ;; (require 'org-download)
 
@@ -5881,7 +5900,7 @@ file-exists-p函数对symlink的特殊性:
       (user-error "Point is not on a link"))))
 #+end_src
 
-*** delete link file
+**** delete link file
 删除当前所在链接对应的文件. org-download-delete现在不可用(attachment link).
 #+begin_src elisp
 (defun gwp/org-delete-link-file (arg)
@@ -5899,7 +5918,7 @@ file-exists-p函数对symlink的特殊性:
       (user-error "Point is not on a file link"))))
 #+end_src
 
-** capture & protocol
+*** capture & protocol
 占位符:
 | %:link                            | URL of the web-page                                  |
 | %:description                     | The title of the web-page                            |
@@ -5924,7 +5943,7 @@ file-exists-p函数对symlink的特殊性:
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 #+end_src
 
-** refile
+*** refile
 refile流程:
 - 打开refile.note
 - 检查其中的条目, 找到可能的合适的归档.note文件, 打开之.
@@ -5956,7 +5975,7 @@ refile流程:
         (org-link-unescape (match-string-no-properties 1)))))
 #+END_SRC
 
-** read/done
+*** read/done
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -5993,7 +6012,7 @@ refile流程:
                                 (vector 'return)))))
 #+end_src
 
-** agenda
+*** agenda
 基本设置
 #+name: 43fd72e2
 #+BEGIN_SRC emacs-lisp
@@ -6173,7 +6192,7 @@ refile流程:
  )
 #+end_src
 
-** org-file-apps
+*** org-file-apps
 org-open-file调用pdf-tools打开PDF文件
 #+begin_src elisp
 (add-to-list 'org-file-apps
@@ -6181,14 +6200,14 @@ org-open-file调用pdf-tools打开PDF文件
                                (org-pdftools-open link))))
 #+end_src
 
-** fix tab
+*** fix tab
 解决按tab键乱窜的问题
 #+begin_src elisp
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 #+end_src
 
-** my .note files
-*** search all notes
+*** my .note files
+**** search all notes
 搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
 我们使用自定义脚本ripgrep, 强制命令退出码为0. 注意~/.local/bin应在PATH变量中.
 
@@ -6220,7 +6239,7 @@ deadgrep与doom有冲突, 不能用了.
               )
 #+end_src
 
-*** find notes
+**** find notes
 #+name: 05419467
 #+begin_src elisp
 (defun gwp/find-file-in-notes ()
@@ -6228,7 +6247,7 @@ deadgrep与doom有冲突, 不能用了.
   (interactive) (doom-project-find-file "~/.cache/notes"))
 #+end_src
 
-** misc
+*** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+begin_src emacs-lisp
 ;; (require 'org-man)
@@ -6251,8 +6270,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (setq org-edit-src-auto-save-idle-delay 1)
 #+end_src
 
-** bindings
-*** core
+*** bindings
+**** core
 #+name: 917381e9
 #+begin_src elisp
 ;; 定义一些特别常用的命令, 仅在org-mode中显示
@@ -6276,7 +6295,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 ;;       )
 #+end_src
 
-*** edit
+**** edit
 #+name: bfe4f470
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6286,7 +6305,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-*** attach/agenda
+**** attach/agenda
 #+name: c09b236a
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6297,7 +6316,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** babel
+**** babel
 #+name: 21ae7ae2
 #+begin_src elisp
 ;; 更多的命令定义在org-babel-map
@@ -6320,7 +6339,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "switch org buffer"          "b" #'org-switchb ; 仿SPC-b-b
        ))
 #+end_src
-*** edit
+**** edit
 #+name: 8d8e9273
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6330,7 +6349,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** goto
+**** goto
 #+name: a02d9b1f
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6342,7 +6361,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** link
+**** link
 #+name: 32a3b56a
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6355,7 +6374,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** subtree/search
+**** subtree/search
 #+name: a393f96d
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6372,7 +6391,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** todo/toggle
+**** todo/toggle
 #+name: ebc6075d
 #+begin_src elisp
 (defun gwp::org-toggle-checkbox ()
@@ -6394,7 +6413,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        "c" #'gwp::org-toggle-checkbox))
 #+end_src
 
-*** refile
+**** refile
 #+name: f4447dfb
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6404,7 +6423,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "refile but preserve subtree" "c" #'org-refile-copy))
 #+end_src
 
-*** export
+**** export
 #+name: d7c4714d
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6414,7 +6433,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** insert
+**** insert
 #+name: 3d7188a4
 #+begin_src elisp
 (defun gwp::new-memo-time-stamp (arg)
@@ -6446,7 +6465,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** toggle
+**** toggle
 #+name: 1e605e7a
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6457,7 +6476,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-*** org-sidebar
+**** org-sidebar
 用的不多
 #+name: 1a561e81
 #+begin_src elisp :tangle no
@@ -6468,7 +6487,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-* bindings.el
+** bindings.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/bindings.el
 :END:
@@ -6480,7 +6499,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 - regexp-builder
 - apropos-value
 
-** core
+*** core
 保存文件同时标记当前位置, 方便随后跳回.
 #+name: 2d76b8e4
 #+begin_src elisp
@@ -6502,8 +6521,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
  "C-x p"                           #'+popup/other)
 #+end_src
 
-** a: ??
-** b: buffer
+*** a: ??
+*** b: buffer
 #+name: 19c9e88c
 #+begin_src elisp
 (map! :leader
@@ -6533,7 +6552,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** c: code
+*** c: code
 #+name: e78a01dd
 #+begin_src elisp
 (map! :leader
@@ -6561,7 +6580,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** d: dodo
+*** d: dodo
 #+name: 5e265fdb
 #+begin_src elisp
 (map! :leader
@@ -6572,7 +6591,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** e: external
+*** e: external
 #+name: 6c75cff0
 #+begin_src elisp
 (map! :leader
@@ -6582,7 +6601,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** f: file/find
+*** f: file/find
 #+name: 9ef458a0
 #+begin_src elisp
 (map! :leader
@@ -6612,7 +6631,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Yank file path from project" "Y"   #'+default/yank-buffer-path-relative-to-project)
       )
 #+end_src
-** g: git
+*** g: git
 #+name: ac7488a5
 #+begin_src elisp
 (map! :leader
@@ -6679,7 +6698,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-** h: help
+*** h: help
 帮助系统
 - apropos-value
 
@@ -6690,7 +6709,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-** i: insert
+*** i: insert
 #+name: 4a4573c2
 #+begin_src elisp
 (map! :leader
@@ -6705,7 +6724,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** j: jump
+*** j: jump
 #+name: 6ea0d271
 #+begin_src elisp
 (map! :leader
@@ -6717,7 +6736,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** l: load/workspace
+*** l: load/workspace
 #+name: 2598d642
 #+begin_src elisp
 (map! :leader
@@ -6748,9 +6767,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** m: my? memo?
+*** m: my? memo?
 
-** n: note/next
+*** n: note/next
 #+name: 1ad72c87
 #+begin_src elisp
 (map! :leader
@@ -6771,7 +6790,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** o: org/open
+*** o: org/open
 #+name: fc304196
 #+begin_src elisp
 (map! :leader
@@ -6791,7 +6810,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** p: quit/session
+*** p: quit/session
 #+name: 1f0c2364
 #+begin_src elisp
 (map! :leader
@@ -6810,7 +6829,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-** r: resume/rings
+*** r: resume/rings
 emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-set-marke)手动设置位置记录, 然后随时跳转回来.
 
 #+name: 1c637dc8
@@ -6829,7 +6848,7 @@ emacs可以记录所有mark操作的位置(mark-ring), 也可以用m命令(evil-
        ))
 #+end_src
 
-** s: search
+*** s: search
 SPC-s-s和SPC-s-b有什么区别?
 #+name: 321efaf0
 #+begin_src elisp
@@ -6844,6 +6863,7 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "Search current directory"     "d" #'+default/search-cwd
        :desc "Search other directory"       "D" #'+default/search-other-cwd
        :desc "Search .emacs.d"              "e" #'+default/search-emacsd
+       :desc "fd in current dir"            "f" #'find-file-in-project-by-selected ; 搜索文件名
        :desc "Jump to symbol"               "i" #'imenu
        :desc "Locate file"                  "l" #'counsel-locate
        :desc "Jump list"                    "j" #'evil-show-jumps
@@ -6859,7 +6879,7 @@ SPC-s-s和SPC-s-b有什么区别?
         :desc "unhighlight regexp"                "u" #'unhighlight-regexp)))
 #+end_src
 
-** t: toggle
+*** t: toggle
 #+name: 95d4be8a
 #+begin_src elisp
 (map! :leader
@@ -6880,7 +6900,7 @@ SPC-s-s和SPC-s-b有什么区别?
        ))
 #+end_src
 
-** v: visual selection
+*** v: visual selection
 #+name: d2dc925d
 #+begin_src elisp
 (map! :leader
@@ -6891,7 +6911,7 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "multi-cursor mode"        "m" #'gwp::hydra-multiedit/body))
 #+end_src
 
-** w/W: window/frame
+*** w/W: window/frame
 #+name: 011dce65
 #+begin_src elisp
 (map! :leader
@@ -6900,7 +6920,7 @@ SPC-s-s和SPC-s-b有什么区别?
       )
 #+end_src
 
-** y: Yank/paste
+*** y: Yank/paste
 #+name: bc190292
 #+begin_src elisp
 (map! :leader
@@ -6915,7 +6935,7 @@ SPC-s-s和SPC-s-b有什么区别?
        ))
 #+end_src
 
-** z: ???
+*** z: ???
 
 * modules/hack
 新思路:

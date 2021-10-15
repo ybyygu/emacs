@@ -39,6 +39,12 @@
           ))))
 ;; d28bc89a ends here
 
+;; [[file:../../doom.note::81cb1ab5][81cb1ab5]]
+(use-package find-file-in-project
+  :config
+  (setq ffip-use-rust-fd t))
+;; 81cb1ab5 ends here
+
 ;; [[file:../../doom.note::4bae51e2][4bae51e2]]
 (use-package magit
   :config

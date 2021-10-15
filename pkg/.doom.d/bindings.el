@@ -7,6 +7,7 @@
 
 (map! :leader
       :desc "Save buffer" "SPC"         #'gwp::mark-and-save-buffer
+      :desc "Universal argument"    "u" #'universal-argument
       :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
       :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer)
 

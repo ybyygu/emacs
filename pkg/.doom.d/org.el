@@ -88,14 +88,12 @@
 
 ;; [[file:../../doom.note::fbbec921][fbbec921]]
 ;; 取自doom org moudle
-(defun +org/dwim-at-point (&optional arg)
+(defun gwp::dwim-at-point (&optional arg)
   "Do-what-I-mean at point.
 
 If on a:
 - checkbox list item or todo heading: toggle it.
 - clock: update its time.
-- headline: cycle ARCHIVE subtrees, toggle latex fragments and inline images in
-  subtree; update statistics cookies/checkboxes and ToCs.
 - footnote reference: jump to the footnote's definition
 - footnote definition: jump to the first reference of this footnote
 - table-row or a TBLFM: recalculate the table's formulas
@@ -116,48 +114,6 @@ If on a:
         (setq context (org-element-property :parent context)
               type (org-element-type context)))
       (pcase type
-        (`headline
-         (cond ((memq (bound-and-true-p org-goto-map)
-                      (current-active-maps))
-                (org-goto-ret))
-               ((and (fboundp 'toc-org-insert-toc)
-                     (member "TOC" (org-get-tags)))
-                (toc-org-insert-toc)
-                (message "Updating table of contents"))
-               ((string= "ARCHIVE" (car-safe (org-get-tags)))
-                (org-force-cycle-archived))
-               ((or (org-element-property :todo-type context)
-                    (org-element-property :scheduled context))
-                (org-todo
-                 (if (eq (org-element-property :todo-type context) 'done)
-                     (or (car (+org-get-todo-keywords-for (org-element-property :todo-keyword context)))
-                         'todo)
-                   'done))))
-         ;; Update any metadata or inline previews in this subtree
-         (org-update-checkbox-count)
-         (org-update-parent-todo-statistics)
-         (when (and (fboundp 'toc-org-insert-toc)
-                    (member "TOC" (org-get-tags)))
-           (toc-org-insert-toc)
-           (message "Updating table of contents"))
-         (let* ((beg (if (org-before-first-heading-p)
-                         (line-beginning-position)
-                       (save-excursion (org-back-to-heading) (point))))
-                (end (if (org-before-first-heading-p)
-                         (line-end-position)
-                       (save-excursion (org-end-of-subtree) (point))))
-                (overlays (ignore-errors (overlays-in beg end)))
-                (latex-overlays
-                 (cl-find-if (lambda (o) (eq (overlay-get o 'org-overlay-type) 'org-latex-overlay))
-                             overlays))
-                (image-overlays
-                 (cl-find-if (lambda (o) (overlay-get o 'org-image-overlay))
-                             overlays)))
-           ;; (+org--toggle-inline-images-in-subtree beg end)
-           (if (or image-overlays latex-overlays)
-               (org-clear-latex-preview beg end)
-             (org--latex-preview-region beg end))))
-
         (`clock (org-clock-update-time-maybe))
 
         (`footnote-reference
@@ -168,21 +124,6 @@ If on a:
 
         ((or `planning `timestamp)
          (org-follow-timestamp-link))
-
-        ;; ((or `table `table-row)
-        ;;  (if (org-at-TBLFM-p)
-        ;;      (org-table-calc-current-TBLFM)
-        ;;    (ignore-errors
-        ;;      (save-excursion
-        ;;        (goto-char (org-element-property :contents-begin context))
-        ;;        (org-call-with-arg 'org-table-recalculate (or arg t))))))
-
-        ;; (`table-cell
-        ;;  (org-table-blank-field)
-        ;;  (org-table-recalculate arg)
-        ;;  (when (and (string-empty-p (string-trim (org-table-get-field)))
-        ;;             (bound-and-true-p evil-local-mode))
-        ;;    (evil-change-state 'insert)))
 
         (`babel-call
          (org-babel-lob-execute-maybe))
@@ -202,11 +143,10 @@ If on a:
                 (path (org-element-property :path lineage)))
            (if (or (equal (org-element-property :type lineage) "img")
                    (and path (image-type-from-file-name path)))
-               ;; (+org--toggle-inline-images-in-subtree
-               ;;  (org-element-property :begin lineage)
-               ;;  (org-element-property :end lineage)
-               ;;  )
-               (org-open-at-point arg))))
+               (org-toggle-inline-images)
+             ;; 强制在本窗口打开
+             (let ((current-prefix-arg '(4)))     ; C-u
+               (call-interactively #'gwp::org-open-at-point-dwim)))))
 
         ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
          (let ((match (and (org-at-item-checkbox-p) (match-string 1))))
@@ -223,19 +163,18 @@ If on a:
            ))))))
 
 (map! :map org-mode-map
-      :n [return]   #'+org/dwim-at-point
-      :n "RET"      #'+org/dwim-at-point
+      :n [return]   #'gwp::dwim-at-point
+      :n "RET"      #'gwp::dwim-at-point
       )
 ;; fbbec921 ends here
 
 ;; [[file:../../doom.note::2f61258f][2f61258f]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
-(defun gwp/org-open-at-point-dwim (&optional arg)
+(defun gwp::org-open-at-point-dwim (&optional arg)
   (interactive "P")
   (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
-            (org-open-at-point)
-            )
+            (org-open-at-point))
     (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
       (org-open-at-point)
       (golden-ratio))))
@@ -251,10 +190,11 @@ If on a:
           (org-edit-src-exit))
       (call-interactively 'evilnc-comment-or-uncomment-lines))))
 
-(map! :map org-mode-map "C-c C-o" #'gwp/org-open-at-point-dwim)
+;; 覆盖默认按键
+(map! :map org-mode-map "C-c C-o" #'gwp::org-open-at-point-dwim)
 (map! :map org-mode-map
       :localleader
-      "o" #'gwp/org-open-at-point-dwim)
+      "o" #'gwp::org-open-at-point-dwim)
 ;; 2f61258f ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]

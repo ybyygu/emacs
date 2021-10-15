@@ -349,7 +349,8 @@
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
        :desc "Spell checker"              "s" #'spell-fu-mode
-       :desc "Spell checker"              "s" #'flyspell-mode
+       ;; :desc "Spell checker"              "s" #'flyspell-mode
+       :desc "Socks proxy"                "p" #'proxy-socks-toggle
        :desc "Soft line wrapping"         "w" #'visual-line-mode
        :desc "Zen mode"                   "z" #'+zen/toggle
        :desc "Zen mode (fullscreen)"      "Z" #'+zen/toggle-fullscreen

@@ -39,7 +39,7 @@
 
 ** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
 doom-emacs问题
-- 依赖于straight, github, 装包太痛苦
+- 依赖于straight, github, 装包太痛苦 [2021-10-15 Fri] 可启有代理, 在emacs中reload (doom/reload)
 - 自定义设置太多, 难以尽如心意.
 
 参考:
@@ -2422,6 +2422,7 @@ gwp-merge:
 ;;       '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
 ;;         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 #+end_src
+
 *** load path
 自定义的el文件放在user-lisp下, 可自动加载
 #+name: af34cd47
@@ -2900,6 +2901,8 @@ github支持, 减慢速度.
 (package! dired-sidebar)
 (package! dockerfile-mode)
 (package! yaml-mode)
+(package! yaml-mode)
+(package! move-dup)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来
@@ -4166,6 +4169,84 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+name: 1dfc22ab
 #+begin_src elisp
 (package! symbol-overlay)
+#+end_src
+** proxy.el
+:PROPERTIES:
+:header-args: :tangle user-lisp/init-proxy.el
+:END:
+[[https://www.scanbuf.net/post/manual/proxy/][设置代理 - 如何自定义编辑器 - 7ym0n - 个人技术分享，记录生活]]
+
+#+name: 20064129
+#+begin_src elisp
+;; (defvar default-proxy "127.0.0.1:8889")
+(defvar default-proxy "127.0.0.1:10808")
+(defvar socks-server)
+(defvar socks-noproxy)
+;; Network Proxy
+(defun proxy-http-show ()
+  "Show HTTP/HTTPS proxy."
+  (interactive)
+  (if url-proxy-services
+      (message "Current HTTP proxy is `%s'" default-proxy)
+    (message "No HTTP proxy")))
+
+(defun proxy-http-enable ()
+  "Enable HTTP/HTTPS proxy."
+  (interactive)
+  (setq url-proxy-services
+        `(("http" . ,default-proxy)
+          ("https" . ,default-proxy)
+          ("no_proxy" . "^\\(localhost\\|192.168.*\\|10.*\\)")))
+  (proxy-http-show))
+
+(defun proxy-http-disable ()
+  "Disable HTTP/HTTPS proxy."
+  (interactive)
+  (setq url-proxy-services nil)
+  (proxy-http-show))
+
+(defun proxy-http-toggle ()
+  "Toggle HTTP/HTTPS proxy."
+  (interactive)
+  (if (bound-and-true-p url-proxy-services)
+      (proxy-http-disable)
+    (proxy-http-enable)))
+
+(defun proxy-socks-show ()
+  "Show SOCKS proxy."
+  (interactive)
+  (when (fboundp 'cadddr)                ; defined 25.2+
+    (if (bound-and-true-p socks-noproxy)
+        (message "Current SOCKS%d proxy is %s:%d"
+                 (cadddr socks-server) (cadr socks-server) (caddr socks-server))
+      (message "No SOCKS proxy"))))
+
+(defun proxy-socks-enable ()
+  "Enable SOCKS proxy."
+  (interactive)
+  (require 'socks)
+  (let* ((proxy (split-string default-proxy "\\s-*:\\s-*"))
+         (addr (car proxy))
+         (port (string-to-number (cadr proxy))))
+    (setq url-gateway-method 'socks
+          socks-noproxy '("localhost")
+          socks-server `("Default server" ,addr ,port 5)))
+  (proxy-socks-show))
+
+(defun proxy-socks-disable ()
+  "Disable SOCKS proxy."
+  (interactive)
+  (setq url-gateway-method 'native
+        socks-noproxy nil)
+  (proxy-socks-show))
+
+(defun proxy-socks-toggle ()
+  "Toggle SOCKS proxy."
+  (interactive)
+  (if (bound-and-true-p socks-noproxy)
+      (proxy-socks-disable)
+    (proxy-socks-enable)))
+(provide 'init-proxy)
 #+end_src
 
 ** develop.el
@@ -6893,7 +6974,8 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
        :desc "Spell checker"              "s" #'spell-fu-mode
-       :desc "Spell checker"              "s" #'flyspell-mode
+       ;; :desc "Spell checker"              "s" #'flyspell-mode
+       :desc "Socks proxy"                "p" #'proxy-socks-toggle
        :desc "Soft line wrapping"         "w" #'visual-line-mode
        :desc "Zen mode"                   "z" #'+zen/toggle
        :desc "Zen mode (fullscreen)"      "Z" #'+zen/toggle-fullscreen

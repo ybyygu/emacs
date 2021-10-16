@@ -114,6 +114,37 @@
   (display-buffer-other-frame (current-buffer)))
 ;; 19e08aef ends here
 
+;; [[file:../../doom.note::6c522fd8][6c522fd8]]
+;; taken from https://github.com/redguardtoo/emacs.d
+(defun gwp::evil-toggle-input-method ()
+  "When input method is on, goto `evil-insert-state'."
+  (interactive)
+
+  ;; some guys don't use evil-mode at all
+  (cond
+   ((and (boundp 'evil-mode) evil-mode)
+    ;; evil-mode
+    (cond
+     ((eq evil-state 'insert)
+      (toggle-input-method))
+     (t
+      (evil-insert-state)
+      (unless current-input-method
+        (toggle-input-method))))
+    (cond
+     (current-input-method
+      ;; evil-escape and pyim may conflict
+      ;; @see https://github.com/redguardtoo/emacs.d/issues/629
+      (evil-escape-mode -1)
+      (message "IME on!"))
+     (t
+      (evil-escape-mode 1)
+      (message "IME off!"))))
+   (t
+    ;; NOT evil-mode
+    (toggle-input-method))))
+;; 6c522fd8 ends here
+
 ;; [[file:../../doom.note::155b72b3][155b72b3]]
 (use-package! rime
   :custom
@@ -138,7 +169,7 @@
   (setq default-input-method "rime"
         rime-show-candidate 'posframe))
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-(map! :nieg "C-SPC" 'toggle-input-method)
+(map! :nieg "C-SPC" 'gwp::evil-toggle-input-method)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
 ;; ivy-call-and-recenter
 ;; 2021-10-13: 直接map不太有效, 时灵不灵的

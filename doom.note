@@ -3088,6 +3088,39 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 
 *** chinese/input method
 默认使用 Ctrl-\ 切换输入法
+**** toggle
+#+name: 6c522fd8
+#+begin_src elisp
+;; taken from https://github.com/redguardtoo/emacs.d
+(defun gwp::evil-toggle-input-method ()
+  "When input method is on, goto `evil-insert-state'."
+  (interactive)
+
+  ;; some guys don't use evil-mode at all
+  (cond
+   ((and (boundp 'evil-mode) evil-mode)
+    ;; evil-mode
+    (cond
+     ((eq evil-state 'insert)
+      (toggle-input-method))
+     (t
+      (evil-insert-state)
+      (unless current-input-method
+        (toggle-input-method))))
+    (cond
+     (current-input-method
+      ;; evil-escape and pyim may conflict
+      ;; @see https://github.com/redguardtoo/emacs.d/issues/629
+      (evil-escape-mode -1)
+      (message "IME on!"))
+     (t
+      (evil-escape-mode 1)
+      (message "IME off!"))))
+   (t
+    ;; NOT evil-mode
+    (toggle-input-method))))
+#+end_src
+
 **** rime
 可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点. 在输入过程中, 按z键临时拼音模式.
 #+name: 155b72b3
@@ -3115,7 +3148,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (setq default-input-method "rime"
         rime-show-candidate 'posframe))
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-(map! :nieg "C-SPC" 'toggle-input-method)
+(map! :nieg "C-SPC" 'gwp::evil-toggle-input-method)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
 ;; ivy-call-and-recenter
 ;; 2021-10-13: 直接map不太有效, 时灵不灵的

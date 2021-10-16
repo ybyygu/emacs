@@ -203,7 +203,7 @@ If two universal prefix arguments are used, then prompt for command to use."
         (message "No file associated to this buffer.")))))
 ;; open-file-externally:1 ends here
 
-;; [[file:../../doom.note::*open in terminal][open in terminal:1]]
+;; [[file:../../doom.note::12a811d1][12a811d1]]
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
   (let ((process-connection-type nil))
@@ -217,9 +217,8 @@ If two universal prefix arguments are used, then prompt for command to use."
   (let ((default-directory (or (and (eq major-mode 'dired-mode)
                                     (dired-current-directory))
                                default-directory)))
-    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
-    ))
-;; open in terminal:1 ends here
+    (gwp/open-in-gnome-terminal (expand-file-name default-directory))))
+;; 12a811d1 ends here
 
 ;; [[file:../../doom.note::*develop][develop:1]]
 (load! "develop")

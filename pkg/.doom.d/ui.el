@@ -120,6 +120,7 @@
   (default-input-method "rime")
   :config
   (setq rime-user-data-dir "~/.local/share/fcitx5/rime")
+  ;; 这个设置与rime的一致, 不然emacs中的inline ascii无法生效
   ;;; support shift-l, shift-r, control-l, control-r
   (setq rime-inline-ascii-trigger 'shift-l)
   ;; 临时英文中阻止标点直接上屏
@@ -130,14 +131,12 @@
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
   (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
   ;; NOTE: 以下有时会让emacs crash
-  ;; (setq rime-posframe-properties
-  ;;       (list :background-color "#333333"
-  ;;             :foreground-color "#dcdccc"
-  ;;             :font "WenQuanYi Micro Hei Mono-14"
-  ;;             :internal-border-width 10))
-  ;; (setq default-input-method "rime"
-  ;;       rime-show-candidate 'posframe)
-  )
+  (setq rime-posframe-properties
+        (list :background-color "#333333"
+              :foreground-color "#dcdccc"
+              :internal-border-width 10))
+  (setq default-input-method "rime"
+        rime-show-candidate 'posframe))
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
 (map! :nieg "C-SPC" 'toggle-input-method)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换

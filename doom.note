@@ -2621,6 +2621,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 *** open in terminal
 emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
+#+name: 12a811d1
 #+begin_src emacs-lisp
 (defun gwp/open-in-gnome-terminal (the-directory)
   "Open `the-directory' in external gnome-terminal."
@@ -2635,8 +2636,7 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
   (let ((default-directory (or (and (eq major-mode 'dired-mode)
                                     (dired-current-directory))
                                default-directory)))
-    (gwp/open-in-gnome-terminal (expand-file-name default-directory))
-    ))
+    (gwp/open-in-gnome-terminal (expand-file-name default-directory))))
 #+end_src
 
 *** develop
@@ -2858,15 +2858,9 @@ org-noter
 #+end_src
 
 *** 需要禁用的包
-pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
-
-#+name: 7448ee80
-#+begin_src elisp
-(disable-packages! pangu-spacing)
-;; (disable-packages! pyim)
-#+end_src
 
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
+#+name: 4916a8ab
 #+begin_src emacs-lisp
 (package! doom-snippets :ignore t)
 #+end_src
@@ -3080,7 +3074,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 (doom-big-font-mode -1)
 #+end_src
 
-*** input method
+*** chinese/input method
 默认使用 Ctrl-\ 切换输入法
 **** rime
 可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点. 在输入过程中, 按z键临时拼音模式.
@@ -3091,6 +3085,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   (default-input-method "rime")
   :config
   (setq rime-user-data-dir "~/.local/share/fcitx5/rime")
+  ;; 这个设置与rime的一致, 不然emacs中的inline ascii无法生效
   ;;; support shift-l, shift-r, control-l, control-r
   (setq rime-inline-ascii-trigger 'shift-l)
   ;; 临时英文中阻止标点直接上屏
@@ -3101,14 +3096,12 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
   (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
   ;; NOTE: 以下有时会让emacs crash
-  ;; (setq rime-posframe-properties
-  ;;       (list :background-color "#333333"
-  ;;             :foreground-color "#dcdccc"
-  ;;             :font "WenQuanYi Micro Hei Mono-14"
-  ;;             :internal-border-width 10))
-  ;; (setq default-input-method "rime"
-  ;;       rime-show-candidate 'posframe)
-  )
+  (setq rime-posframe-properties
+        (list :background-color "#333333"
+              :foreground-color "#dcdccc"
+              :internal-border-width 10))
+  (setq default-input-method "rime"
+        rime-show-candidate 'posframe))
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
 (map! :nieg "C-SPC" 'toggle-input-method)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
@@ -3196,7 +3189,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
     ))
 #+END_SRC
 
-*** chinese fonts setup
+*** chinese/fonts setup
 最早用cnfonts, 不过这个也比较麻烦. 现在用Sarasa之类的中英文等宽字体, 可较完美解
 决中英文表格对齐问题
 
@@ -3329,6 +3322,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ;; set line space wider than default
 (setq-default line-spacing 4)
 #+end_src
+
 *** packages
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el
@@ -3341,6 +3335,11 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ; (package! pyim)
 ;; 五笔输入法
 ;; (package! pyim-wbdict)
+
+;; pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
+(disable-packages! pangu-spacing)
+;; 避免与rime的设置有冲突
+(disable-packages! pyim)
 #+end_src
 
 
@@ -5010,8 +5009,10 @@ If on a:
 (map! :n "M-k" #'org-metaup)
 (map! :n "M-j" #'org-metadown)
 
-(map! :n "M-p" #'org-previous-visible-heading)
-(map! :n "M-n" #'org-next-visible-heading)
+;; (map! :n "M-p" #'org-previous-visible-heading)
+;; (map! :n "M-n" #'org-next-visible-heading)
+(map! :n "M-p" #'org-backward-element)
+(map! :n "M-n" #'org-forward-element)
 #+end_src
 
 *** screenshot

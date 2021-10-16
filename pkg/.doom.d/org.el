@@ -201,8 +201,10 @@ If on a:
 (map! :n "M-k" #'org-metaup)
 (map! :n "M-j" #'org-metadown)
 
-(map! :n "M-p" #'org-previous-visible-heading)
-(map! :n "M-n" #'org-next-visible-heading)
+;; (map! :n "M-p" #'org-previous-visible-heading)
+;; (map! :n "M-n" #'org-next-visible-heading)
+(map! :n "M-p" #'org-backward-element)
+(map! :n "M-n" #'org-forward-element)
 ;; bbdcd834 ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]

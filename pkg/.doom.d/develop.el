@@ -42,12 +42,14 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
 (defun gwp::imenu-goto-next ()
   (interactive)
   (unless (gwp::imenu-goto--closest-dir 1)
-    (goto-char (point-max))))
+    (goto-char (point-max)))
+  (recenter))
 
 (defun gwp::imenu-goto-prev ()
   (interactive)
   (unless (gwp::imenu-goto--closest-dir -1)
-    (goto-char (point-min))))
+    (goto-char (point-min)))
+  (recenter))
 
 ;; vim里没有Alt修饰, M-x类绑定可以放心用
 (map! :n "M-n" #'gwp::imenu-goto-next)

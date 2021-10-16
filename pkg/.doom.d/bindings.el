@@ -19,6 +19,17 @@
 ;; 2d76b8e4 ends here
 
 ;; [[file:../../doom.note::19c9e88c][19c9e88c]]
+;; https://stackoverflow.com/a/10395406/173271
+(require 'cl)
+(require 'recentf)
+
+(defun gwp::find-last-killed-file ()
+  (interactive)
+  (let ((active-files (loop for buf in (buffer-list)
+                            when (buffer-file-name buf) collect it)))
+    (loop for file in recentf-list
+          unless (member file active-files) return (find-file file))))
+
 (map! :leader
       (:prefix-map ("b" . "buffer/bookmark")
        :desc "Switch workspace buffer"     "b"   #'persp-switch-to-buffer
@@ -38,7 +49,8 @@
        :desc "Open in new frame"           "o"   #'gwp/display-current-buffer-other-frame
        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
        :desc "Save all buffers"            "S"   #'evil-write-all
-       :desc "Save buffer as root"         "u"   #'doom/sudo-save-buffer
+       :desc "reopen killed file"          "u"   #'gwp::find-last-killed-file
+       :desc "copy file path"              "y"   #'+default/yank-buffer-path
        :desc "Bury buffer"                 "z"   #'bury-buffer
        :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers
        :desc "Set bookmark"                "m"   #'bookmark-set

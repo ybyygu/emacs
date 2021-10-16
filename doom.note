@@ -10,11 +10,12 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [4/4]
+* Tasks [4/5]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
 - [X] tab不能cycle item及properties
+- [ ] 在magit commit环境中不能使用C-d
 
 * 配置参考
 - [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
@@ -36,6 +37,10 @@
 - 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 
 * Memo [55/67]
+** TODO [2021-10-16 Sat] 如何重新打开关闭的buffer?
+- [[https://github.com/mrkkrp/kill-or-bury-alive][mrkkrp/kill-or-bury-alive: Precise control over buffer killing in Emacs]]
+- [[https://stackoverflow.com/questions/10394213/emacs-reopen-previous-killed-buffer][Emacs reopen previous killed buffer？ - Stack Overflow]]
+
 ** TODO [2021-10-15 Fri] 实现当前目录下搜索文件名功能
 
 ** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
@@ -4377,7 +4382,9 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 :header-args: :tangle pkg/.doom.d/develop.el
 :END:
 *** imenu
-[[https://emacs.stackexchange.com/questions/30673/next-prev-imenu-item-function/33747#33747][motion - next/prev-imenu-item function - Emacs Stack Exchange]]
+- [[https://emacs.stackexchange.com/questions/30673/next-prev-imenu-item-function/33747#33747][motion - next/prev-imenu-item function - Emacs Stack Exchange]]
+- 也可以参考这个改(基于 counsel) [[file:redguardtoo-emacs.d/lisp/init-utils.el::defun my-closest-imenu-item-internal][my-closest-imenu-item-internal]]
+
 #+name: f28734ed
 #+begin_src elisp
 ;; https://emacs.stackexchange.com/a/33747
@@ -4423,12 +4430,14 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
 (defun gwp::imenu-goto-next ()
   (interactive)
   (unless (gwp::imenu-goto--closest-dir 1)
-    (goto-char (point-max))))
+    (goto-char (point-max)))
+  (recenter))
 
 (defun gwp::imenu-goto-prev ()
   (interactive)
   (unless (gwp::imenu-goto--closest-dir -1)
-    (goto-char (point-min))))
+    (goto-char (point-min)))
+  (recenter))
 
 ;; vim里没有Alt修饰, M-x类绑定可以放心用
 (map! :n "M-n" #'gwp::imenu-goto-next)
@@ -6805,6 +6814,17 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 *** b: buffer
 #+name: 19c9e88c
 #+begin_src elisp
+;; https://stackoverflow.com/a/10395406/173271
+(require 'cl)
+(require 'recentf)
+
+(defun gwp::find-last-killed-file ()
+  (interactive)
+  (let ((active-files (loop for buf in (buffer-list)
+                            when (buffer-file-name buf) collect it)))
+    (loop for file in recentf-list
+          unless (member file active-files) return (find-file file))))
+
 (map! :leader
       (:prefix-map ("b" . "buffer/bookmark")
        :desc "Switch workspace buffer"     "b"   #'persp-switch-to-buffer
@@ -6824,7 +6844,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Open in new frame"           "o"   #'gwp/display-current-buffer-other-frame
        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
        :desc "Save all buffers"            "S"   #'evil-write-all
-       :desc "Save buffer as root"         "u"   #'doom/sudo-save-buffer
+       :desc "reopen killed file"          "u"   #'gwp::find-last-killed-file
        :desc "copy file path"              "y"   #'+default/yank-buffer-path
        :desc "Bury buffer"                 "z"   #'bury-buffer
        :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers
@@ -7451,6 +7471,8 @@ fn ${1:test_name}() {
 *** todo
 : pkg/.doom.d/snippets/prog-mode/todo
 
+** elisp
+: pkg/.doom.d/snippets/emacs-lisp-mode
 
 * theme
 [[file:emacs-material-theme/][file:~/Workspace/Programming/emacs/emacs-material-theme/]]

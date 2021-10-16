@@ -312,11 +312,13 @@
 
 ;; [[file:../../doom.note::321efaf0][321efaf0]]
 (map! :leader
+      :desc "Search buffer at point"        "*" #'swiper-isearch-thing-at-point
       (:prefix-map ("s" . "search")
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
        :desc "Search buffer"                "s" #'+default/search-buffer ; 走isearch路线, 可一行多个匹配
        :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
        :desc "Search buffer"                "b" #'swiper ; 一行仅一个匹配?
+       :desc "Search buffer from clipboard" "y" #'gwp::swiper-from-clipboard
        :desc "Search all open buffers"      "B" #'swiper-all
        :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "Search current directory"     "d" #'+default/search-cwd

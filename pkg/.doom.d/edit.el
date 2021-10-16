@@ -32,6 +32,13 @@
 ;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
 ;; 3eff5fa2 ends here
 
+;; [[file:../../doom.note::e571c476][e571c476]]
+(use-package simpleclip)
+
+;; 从其它程序复制的内容也放至在kill-ring中, 不会因为emacs的操作而覆盖之前的内容
+(setq save-interprogram-paste-before-kill t)
+;; e571c476 ends here
+
 ;; [[file:../../doom.note::b5a74212][b5a74212]]
 (setq kill-ring-max 999)
 
@@ -133,9 +140,14 @@
 (map! :ni  "C-j"           #'+default/newline-below)
 ;; 1a0721e0 ends here
 
-;; [[file:../../doom.note::*search/replace][search/replace:1]]
-
-;; search/replace:1 ends here
+;; [[file:../../doom.note::b23f833f][b23f833f]]
+(defun gwp::swiper-from-clipboard (prefix)
+  "从clipboard取词来搜索"
+  (interactive "P")
+  (let ((keyword
+         (simpleclip-get-contents)))
+    (swiper-isearch keyword)))
+;; b23f833f ends here
 
 ;; [[file:../../doom.note::356a926a][356a926a]]
 (use-package hydra)

@@ -18,7 +18,7 @@
 
 * 配置参考
 - [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
-- [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]]
+- [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 - [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
 - [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
 - [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
@@ -3430,6 +3430,14 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ;;   (map! :iv "C-M-j" #'move-dup-duplicate-down)
 ;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
 #+end_src
+*** clipboard
+#+name: e571c476
+#+begin_src elisp
+(use-package simpleclip)
+
+;; 从其它程序复制的内容也放至在kill-ring中, 不会因为emacs的操作而覆盖之前的内容
+(setq save-interprogram-paste-before-kill t)
+#+end_src
 
 *** kill/delete/yank
 #+name: b5a74212
@@ -3576,8 +3584,14 @@ emacs默认搜索光标处的字词:
 按C-c ;后可跳转(avy)
 
 在evil中可用*或/. 感觉evil更方便.
+#+name: b23f833f
 #+begin_src elisp
-
+(defun gwp::swiper-from-clipboard (prefix)
+  "从clipboard取词来搜索"
+  (interactive "P")
+  (let ((keyword
+         (simpleclip-get-contents)))
+    (swiper-isearch keyword)))
 #+end_src
 
 *** hydra
@@ -4256,6 +4270,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+begin_src elisp
 (package! symbol-overlay)
 (package! move-dup)
+(package! simpleclip)
 #+end_src
 
 ** proxy.el
@@ -7038,11 +7053,13 @@ SPC-s-s和SPC-s-b有什么区别?
 #+name: 321efaf0
 #+begin_src elisp
 (map! :leader
+      :desc "Search buffer at point"        "*" #'swiper-isearch-thing-at-point
       (:prefix-map ("s" . "search")
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
        :desc "Search buffer"                "s" #'+default/search-buffer ; 走isearch路线, 可一行多个匹配
        :desc "Search buffer at point"       "S" #'swiper-isearch-thing-at-point
        :desc "Search buffer"                "b" #'swiper ; 一行仅一个匹配?
+       :desc "Search buffer from clipboard" "y" #'gwp::swiper-from-clipboard
        :desc "Search all open buffers"      "B" #'swiper-all
        :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "Search current directory"     "d" #'+default/search-cwd

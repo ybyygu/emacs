@@ -1,4 +1,4 @@
-;; [[file:../../doom.note::3eff5fa2][3eff5fa2]]
+;; [[file:../../../../../doom.note::3eff5fa2][3eff5fa2]]
 (defun gwp::duplicate-region (beg end)
   (interactive "r")
   (save-excursion
@@ -32,14 +32,14 @@
 ;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
 ;; 3eff5fa2 ends here
 
-;; [[file:../../doom.note::e571c476][e571c476]]
+;; [[file:../../../../../doom.note::e571c476][e571c476]]
 (use-package simpleclip)
 
 ;; 从其它程序复制的内容也放至在kill-ring中, 不会因为emacs的操作而覆盖之前的内容
 (setq save-interprogram-paste-before-kill t)
 ;; e571c476 ends here
 
-;; [[file:../../doom.note::b5a74212][b5a74212]]
+;; [[file:../../../../../doom.note::b5a74212][b5a74212]]
 (setq kill-ring-max 999)
 
 ;; 粘贴时删除区域中的内容, 不污染clipboard, 方便连续yank.
@@ -70,7 +70,7 @@
 (map! :leader "C-o" #'delete-blank-lines)
 ;; b5a74212 ends here
 
-;; [[file:../../doom.note::7d5caf69][7d5caf69]]
+;; [[file:../../../../../doom.note::7d5caf69][7d5caf69]]
 (defun gwp::ctrl-d-dwim (prefix)
   "清除区域或复制区域"
   (interactive "P")
@@ -86,7 +86,7 @@
     (delete-char 1)))
 ;; 7d5caf69 ends here
 
-;; [[file:../../doom.note::73388047][73388047]]
+;; [[file:../../../../../doom.note::73388047][73388047]]
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.
 (map! :n "q" #'evil-forward-paragraph)
 (map! :n "Q" #'evil-backward-paragraph)
@@ -122,7 +122,7 @@
 ;; (setq evil-disable-insert-state-bindings t)
 ;; 73388047 ends here
 
-;; [[file:../../doom.note::9f41280c][9f41280c]]
+;; [[file:../../../../../doom.note::9f41280c][9f41280c]]
 (defun gwp::undo-dwim ()
   (interactive)
   (if (region-active-p)
@@ -136,11 +136,11 @@
 (setq evil-want-fine-undo t)
 ;; 9f41280c ends here
 
-;; [[file:../../doom.note::1a0721e0][1a0721e0]]
+;; [[file:../../../../../doom.note::1a0721e0][1a0721e0]]
 (map! :ni  "C-j"           #'+default/newline-below)
 ;; 1a0721e0 ends here
 
-;; [[file:../../doom.note::b23f833f][b23f833f]]
+;; [[file:../../../../../doom.note::b23f833f][b23f833f]]
 (defun gwp::swiper-from-clipboard (prefix)
   "从clipboard取词来搜索"
   (interactive "P")
@@ -149,17 +149,17 @@
     (swiper-isearch keyword)))
 ;; b23f833f ends here
 
-;; [[file:../../doom.note::356a926a][356a926a]]
+;; [[file:../../../../../doom.note::356a926a][356a926a]]
 (use-package hydra)
 ;; 356a926a ends here
 
-;; [[file:../../doom.note::*keyfreq][keyfreq:1]]
+;; [[file:../../../../../doom.note::*keyfreq][keyfreq:1]]
 (require 'keyfreq)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 ;; keyfreq:1 ends here
 
-;; [[file:../../doom.note::*auto-save][auto-save:1]]
+;; [[file:../../../../../doom.note::*auto-save][auto-save:1]]
 (setq
  ;; doom里已默认为true
  auto-save-default t
@@ -170,19 +170,19 @@
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
 
-;; [[file:../../doom.note::9edb7f25][9edb7f25]]
+;; [[file:../../../../../doom.note::9edb7f25][9edb7f25]]
 (after! evil
   ;; 如何误入evil-emacs-state, 按ESC返回normal state
   (define-key evil-emacs-state-map [escape] 'evil-normal-state))
 ;; 9edb7f25 ends here
 
-;; [[file:../../doom.note::b9054953][b9054953]]
+;; [[file:../../../../../doom.note::b9054953][b9054953]]
 (map! :vi "M-u" #'upcase-dwim
       :vi "M-l" #'downcase-dwim
       :vi "M-c" #'capitalize-dwim)
 ;; b9054953 ends here
 
-;; [[file:../../doom.note::e4fc036b][e4fc036b]]
+;; [[file:../../../../../doom.note::e4fc036b][e4fc036b]]
 ;; 要保证 C-u C-@ 连续调用有效
 (setq set-mark-command-repeat-pop nil)
 
@@ -203,7 +203,7 @@
       mark-ring-max 99)
 ;; e4fc036b ends here
 
-;; [[file:../../doom.note::e48dc36a][e48dc36a]]
+;; [[file:../../../../../doom.note::e48dc36a][e48dc36a]]
 ;; https://stackoverflow.com/a/27661338
 (defun marker-is-point-p (marker)
   "test if marker is current point"
@@ -237,7 +237,7 @@
   (setq global-mark-ring (nreverse global-mark-ring)))
 ;; e48dc36a ends here
 
-;; [[file:../../doom.note::ebb32bb1][ebb32bb1]]
+;; [[file:../../../../../doom.note::ebb32bb1][ebb32bb1]]
 ;; https://github.com/deestan/emacs/blob/master/emacs-goodies-el/marker-visit.el
 ;;
 ;;; marker-visit.el --- navigate through a buffer's marks in order
@@ -372,7 +372,7 @@
   (setq mark-ring nil))
 ;; ebb32bb1 ends here
 
-;; [[file:../../doom.note::00b43976][00b43976]]
+;; [[file:../../../../../doom.note::00b43976][00b43976]]
 (defhydra gwp::hydra-mark-ring-pop ()
   "goto last location"
   ("SPC" gwp::jump-to-previous-mark "prev mark")          ; 在org中可自动打开折叠的内容
@@ -384,7 +384,7 @@
   ("q" nil "quit"))
 ;; 00b43976 ends here
 
-;; [[file:../../doom.note::6ded2bf1][6ded2bf1]]
+;; [[file:../../../../../doom.note::6ded2bf1][6ded2bf1]]
 (map! :nm
       [M-mouse-4] #'better-jumper-jump-backward
       [M-mouse-5] #'better-jumper-jump-forward)
@@ -398,13 +398,13 @@
         )))
 ;; 6ded2bf1 ends here
 
-;; [[file:../../doom.note::08a09ddb][08a09ddb]]
+;; [[file:../../../../../doom.note::08a09ddb][08a09ddb]]
 (map! :map isearch-mode-map
       :desc "avy跳转" "C-c ;" #'avy-isearch
       )
 ;; 08a09ddb ends here
 
-;; [[file:../../doom.note::0ed10c98][0ed10c98]]
+;; [[file:../../../../../doom.note::0ed10c98][0ed10c98]]
 (defun gwp/evil-ex-search-avy-jump ()
   (interactive)
   (when evil-ex-search-pattern
@@ -417,7 +417,7 @@
 ;;
 ;; 0ed10c98 ends here
 
-;; [[file:../../doom.note::dde3ee55][dde3ee55]]
+;; [[file:../../../../../doom.note::dde3ee55][dde3ee55]]
 (map! :map ivy-minibuffer-map
       ;; 修改后的命令会报错, 原按键可以. 原因不明.
       ;; "C-c ;" #'ivy-avy
@@ -428,7 +428,7 @@
       )
 ;; dde3ee55 ends here
 
-;; [[file:../../doom.note::ab440ea2][ab440ea2]]
+;; [[file:../../../../../doom.note::ab440ea2][ab440ea2]]
 (defun gwp/insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."
   (interactive "P")
@@ -440,19 +440,19 @@
 (map! :i "C-c i" #'gwp/insert-date)
 ;; ab440ea2 ends here
 
-;; [[file:../../doom.note::f75f80bd][f75f80bd]]
+;; [[file:../../../../../doom.note::f75f80bd][f75f80bd]]
 (setq show-trailing-whitespace t)
 ;; 保留时会自动清理, 以下已不必要
 ;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
 ;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
 ;; f75f80bd ends here
 
-;; [[file:../../doom.note::2286a7d2][2286a7d2]]
+;; [[file:../../../../../doom.note::2286a7d2][2286a7d2]]
 (after! evil
   (advice-remove #'evil-join #'+evil-join-a))
 ;; 2286a7d2 ends here
 
-;; [[file:../../doom.note::7628d03d][7628d03d]]
+;; [[file:../../../../../doom.note::7628d03d][7628d03d]]
 ;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
 (define-minor-mode disable-mouse-mode
   "A minor-mode that disables all mouse keybinds."
@@ -488,7 +488,7 @@
 (add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
 ;; 7628d03d ends here
 
-;; [[file:../../doom.note::be09bc09][be09bc09]]
+;; [[file:../../../../../doom.note::be09bc09][be09bc09]]
 ;; expand selection
 ;; http://xahlee.org/emacs/modernization_mark-word.html
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
@@ -545,7 +545,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
 ;; be09bc09 ends here
 
-;; [[file:../../doom.note::*advanced selection][advanced selection:2]]
+;; [[file:../../../../../doom.note::*advanced selection][advanced selection:2]]
 ;; https://stackoverflow.com/a/22418983
 (defmacro define-and-bind-text-object (key start-regex end-regex)
   (let ((inner-name (make-symbol "inner-name"))
@@ -563,7 +563,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (define-and-bind-text-object "d" "\"" "\"")
 ;; advanced selection:2 ends here
 
-;; [[file:../../doom.note::8fac8bf1][8fac8bf1]]
+;; [[file:../../../../../doom.note::8fac8bf1][8fac8bf1]]
 ;; (use-package expand-region :after evil :config
 ;;   (map! :leader :v "v"
 ;;         (function er/expand-region)))
@@ -586,7 +586,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 ;; 8fac8bf1 ends here
 
-;; [[file:../../doom.note::4593181c][4593181c]]
+;; [[file:../../../../../doom.note::4593181c][4593181c]]
 (use-package evil-multiedit
   :after evil
   :config
@@ -611,14 +611,14 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
    [return] #'evil-multiedit-toggle-or-restrict-region)))
 ;; 4593181c ends here
 
-;; [[file:../../doom.note::*bibtex][bibtex:1]]
+;; [[file:../../../../../doom.note::*bibtex][bibtex:1]]
 (setq bibtex-completion-bibliography
       '("~/Data/zotero/my.bib"))
 (setq bibtex-completion-pdf-field "file")
 (setq bibtex-completion-additional-search-fields '(keywords annotation note))
 ;; bibtex:1 ends here
 
-;; [[file:../../doom.note::9786fedc][9786fedc]]
+;; [[file:../../../../../doom.note::9786fedc][9786fedc]]
 (defhydra gwp/hydra-smartparens (:hint nil)
   ("v" evil-visual-char)
   ("u" evil-undo)
@@ -636,7 +636,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   )
 ;; 9786fedc ends here
 
-;; [[file:../../doom.note::1c79ba79][1c79ba79]]
+;; [[file:../../../../../doom.note::1c79ba79][1c79ba79]]
 (defhydra gwp::hydra-last-change ()
   ("p" goto-last-change "last change")
   ("n" goto-last-change-reverse "previous change")

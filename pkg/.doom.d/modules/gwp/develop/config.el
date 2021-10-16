@@ -1,4 +1,4 @@
-;; [[file:../../doom.note::f28734ed][f28734ed]]
+;; [[file:../../../../../doom.note::f28734ed][f28734ed]]
 ;; https://emacs.stackexchange.com/a/33747
 (defun gwp::imenu-goto--closest-dir (direction)
   "Jump to the closest imenu item on the current buffer.
@@ -56,7 +56,7 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
 (map! :n "M-p" #'gwp::imenu-goto-prev)
 ;; f28734ed ends here
 
-;; [[file:../../doom.note::d28bc89a][d28bc89a]]
+;; [[file:../../../../../doom.note::d28bc89a][d28bc89a]]
 ;; Use hippie-expand instead of dabbrev-expand
 ;; (global-set-key (kbd "M-/") #'dabbrev-expand)
 (global-set-key (kbd "M-/") #'hippie-expand)
@@ -97,13 +97,13 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
           ))))
 ;; d28bc89a ends here
 
-;; [[file:../../doom.note::81cb1ab5][81cb1ab5]]
+;; [[file:../../../../../doom.note::81cb1ab5][81cb1ab5]]
 (use-package find-file-in-project
   :config
   (setq ffip-use-rust-fd t))
 ;; 81cb1ab5 ends here
 
-;; [[file:../../doom.note::4bae51e2][4bae51e2]]
+;; [[file:../../../../../doom.note::4bae51e2][4bae51e2]]
 (use-package magit
   :config
   ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
@@ -112,7 +112,7 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
   (setq magit-revision-show-gravatars nil))
 ;; 4bae51e2 ends here
 
-;; [[file:../../doom.note::3ac9a958][3ac9a958]]
+;; [[file:../../../../../doom.note::3ac9a958][3ac9a958]]
 (use-package vc
   :init
   (add-hook 'vc-before-checkin-hook #'time-stamp))
@@ -123,7 +123,7 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
   (setq vc-follow-symlinks t))
 ;; 3ac9a958 ends here
 
-;; [[file:../../doom.note::0717be82][0717be82]]
+;; [[file:../../../../../doom.note::0717be82][0717be82]]
 ;; (magit-status  "/yadm::")
 (after! tramp
   (add-to-list 'tramp-methods
@@ -135,7 +135,7 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
                (tramp-remote-shell-args ("-c")))))
 ;; 0717be82 ends here
 
-;; [[file:../../doom.note::*edit][edit:1]]
+;; [[file:../../../../../doom.note::*edit][edit:1]]
 (after! smartparens
   (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
   ;; Rust closure中使用
@@ -150,7 +150,7 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 ;; edit:1 ends here
 
-;; [[file:../../doom.note::*cargo/rust-mode][cargo/rust-mode:2]]
+;; [[file:../../../../../doom.note::*cargo/rust-mode][cargo/rust-mode:2]]
 (require 'rust-mode)
 (require 'cargo)
 
@@ -246,7 +246,7 @@ The org src will be tangled first before compiling.
       )
 ;; cargo/rust-mode:2 ends here
 
-;; [[file:../../doom.note::*racer][racer:1]]
+;; [[file:../../../../../doom.note::*racer][racer:1]]
 (use-package cargo
   :defer t
   :init
@@ -257,7 +257,7 @@ The org src will be tangled first before compiling.
     ))
 ;; racer:1 ends here
 
-;; [[file:../../doom.note::151a16d0][151a16d0]]
+;; [[file:../../../../../doom.note::151a16d0][151a16d0]]
 (map! :map rust-mode-map
       :localleader
       "f" #'rust-format-buffer
@@ -275,7 +275,7 @@ The org src will be tangled first before compiling.
   )
 ;; 151a16d0 ends here
 
-;; [[file:../../doom.note::72f0d377][72f0d377]]
+;; [[file:../../../../../doom.note::72f0d377][72f0d377]]
 (defun gwp/rust-insert-option (&optional result)
   "Insert the Option type."
   (interactive)
@@ -348,10 +348,10 @@ The org src will be tangled first before compiling.
       )
 ;; 72f0d377 ends here
 
-;; [[file:../../doom.note::*python.el][python.el:2]]
+;; [[file:../../../../../doom.note::44b70ed9][44b70ed9]]
 (defun gwp/tmux-ipython-paste-region (beg end &optional region)
   "Execute \"%paste\" in tmux session"
   (interactive "r")
   (kill-ring-save beg end)
   (+tmux/run "%paste"))
-;; python.el:2 ends here
+;; 44b70ed9 ends here

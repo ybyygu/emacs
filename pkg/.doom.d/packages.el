@@ -90,37 +90,6 @@
            :branch "main"
            :files ("*.el")))
 
-;; [[file:../../doom.note::d6a037d0][d6a037d0]]
-;; (package! fcitx)
-(package! rime)
-(package! golden-ratio)
-; (package! pyim)
-;; 五笔输入法
-;; (package! pyim-wbdict)
-
-;; pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
-(disable-packages! pangu-spacing)
-;; 避免与rime的设置有冲突
-(disable-packages! pyim)
-;; d6a037d0 ends here
-
-;; [[file:../../doom.note::1dfc22ab][1dfc22ab]]
-(package! symbol-overlay)
-(package! move-dup)
-(package! simpleclip)
-;; 1dfc22ab ends here
-
-;; [[file:../../doom.note::*vterm][vterm:1]]
-(package! vterm-toggle)
-;; vterm:1 ends here
-
-;; [[file:../../doom.note::e86dc54d][e86dc54d]]
-(package! cargo)
-(package! racer)
-(package! rust-mode)
-(package! citre)
-;; e86dc54d ends here
-
 ;; [[file:../../doom.note::*screenshot][screenshot:2]]
 (package! org-download)
 ;; screenshot:2 ends here
@@ -128,3 +97,7 @@
 ;; [[file:../../doom.note::*pairs][pairs:1]]
 (package! smartparens-org :ignore t)
 ;; pairs:1 ends here
+
+;; [[file:../../doom.note::*vterm][vterm:1]]
+(package! vterm-toggle)
+;; vterm:1 ends here

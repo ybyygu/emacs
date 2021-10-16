@@ -1,4 +1,4 @@
-# [[file:doom.note::*Makefile][Makefile:1]]
+# [[file:doom.note::1f24e8ab][1f24e8ab]]
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
 .ONESHELL:
 
@@ -7,7 +7,7 @@ default: install doom-sync
 install: stow
 	stow --verbose --adopt --no-folding --target ~/ pkg
 	rsync -rav ./doom-hacks/modules/tools/magit ~/.doom.d/modules/gwp/
-	rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
+	# rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/rust ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/config/default ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/tools/pdf ~/.doom.d/modules/gwp/
@@ -34,4 +34,4 @@ gwp-merge:
 	git pull
 	git checkout gwp
 	git merge -e develop
-# Makefile:1 ends here
+# 1f24e8ab ends here

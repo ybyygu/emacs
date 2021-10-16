@@ -174,14 +174,33 @@
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
-       :gwp                ; 自定义模块
+       ;; :config
+       ;;literate
+       ;; (default +smartparents)
+
+       :gwp
        ;; (org +roam2)
        magit
        (default +smartparents)
        pdf
        ;; (rust)
-
-       ;; :config
-       ;;literate
-       ;; (default +smartparents)
+       ;; 自定义模块
+       ui
+       org
+       develop
+       edit
+       bindings
        )
+
+;; 屏蔽掉emacs默认的f2功能, 避免在normal state下按f2误操作
+(global-unset-key (kbd "<f2>"))
+
+(setq doom-leader-key "SPC"
+      doom-leader-alt-key "<f2>"        ; 仅在insert state下有效
+      doom-localleader-key ","
+      doom-localleader-alt-key "M-,")   ; 仅在insert state下有效
+
+;; (setq-default doom-leader-key "SPC"
+;;               doom-leader-alt "<f13>"
+;;               doom-localleader-key ""
+;;               doom-localleader-alt-key "<M-f13>")

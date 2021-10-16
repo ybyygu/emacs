@@ -48,21 +48,6 @@
 (push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)
 ;; af34cd47 ends here
 
-;; [[file:../../doom.note::56a9b4bd][56a9b4bd]]
-;; 屏蔽掉emacs默认的f2功能, 避免在normal state下按f2误操作
-(global-unset-key (kbd "<f2>"))
-
-(setq doom-leader-key "SPC"
-      doom-leader-alt-key "<f2>"        ; 仅在insert state下有效
-      doom-localleader-key ","
-      doom-localleader-alt-key "M-,")   ; 仅在insert state下有效
-
-;; (setq-default doom-leader-key "SPC"
-;;               doom-leader-alt "<f13>"
-;;               doom-localleader-key ""
-;;               doom-localleader-alt-key "<M-f13>")
-;; 56a9b4bd ends here
-
 ;; [[file:../../doom.note::11b27926][11b27926]]
 (setq doom-scratch-initial-major-mode 'emacs-lisp)
 ;; 11b27926 ends here
@@ -86,95 +71,7 @@
   (+workspace/display))
 ;; 6b10b827 ends here
 
-;; [[file:../../doom.note::e9e282a0][e9e282a0]]
-(load! "ui")
-;; e9e282a0 ends here
-
-;; [[file:../../doom.note::bbcdc054][bbcdc054]]
-(load! "edit")
-;; bbcdc054 ends here
-
-;; [[file:../../doom.note::*dired][dired:1]]
-(use-package dired
-  :config
-  ;; Set this variable to non-nil, Dired will try to guess a default
-  ;; target directory. This means: if there is a dired buffer
-  ;; displayed in the next window, use its current subdir, instead
-  ;; of the current subdir of this dired buffer. The target is used
-  ;; in the prompt for file copy, rename etc.
-  (progn
-    (setq dired-dwim-target t)
-
-    ;; Dired listing switches
-    ;;  -a : Do not ignore entries starting with .
-    ;;  -l : Use long listing format.
-    ;;  -G : Do not print group names like 'users'
-    ;;  -h : Human-readable sizes like 1K, 234M, ..
-    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-    ;;  -F : Classify filenames by appending '*' to executables,
-    ;;       '/' to directories, etc.
-    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
-
-    ;; 用于在dired中复制当前文件的全路径.
-    (defun gwp/dired-copy-file-path()
-      (interactive)
-      (let ((current-prefix-arg '(0)))
-        (call-interactively 'dired-copy-filename-as-kill)
-        ))
-
-    (map! :map dired-mode-map
-          :localleader
-          :desc "Copy file path"
-          :n "y" #'gwp/dired-copy-file-path
-          :desc "Make symlink"
-          :n "l" #'dired-do-symlink
-          :desc "Async shell command"
-          :n "!" #'dired-do-async-shell-command
-          )
-
-    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
-    (map! :map dired-mode-map
-          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-          :nv "C-S-n" #'dired-create-directory
-          )
-    ))
-;; dired:1 ends here
-
-;; [[file:../../doom.note::*dired][dired:2]]
-(use-package dired-x
-  :config
-  (progn
-    (setq dired-omit-verbose t)
-    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
-  )
-;; dired:2 ends here
-
-;; [[file:../../doom.note::*org][org:1]]
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Notes/")
-(setq org-roam-directory "~/Notes/roam")
-(setq org-roam-file-extensions '("note" "org"))
-
-;;
-(use-package! org
-  :config
-  (load! "org")
-  )
-
-;; https://github.com/org-roam/org-roam-ui#doom
-(use-package! websocket
-  :after org-roam)
-
-(use-package! org-roam-ui
-  :after org-roam ;; or :after org
-  :hook (org-roam . org-roam-ui-mode)
-  :config
-  )
-;; org:1 ends here
-
-;; [[file:../../doom.note::*open-file-externally][open-file-externally:1]]
+;; [[file:../../doom.note::e13c7903][e13c7903]]
 (defun spacemacs/open-in-external-app (file-path)
   "Open `file-path' in external application."
   (let ((process-connection-type nil))
@@ -195,13 +92,10 @@ If two universal prefix arguments are used, then prompt for command to use."
           (if (equal arg '(16))         ; C-u C-u
               (progn
                 (let ((program (read-shell-command "Open current file with: ")))
-                  (call-process program nil 0 nil file-path)
-                  )
-                )
-            (spacemacs/open-in-external-app file-path)
-            )
+                  (call-process program nil 0 nil file-path)))
+            (spacemacs/open-in-external-app file-path))
         (message "No file associated to this buffer.")))))
-;; open-file-externally:1 ends here
+;; e13c7903 ends here
 
 ;; [[file:../../doom.note::12a811d1][12a811d1]]
 (defun gwp/open-in-gnome-terminal (the-directory)
@@ -220,10 +114,6 @@ If two universal prefix arguments are used, then prompt for command to use."
     (gwp/open-in-gnome-terminal (expand-file-name default-directory))))
 ;; 12a811d1 ends here
 
-;; [[file:../../doom.note::*develop][develop:1]]
-(load! "develop")
-;; develop:1 ends here
-
 ;; [[file:../../doom.note::493c2a26][493c2a26]]
 (require 'recentf)
 ;; the default is only 20
@@ -235,11 +125,12 @@ If two universal prefix arguments are used, then prompt for command to use."
 (add-to-list 'recentf-exclude "\.odt$")
 ;; 493c2a26 ends here
 
-;; [[file:../../doom.note::*dired-sidebar][dired-sidebar:1]]
+;; [[file:../../doom.note::38a0a087][38a0a087]]
 (use-package dired-sidebar
   :commands (dired-sidebar-toggle-sidebar))
-;; dired-sidebar:1 ends here
+;; 38a0a087 ends here
 
-;; [[file:../../doom.note::24c9210c][24c9210c]]
-(load! "bindings")
-;; 24c9210c ends here
+;; [[file:../../doom.note::c54f13b5][c54f13b5]]
+(require 'init-proxy)
+(require 'init-dired)
+;; c54f13b5 ends here

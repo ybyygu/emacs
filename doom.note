@@ -10,39 +10,40 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [4/5]
+* Tasks [5/5]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
 - [X] tab不能cycle item及properties
-- [ ] 在magit commit环境中不能使用C-d
+- [X] 在magit commit环境中不能使用C-d
 
 * 配置参考
-- [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
-- [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
-- [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
-- [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
-- [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
-- [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
-  - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
-  - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][doom-emacs/getting_started.org]]
-  - [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
-  - [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-- https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
-- [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
-- [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
-- https://github.com/utrack/dotfiles/tree/master/doomemacs/.doom.d
-- [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
-- [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
-- 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
+- [ ] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
+- [ ] [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
+- [ ] [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
+- [ ] [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
+  - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
+  - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][doom-emacs/getting_started.org]]
+  - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
+  - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
+- [ ] https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
+- [ ] [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
+- [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
+- [ ] [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
+- [ ] [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
+- [ ] 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
+- [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
+- [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [55/67]
-** TODO [2021-10-16 Sat] 如何重新打开关闭的buffer?
+* Memo [57/69]
+** DONE [2021-10-16 Sat] 如何重新打开关闭的buffer?
+- State "DONE"       from "TODO"       [2021-10-17 Sun 07:04]
 - [[https://github.com/mrkkrp/kill-or-bury-alive][mrkkrp/kill-or-bury-alive: Precise control over buffer killing in Emacs]]
 - [[https://stackoverflow.com/questions/10394213/emacs-reopen-previous-killed-buffer][Emacs reopen previous killed buffer？ - Stack Overflow]]
 
-** TODO [2021-10-15 Fri] 实现当前目录下搜索文件名功能
+** DONE [2021-10-15 Fri] 实现当前目录下搜索文件名功能
 
+- State "DONE"       from "TODO"       [2021-10-17 Sun 07:03]
 ** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
 doom-emacs问题
 - 依赖于straight, github, 装包太痛苦 [2021-10-15 Fri] 可启有代理, 在emacs中reload (doom/reload)
@@ -2082,6 +2083,7 @@ backtrace.
 : make install && make
 
 #+header: :tangle Makefile
+#+name: 1f24e8ab
 #+BEGIN_SRC makefile -i
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
 .ONESHELL:
@@ -2091,7 +2093,7 @@ default: install doom-sync
 install: stow
 	stow --verbose --adopt --no-folding --target ~/ pkg
 	rsync -rav ./doom-hacks/modules/tools/magit ~/.doom.d/modules/gwp/
-	rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
+	# rsync -rav ./doom-hacks/modules/lang/org ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/lang/rust ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/config/default ~/.doom.d/modules/gwp/
 	rsync -rav ./doom-hacks/modules/tools/pdf ~/.doom.d/modules/gwp/
@@ -2349,17 +2351,42 @@ gwp-merge:
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
-       :gwp                ; 自定义模块
+       ;; :config
+       ;;literate
+       ;; (default +smartparents)
+
+       :gwp
        ;; (org +roam2)
        magit
        (default +smartparents)
        pdf
        ;; (rust)
-
-       ;; :config
-       ;;literate
-       ;; (default +smartparents)
+       ;; 自定义模块
+       ui
+       org
+       develop
+       edit
+       bindings
        )
+#+end_src
+
+*** leader key
+默认的alt leader key为 M-SPC, 与KDE中的krunner有冲突. 现改为F2, 更方便. 注意: alt leader key仅在insert状态下有效.
+
+#+name: 56a9b4bd
+#+begin_src elisp
+;; 屏蔽掉emacs默认的f2功能, 避免在normal state下按f2误操作
+(global-unset-key (kbd "<f2>"))
+
+(setq doom-leader-key "SPC"
+      doom-leader-alt-key "<f2>"        ; 仅在insert state下有效
+      doom-localleader-key ","
+      doom-localleader-alt-key "M-,")   ; 仅在insert state下有效
+
+;; (setq-default doom-leader-key "SPC"
+;;               doom-leader-alt "<f13>"
+;;               doom-localleader-key ""
+;;               doom-localleader-alt-key "<M-f13>")
 #+end_src
 
 ** config.el
@@ -2437,25 +2464,6 @@ gwp-merge:
 (push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)
 #+end_src
 
-*** leader key
-默认的alt leader key为 M-SPC, 与KDE中的krunner有冲突. 现改为F2, 更方便. 注意: alt leader key仅在insert状态下有效.
-
-#+name: 56a9b4bd
-#+begin_src elisp
-;; 屏蔽掉emacs默认的f2功能, 避免在normal state下按f2误操作
-(global-unset-key (kbd "<f2>"))
-
-(setq doom-leader-key "SPC"
-      doom-leader-alt-key "<f2>"        ; 仅在insert state下有效
-      doom-localleader-key ","
-      doom-localleader-alt-key "M-,")   ; 仅在insert state下有效
-
-;; (setq-default doom-leader-key "SPC"
-;;               doom-leader-alt "<f13>"
-;;               doom-localleader-key ""
-;;               doom-localleader-alt-key "<M-f13>")
-#+end_src
-
 *** scratch
 [2021-10-01 Fri] 还是elisp更方便些.
 #+name: 11b27926
@@ -2485,103 +2493,6 @@ gwp-merge:
   (+workspace/display))
 #+end_src
 
-*** ui
-#+name: e9e282a0
-#+begin_src elisp
-(load! "ui")
-#+end_src
-
-*** edit
-#+name: bbcdc054
-#+begin_src emacs-lisp
-(load! "edit")
-#+end_src
-
-*** dired
-- [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
-
-#+begin_src emacs-lisp
-(use-package dired
-  :config
-  ;; Set this variable to non-nil, Dired will try to guess a default
-  ;; target directory. This means: if there is a dired buffer
-  ;; displayed in the next window, use its current subdir, instead
-  ;; of the current subdir of this dired buffer. The target is used
-  ;; in the prompt for file copy, rename etc.
-  (progn
-    (setq dired-dwim-target t)
-
-    ;; Dired listing switches
-    ;;  -a : Do not ignore entries starting with .
-    ;;  -l : Use long listing format.
-    ;;  -G : Do not print group names like 'users'
-    ;;  -h : Human-readable sizes like 1K, 234M, ..
-    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-    ;;  -F : Classify filenames by appending '*' to executables,
-    ;;       '/' to directories, etc.
-    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
-
-    ;; 用于在dired中复制当前文件的全路径.
-    (defun gwp/dired-copy-file-path()
-      (interactive)
-      (let ((current-prefix-arg '(0)))
-        (call-interactively 'dired-copy-filename-as-kill)
-        ))
-
-    (map! :map dired-mode-map
-          :localleader
-          :desc "Copy file path"
-          :n "y" #'gwp/dired-copy-file-path
-          :desc "Make symlink"
-          :n "l" #'dired-do-symlink
-          :desc "Async shell command"
-          :n "!" #'dired-do-async-shell-command
-          )
-
-    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
-    (map! :map dired-mode-map
-          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-          :nv "C-S-n" #'dired-create-directory
-          )
-    ))
-#+end_src
-
-隐藏.dotfiles, doom中默认omit的太少
-#+begin_src emacs-lisp
-(use-package dired-x
-  :config
-  (progn
-    (setq dired-omit-verbose t)
-    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
-  )
-#+end_src
-
-*** org
-#+begin_src emacs-lisp
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Notes/")
-(setq org-roam-directory "~/Notes/roam")
-(setq org-roam-file-extensions '("note" "org"))
-
-;;
-(use-package! org
-  :config
-  (load! "org")
-  )
-
-;; https://github.com/org-roam/org-roam-ui#doom
-(use-package! websocket
-  :after org-roam)
-
-(use-package! org-roam-ui
-  :after org-roam ;; or :after org
-  :hook (org-roam . org-roam-ui-mode)
-  :config
-  )
-#+end_src
-
 *** re-open-current-file
 可以用revert-buffer SPC-b-r
 #+name: 2588788c
@@ -2595,6 +2506,7 @@ gwp-merge:
 
 *** open-file-externally
 从spacemacs中改过来的
+#+name: e13c7903
 #+begin_src emacs-lisp
 (defun spacemacs/open-in-external-app (file-path)
   "Open `file-path' in external application."
@@ -2616,11 +2528,8 @@ If two universal prefix arguments are used, then prompt for command to use."
           (if (equal arg '(16))         ; C-u C-u
               (progn
                 (let ((program (read-shell-command "Open current file with: ")))
-                  (call-process program nil 0 nil file-path)
-                  )
-                )
-            (spacemacs/open-in-external-app file-path)
-            )
+                  (call-process program nil 0 nil file-path)))
+            (spacemacs/open-in-external-app file-path))
         (message "No file associated to this buffer.")))))
 #+end_src
 
@@ -2642,11 +2551,6 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
                                     (dired-current-directory))
                                default-directory)))
     (gwp/open-in-gnome-terminal (expand-file-name default-directory))))
-#+end_src
-
-*** develop
-#+begin_src emacs-lisp
-(load! "develop")
 #+end_src
 
 *** recent files
@@ -2737,48 +2641,17 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+END_SRC
 
 *** dired-sidebar
+#+name: 38a0a087
 #+begin_src elisp
 (use-package dired-sidebar
   :commands (dired-sidebar-toggle-sidebar))
 #+end_src
 
-*** key bindings
-#+name: 24c9210c
+*** user-lisp
+#+name: c54f13b5
 #+begin_src elisp
-(load! "bindings")
-#+end_src
-
-* gwp
-** dwim
-临时按键绑定. 这和hydra等类似了
-#+begin_src elisp :tangle no
-(defun gwp::dwim ()
-  (interactive)
-  (set-temporary-overlay-map
-   (let ((map (make-sparse-keymap)))
-     (define-key map (kbd "<right>")	'org-next-block)
-     (define-key map (kbd "<left>") 	'org-previous-block)
-     map) t))
-
-(defun my-setup-extra-keymap (extra-fn-list hint fn &rest args)
-  "Map EXTRA-FN-LIST to new keymap and show HINT after calling FN with ARGS."
-  (let ((echo-keystrokes nil))
-    (when fn (apply fn args))
-    (message hint)
-    (set-transient-map
-     (let ((map (make-sparse-keymap)))
-       (dolist (item extra-fn-list)
-         (define-key map (kbd (nth 0 item)) (nth 1 item)))
-       map)
-     t)))
-
-(defun my-navigate ()
-  (interactive)
-  (my-setup-extra-keymap '(("k" org-up-element)
-                           ("p" org-down-element)
-                           ("f" my-open-pdf-from-history))
-                         "PDF: [k]up [j]down [p]revious-page [n]ext-page [g]oto [f]rom-history [q]uit"
-                         nil))
+(require 'init-proxy)
+(require 'init-dired)
 #+end_src
 
 ** packages.el
@@ -2895,7 +2768,6 @@ org-noter
 #+end_src
 
 *** 需要禁用的包
-
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
 #+name: 4916a8ab
 #+begin_src emacs-lisp
@@ -2930,9 +2802,191 @@ github支持, 减慢速度.
            :branch "main"
            :files ("*.el")))
 #+end_src
-** ui.el
+* user-lisp
+小玩意可以放在这里
+** dwim
+临时按键绑定. 这和hydra等类似了
+#+begin_src elisp :tangle no
+(defun gwp::dwim ()
+  (interactive)
+  (set-temporary-overlay-map
+   (let ((map (make-sparse-keymap)))
+     (define-key map (kbd "<right>")	'org-next-block)
+     (define-key map (kbd "<left>") 	'org-previous-block)
+     map) t))
+
+(defun my-setup-extra-keymap (extra-fn-list hint fn &rest args)
+  "Map EXTRA-FN-LIST to new keymap and show HINT after calling FN with ARGS."
+  (let ((echo-keystrokes nil))
+    (when fn (apply fn args))
+    (message hint)
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))
+       (dolist (item extra-fn-list)
+         (define-key map (kbd (nth 0 item)) (nth 1 item)))
+       map)
+     t)))
+
+(defun my-navigate ()
+  (interactive)
+  (my-setup-extra-keymap '(("k" org-up-element)
+                           ("p" org-down-element)
+                           ("f" my-open-pdf-from-history))
+                         "PDF: [k]up [j]down [p]revious-page [n]ext-page [g]oto [f]rom-history [q]uit"
+                         nil))
+#+end_src
+
+** init-proxy.el
 :PROPERTIES:
-:header-args: :tangle pkg/.doom.d/ui.el
+:header-args: :tangle user-lisp/init-proxy.el
+:END:
+[[https://www.scanbuf.net/post/manual/proxy/][设置代理 - 如何自定义编辑器 - 7ym0n - 个人技术分享，记录生活]]
+
+#+name: 20064129
+#+begin_src elisp
+;; (defvar default-proxy "127.0.0.1:8889")
+(defvar default-proxy "127.0.0.1:10808")
+(defvar socks-server)
+(defvar socks-noproxy)
+;; Network Proxy
+(defun proxy-http-show ()
+  "Show HTTP/HTTPS proxy."
+  (interactive)
+  (if url-proxy-services
+      (message "Current HTTP proxy is `%s'" default-proxy)
+    (message "No HTTP proxy")))
+
+(defun proxy-http-enable ()
+  "Enable HTTP/HTTPS proxy."
+  (interactive)
+  (setq url-proxy-services
+        `(("http" . ,default-proxy)
+          ("https" . ,default-proxy)
+          ("no_proxy" . "^\\(localhost\\|192.168.*\\|10.*\\)")))
+  (proxy-http-show))
+
+(defun proxy-http-disable ()
+  "Disable HTTP/HTTPS proxy."
+  (interactive)
+  (setq url-proxy-services nil)
+  (proxy-http-show))
+
+(defun proxy-http-toggle ()
+  "Toggle HTTP/HTTPS proxy."
+  (interactive)
+  (if (bound-and-true-p url-proxy-services)
+      (proxy-http-disable)
+    (proxy-http-enable)))
+
+(defun proxy-socks-show ()
+  "Show SOCKS proxy."
+  (interactive)
+  (when (fboundp 'cadddr)                ; defined 25.2+
+    (if (bound-and-true-p socks-noproxy)
+        (message "Current SOCKS%d proxy is %s:%d"
+                 (cadddr socks-server) (cadr socks-server) (caddr socks-server))
+      (message "No SOCKS proxy"))))
+
+(defun proxy-socks-enable ()
+  "Enable SOCKS proxy."
+  (interactive)
+  (require 'socks)
+  (let* ((proxy (split-string default-proxy "\\s-*:\\s-*"))
+         (addr (car proxy))
+         (port (string-to-number (cadr proxy))))
+    (setq url-gateway-method 'socks
+          socks-noproxy '("localhost")
+          socks-server `("Default server" ,addr ,port 5)))
+  (proxy-socks-show))
+
+(defun proxy-socks-disable ()
+  "Disable SOCKS proxy."
+  (interactive)
+  (setq url-gateway-method 'native
+        socks-noproxy nil)
+  (proxy-socks-show))
+
+(defun proxy-socks-toggle ()
+  "Toggle SOCKS proxy."
+  (interactive)
+  (if (bound-and-true-p socks-noproxy)
+      (proxy-socks-disable)
+    (proxy-socks-enable)))
+(provide 'init-proxy)
+#+end_src
+
+** init-dired.el
+:PROPERTIES:
+:header-args: :tangle user-lisp/init-dired.el
+:END:
+- [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
+
+#+name: edd7000d
+#+begin_src emacs-lisp
+(use-package dired
+  :config
+  ;; Set this variable to non-nil, Dired will try to guess a default
+  ;; target directory. This means: if there is a dired buffer
+  ;; displayed in the next window, use its current subdir, instead
+  ;; of the current subdir of this dired buffer. The target is used
+  ;; in the prompt for file copy, rename etc.
+  (progn
+    ;; 安全第一
+    (setq delete-by-moving-to-trash t)
+    ;; 方便多个文件夹文件互动
+    (setq dired-dwim-target t)
+
+    ;; Dired listing switches
+    ;;  -a : Do not ignore entries starting with .
+    ;;  -l : Use long listing format.
+    ;;  -G : Do not print group names like 'users'
+    ;;  -h : Human-readable sizes like 1K, 234M, ..
+    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+    ;;  -F : Classify filenames by appending '*' to executables,
+    ;;       '/' to directories, etc.
+    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+
+    ;; 用于在dired中复制当前文件的全路径.
+    (defun gwp/dired-copy-file-path()
+      (interactive)
+      (let ((current-prefix-arg '(0)))
+        (call-interactively 'dired-copy-filename-as-kill)))
+
+    (map! :map dired-mode-map
+          :localleader
+          :desc "Copy file path"
+          :n "y" #'gwp/dired-copy-file-path
+          :desc "Make symlink"
+          :n "l" #'dired-do-symlink
+          :desc "Async shell command"
+          :n "!" #'dired-do-async-shell-command
+          )
+
+    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+    (map! :map dired-mode-map
+          :nv "DEL"   #'dired-up-directory       ; BACKSPACE
+          :nv "C-S-n" #'dired-create-directory
+          )))
+#+end_src
+
+隐藏.dotfiles, doom中默认omit的太少
+#+name: 67102cd3
+#+begin_src emacs-lisp
+(use-package dired-x
+  :config
+  (progn
+    (setq dired-omit-verbose t)
+    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
+    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
+  )
+
+(provide 'init-dired)
+#+end_src
+* modules/gwp
+使用doom的方式来组织代码, 这样的好处是packages可以模块化来定义, 避免tangle时不小心出问题.
+** ui
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/ui/config.el
 :END:
 *** wrap long line
 更习惯手动折行
@@ -3393,9 +3447,9 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 (setq-default line-spacing 4)
 #+end_src
 
-*** packages
+*** packages.el
 :PROPERTIES:
-:header-args: :tangle pkg/.doom.d/packages.el
+:header-args: :tangle pkg/.doom.d/modules/gwp/ui/packages.el
 :END:
 #+name: d6a037d0
 #+begin_src elisp
@@ -3411,11 +3465,592 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 ;; 避免与rime的设置有冲突
 (disable-packages! pyim)
 #+end_src
-
-
-** edit.el
+** develop
 :PROPERTIES:
-:header-args: :tangle pkg/.doom.d/edit.el
+:header-args: :tangle pkg/.doom.d/modules/gwp/develop/config.el
+:END:
+*** imenu
+- [[https://emacs.stackexchange.com/questions/30673/next-prev-imenu-item-function/33747#33747][motion - next/prev-imenu-item function - Emacs Stack Exchange]]
+- 也可以参考这个改(基于 counsel) [[file:redguardtoo-emacs.d/lisp/init-utils.el::defun my-closest-imenu-item-internal][my-closest-imenu-item-internal]]
+
+#+name: f28734ed
+#+begin_src elisp
+;; https://emacs.stackexchange.com/a/33747
+(defun gwp::imenu-goto--closest-dir (direction)
+  "Jump to the closest imenu item on the current buffer.
+If direction is 1, jump to next imenu item.
+If direction is -1, jump to previous imenu item.
+See https://emacs.stackexchange.com/questions/30673
+Adapted from `which-function' in::
+https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
+  ;; Ensure `imenu--index-alist' is populated.
+  (imenu--make-index-alist)
+
+  (let ((alist imenu--index-alist)
+        (minoffset (point-max))
+        offset pair mark imstack destination)
+    ;; Elements of alist are either ("name" . marker), or
+    ;; ("submenu" ("name" . marker) ... ). The list can be
+    ;; Arbitrarily nested.
+    (while (or alist imstack)
+      (if alist
+          (progn
+            (setq pair (car-safe alist)
+                  alist (cdr-safe alist))
+            (cond
+             ((atom pair)) ;; Skip anything not a cons.
+
+             ((imenu--subalist-p pair)
+              (setq imstack   (cons alist imstack)
+                    alist     (cdr pair)))
+
+             ((number-or-marker-p (setq mark (cdr pair)))
+              (when (> (setq offset (* (- mark (point)) direction)) 0)
+                (when (< offset minoffset) ;; Find the closest item.
+                  (setq minoffset offset
+                        destination mark))))))
+
+        (setq alist   (car imstack)
+              imstack (cdr imstack))))
+    (when destination
+      (imenu-default-goto-function "" destination ""))))
+
+(defun gwp::imenu-goto-next ()
+  (interactive)
+  (unless (gwp::imenu-goto--closest-dir 1)
+    (goto-char (point-max)))
+  (recenter))
+
+(defun gwp::imenu-goto-prev ()
+  (interactive)
+  (unless (gwp::imenu-goto--closest-dir -1)
+    (goto-char (point-min)))
+  (recenter))
+
+;; vim里没有Alt修饰, M-x类绑定可以放心用
+(map! :n "M-n" #'gwp::imenu-goto-next)
+(map! :n "M-p" #'gwp::imenu-goto-prev)
+#+end_src
+
+*** vterm
+安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
+#+begin_src elisp :tangle pkg/.doom.d/packages.el
+(package! vterm-toggle)
+#+end_src
+
+*** completion
+关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
+: M-n, M-p: Next/prev line.
+: M-N, M-P: Next/prev definition.
+: M-l j: Jump to the definition.
+: C-g: Close the peek window.
+
+#+name: d28bc89a
+#+begin_src elisp
+;; Use hippie-expand instead of dabbrev-expand
+;; (global-set-key (kbd "M-/") #'dabbrev-expand)
+(global-set-key (kbd "M-/") #'hippie-expand)
+;; the same behavior as the original `dabbrev-expand'
+(setq hippie-expand-dabbrev-skip-space t)
+
+;; adjust the list of functions that hippie-expand will try
+(setq hippie-expand-try-functions-list
+      '(
+        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-line
+        try-expand-dabbrev-from-kill
+        ;; try-expand-all-abbrevs
+        ;; try-expand-list
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol
+        ))
+
+(after! company
+  (setq company-idle-delay 1.5
+        company-minimum-prefix-length 2))
+
+(use-package! citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  (map! :leader
+        (:prefix-map ("j" . "jump")
+         (:prefix-map ("c" . "citre")
+          :desc "citre jump to definition"                    "d" #'citre-jump
+          :desc "citre jump back"                             "b" #'citre-jump-back
+          :desc "citre peek"                                  "p" #'citre-peek
+          ))))
+#+end_src
+*** find file in project
+- [[https://github.com/redguardtoo/find-file-in-project][redguardtoo/find-file-in-project: Quick access to project files in Emacs]]
+
+#+name: 81cb1ab5
+#+begin_src elisp
+(use-package find-file-in-project
+  :config
+  (setq ffip-use-rust-fd t))
+#+end_src
+
+*** magit
+#+name: 4bae51e2
+#+begin_src elisp
+(use-package magit
+  :config
+  ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
+  (setq magit-section-initial-visibility-alist (quote ((untracked . hide))))
+  ;;禁用magit中的gravatars支持, 响应能快一些.
+  (setq magit-revision-show-gravatars nil))
+#+end_src
+
+git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
+
+magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
+- [[https://github.com/alphapapa/magit-todos][alphapapa/magit-todos: Show source files' TODOs (and FIXMEs, etc) in Magit status buffer]]
+
+magit-todos已在magit modules定义.
+#+begin_src elisp :tangle no
+(package! magit-todos)
+#+end_src
+
+*** vc commit
+自动更新时间戳
+#+name: 3ac9a958
+#+BEGIN_SRC emacs-lisp
+(use-package vc
+  :init
+  (add-hook 'vc-before-checkin-hook #'time-stamp))
+
+(use-package vc-hooks
+  :init
+  ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
+  (setq vc-follow-symlinks t))
+#+END_SRC
+
+*** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
+快捷键 SPC g y
+#+name: 0717be82
+#+begin_src emacs-lisp
+;; (magit-status  "/yadm::")
+(after! tramp
+  (add-to-list 'tramp-methods
+             '("yadm"
+               (tramp-login-program "yadm")
+               (tramp-login-args (("enter")))
+               (tramp-login-env (("SHELL") ("/bin/sh")))
+               (tramp-remote-shell "/bin/sh")
+               (tramp-remote-shell-args ("-c")))))
+#+end_src
+
+*** rust-mode
+**** docs
+- 关于补全: lsp/rust-analyze太重了, racer更简单一些.
+- 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
+- https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
+
+重要资源
+- [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]]
+- rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
+  (rustic-mode以后会是依赖于rust-mode的增强版 [[https://github.com/rust-lang/rust-mode/issues/405][Towards making rustic use rust-mode #405]])
+
+**** edit
+#+begin_src emacs-lisp
+(after! smartparens
+  (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
+  ;; Rust closure中使用
+  (sp-with-modes '(rust-mode)
+    (sp-local-pair "|" "|"))
+  )
+
+(add-hook 'rust-mode-hook
+          (lambda () (require 'smartparens-rust)))
+
+(after! org-src
+  (add-to-list 'org-src-lang-modes '("rust" . rust)))
+#+end_src
+
+**** cargo/rust-mode
+使用 rust-mode中的cargo
+- [[https://github.com/rust-lang/rust-mode/blob/master/rust-compile.el][rust-mode/rust-compile.el]]
+
+基于compilation mode定制
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
+
+以下自定义cargo命令, 比在term下执行更好一些.
+- 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
+- 链接到的src文件可直接打开.
+
+现有如下问题, 导致编译buffer无法基于出错信息跳转到对应文件:
+- [[https://github.com/rust-lang/cargo/issues/5895][Error messages use relative paths differently if in a workspace · Issue #5895 · rust-lang/cargo]]
+
+为此, 我们需要cargo.sh, 包装下cargo命令, 在emacs调用前, 切到workspace根目录, 但执行cargo时再换为到原buffer对应目录.
+这样, 可仅编译当前包, 无不是所有workspace中的包, 同时还能解决error跳转的问题.
+
+cargo默认输出warning太多, 以下命令调用cargo, 但忽略warnings. 同时编译信息里强制输出文件全路径
+
+#+begin_src shell :tangle ~/.local/bin/cargo.sh :shebang #! /bin/bash
+# a wrapper for cargo command to work around a cargo issue:
+# https://github.com/rust-lang/cargo/issues/5450#issuecomment-732954248
+
+# goto current workspace memeber directory
+cd "$1"
+shift
+
+# supress warnings and print full file paths in compilation
+export RUSTFLAGS="$RUSTFLAGS -Awarnings"
+cargo $@
+#+end_src
+
+#+begin_src elisp
+(require 'rust-mode)
+(require 'cargo)
+
+;; taken from rust-cargo.el
+(defun gwp/cargo-compile (args)
+  ;; taken from cargo.el
+  ;;
+  ;; workaround cargo issue: https://github.com/rust-lang/cargo/issues/5895
+  ;;
+  ;; to make "jump-to-error" work, we need start compilation in workspace root dir
+  (let (
+        ;; save current directory
+        (old-directory default-directory)
+        (default-directory (or (cargo-process--workspace-root)
+                               default-directory))
+        )
+    (compile (format "cargo.sh \"%s\" %s" old-directory args))
+    ))
+
+(defun gwp/rust-cargo-tangle-watch-check ()
+  "Compile using `cargo watch and check`
+The org src will be tangled first before compiling.
+"
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
+  (gwp/rust-cargo-watch-check))
+
+(defun gwp/rust-cargo-watch-check ()
+  "Compile using `cargo watch and check`
+"
+  (interactive)
+  (gwp/cargo-compile "check -q"))
+
+(defun gwp/rust-cargo-tangle-watch-test ()
+  "Compile using `cargo watch and test`
+The org src will be tangled first before compiling.
+"
+  (interactive)
+  (gwp/org-babel-tangle-dwim)
+  (gwp/rust-cargo-watch-test))
+
+(defun gwp/rust-cargo-watch-test ()
+  "Compile using `cargo watch and test`
+The org src will be tangled first before compiling.
+"
+  (interactive)
+  (gwp/cargo-compile "d"))
+
+(defun gwp/rust-cargo-update ()
+  "Execute `cargo update` command"
+  (interactive)
+  (gwp/cargo-compile "update"))
+
+(defun gwp/rust-cargo-doc-open ()
+  "Execute `cargo doc --open` command"
+  (interactive)
+  (gwp/cargo-compile "doc --open --no-deps"))
+
+(defun gwp/rust-cargo-edit-upgrade ()
+  "Execute `cargo upgrade --dry-run` command"
+  (interactive)
+  (gwp/cargo-compile "upgrade --dry-run"))
+
+;; ;; 修改popup window, 放大一些, 方便查看.
+;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
+;; gwp/org-babel-tangle-dwim
+
+(require 'transient)
+(transient-define-prefix gwp/rust-cargo-transient ()
+  "rust development tools"
+  [["compile org src:"
+    :if org-in-src-block-p
+    ("o b" "tangle src only" gwp/org-babel-tangle-dwim)
+    ("o c" "tangle src & cargo check" gwp/rust-cargo-tangle-watch-check)
+    ("o t" "tangle src & cargo test" gwp/rust-cargo-tangle-watch-test)
+    ]]
+  [["compile rust project:"
+    ("c" "cargo check" gwp/rust-cargo-watch-check)
+    ("t" "cargo test" gwp/rust-cargo-watch-test)
+    ("d" "cargo doc" gwp/rust-cargo-doc-open)
+    ("u" "cargo update" gwp/rust-cargo-update)
+    ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
+    ]]
+  )
+
+(map! :map org-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+(map! :map rust-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+#+end_src
+
+**** cargo/cargo.el
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+- [[https://github.com/kwrooijen/cargo.el][kwrooijen/cargo.el: Emacs Minor Mode for Cargo, Rust's Package Manager.]]
+
+[2021-09-20 Mon] 这里的问题: 执行时会切到workspace root执行, 如果hack后, 就与rust-mode中的功能相当了.
+
+cargo命令如果使用C-u 调用, 可在minibuffer中修改cargo参数.
+
+以下自定义cargo-watch命令, 比在term下执行更好一些.
+- p, n来跳转到前一个或下一个error
+- 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
+- 链接到的src文件可直接打开.
+- 按q退出
+
+使用el-path修改cargo-process调用方式, 不要切换至workspace根目录执行cargo命令, 更
+匹配命令行使用习惯.
+#+begin_src elisp
+(eval-when-compile (require 'el-patch))
+
+(use-package cargo
+  :defer t
+  :hook (rust-mode . cargo-minor-mode)
+  :custom
+  (cargo-process--custom-path-to-bin "cargo.sh")
+  (cargo-process--command-check "check -q")
+  (cargo-process--command-test "test -- --nocapture --test-threads=1")
+  ;;   :config/el-patch
+  ;;   (defun cargo-process--start (name command &optional last-cmd opens-external)
+  ;;     "Start the Cargo process NAME with the cargo command COMMAND.
+  ;; OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
+  ;; Returns the created process."
+  ;;     (set-rust-backtrace command)
+  ;;     (let* ((buffer (concat "*Cargo " name "*"))
+  ;;            (project-root (cargo-process--project-root))
+  ;;            (cmd
+  ;;             (or last-cmd
+  ;;                 (cargo-process--maybe-read-command
+  ;;                  (cargo-process--augment-cmd-for-os opens-external
+  ;;                                                     (mapconcat #'identity (list (shell-quote-argument cargo-process--custom-path-to-bin)
+  ;;                                                                                 command
+  ;;                                                                                 ;; (manifest-path-argument name)
+  ;;                                                                                 cargo-process--command-flags)
+  ;;                                                                " ")))))
+  ;;            ;; (default-directory (or project-root default-directory))
+  ;;            )
+  ;;       (save-some-buffers (not compilation-ask-about-save)
+  ;;                          (lambda ()
+  ;;                            (and project-root
+  ;;                                 buffer-file-name
+  ;;                                 (string-prefix-p project-root (file-truename buffer-file-name)))))
+  ;;       (setq cargo-process-last-command (list name command cmd))
+  ;;       ;; (let ((default-directory (or (cargo-process--workspace-root)
+  ;;       ;;                              default-directory)))
+  ;;       ;;   (compilation-start cmd 'cargo-process-mode (lambda(_) buffer)))
+  ;;       (compilation-start cmd 'cargo-process-mode (lambda(_) buffer))
+  ;;       (let ((process (get-buffer-process buffer)))
+  ;;         (set-process-sentinel process 'cargo-process--finished-sentinel)
+  ;;         process)))
+
+  :init
+  (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
+  )
+
+(require 'cargo)
+(require 'transient)
+(transient-define-prefix gwp/rust-cargo-transient ()
+  "Search zotero database"
+  [["Search zotero items:"
+    ("c" "cargo check" cargo-process-check)
+    ("t" "cargo test" cargo-process-test)
+    ("u" "cargo update" cargo-process-update)
+    ("d" "cargo doc" cargo-process-doc-open)
+    ]]
+  )
+
+(map! :map org-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+(map! :map rust-mode-map
+      :localleader
+      "1" #'gwp/rust-cargo-transient
+      )
+#+end_src
+
+**** racer
+用于自动补全, 比lsp更轻便些.
+#+begin_src elisp
+(use-package cargo
+  :defer t
+  :init
+  (progn
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)
+    ))
+#+end_src
+
+**** rust-format
+rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
+#+name: 151a16d0
+#+begin_src elisp
+(map! :map rust-mode-map
+      :localleader
+      "f" #'rust-format-buffer
+      "C-f" #'rust-format-buffer
+      "=" #'rust-format-buffer)
+
+(use-package rust-mode
+  :hook (rust-mode . gwp/override-doom-format-buffer)
+  )
+
+(defun gwp/override-doom-format-buffer ()
+  (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
+  ;; 无效
+  ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
+  )
+#+end_src
+
+**** edit
+#+name: 72f0d377
+#+begin_src elisp
+(defun gwp/rust-insert-option (&optional result)
+  "Insert the Option type."
+  (interactive)
+
+  (when (region-active-p)
+    (sp-wrap-with-pair "<")
+    (backward-char)
+    (insert (or result "Option"))
+    ))
+
+(defun gwp/rust-unwrap-option (&optional result)
+  "Remove Option type wrapper"
+  (interactive)
+
+  (when (region-active-p)
+    (when (> (mark) (point))
+      (exchange-point-and-mark))
+    (sp-unwrap-sexp)
+    (when (search-backward (or result "Option") (line-beginning-position) t)
+      (delete-region (match-beginning 0) (match-end 0))
+      )))
+
+
+;; https://github.com/Wilfred/.emacs.d/blob/gh-pages/user-lisp/rust-customisations.el
+(defun gwp/rust-toggle-pub ()
+  "Toggle the public visibility of the function at point."
+  (interactive)
+  (save-excursion
+    ;; If we're already at the beginning of the function definition,
+    ;; `beginning-of-defun' moves to the previous function, so move elsewhere.
+    (end-of-line)
+    (beginning-of-defun)
+    (if (looking-at "pub ")
+        (delete-char 4)
+      (insert "pub "))))
+
+(defun gwp/rust-insert-result ()
+  (interactive)
+  (gwp/rust-insert-option "Result"))
+
+(defun gwp/rust-unwrap-result ()
+  (interactive)
+  (gwp/rust-unwrap-option "Result"))
+
+(transient-define-prefix gwp/rust-edit-transient ()
+  "rust development tools"
+  [["Result"
+    ("o" "Wrap in Option" gwp/rust-insert-option)
+    ("u" "Unwrap Option" gwp/rust-unwrap-option)
+    ]]
+  [["Result"
+    ("r" "Wrap in Result" gwp/rust-insert-result)
+    ("k" "Unwrap Result" gwp/rust-unwrap-result)
+    ]]
+  [["Pub"
+    ("p" "toggle pub at point" gwp/rust-toggle-pub)
+    ]]
+  )
+
+;; (defhydra gwp/rust-edit-hydra ()
+;;   ("o" gwp/rust-insert-option "wrap with Option")
+;;   ("u" gwp/rust-unwrap-option "unwrap Option")
+;;   ("q" nil "quit")
+;;   )
+
+(map! :map rust-mode-map
+      :localleader
+      "e" #'gwp/rust-edit-transient
+      :desc "select inner type" "m" (general-simulate-key "vi<")
+      )
+#+end_src
+
+xx <=> Option<xx>
+
+*** rustic-mode
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+#+begin_src elisp
+(use-package rustic
+  :custom
+  (rustic-lsp-client nil)
+  (rustic-format-on-save nil)
+  (rustic-display-spinner nil)
+  )
+#+end_src
+
+*** python
+[[file:doom-emacs/modules/tools/eval/README.org::+TITLE: tools/eval]]
+
+: SPC-o-r 打开repl
+: SPC-c-s send-region
+默认的挺难用的
+#+begin_src elisp :tangle no
+(after! python
+  (setq python-shell-interpreter "ipython"))
+#+end_src
+
+使用tmux/ipython组合来实现
+
+#+name: 44b70ed9
+#+begin_src elisp
+(defun gwp/tmux-ipython-paste-region (beg end &optional region)
+  "Execute \"%paste\" in tmux session"
+  (interactive "r")
+  (kill-ring-save beg end)
+  (+tmux/run "%paste"))
+#+end_src
+
+*** packages.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/develop/packages.el
+:END:
+需要安装cargo.el等包
+#+name: e86dc54d
+#+begin_src elisp
+(package! cargo)
+(package! racer)
+(package! rust-mode)
+(package! citre)
+(package! find-file-in-project)
+#+end_src
+
+** edit
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/edit/config.el
 :END:
 *** duplicate
 可用的
@@ -3511,11 +4146,11 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
       (call-interactively #'gwp::duplicate-line-or-region)
     (call-interactively #'gwp::delete-char-or-region)))
 
-(defun gwp::delete-char-or-region(beg end)
+(defun gwp::delete-char-or-region()
   "清除光标前字符或选定区域"
-  (interactive "r")
-  (if (region-active-p)
-      (delete-region beg end)
+  (interactive)
+  (if (use-region-p)
+      (call-interactively #'delete-region)
     (delete-char 1)))
 #+end_src
 
@@ -4289,7 +4924,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+end_src
 *** packages
 :PROPERTIES:
-:header-args: :tangle pkg/.doom.d/packages.el
+:header-args: :tangle pkg/.doom.d/modules/gwp/edit/packages.el
 :END:
 #+name: 1dfc22ab
 #+begin_src elisp
@@ -4298,671 +4933,43 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (package! simpleclip)
 #+end_src
 
-** proxy.el
+** org
+*** config.el
 :PROPERTIES:
-:header-args: :tangle user-lisp/init-proxy.el
+:header-args: :tangle pkg/.doom.d/modules/gwp/org/config.el
 :END:
-[[https://www.scanbuf.net/post/manual/proxy/][设置代理 - 如何自定义编辑器 - 7ym0n - 个人技术分享，记录生活]]
-
-#+name: 20064129
-#+begin_src elisp
-;; (defvar default-proxy "127.0.0.1:8889")
-(defvar default-proxy "127.0.0.1:10808")
-(defvar socks-server)
-(defvar socks-noproxy)
-;; Network Proxy
-(defun proxy-http-show ()
-  "Show HTTP/HTTPS proxy."
-  (interactive)
-  (if url-proxy-services
-      (message "Current HTTP proxy is `%s'" default-proxy)
-    (message "No HTTP proxy")))
-
-(defun proxy-http-enable ()
-  "Enable HTTP/HTTPS proxy."
-  (interactive)
-  (setq url-proxy-services
-        `(("http" . ,default-proxy)
-          ("https" . ,default-proxy)
-          ("no_proxy" . "^\\(localhost\\|192.168.*\\|10.*\\)")))
-  (proxy-http-show))
-
-(defun proxy-http-disable ()
-  "Disable HTTP/HTTPS proxy."
-  (interactive)
-  (setq url-proxy-services nil)
-  (proxy-http-show))
-
-(defun proxy-http-toggle ()
-  "Toggle HTTP/HTTPS proxy."
-  (interactive)
-  (if (bound-and-true-p url-proxy-services)
-      (proxy-http-disable)
-    (proxy-http-enable)))
-
-(defun proxy-socks-show ()
-  "Show SOCKS proxy."
-  (interactive)
-  (when (fboundp 'cadddr)                ; defined 25.2+
-    (if (bound-and-true-p socks-noproxy)
-        (message "Current SOCKS%d proxy is %s:%d"
-                 (cadddr socks-server) (cadr socks-server) (caddr socks-server))
-      (message "No SOCKS proxy"))))
-
-(defun proxy-socks-enable ()
-  "Enable SOCKS proxy."
-  (interactive)
-  (require 'socks)
-  (let* ((proxy (split-string default-proxy "\\s-*:\\s-*"))
-         (addr (car proxy))
-         (port (string-to-number (cadr proxy))))
-    (setq url-gateway-method 'socks
-          socks-noproxy '("localhost")
-          socks-server `("Default server" ,addr ,port 5)))
-  (proxy-socks-show))
-
-(defun proxy-socks-disable ()
-  "Disable SOCKS proxy."
-  (interactive)
-  (setq url-gateway-method 'native
-        socks-noproxy nil)
-  (proxy-socks-show))
-
-(defun proxy-socks-toggle ()
-  "Toggle SOCKS proxy."
-  (interactive)
-  (if (bound-and-true-p socks-noproxy)
-      (proxy-socks-disable)
-    (proxy-socks-enable)))
-(provide 'init-proxy)
-#+end_src
-
-** develop.el
-:PROPERTIES:
-:header-args: :tangle pkg/.doom.d/develop.el
-:END:
-*** imenu
-- [[https://emacs.stackexchange.com/questions/30673/next-prev-imenu-item-function/33747#33747][motion - next/prev-imenu-item function - Emacs Stack Exchange]]
-- 也可以参考这个改(基于 counsel) [[file:redguardtoo-emacs.d/lisp/init-utils.el::defun my-closest-imenu-item-internal][my-closest-imenu-item-internal]]
-
-#+name: f28734ed
-#+begin_src elisp
-;; https://emacs.stackexchange.com/a/33747
-(defun gwp::imenu-goto--closest-dir (direction)
-  "Jump to the closest imenu item on the current buffer.
-If direction is 1, jump to next imenu item.
-If direction is -1, jump to previous imenu item.
-See https://emacs.stackexchange.com/questions/30673
-Adapted from `which-function' in::
-https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
-  ;; Ensure `imenu--index-alist' is populated.
-  (imenu--make-index-alist)
-
-  (let ((alist imenu--index-alist)
-        (minoffset (point-max))
-        offset pair mark imstack destination)
-    ;; Elements of alist are either ("name" . marker), or
-    ;; ("submenu" ("name" . marker) ... ). The list can be
-    ;; Arbitrarily nested.
-    (while (or alist imstack)
-      (if alist
-          (progn
-            (setq pair (car-safe alist)
-                  alist (cdr-safe alist))
-            (cond
-             ((atom pair)) ;; Skip anything not a cons.
-
-             ((imenu--subalist-p pair)
-              (setq imstack   (cons alist imstack)
-                    alist     (cdr pair)))
-
-             ((number-or-marker-p (setq mark (cdr pair)))
-              (when (> (setq offset (* (- mark (point)) direction)) 0)
-                (when (< offset minoffset) ;; Find the closest item.
-                  (setq minoffset offset
-                        destination mark))))))
-
-        (setq alist   (car imstack)
-              imstack (cdr imstack))))
-    (when destination
-      (imenu-default-goto-function "" destination ""))))
-
-(defun gwp::imenu-goto-next ()
-  (interactive)
-  (unless (gwp::imenu-goto--closest-dir 1)
-    (goto-char (point-max)))
-  (recenter))
-
-(defun gwp::imenu-goto-prev ()
-  (interactive)
-  (unless (gwp::imenu-goto--closest-dir -1)
-    (goto-char (point-min)))
-  (recenter))
-
-;; vim里没有Alt修饰, M-x类绑定可以放心用
-(map! :n "M-n" #'gwp::imenu-goto-next)
-(map! :n "M-p" #'gwp::imenu-goto-prev)
-#+end_src
-
-*** vterm
-安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
-#+begin_src elisp :tangle pkg/.doom.d/packages.el
-(package! vterm-toggle)
-#+end_src
-
-*** completion
-关于 [[https://github.com/universal-ctags/citre/blob/master/docs/user-manual/citre-peek.md][citre-peek]]
-: M-n, M-p: Next/prev line.
-: M-N, M-P: Next/prev definition.
-: M-l j: Jump to the definition.
-: C-g: Close the peek window.
-
-#+name: d28bc89a
-#+begin_src elisp
-;; Use hippie-expand instead of dabbrev-expand
-;; (global-set-key (kbd "M-/") #'dabbrev-expand)
-(global-set-key (kbd "M-/") #'hippie-expand)
-;; the same behavior as the original `dabbrev-expand'
-(setq hippie-expand-dabbrev-skip-space t)
-
-;; adjust the list of functions that hippie-expand will try
-(setq hippie-expand-try-functions-list
-      '(
-        try-expand-dabbrev-visible      ; first try the expansions from the currently visible parts
-        try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-complete-file-name-partially
-        try-complete-file-name
-        try-expand-line
-        try-expand-dabbrev-from-kill
-        ;; try-expand-all-abbrevs
-        ;; try-expand-list
-        try-complete-lisp-symbol-partially
-        try-complete-lisp-symbol
-        ))
-
-(after! company
-  (setq company-idle-delay 1.5
-        company-minimum-prefix-length 2))
-
-(use-package! citre
-  :defer t
-  :init
-  ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config)
-  (map! :leader
-        (:prefix-map ("j" . "jump")
-         (:prefix-map ("c" . "citre")
-          :desc "citre jump to definition"                    "d" #'citre-jump
-          :desc "citre jump back"                             "b" #'citre-jump-back
-          :desc "citre peek"                                  "p" #'citre-peek
-          ))))
-#+end_src
-*** find file in project
-- [[https://github.com/redguardtoo/find-file-in-project][redguardtoo/find-file-in-project: Quick access to project files in Emacs]]
-
-#+name: 81cb1ab5
-#+begin_src elisp
-(use-package find-file-in-project
-  :config
-  (setq ffip-use-rust-fd t))
-#+end_src
-
-*** magit
-#+name: 4bae51e2
-#+begin_src elisp
-(use-package magit
-  :config
-  ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
-  (setq magit-section-initial-visibility-alist (quote ((untracked . hide))))
-  ;;禁用magit中的gravatars支持, 响应能快一些.
-  (setq magit-revision-show-gravatars nil))
-#+end_src
-
-git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
-
-magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
-- [[https://github.com/alphapapa/magit-todos][alphapapa/magit-todos: Show source files' TODOs (and FIXMEs, etc) in Magit status buffer]]
-
-magit-todos已在magit modules定义.
-#+begin_src elisp :tangle no
-(package! magit-todos)
-#+end_src
-
-*** vc commit
-自动更新时间戳
-#+name: 3ac9a958
-#+BEGIN_SRC emacs-lisp
-(use-package vc
-  :init
-  (add-hook 'vc-before-checkin-hook #'time-stamp))
-
-(use-package vc-hooks
-  :init
-  ;; Don't ask if I want to visit a sym-linked file under VC. I always want to!
-  (setq vc-follow-symlinks t))
-#+END_SRC
-
-*** yadm [[https://github.com/TheLocehiliosan/yadm/blob/master/yadm.md][yadm/yadm.md at master · TheLocehiliosan/yadm]]
-快捷键 SPC g y
-#+name: 0717be82
+#+name: abd5e254
 #+begin_src emacs-lisp
-;; (magit-status  "/yadm::")
-(after! tramp
-  (add-to-list 'tramp-methods
-             '("yadm"
-               (tramp-login-program "yadm")
-               (tramp-login-args (("enter")))
-               (tramp-login-env (("SHELL") ("/bin/sh")))
-               (tramp-remote-shell "/bin/sh")
-               (tramp-remote-shell-args ("-c")))))
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/Notes/")
+(setq org-roam-directory "~/Notes/roam")
+(setq org-roam-file-extensions '("note" "org"))
+
+(use-package! org
+  :config
+  (load! "org"))
+
+;; https://github.com/org-roam/org-roam-ui#doom
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam ;; or :after org
+  :hook (org-roam . org-roam-ui-mode)
+  :config)
 #+end_src
 
-*** rust-mode
+*** packages.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/org/packages.el
+:END:
+
+*** org.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/org/org.el
+:END:
 **** docs
-- 关于补全: lsp/rust-analyze太重了, racer更简单一些.
-- 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
-- https://emacs.stackexchange.com/questions/2837/automatically-formatting-brackets
-
-重要资源
-- [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]]
-- rustic相关 [[https://github.com/brotzeit/rustic][brotzeit/rustic: Rust development environment for Emacs]]
-  (rustic-mode以后会是依赖于rust-mode的增强版 [[https://github.com/rust-lang/rust-mode/issues/405][Towards making rustic use rust-mode #405]])
-
-**** edit
-#+begin_src emacs-lisp
-(after! smartparens
-  (sp-local-pair 'rust-mode "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
-  ;; Rust closure中使用
-  (sp-with-modes '(rust-mode)
-    (sp-local-pair "|" "|"))
-  )
-
-(add-hook 'rust-mode-hook
-          (lambda () (require 'smartparens-rust)))
-
-(after! org-src
-  (add-to-list 'org-src-lang-modes '("rust" . rust)))
-#+end_src
-
-**** cargo/rust-mode
-使用 rust-mode中的cargo
-- [[https://github.com/rust-lang/rust-mode/blob/master/rust-compile.el][rust-mode/rust-compile.el]]
-
-基于compilation mode定制
-- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html][Compilation Mode - GNU Emacs Manual]]
-
-以下自定义cargo命令, 比在term下执行更好一些.
-- 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
-- 链接到的src文件可直接打开.
-
-现有如下问题, 导致编译buffer无法基于出错信息跳转到对应文件:
-- [[https://github.com/rust-lang/cargo/issues/5895][Error messages use relative paths differently if in a workspace · Issue #5895 · rust-lang/cargo]]
-
-为此, 我们需要cargo.sh, 包装下cargo命令, 在emacs调用前, 切到workspace根目录, 但执行cargo时再换为到原buffer对应目录.
-这样, 可仅编译当前包, 无不是所有workspace中的包, 同时还能解决error跳转的问题.
-
-cargo默认输出warning太多, 以下命令调用cargo, 但忽略warnings. 同时编译信息里强制输出文件全路径
-
-#+begin_src shell :tangle ~/.local/bin/cargo.sh :shebang #! /bin/bash
-# a wrapper for cargo command to work around a cargo issue:
-# https://github.com/rust-lang/cargo/issues/5450#issuecomment-732954248
-
-# goto current workspace memeber directory
-cd "$1"
-shift
-
-# supress warnings and print full file paths in compilation
-export RUSTFLAGS="$RUSTFLAGS -Awarnings"
-cargo $@
-#+end_src
-
-#+begin_src elisp
-(require 'rust-mode)
-(require 'cargo)
-
-;; taken from rust-cargo.el
-(defun gwp/cargo-compile (args)
-  ;; taken from cargo.el
-  ;;
-  ;; workaround cargo issue: https://github.com/rust-lang/cargo/issues/5895
-  ;;
-  ;; to make "jump-to-error" work, we need start compilation in workspace root dir
-  (let (
-        ;; save current directory
-        (old-directory default-directory)
-        (default-directory (or (cargo-process--workspace-root)
-                               default-directory))
-        )
-    (compile (format "cargo.sh \"%s\" %s" old-directory args))
-    ))
-
-(defun gwp/rust-cargo-tangle-watch-check ()
-  "Compile using `cargo watch and check`
-The org src will be tangled first before compiling.
-"
-  (interactive)
-  (gwp/org-babel-tangle-dwim)
-  (gwp/rust-cargo-watch-check))
-
-(defun gwp/rust-cargo-watch-check ()
-  "Compile using `cargo watch and check`
-"
-  (interactive)
-  (gwp/cargo-compile "check -q"))
-
-(defun gwp/rust-cargo-tangle-watch-test ()
-  "Compile using `cargo watch and test`
-The org src will be tangled first before compiling.
-"
-  (interactive)
-  (gwp/org-babel-tangle-dwim)
-  (gwp/rust-cargo-watch-test))
-
-(defun gwp/rust-cargo-watch-test ()
-  "Compile using `cargo watch and test`
-The org src will be tangled first before compiling.
-"
-  (interactive)
-  (gwp/cargo-compile "d"))
-
-(defun gwp/rust-cargo-update ()
-  "Execute `cargo update` command"
-  (interactive)
-  (gwp/cargo-compile "update"))
-
-(defun gwp/rust-cargo-doc-open ()
-  "Execute `cargo doc --open` command"
-  (interactive)
-  (gwp/cargo-compile "doc --open --no-deps"))
-
-(defun gwp/rust-cargo-edit-upgrade ()
-  "Execute `cargo upgrade --dry-run` command"
-  (interactive)
-  (gwp/cargo-compile "upgrade --dry-run"))
-
-;; ;; 修改popup window, 放大一些, 方便查看.
-;; (set-popup-rule! "^\\*compilation\\*" :size 0.85 :quit t :select t :ttl nil)
-;; gwp/org-babel-tangle-dwim
-
-(require 'transient)
-(transient-define-prefix gwp/rust-cargo-transient ()
-  "rust development tools"
-  [["compile org src:"
-    :if org-in-src-block-p
-    ("o b" "tangle src only" gwp/org-babel-tangle-dwim)
-    ("o c" "tangle src & cargo check" gwp/rust-cargo-tangle-watch-check)
-    ("o t" "tangle src & cargo test" gwp/rust-cargo-tangle-watch-test)
-    ]]
-  [["compile rust project:"
-    ("c" "cargo check" gwp/rust-cargo-watch-check)
-    ("t" "cargo test" gwp/rust-cargo-watch-test)
-    ("d" "cargo doc" gwp/rust-cargo-doc-open)
-    ("u" "cargo update" gwp/rust-cargo-update)
-    ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
-    ]]
-  )
-
-(map! :map org-mode-map
-      :localleader
-      "1" #'gwp/rust-cargo-transient
-      )
-(map! :map rust-mode-map
-      :localleader
-      "1" #'gwp/rust-cargo-transient
-      )
-#+end_src
-
-**** cargo/cargo.el
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-- [[https://github.com/kwrooijen/cargo.el][kwrooijen/cargo.el: Emacs Minor Mode for Cargo, Rust's Package Manager.]]
-
-[2021-09-20 Mon] 这里的问题: 执行时会切到workspace root执行, 如果hack后, 就与rust-mode中的功能相当了.
-
-cargo命令如果使用C-u 调用, 可在minibuffer中修改cargo参数.
-
-以下自定义cargo-watch命令, 比在term下执行更好一些.
-- p, n来跳转到前一个或下一个error
-- 使用Alt-n, Alt-p可以快速定位error或warning 或C-j, C-k
-- 链接到的src文件可直接打开.
-- 按q退出
-
-使用el-path修改cargo-process调用方式, 不要切换至workspace根目录执行cargo命令, 更
-匹配命令行使用习惯.
-#+begin_src elisp
-(eval-when-compile (require 'el-patch))
-
-(use-package cargo
-  :defer t
-  :hook (rust-mode . cargo-minor-mode)
-  :custom
-  (cargo-process--custom-path-to-bin "cargo.sh")
-  (cargo-process--command-check "check -q")
-  (cargo-process--command-test "test -- --nocapture --test-threads=1")
-  ;;   :config/el-patch
-  ;;   (defun cargo-process--start (name command &optional last-cmd opens-external)
-  ;;     "Start the Cargo process NAME with the cargo command COMMAND.
-  ;; OPENS-EXTERNAL is non-nil if the COMMAND is expected to open an external application.
-  ;; Returns the created process."
-  ;;     (set-rust-backtrace command)
-  ;;     (let* ((buffer (concat "*Cargo " name "*"))
-  ;;            (project-root (cargo-process--project-root))
-  ;;            (cmd
-  ;;             (or last-cmd
-  ;;                 (cargo-process--maybe-read-command
-  ;;                  (cargo-process--augment-cmd-for-os opens-external
-  ;;                                                     (mapconcat #'identity (list (shell-quote-argument cargo-process--custom-path-to-bin)
-  ;;                                                                                 command
-  ;;                                                                                 ;; (manifest-path-argument name)
-  ;;                                                                                 cargo-process--command-flags)
-  ;;                                                                " ")))))
-  ;;            ;; (default-directory (or project-root default-directory))
-  ;;            )
-  ;;       (save-some-buffers (not compilation-ask-about-save)
-  ;;                          (lambda ()
-  ;;                            (and project-root
-  ;;                                 buffer-file-name
-  ;;                                 (string-prefix-p project-root (file-truename buffer-file-name)))))
-  ;;       (setq cargo-process-last-command (list name command cmd))
-  ;;       ;; (let ((default-directory (or (cargo-process--workspace-root)
-  ;;       ;;                              default-directory)))
-  ;;       ;;   (compilation-start cmd 'cargo-process-mode (lambda(_) buffer)))
-  ;;       (compilation-start cmd 'cargo-process-mode (lambda(_) buffer))
-  ;;       (let ((process (get-buffer-process buffer)))
-  ;;         (set-process-sentinel process 'cargo-process--finished-sentinel)
-  ;;         process)))
-
-  :init
-  (add-hook 'conf-toml-mode-hook 'cargo-minor-mode) ; when edit Cargo.toml
-  )
-
-(require 'cargo)
-(require 'transient)
-(transient-define-prefix gwp/rust-cargo-transient ()
-  "Search zotero database"
-  [["Search zotero items:"
-    ("c" "cargo check" cargo-process-check)
-    ("t" "cargo test" cargo-process-test)
-    ("u" "cargo update" cargo-process-update)
-    ("d" "cargo doc" cargo-process-doc-open)
-    ]]
-  )
-
-(map! :map org-mode-map
-      :localleader
-      "1" #'gwp/rust-cargo-transient
-      )
-(map! :map rust-mode-map
-      :localleader
-      "1" #'gwp/rust-cargo-transient
-      )
-#+end_src
-
-**** racer
-用于自动补全, 比lsp更轻便些.
-#+begin_src elisp
-(use-package cargo
-  :defer t
-  :init
-  (progn
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode)
-    ))
-#+end_src
-
-**** rust-format
-rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
-#+name: 151a16d0
-#+begin_src elisp
-(map! :map rust-mode-map
-      :localleader
-      "f" #'rust-format-buffer
-      "C-f" #'rust-format-buffer
-      "=" #'rust-format-buffer)
-
-(use-package rust-mode
-  :hook (rust-mode . gwp/override-doom-format-buffer)
-  )
-
-(defun gwp/override-doom-format-buffer ()
-  (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
-  ;; 无效
-  ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
-  )
-#+end_src
-
-**** edit
-#+name: 72f0d377
-#+begin_src elisp
-(defun gwp/rust-insert-option (&optional result)
-  "Insert the Option type."
-  (interactive)
-
-  (when (region-active-p)
-    (sp-wrap-with-pair "<")
-    (backward-char)
-    (insert (or result "Option"))
-    ))
-
-(defun gwp/rust-unwrap-option (&optional result)
-  "Remove Option type wrapper"
-  (interactive)
-
-  (when (region-active-p)
-    (when (> (mark) (point))
-      (exchange-point-and-mark))
-    (sp-unwrap-sexp)
-    (when (search-backward (or result "Option") (line-beginning-position) t)
-      (delete-region (match-beginning 0) (match-end 0))
-      )))
-
-
-;; https://github.com/Wilfred/.emacs.d/blob/gh-pages/user-lisp/rust-customisations.el
-(defun gwp/rust-toggle-pub ()
-  "Toggle the public visibility of the function at point."
-  (interactive)
-  (save-excursion
-    ;; If we're already at the beginning of the function definition,
-    ;; `beginning-of-defun' moves to the previous function, so move elsewhere.
-    (end-of-line)
-    (beginning-of-defun)
-    (if (looking-at "pub ")
-        (delete-char 4)
-      (insert "pub "))))
-
-(defun gwp/rust-insert-result ()
-  (interactive)
-  (gwp/rust-insert-option "Result"))
-
-(defun gwp/rust-unwrap-result ()
-  (interactive)
-  (gwp/rust-unwrap-option "Result"))
-
-(transient-define-prefix gwp/rust-edit-transient ()
-  "rust development tools"
-  [["Result"
-    ("o" "Wrap in Option" gwp/rust-insert-option)
-    ("u" "Unwrap Option" gwp/rust-unwrap-option)
-    ]]
-  [["Result"
-    ("r" "Wrap in Result" gwp/rust-insert-result)
-    ("k" "Unwrap Result" gwp/rust-unwrap-result)
-    ]]
-  [["Pub"
-    ("p" "toggle pub at point" gwp/rust-toggle-pub)
-    ]]
-  )
-
-;; (defhydra gwp/rust-edit-hydra ()
-;;   ("o" gwp/rust-insert-option "wrap with Option")
-;;   ("u" gwp/rust-unwrap-option "unwrap Option")
-;;   ("q" nil "quit")
-;;   )
-
-(map! :map rust-mode-map
-      :localleader
-      "e" #'gwp/rust-edit-transient
-      :desc "select inner type" "m" (general-simulate-key "vi<")
-      )
-#+end_src
-
-xx <=> Option<xx>
-
-*** rustic-mode
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-#+begin_src elisp
-(use-package rustic
-  :custom
-  (rustic-lsp-client nil)
-  (rustic-format-on-save nil)
-  (rustic-display-spinner nil)
-  )
-#+end_src
-
-*** python.el
-[[file:doom-emacs/modules/tools/eval/README.org::+TITLE: tools/eval]]
-
-: SPC-o-r 打开repl
-: SPC-c-s send-region
-默认的挺难用的
-#+begin_src elisp :tangle no
-(after! python
-  (setq python-shell-interpreter "ipython"))
-#+end_src
-
-使用tmux/ipython组合来实现
-
-#+begin_src elisp
-(defun gwp/tmux-ipython-paste-region (beg end &optional region)
-  "Execute \"%paste\" in tmux session"
-  (interactive "r")
-  (kill-ring-save beg end)
-  (+tmux/run "%paste"))
-#+end_src
-
-*** packages
-:PROPERTIES:
-:header-args: :tangle pkg/.doom.d/packages.el
-:END:
-需要安装cargo.el等包
-#+name: e86dc54d
-#+begin_src elisp
-(package! cargo)
-(package! racer)
-(package! rust-mode)
-(package! citre)
-#+end_src
-
-** org.el
-:PROPERTIES:
-:header-args: :tangle pkg/.doom.d/org.el
-:END:
-*** docs
 这里放org配置相关的内容, 在config.el中以load!宏来加载.
 
 关于Tab键
@@ -4972,7 +4979,7 @@ xx <=> Option<xx>
 - [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]
 - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][.emacs.d/setup-org.el at master · kaushalmodi/.emacs.d]]
 
-*** 基本设置
+**** 基本设置
 #+name: b28b06dc
 #+begin_src elisp
 ;; treat .note files as org-mode
@@ -5001,7 +5008,7 @@ xx <=> Option<xx>
 (setq org-catch-invisible-edits 'show-and-error)
 #+end_src
 
-*** 按键行为
+**** 按键行为
 #+name: d3c71916
 #+begin_src elisp
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
@@ -5017,7 +5024,7 @@ xx <=> Option<xx>
       )
 #+end_src
 
-*** view
+**** view
 #+name: 7341aa84
 #+begin_src elisp
 ;; 2021-10-13: 现不用doom中的org module了
@@ -5066,8 +5073,8 @@ xx <=> Option<xx>
       :ng "zc" #'org-hide-entry)
 #+end_src
 
-*** dwim
-**** enter-at-point
+**** dwim
+***** enter-at-point
 +org/dwim-at-point, 在org-src环境, 直接编辑代码, 而非执行
 
 #+name: fbbec921
@@ -5154,7 +5161,7 @@ If on a:
 #+end_src
 
 
-**** open-at-point
+***** open-at-point
 默认在另一窗口打开链接, 如果使用C-u参数, 则强制在本窗口打开.
 #+name: 2f61258f
 #+begin_src elisp
@@ -5185,7 +5192,7 @@ If on a:
       :localleader
       "o" #'gwp::org-open-at-point-dwim)
 #+end_src
-*** move/movment
+**** move/movment
 #+name: bbdcd834
 #+begin_src elisp
 (map! :n "M-k" #'org-metaup)
@@ -5197,7 +5204,7 @@ If on a:
 (map! :map org-mode-map :n "M-n" #'org-forward-element)
 #+end_src
 
-*** screenshot
+**** screenshot
 - org-contrib: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-screenshot.el][org-screenshot.el]]
 
 目前最佳方案: 使用org-download来实现屏幕截图的功能
@@ -5258,22 +5265,22 @@ If on a:
 (package! org-download)
 #+end_src
 
-*** latex preview
+**** latex preview
 默认公式预览图片太小, 改大一些([[https://emacs.stackexchange.com/questions/19880/font-size-control-of-latex-previews-in-org-files][URL]]).
 - [[https://emacs.stackexchange.com/questions/30309/latex-preview-on-hidpi-display/30318#30318][LaTeX preview on HiDPI display - Emacs Stack Exchange]]
 #+begin_src elisp
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 #+end_src
 
-*** org-babel
-**** docs
+**** org-babel
+***** docs
 参考
 - [[https://org-babel.readthedocs.io/en/latest/][Org Babel reference card]]
 
 如何察看noweb展开后的代码:
 - C-c C-v v: org-babel-expand-src-block
 
-**** init
+***** init
 #+begin_src emacs-lisp
 ;; 不缩进org-src块中的代码.
 ;; 注意: 不直接设置为"org-src-preserve-indentation t",
@@ -5302,7 +5309,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 #+end_src
 
-**** enter
+***** enter
 #+begin_src emacs-lisp
 ;; 禁用代码着色, 影响速度
 ;; (setq org-src-fontify-natively nil)
@@ -5321,14 +5328,14 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 #+end_src
 
-**** toml
+***** toml
 方便写Cargo.toml, 指定为toml为conf-toml-mode, 而不用写全 "conf-toml".
 #+begin_src elisp
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 #+end_src
 
-**** edit
+***** edit
 - org-babel-demarcate-block: 可以用来将选中代码分割为不同的代码块.
 - org-babel-do-key-sequence-in-edit-buffer: 在当前代码下直接执行src code语境下的命令
 
@@ -5355,7 +5362,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 #+end_src
 
-**** jump to org blocks/links
+***** jump to org blocks/links
 #+name: 8aa4aca8
 #+begin_src elisp
 (defhydra gwp/org-jump-block ()
@@ -5380,7 +5387,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
        ))
 #+end_src
 
-**** jump to file
+***** jump to file
 从org文件跳转到tangled file
 - 这个包可用于与compile等跳转配合使用 [[https://github.com/EricCrosson/help-find-org-mode][help-find-org-mode]]
 
@@ -5445,7 +5452,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 : org-babel-detangle
 
 还有一个https://github.com/mtekman/org-tanglesync.el. 但使用上有限制 [[https://github.com/mtekman/org-tanglesync.el/issues/13][issue 13]].
-**** jump to org
+***** jump to org
 原版的似有bug, 不能精确复原光标位置.
 #+name: 9b40c7cf
 #+begin_src elisp
@@ -5503,10 +5510,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     (goto-char target-char)))
 #+end_src
 
-**** noweb
+***** noweb
 org-babel-expand-src-block (可以展开noweb macro)
 
-**** tangle
+***** tangle
 注意: tangle-subtree时得注意, 可能会以部分内容覆盖总文件.
 #+name: f1b57cf1
 #+begin_src elisp
@@ -5591,7 +5598,7 @@ org-delete-property 删除 header-args
       (message "not in source block"))))
 #+end_src
 
-**** template
+***** template
 - http://orgmode.org/manual/Languages.html
 
 #+name: e9fca5dc
@@ -5613,7 +5620,7 @@ org-delete-property 删除 header-args
     ))
 #+end_src
 
-**** auto time-stamp
+***** auto time-stamp
 格式设置为类org-mode, 方便插入和修改. 参考: [[http://nullman.net/emacs/files/init-emacs.org][URL]]
 
 #+begin_src emacs-lisp
@@ -5627,7 +5634,7 @@ org-delete-property 删除 header-args
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 #+end_src
 
-*** org-noter/pdf-view
+**** org-noter/pdf-view
 pdf-view-fit-width-to-window
 #+name: 37fef008
 #+begin_src elisp
@@ -5663,7 +5670,7 @@ pdf-view-fit-width-to-window
          )))
 #+end_src
 
-*** pairs
+**** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
 (package! smartparens-org :ignore t)
@@ -5682,7 +5689,7 @@ doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一�
   )
 #+end_src
 
-*** narrow
+**** narrow
 [2021-10-02 Sat] 和org-tree-to-indirect-buffer相比, 以下代码功能类似, 但是先生成
 整个indirect buffer再narrow, kill-buffer时不影响原buffer.
 
@@ -5718,7 +5725,7 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 #+end_src
 
-*** zotero/ui                                                           :ATTACH:
+**** zotero/ui                                                          :ATTACH:
 :PROPERTIES:
 :ID:       0cbea3c4-ceef-44b4-9d07-250080801511
 :END:
@@ -5865,7 +5872,7 @@ selected instead of creating a new buffer."
       "O" #'gwp/org-open-zotero-attachments-at-point)
 #+end_src
 
-*** zotero/link
+**** zotero/link
 #+begin_src elisp
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
@@ -5875,7 +5882,7 @@ selected instead of creating a new buffer."
   (browse-url url))
 #+end_src
 
-*** zotero/export
+**** zotero/export
 支持 "zotero" 链接的点击行为及odt导出.
 
 bibtex更新了item link的格式.
@@ -5956,7 +5963,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 #+end_src
 
-*** odt export
+**** odt export
 odt导出时, 图表默认以大纲级别来编号. 对于中文文档, 如果章节以中文一二三编号时,
 图表编号默认为一.1, 二.3. 这很古怪, 还是取消的好.
 
@@ -6017,7 +6024,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 #+end_src
 
-*** encryption
+**** encryption
 #+begin_src emacs-lisp
 (require 'org-crypt)
 (require 'epa-file)
@@ -6032,13 +6039,13 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 (setq org-crypt-disable-auto-save nil)
 #+end_src
 
-*** org-attach
-**** setup
+**** org-attach
+***** setup
 #+begin_src emacs-lisp
 (require 'org-attach)
 #+end_src
 
-**** copy & paste attachments
+***** copy & paste attachments
 #+begin_src emacs-lisp
 (setq org-attach-store-link-p 'attached)
 
@@ -6060,7 +6067,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
     (zotero-attach-txclip-paste-files current-dir)))
 #+end_src
 
-***** old
+****** old
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -6129,9 +6136,9 @@ file-exists-p函数对symlink的特殊性:
   )
 #+end_src
 
-**** take file link as attachment
+***** take file link as attachment
 [2020-03-21 Sat] org里有对应的功能: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-attach-embedded-images.el][org-attach-embedded-images.el]]
-***** 从当前位置文件链接提取文件名.
+****** 从当前位置文件链接提取文件名.
 #+begin_src emacs-lisp
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
@@ -6152,7 +6159,7 @@ file-exists-p函数对symlink的特殊性:
        ))))
 #+end_src
 
-***** 使用org-attach将文件move到当到附录中并更新文件链接
+****** 使用org-attach将文件move到当到附录中并更新文件链接
 #+begin_src emacs-lisp
 ;; (require 'org-download)
 
@@ -6186,7 +6193,7 @@ file-exists-p函数对symlink的特殊性:
       (user-error "Point is not on a link"))))
 #+end_src
 
-**** delete link file
+***** delete link file
 删除当前所在链接对应的文件. org-download-delete现在不可用(attachment link).
 #+begin_src elisp
 (defun gwp/org-delete-link-file (arg)
@@ -6204,7 +6211,7 @@ file-exists-p函数对symlink的特殊性:
       (user-error "Point is not on a file link"))))
 #+end_src
 
-*** capture & protocol
+**** capture & protocol
 占位符:
 | %:link                            | URL of the web-page                                  |
 | %:description                     | The title of the web-page                            |
@@ -6229,7 +6236,7 @@ file-exists-p函数对symlink的特殊性:
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 #+end_src
 
-*** refile
+**** refile
 refile流程:
 - 打开refile.note
 - 检查其中的条目, 找到可能的合适的归档.note文件, 打开之.
@@ -6261,7 +6268,7 @@ refile流程:
         (org-link-unescape (match-string-no-properties 1)))))
 #+END_SRC
 
-*** read/done
+**** read/done
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -6298,7 +6305,7 @@ refile流程:
                                 (vector 'return)))))
 #+end_src
 
-*** agenda
+**** agenda
 基本设置
 #+name: 43fd72e2
 #+BEGIN_SRC emacs-lisp
@@ -6478,7 +6485,7 @@ refile流程:
  )
 #+end_src
 
-*** org-file-apps
+**** org-file-apps
 org-open-file调用pdf-tools打开PDF文件
 #+begin_src elisp
 (add-to-list 'org-file-apps
@@ -6486,14 +6493,14 @@ org-open-file调用pdf-tools打开PDF文件
                                (org-pdftools-open link))))
 #+end_src
 
-*** fix tab
+**** fix tab
 解决按tab键乱窜的问题
 #+begin_src elisp
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 #+end_src
 
-*** my .note files
-**** search all notes
+**** my .note files
+***** search all notes
 搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
 我们使用自定义脚本ripgrep, 强制命令退出码为0. 注意~/.local/bin应在PATH变量中.
 
@@ -6525,7 +6532,7 @@ deadgrep与doom有冲突, 不能用了.
               )
 #+end_src
 
-**** find notes
+***** find notes
 #+name: 05419467
 #+begin_src elisp
 (defun gwp/find-file-in-notes ()
@@ -6533,7 +6540,7 @@ deadgrep与doom有冲突, 不能用了.
   (interactive) (doom-project-find-file "~/.cache/notes"))
 #+end_src
 
-*** misc
+**** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+begin_src emacs-lisp
 ;; (require 'org-man)
@@ -6556,8 +6563,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (setq org-edit-src-auto-save-idle-delay 1)
 #+end_src
 
-*** bindings
-**** core
+**** bindings
+***** core
 #+name: 917381e9
 #+begin_src elisp
 ;; 定义一些特别常用的命令, 仅在org-mode中显示
@@ -6581,7 +6588,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 ;;       )
 #+end_src
 
-**** edit
+***** edit
 #+name: bfe4f470
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6591,7 +6598,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-**** attach/agenda
+***** attach/agenda
 #+name: c09b236a
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6602,7 +6609,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** babel
+***** babel
 #+name: 21ae7ae2
 #+begin_src elisp
 ;; 更多的命令定义在org-babel-map
@@ -6625,7 +6632,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "switch org buffer"          "b" #'org-switchb ; 仿SPC-b-b
        ))
 #+end_src
-**** edit
+***** edit
 #+name: 8d8e9273
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6635,7 +6642,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** goto
+***** goto
 #+name: a02d9b1f
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6647,7 +6654,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** link
+***** link
 #+name: 32a3b56a
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6660,7 +6667,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** subtree/search
+***** subtree/search
 #+name: a393f96d
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6677,7 +6684,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** todo/toggle
+***** todo/toggle
 #+name: ebc6075d
 #+begin_src elisp
 (defun gwp::org-toggle-checkbox ()
@@ -6699,7 +6706,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        "c" #'gwp::org-toggle-checkbox))
 #+end_src
 
-**** refile
+***** refile
 #+name: f4447dfb
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6709,7 +6716,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "refile but preserve subtree" "c" #'org-refile-copy))
 #+end_src
 
-**** export
+***** export
 #+name: d7c4714d
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6719,7 +6726,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** insert
+***** insert
 #+name: 3d7188a4
 #+begin_src elisp
 (defun gwp::new-memo-time-stamp (arg)
@@ -6753,7 +6760,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-**** toggle
+***** toggle
 #+name: 1e605e7a
 #+begin_src elisp
 (map! :map org-mode-map
@@ -6764,7 +6771,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-**** org-sidebar
+***** org-sidebar
 用的不多
 #+name: 1a561e81
 #+begin_src elisp :tangle no
@@ -6775,9 +6782,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-** bindings.el
+** bindings
 :PROPERTIES:
-:header-args: :tangle pkg/.doom.d/bindings.el
+:header-args: :tangle pkg/.doom.d/modules/gwp/bindings/config.el
 :END:
 还是自定义更舒服些. 以后hack下default +evil-bindings.el仅用于取消某些不习惯的按
 键. 注意的键位变量为 doom-leader-<xx>-map, 其中xx为"prefix-map"后所定义的内容,
@@ -6815,7 +6822,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+name: 19c9e88c
 #+begin_src elisp
 ;; https://stackoverflow.com/a/10395406/173271
-(require 'cl)
+(require 'cl-lib)
 (require 'recentf)
 
 (defun gwp::find-last-killed-file ()
@@ -7240,6 +7247,14 @@ SPC-s-s和SPC-s-b有什么区别?
 #+end_src
 
 *** z: ???
+** misc
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/misc/config.el
+:END:
+*** packages.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/misc/packages.el
+:END:
 
 * modules/hack
 新思路:
@@ -7264,7 +7279,7 @@ SPC-s-s和SPC-s-b有什么区别?
 TAB自动补全很可怕, 无意按键, 补出很多没用的东西. doom系统下private snippets目录
 为 ~/.doom.d/snippets.
 
-- [[https://github.com/hlissner/doom-snippets][hlissner/doom-snippets: The Doom Emacs snippets library]]
+- [[https://github.com/hlissner/doom-snippets][hlissner/doom-snippets: The Doom Emacs snippets library]] [[file:doom-snippets][visit]]
 
 ** org-mode
 *** begin_src

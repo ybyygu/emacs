@@ -1,4 +1,4 @@
-;; [[file:../../doom.note::a6f83332][a6f83332]]
+;; [[file:../../../../../doom.note::a6f83332][a6f83332]]
 ;; 默认不要显示折行
 (global-visual-line-mode -1)
 
@@ -7,7 +7,7 @@
 (add-hook 'org-mode-hook 'gwp::turn-off-wrap-long-line)
 ;; a6f83332 ends here
 
-;; [[file:../../doom.note::885c9fa9][885c9fa9]]
+;; [[file:../../../../../doom.note::885c9fa9][885c9fa9]]
 ;; 方便绑定到 SPC-t-l
 ;;
 ;; 仅切换relative和none两种状态, doom的要切三种
@@ -30,7 +30,7 @@
 ;; (setq display-line-numbers-type 'relative)
 ;; 885c9fa9 ends here
 
-;; [[file:../../doom.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
+;; [[file:../../../../../doom.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
       '((:eval (+workspace-current-name)) ;
@@ -40,14 +40,14 @@
         ))
 ;; 修改 frame 标题 方便 gnome-shell 桌面切换:1 ends here
 
-;; [[file:../../doom.note::bfacbb8e][bfacbb8e]]
+;; [[file:../../../../../doom.note::bfacbb8e][bfacbb8e]]
 (use-package! golden-ratio
   :config
   (map! :map evil-window-map
         "z" #'golden-ratio))
 ;; bfacbb8e ends here
 
-;; [[file:../../doom.note::9f0e3550][9f0e3550]]
+;; [[file:../../../../../doom.note::9f0e3550][9f0e3550]]
 (map! :map evil-window-map
       "1"       #'doom/window-maximize-buffer
       "o"       #'doom/window-maximize-buffer ;show "only"
@@ -55,11 +55,11 @@
       )
 ;; 9f0e3550 ends here
 
-;; [[file:../../doom.note::9a32eb12][9a32eb12]]
+;; [[file:../../../../../doom.note::9a32eb12][9a32eb12]]
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; 9a32eb12 ends here
 
-;; [[file:../../doom.note::19f082d3][19f082d3]]
+;; [[file:../../../../../doom.note::19f082d3][19f082d3]]
 (use-package! avy
   :config
   (setq avy-all-windows t))
@@ -77,22 +77,22 @@
       )
 ;; 19f082d3 ends here
 
-;; [[file:../../doom.note::*弹出窗口][弹出窗口:1]]
+;; [[file:../../../../../doom.note::*弹出窗口][弹出窗口:1]]
 (map! :i "C-`" #'+popup/toggle)
 ;; 弹出窗口:1 ends here
 
-;; [[file:../../doom.note::032e71c0][032e71c0]]
+;; [[file:../../../../../doom.note::032e71c0][032e71c0]]
 (map! :nvi
       [C-M-mouse-4] #'evil-window-increase-width
       [C-M-mouse-5] #'evil-window-decrease-width
       )
 ;; 032e71c0 ends here
 
-;; [[file:../../doom.note::*窗口大小][窗口大小:2]]
+;; [[file:../../../../../doom.note::*窗口大小][窗口大小:2]]
 (setq split-width-threshold 200)        ; default is 160
 ;; 窗口大小:2 ends here
 
-;; [[file:../../doom.note::f07dc327][f07dc327]]
+;; [[file:../../../../../doom.note::f07dc327][f07dc327]]
 (defhydra gwp/adjust-window-size ()
   "resize-window"
   ("h" evil-window-decrease-width "decrease width")
@@ -107,14 +107,14 @@
       )
 ;; f07dc327 ends here
 
-;; [[file:../../doom.note::19e08aef][19e08aef]]
+;; [[file:../../../../../doom.note::19e08aef][19e08aef]]
 (defun gwp/display-current-buffer-other-frame ()
   "display current buffer on other frame"
   (interactive)
   (display-buffer-other-frame (current-buffer)))
 ;; 19e08aef ends here
 
-;; [[file:../../doom.note::6c522fd8][6c522fd8]]
+;; [[file:../../../../../doom.note::6c522fd8][6c522fd8]]
 ;; taken from https://github.com/redguardtoo/emacs.d
 (defun gwp::evil-toggle-input-method ()
   "When input method is on, goto `evil-insert-state'."
@@ -145,7 +145,7 @@
     (toggle-input-method))))
 ;; 6c522fd8 ends here
 
-;; [[file:../../doom.note::155b72b3][155b72b3]]
+;; [[file:../../../../../doom.note::155b72b3][155b72b3]]
 (use-package! rime
   :custom
   (default-input-method "rime")
@@ -225,7 +225,7 @@
         doom-big-font (font-spec :family user-font :size big-font-size))
   )
 
-;; [[file:../../doom.note::*theme][theme:1]]
+;; [[file:../../../../../doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -253,7 +253,7 @@
   )
 ;; theme:1 ends here
 
-;; [[file:../../doom.note::fae9a6ea][fae9a6ea]]
+;; [[file:../../../../../doom.note::fae9a6ea][fae9a6ea]]
 ;; symbol-overlay
 ;;;  a highlight-symbol replacement.
 (use-package symbol-overlay
@@ -283,7 +283,7 @@
   )
 ;; fae9a6ea ends here
 
-;; [[file:../../doom.note::6013493c][6013493c]]
+;; [[file:../../../../../doom.note::6013493c][6013493c]]
 ;; View images inside Emacs
 (auto-image-file-mode t)
 

@@ -1,4 +1,4 @@
-;; [[file:../../doom.note::b28b06dc][b28b06dc]]
+;; [[file:../../../../../doom.note::b28b06dc][b28b06dc]]
 ;; treat .note files as org-mode
 (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
@@ -25,7 +25,7 @@
 (setq org-catch-invisible-edits 'show-and-error)
 ;; b28b06dc ends here
 
-;; [[file:../../doom.note::d3c71916][d3c71916]]
+;; [[file:../../../../../doom.note::d3c71916][d3c71916]]
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
 
@@ -39,7 +39,7 @@
       )
 ;; d3c71916 ends here
 
-;; [[file:../../doom.note::7341aa84][7341aa84]]
+;; [[file:../../../../../doom.note::7341aa84][7341aa84]]
 ;; 2021-10-13: 现不用doom中的org module了
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
@@ -86,7 +86,7 @@
       :ng "zc" #'org-hide-entry)
 ;; 7341aa84 ends here
 
-;; [[file:../../doom.note::fbbec921][fbbec921]]
+;; [[file:../../../../../doom.note::fbbec921][fbbec921]]
 ;; 取自doom org moudle
 (defun gwp::dwim-at-point (&optional arg)
   "Do-what-I-mean at point.
@@ -168,7 +168,7 @@ If on a:
       )
 ;; fbbec921 ends here
 
-;; [[file:../../doom.note::2f61258f][2f61258f]]
+;; [[file:../../../../../doom.note::2f61258f][2f61258f]]
 ;; https://stackoverflow.com/questions/17590784/how-to-let-org-mode-open-a-link-like-file-file-org-in-current-window-inste
 ;; Depending on universal argument try opening link
 (defun gwp::org-open-at-point-dwim (&optional arg)
@@ -197,7 +197,7 @@ If on a:
       "o" #'gwp::org-open-at-point-dwim)
 ;; 2f61258f ends here
 
-;; [[file:../../doom.note::bbdcd834][bbdcd834]]
+;; [[file:../../../../../doom.note::bbdcd834][bbdcd834]]
 (map! :n "M-k" #'org-metaup)
 (map! :n "M-j" #'org-metadown)
 
@@ -207,7 +207,7 @@ If on a:
 (map! :map org-mode-map :n "M-n" #'org-forward-element)
 ;; bbdcd834 ends here
 
-;; [[file:../../doom.note::*screenshot][screenshot:1]]
+;; [[file:../../../../../doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
   "Annotate LINK with the time of download."
@@ -250,11 +250,11 @@ If on a:
           )))
 ;; screenshot:1 ends here
 
-;; [[file:../../doom.note::*latex preview][latex preview:1]]
+;; [[file:../../../../../doom.note::*latex preview][latex preview:1]]
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 ;; latex preview:1 ends here
 
-;; [[file:../../doom.note::*init][init:1]]
+;; [[file:../../../../../doom.note::*init][init:1]]
 ;; 不缩进org-src块中的代码.
 ;; 注意: 不直接设置为"org-src-preserve-indentation t",
 ;; 只设置org-edit-src-content-indentation为0, 这样仅影响编辑的org, 不影响tangle
@@ -282,7 +282,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 ;; init:1 ends here
 
-;; [[file:../../doom.note::*enter][enter:1]]
+;; [[file:../../../../../doom.note::*enter][enter:1]]
 ;; 禁用代码着色, 影响速度
 ;; (setq org-src-fontify-natively nil)
 
@@ -300,12 +300,12 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 ;; enter:1 ends here
 
-;; [[file:../../doom.note::*toml][toml:1]]
+;; [[file:../../../../../doom.note::*toml][toml:1]]
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 ;; toml:1 ends here
 
-;; [[file:../../doom.note::84623fc4][84623fc4]]
+;; [[file:../../../../../doom.note::84623fc4][84623fc4]]
 ;; 用于激活 localleader
 (add-hook 'org-src-mode-hook #'evil-normalize-keymaps)
 
@@ -327,7 +327,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 ;; 84623fc4 ends here
 
-;; [[file:../../doom.note::8aa4aca8][8aa4aca8]]
+;; [[file:../../../../../doom.note::8aa4aca8][8aa4aca8]]
 (defhydra gwp/org-jump-block ()
   "jump to org blocks"
   ("n" org-next-block "next block")
@@ -350,7 +350,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
        ))
 ;; 8aa4aca8 ends here
 
-;; [[file:../../doom.note::fa928b1c][fa928b1c]]
+;; [[file:../../../../../doom.note::fa928b1c][fa928b1c]]
 (defun gwp/org-babel-tangle-jump-to-file ()
   "Jump to tangle file for the source block at point."
   (interactive)
@@ -385,7 +385,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       (message "not in source block"))))
 ;; fa928b1c ends here
 
-;; [[file:../../doom.note::9b40c7cf][9b40c7cf]]
+;; [[file:../../../../../doom.note::9b40c7cf][9b40c7cf]]
 (defun gwp/org-babel-tangle-jump-to-org ()
   "Jump from a tangled code file to the related Org mode file."
 
@@ -440,7 +440,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     (goto-char target-char)))
 ;; 9b40c7cf ends here
 
-;; [[file:../../doom.note::f1b57cf1][f1b57cf1]]
+;; [[file:../../../../../doom.note::f1b57cf1][f1b57cf1]]
 ;; tangle blocks for current file at point
 ;; http://stackoverflow.com/questions/28727190/org-babel-tangle-only-one-code-block
 ;; call org-babel-tangle with C-u C-u
@@ -460,7 +460,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   )
 ;; f1b57cf1 ends here
 
-;; [[file:../../doom.note::566a6ed9][566a6ed9]]
+;; [[file:../../../../../doom.note::566a6ed9][566a6ed9]]
 (defun gwp/org-edit-save-and-tangle ()
   "When in a sub-editing buffer, swith to the parent buffer and tangle the file blocks"
   (interactive)
@@ -486,7 +486,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       (message "not in source block"))))
 ;; 566a6ed9 ends here
 
-;; [[file:../../doom.note::661f0512][661f0512]]
+;; [[file:../../../../../doom.note::661f0512][661f0512]]
 (defun gwp/org-babel-tangle-no()
   "Turn on or turn off tangling current code block"
   (interactive)
@@ -499,7 +499,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     (org-set-property "header-args" ":tangle no")))
 ;; 661f0512 ends here
 
-;; [[file:../../doom.note::1a4b128e][1a4b128e]]
+;; [[file:../../../../../doom.note::1a4b128e][1a4b128e]]
 (defun gwp/org-src-insert-name ()
   "If it doesn't have a NAME property then assign it an unique name."
   (interactive)
@@ -515,7 +515,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       (message "not in source block"))))
 ;; 1a4b128e ends here
 
-;; [[file:../../doom.note::e9fca5dc][e9fca5dc]]
+;; [[file:../../../../../doom.note::e9fca5dc][e9fca5dc]]
 (with-eval-after-load 'ob
   (setq org-structure-template-alist
         '(
@@ -533,7 +533,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
     ))
 ;; e9fca5dc ends here
 
-;; [[file:../../doom.note::*auto time-stamp][auto time-stamp:1]]
+;; [[file:../../../../../doom.note::*auto time-stamp][auto time-stamp:1]]
 (with-eval-after-load "ob-tangle"
   ;; update timestamps on tangled files
   (setq time-stamp-pattern "100/UPDATED:[ \t]+\\\\?[\"<]+%:y-%02m-%02d %3a %02H:%02M\\\\?[\">]")
@@ -544,7 +544,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (add-hook 'org-babel-post-tangle-hook 'org-babel-post-tangle-hook--time-stamp))
 ;; auto time-stamp:1 ends here
 
-;; [[file:../../doom.note::37fef008][37fef008]]
+;; [[file:../../../../../doom.note::37fef008][37fef008]]
 (use-package! org-noter
   :custom
   (org-noter-default-notes-file-names '("annotation.note")))
@@ -577,7 +577,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
          )))
 ;; 37fef008 ends here
 
-;; [[file:../../doom.note::*narrow][narrow:1]]
+;; [[file:../../../../../doom.note::*narrow][narrow:1]]
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.
 The buffer is named after the subtree heading, with the filename
@@ -607,7 +607,7 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 ;; narrow:1 ends here
 
-;; [[file:../../doom.note::*zotero/ui][zotero/ui:1]]
+;; [[file:../../../../../doom.note::*zotero/ui][zotero/ui:1]]
 ;; rust-modules
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
 (require 'zotero)
@@ -736,7 +736,7 @@ selected instead of creating a new buffer."
       "O" #'gwp/org-open-zotero-attachments-at-point)
 ;; zotero/ui:1 ends here
 
-;; [[file:../../doom.note::*zotero/link][zotero/link:1]]
+;; [[file:../../../../../doom.note::*zotero/link][zotero/link:1]]
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
 
@@ -745,7 +745,7 @@ selected instead of creating a new buffer."
   (browse-url url))
 ;; zotero/link:1 ends here
 
-;; [[file:../../doom.note::*zotero/export][zotero/export:1]]
+;; [[file:../../../../../doom.note::*zotero/export][zotero/export:1]]
 (with-eval-after-load 'org-compat
   (defun gwp/org-zotero-export (path desc format)
     "Create the export version of zotero link specified by PATH and
@@ -814,7 +814,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; zotero/export:1 ends here
 
-;; [[file:../../doom.note::*odt export][odt export:1]]
+;; [[file:../../../../../doom.note::*odt export][odt export:1]]
 (use-package ox-odt
   :config
   (progn
@@ -828,7 +828,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; odt export:1 ends here
 
-;; [[file:../../doom.note::*odt export][odt export:2]]
+;; [[file:../../../../../doom.note::*odt export][odt export:2]]
 ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el
 (defun gwp/clear-unwanted-space (text)
   "clear unwanted space when exporting org-mode to other formats"
@@ -865,7 +865,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 ;; odt export:2 ends here
 
-;; [[file:../../doom.note::*encryption][encryption:1]]
+;; [[file:../../../../../doom.note::*encryption][encryption:1]]
 (require 'org-crypt)
 (require 'epa-file)
 (epa-file-enable)
@@ -879,11 +879,11 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (setq org-crypt-disable-auto-save nil)
 ;; encryption:1 ends here
 
-;; [[file:../../doom.note::*setup][setup:1]]
+;; [[file:../../../../../doom.note::*setup][setup:1]]
 (require 'org-attach)
 ;; setup:1 ends here
 
-;; [[file:../../doom.note::*copy & paste attachments][copy & paste attachments:1]]
+;; [[file:../../../../../doom.note::*copy & paste attachments][copy & paste attachments:1]]
 (setq org-attach-store-link-p 'attached)
 
 ;; 1. store the ataach files into clipboard
@@ -904,7 +904,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (zotero-attach-txclip-paste-files current-dir)))
 ;; copy & paste attachments:1 ends here
 
-;; [[file:../../doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
+;; [[file:../../../../../doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
     (and (eq (org-element-type el) 'link)
@@ -924,7 +924,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))))
 ;; 从当前位置文件链接提取文件名.:1 ends here
 
-;; [[file:../../doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
+;; [[file:../../../../../doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
 ;; (require 'org-download)
 
 (defun gwp/org-store-link-without-desc (file)
@@ -957,7 +957,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (user-error "Point is not on a link"))))
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
-;; [[file:../../doom.note::*delete link file][delete link file:1]]
+;; [[file:../../../../../doom.note::*delete link file][delete link file:1]]
 (defun gwp/org-delete-link-file (arg)
   "Delete the file that link points to."
   (interactive "P")
@@ -973,7 +973,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (user-error "Point is not on a file link"))))
 ;; delete link file:1 ends here
 
-;; [[file:../../doom.note::*capture & protocol][capture & protocol:1]]
+;; [[file:../../../../../doom.note::*capture & protocol][capture & protocol:1]]
 (setq org-capture-templates
       '(
         ("n" "Note" entry (file "~/Notes/refile.note")
@@ -990,7 +990,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 ;; capture & protocol:1 ends here
 
-;; [[file:../../doom.note::568eea25][568eea25]]
+;; [[file:../../../../../doom.note::568eea25][568eea25]]
 (defun gwp/org-get-refile-targets ()
   "Return the list of files currently opened in emacs"
   (delq nil
@@ -1014,7 +1014,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         (org-link-unescape (match-string-no-properties 1)))))
 ;; 568eea25 ends here
 
-;; [[file:../../doom.note::43fd72e2][43fd72e2]]
+;; [[file:../../../../../doom.note::43fd72e2][43fd72e2]]
 (with-eval-after-load 'org-agenda
   ;; 2013-01-20: less is more
   ;; (setq org-agenda-files (append (file-expand-wildcards "~/Notes/*.note") (file-expand-wildcards "~/Notes/*/*.note")))
@@ -1043,12 +1043,12 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (setq org-agenda-include-all-todo nil))
 ;; 43fd72e2 ends here
 
-;; [[file:../../doom.note::*agenda][agenda:2]]
+;; [[file:../../../../../doom.note::*agenda][agenda:2]]
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
 ;; agenda:2 ends here
 
-;; [[file:../../doom.note::*agenda][agenda:3]]
+;; [[file:../../../../../doom.note::*agenda][agenda:3]]
 (with-eval-after-load 'org-agenda
   (setq org-agenda-custom-commands
                '(
@@ -1161,17 +1161,17 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; agenda:3 ends here
 
-;; [[file:../../doom.note::*org-file-apps][org-file-apps:1]]
+;; [[file:../../../../../doom.note::*org-file-apps][org-file-apps:1]]
 (add-to-list 'org-file-apps
              '("\\.pdf\\'" . (lambda (file link)
                                (org-pdftools-open link))))
 ;; org-file-apps:1 ends here
 
-;; [[file:../../doom.note::*fix tab][fix tab:1]]
+;; [[file:../../../../../doom.note::*fix tab][fix tab:1]]
 (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 ;; fix tab:1 ends here
 
-;; [[file:../../doom.note::4971b464][4971b464]]
+;; [[file:../../../../../doom.note::4971b464][4971b464]]
 ;;;###autoload
 (defun gwp/search-all-notes ()
   "search all notes in ~/.cache/notes"
@@ -1181,21 +1181,21 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (counsel-rg "" "~/.cache/notes")))
 ;; 4971b464 ends here
 
-;; [[file:../../doom.note::05419467][05419467]]
+;; [[file:../../../../../doom.note::05419467][05419467]]
 (defun gwp/find-file-in-notes ()
   "Find a file under `~/.cache/notes', recursively."
   (interactive) (doom-project-find-file "~/.cache/notes"))
 ;; 05419467 ends here
 
-;; [[file:../../doom.note::*misc][misc:1]]
+;; [[file:../../../../../doom.note::*misc][misc:1]]
 ;; (require 'org-man)
 ;; misc:1 ends here
 
-;; [[file:../../doom.note::*misc][misc:2]]
+;; [[file:../../../../../doom.note::*misc][misc:2]]
 (setq org-fontify-emphasized-text nil)
 ;; misc:2 ends here
 
-;; [[file:../../doom.note::917381e9][917381e9]]
+;; [[file:../../../../../doom.note::917381e9][917381e9]]
 ;; 定义一些特别常用的命令, 仅在org-mode中显示
 (defun gwp/org-mode-keys-hook ()
   (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
@@ -1217,7 +1217,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;;       )
 ;; 917381e9 ends here
 
-;; [[file:../../doom.note::bfe4f470][bfe4f470]]
+;; [[file:../../../../../doom.note::bfe4f470][bfe4f470]]
 (map! :map org-mode-map
       :localleader
       "-" #'org-ctrl-c-minus            ; toggle item (-)
@@ -1225,7 +1225,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       )
 ;; bfe4f470 ends here
 
-;; [[file:../../doom.note::c09b236a][c09b236a]]
+;; [[file:../../../../../doom.note::c09b236a][c09b236a]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("a" . "attach/agenda")
@@ -1234,7 +1234,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; c09b236a ends here
 
-;; [[file:../../doom.note::21ae7ae2][21ae7ae2]]
+;; [[file:../../../../../doom.note::21ae7ae2][21ae7ae2]]
 ;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
@@ -1256,7 +1256,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; 21ae7ae2 ends here
 
-;; [[file:../../doom.note::8d8e9273][8d8e9273]]
+;; [[file:../../../../../doom.note::8d8e9273][8d8e9273]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("d" . "do")
@@ -1264,7 +1264,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; 8d8e9273 ends here
 
-;; [[file:../../doom.note::a02d9b1f][a02d9b1f]]
+;; [[file:../../../../../doom.note::a02d9b1f][a02d9b1f]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("g" . "goto")
@@ -1274,7 +1274,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; a02d9b1f ends here
 
-;; [[file:../../doom.note::32a3b56a][32a3b56a]]
+;; [[file:../../../../../doom.note::32a3b56a][32a3b56a]]
 (map! :map org-mode-map
       :localleader
       :desc "next link"           [tab]   #'org-next-link
@@ -1285,7 +1285,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; 32a3b56a ends here
 
-;; [[file:../../doom.note::a393f96d][a393f96d]]
+;; [[file:../../../../../doom.note::a393f96d][a393f96d]]
 (map! :map org-mode-map
       :localleader
       (:prefix-map ("s" . "subtree/search")
@@ -1300,7 +1300,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; a393f96d ends here
 
-;; [[file:../../doom.note::ebc6075d][ebc6075d]]
+;; [[file:../../../../../doom.note::ebc6075d][ebc6075d]]
 (defun gwp::org-toggle-checkbox ()
   (interactive)
   (unless (org-at-item-p)
@@ -1320,7 +1320,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        "c" #'gwp::org-toggle-checkbox))
 ;; ebc6075d ends here
 
-;; [[file:../../doom.note::f4447dfb][f4447dfb]]
+;; [[file:../../../../../doom.note::f4447dfb][f4447dfb]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("r" . "refile")
@@ -1328,7 +1328,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        :desc "refile but preserve subtree" "c" #'org-refile-copy))
 ;; f4447dfb ends here
 
-;; [[file:../../doom.note::d7c4714d][d7c4714d]]
+;; [[file:../../../../../doom.note::d7c4714d][d7c4714d]]
 (map! :map org-mode-map
       :localleader
       (:prefix ("e" . "export")
@@ -1336,7 +1336,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; d7c4714d ends here
 
-;; [[file:../../doom.note::3d7188a4][3d7188a4]]
+;; [[file:../../../../../doom.note::3d7188a4][3d7188a4]]
 (defun gwp::new-memo-time-stamp (arg)
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
@@ -1368,7 +1368,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; 3d7188a4 ends here
 
-;; [[file:../../doom.note::1e605e7a][1e605e7a]]
+;; [[file:../../../../../doom.note::1e605e7a][1e605e7a]]
 (map! :map org-mode-map
       :localleader
       :desc "preview inline images"       "I"     #'org-toggle-inline-images

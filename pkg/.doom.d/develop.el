@@ -1,3 +1,59 @@
+;; [[file:../../doom.note::f28734ed][f28734ed]]
+;; https://emacs.stackexchange.com/a/33747
+(defun gwp::imenu-goto--closest-dir (direction)
+  "Jump to the closest imenu item on the current buffer.
+If direction is 1, jump to next imenu item.
+If direction is -1, jump to previous imenu item.
+See https://emacs.stackexchange.com/questions/30673
+Adapted from `which-function' in::
+https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
+  ;; Ensure `imenu--index-alist' is populated.
+  (imenu--make-index-alist)
+
+  (let ((alist imenu--index-alist)
+        (minoffset (point-max))
+        offset pair mark imstack destination)
+    ;; Elements of alist are either ("name" . marker), or
+    ;; ("submenu" ("name" . marker) ... ). The list can be
+    ;; Arbitrarily nested.
+    (while (or alist imstack)
+      (if alist
+          (progn
+            (setq pair (car-safe alist)
+                  alist (cdr-safe alist))
+            (cond
+             ((atom pair)) ;; Skip anything not a cons.
+
+             ((imenu--subalist-p pair)
+              (setq imstack   (cons alist imstack)
+                    alist     (cdr pair)))
+
+             ((number-or-marker-p (setq mark (cdr pair)))
+              (when (> (setq offset (* (- mark (point)) direction)) 0)
+                (when (< offset minoffset) ;; Find the closest item.
+                  (setq minoffset offset
+                        destination mark))))))
+
+        (setq alist   (car imstack)
+              imstack (cdr imstack))))
+    (when destination
+      (imenu-default-goto-function "" destination ""))))
+
+(defun gwp::imenu-goto-next ()
+  (interactive)
+  (unless (gwp::imenu-goto--closest-dir 1)
+    (goto-char (point-max))))
+
+(defun gwp::imenu-goto-prev ()
+  (interactive)
+  (unless (gwp::imenu-goto--closest-dir -1)
+    (goto-char (point-min))))
+
+;; vim里没有Alt修饰, M-x类绑定可以放心用
+(map! :n "M-n" #'gwp::imenu-goto-next)
+(map! :n "M-p" #'gwp::imenu-goto-prev)
+;; f28734ed ends here
+
 ;; [[file:../../doom.note::d28bc89a][d28bc89a]]
 ;; Use hippie-expand instead of dabbrev-expand
 ;; (global-set-key (kbd "M-/") #'dabbrev-expand)

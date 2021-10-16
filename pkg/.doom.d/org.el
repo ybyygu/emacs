@@ -203,8 +203,8 @@ If on a:
 
 ;; (map! :n "M-p" #'org-previous-visible-heading)
 ;; (map! :n "M-n" #'org-next-visible-heading)
-(map! :n "M-p" #'org-backward-element)
-(map! :n "M-n" #'org-forward-element)
+(map! :map org-mode-map :n "M-p" #'org-backward-element)
+(map! :map org-mode-map :n "M-n" #'org-forward-element)
 ;; bbdcd834 ends here
 
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]
@@ -1340,7 +1340,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (defun gwp::new-memo-time-stamp (arg)
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
-  (org-up-element)
+  (unless (org-at-heading-p)
+    (org-up-element))
   (call-interactively 'evil-open-below)
   (call-interactively 'org-insert-todo-subheading)
   (call-interactively 'org-time-stamp-inactive)

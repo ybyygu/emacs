@@ -2754,6 +2754,26 @@ Argument E is a mouse event used by `mouse-set-point'."
      (define-key map (kbd "<right>")	'org-next-block)
      (define-key map (kbd "<left>") 	'org-previous-block)
      map) t))
+
+(defun my-setup-extra-keymap (extra-fn-list hint fn &rest args)
+  "Map EXTRA-FN-LIST to new keymap and show HINT after calling FN with ARGS."
+  (let ((echo-keystrokes nil))
+    (when fn (apply fn args))
+    (message hint)
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))
+       (dolist (item extra-fn-list)
+         (define-key map (kbd (nth 0 item)) (nth 1 item)))
+       map)
+     t)))
+
+(defun my-navigate ()
+  (interactive)
+  (my-setup-extra-keymap '(("k" org-up-element)
+                           ("p" org-down-element)
+                           ("f" my-open-pdf-from-history))
+                         "PDF: [k]up [j]down [p]revious-page [n]ext-page [g]oto [f]rom-history [q]uit"
+                         nil))
 #+end_src
 
 ** packages.el
@@ -4356,6 +4376,65 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/develop.el
 :END:
+*** imenu
+[[https://emacs.stackexchange.com/questions/30673/next-prev-imenu-item-function/33747#33747][motion - next/prev-imenu-item function - Emacs Stack Exchange]]
+#+name: f28734ed
+#+begin_src elisp
+;; https://emacs.stackexchange.com/a/33747
+(defun gwp::imenu-goto--closest-dir (direction)
+  "Jump to the closest imenu item on the current buffer.
+If direction is 1, jump to next imenu item.
+If direction is -1, jump to previous imenu item.
+See https://emacs.stackexchange.com/questions/30673
+Adapted from `which-function' in::
+https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
+  ;; Ensure `imenu--index-alist' is populated.
+  (imenu--make-index-alist)
+
+  (let ((alist imenu--index-alist)
+        (minoffset (point-max))
+        offset pair mark imstack destination)
+    ;; Elements of alist are either ("name" . marker), or
+    ;; ("submenu" ("name" . marker) ... ). The list can be
+    ;; Arbitrarily nested.
+    (while (or alist imstack)
+      (if alist
+          (progn
+            (setq pair (car-safe alist)
+                  alist (cdr-safe alist))
+            (cond
+             ((atom pair)) ;; Skip anything not a cons.
+
+             ((imenu--subalist-p pair)
+              (setq imstack   (cons alist imstack)
+                    alist     (cdr pair)))
+
+             ((number-or-marker-p (setq mark (cdr pair)))
+              (when (> (setq offset (* (- mark (point)) direction)) 0)
+                (when (< offset minoffset) ;; Find the closest item.
+                  (setq minoffset offset
+                        destination mark))))))
+
+        (setq alist   (car imstack)
+              imstack (cdr imstack))))
+    (when destination
+      (imenu-default-goto-function "" destination ""))))
+
+(defun gwp::imenu-goto-next ()
+  (interactive)
+  (unless (gwp::imenu-goto--closest-dir 1)
+    (goto-char (point-max))))
+
+(defun gwp::imenu-goto-prev ()
+  (interactive)
+  (unless (gwp::imenu-goto--closest-dir -1)
+    (goto-char (point-min))))
+
+;; vim里没有Alt修饰, M-x类绑定可以放心用
+(map! :n "M-n" #'gwp::imenu-goto-next)
+(map! :n "M-p" #'gwp::imenu-goto-prev)
+#+end_src
+
 *** vterm
 安装 vterm-toggle package. 这个比doom内置的强, 支持tramp buffer.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
@@ -5105,8 +5184,8 @@ If on a:
 
 ;; (map! :n "M-p" #'org-previous-visible-heading)
 ;; (map! :n "M-n" #'org-next-visible-heading)
-(map! :n "M-p" #'org-backward-element)
-(map! :n "M-n" #'org-forward-element)
+(map! :map org-mode-map :n "M-p" #'org-backward-element)
+(map! :map org-mode-map :n "M-n" #'org-forward-element)
 #+end_src
 
 *** screenshot
@@ -6637,7 +6716,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (defun gwp::new-memo-time-stamp (arg)
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
-  (org-up-element)
+  (unless (org-at-heading-p)
+    (org-up-element))
   (call-interactively 'evil-open-below)
   (call-interactively 'org-insert-todo-subheading)
   (call-interactively 'org-time-stamp-inactive)
@@ -6745,6 +6825,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
        :desc "Save all buffers"            "S"   #'evil-write-all
        :desc "Save buffer as root"         "u"   #'doom/sudo-save-buffer
+       :desc "copy file path"              "y"   #'+default/yank-buffer-path
        :desc "Bury buffer"                 "z"   #'bury-buffer
        :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers
        :desc "Set bookmark"                "m"   #'bookmark-set

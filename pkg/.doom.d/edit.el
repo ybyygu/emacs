@@ -30,9 +30,15 @@
     (call-interactively #'delete-char)))
 ;; 7d5caf69 ends here
 
-;; [[file:../../doom.note::974c9767][974c9767]]
-
-;; 974c9767 ends here
+;; [[file:../../doom.note::3eff5fa2][3eff5fa2]]
+(use-package move-dup
+  :config
+  (map! :iv "M-j" #'move-dup-move-lines-down)
+  (map! :iv "M-k" #'move-dup-move-lines-up)
+  (map! :iv "C-M-j" #'move-dup-duplicate-down)
+  (map! :iv "C-M-k" #'move-dup-duplicate-up)
+  )
+;; 3eff5fa2 ends here
 
 ;; [[file:../../doom.note::73388047][73388047]]
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.

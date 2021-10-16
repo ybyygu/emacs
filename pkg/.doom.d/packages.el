@@ -53,9 +53,6 @@
 (package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools"))
 (package! org-superstar :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 
-;; 五笔输入法
-;; (package! pyim-wbdict)
-
 ;; (package! berrys-theme)
 ;; (package! material-theme)
 (package! material-theme
@@ -71,7 +68,7 @@
 (package! nix-mode)
 
 (disable-packages! pangu-spacing)
-(disable-packages! pyim)
+;; (disable-packages! pyim)
 
 (package! doom-snippets :ignore t)
 
@@ -83,7 +80,6 @@
 (package! dockerfile-mode)
 (package! yaml-mode)
 (package! yaml-mode)
-(package! move-dup)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来
@@ -97,17 +93,18 @@
            :branch "main"
            :files ("*.el")))
 
-;; [[file:../../doom.note::e61c257c][e61c257c]]
-(package! golden-ratio)
-;; e61c257c ends here
-
 ;; [[file:../../doom.note::d6a037d0][d6a037d0]]
-(package! fcitx)
+;; (package! fcitx)
 (package! rime)
+(package! golden-ratio)
+; (package! pyim)
+;; 五笔输入法
+;; (package! pyim-wbdict)
 ;; d6a037d0 ends here
 
 ;; [[file:../../doom.note::1dfc22ab][1dfc22ab]]
 (package! symbol-overlay)
+(package! move-dup)
 ;; 1dfc22ab ends here
 
 ;; [[file:../../doom.note::*vterm][vterm:1]]

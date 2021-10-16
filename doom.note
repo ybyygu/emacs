@@ -18,6 +18,7 @@
 
 * 配置参考
 - [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
+- [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]]
 - [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
 - [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
 - [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
@@ -2656,20 +2657,6 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 (add-to-list 'recentf-exclude "\.odt$")
 #+end_src
 
-*** fcitx
-自动中英文切换, 解决vim模式下的一大痛点.
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package! fcitx
-  :after evil
-  :config
-  (when (executable-find "fcitx-remote")
-    ;; (fcitx-prefix-keys-add "M-m")
-    ;; 影响搜索界面, 不应该开
-    ;; (setq fcitx-use-dbus t)
-    (fcitx-aggressive-setup)
-    ))
-#+END_SRC
-
 *** TODO bm
 主要用 bm, 书签持久化是从 bm.el 里抄来的.
 [2019-07-11 Thu] spacemacs有bm layer, 用那个吧.
@@ -2828,7 +2815,7 @@ narrowed buffer中tangle.
 #+end_src
 
 *** 需要安装的包
-- chfonts: 中文显示
+- cnfonts: 中文显示
 - golden-ratio: 自动放大当前window
 - fcitx 自动中英文切换
 - 修改版material-theme
@@ -2837,9 +2824,6 @@ narrowed buffer中tangle.
 
 #+name: d8f41362
 #+begin_src elisp
-;; 五笔输入法
-;; (package! pyim-wbdict)
-
 ;; (package! berrys-theme)
 ;; (package! material-theme)
 (package! material-theme
@@ -2879,7 +2863,7 @@ pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 #+name: 7448ee80
 #+begin_src elisp
 (disable-packages! pangu-spacing)
-(disable-packages! pyim)
+;; (disable-packages! pyim)
 #+end_src
 
 - TAB自动补全很可怕, 无意按键, 补出很多没用的东西, 禁用自带的模板.
@@ -2902,7 +2886,6 @@ github支持, 减慢速度.
 (package! dockerfile-mode)
 (package! yaml-mode)
 (package! yaml-mode)
-(package! move-dup)
 
 ;; https://github.com/org-roam/org-roam-ui#doom
 ;; 2021-08-01 用不起来
@@ -2982,12 +2965,6 @@ github支持, 减慢速度.
   :config
   (map! :map evil-window-map
         "z" #'golden-ratio))
-#+end_src
-
-安装对应的包
-#+name: e61c257c
-#+begin_src emacs-lisp :tangle pkg/.doom.d/packages.el
-(package! golden-ratio)
 #+end_src
 
 doom内置了几个命令:
@@ -3153,7 +3130,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 #+begin_src elisp
 (use-package! pyim
   :config
-  (setq default-input-method "pyim")
+  ;; (setq default-input-method "pyim")
 
   ;; 我使用五笔
   (use-package! pyim-wbdict
@@ -3175,6 +3152,9 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
   ;; (delete '("/" "、")  pyim-punctuation-dict)
   ;; (add-to-list 'pyim-punctuation-dict '("\\" "、"))
   (setq pyim-punctuation-dict nil)
+  ;; 2021-10-16 ivy中文拼音搜索. 设置不通
+  (setq ivy-re-builders-alist
+        '((t . pyim-cregexp-ivy)))
 
   ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
   ;; 我自己使用的中英文动态切换规则是：
@@ -3199,8 +3179,23 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
     ("/" . pyim-toggle-assistant-scheme)
     ("_" . pyim-toggle-input-ascii)
     ("\\" . pyim-toggle-input-ascii)
-    )))
+    ))
+  )
 #+end_src
+
+**** fcitx
+自动中英文切换, 解决vim模式下的一大痛点.
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package! fcitx
+  :after evil
+  :config
+  (when (executable-find "fcitx-remote")
+    ;; (fcitx-prefix-keys-add "M-m")
+    ;; 影响搜索界面, 不应该开
+    ;; (setq fcitx-use-dbus t)
+    (fcitx-aggressive-setup)
+    ))
+#+END_SRC
 
 *** chinese fonts setup
 最早用cnfonts, 不过这个也比较麻烦. 现在用Sarasa之类的中英文等宽字体, 可较完美解
@@ -3341,8 +3336,12 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 :END:
 #+name: d6a037d0
 #+begin_src elisp
-(package! fcitx)
+;; (package! fcitx)
 (package! rime)
+(package! golden-ratio)
+; (package! pyim)
+;; 五笔输入法
+;; (package! pyim-wbdict)
 #+end_src
 
 
@@ -3412,8 +3411,16 @@ If a prefix argument is given, don't change the kill-ring."
 *** duplicate
 可用的
 - delete-duplicate-lines
-#+name: 974c9767
+
+#+name: 3eff5fa2
 #+begin_src elisp
+(use-package move-dup
+  :config
+  (map! :iv "M-j" #'move-dup-move-lines-down)
+  (map! :iv "M-k" #'move-dup-move-lines-up)
+  (map! :iv "C-M-j" #'move-dup-duplicate-down)
+  (map! :iv "C-M-k" #'move-dup-duplicate-up)
+  )
 #+end_src
 
 *** evil
@@ -4169,7 +4176,9 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+name: 1dfc22ab
 #+begin_src elisp
 (package! symbol-overlay)
+(package! move-dup)
 #+end_src
+
 ** proxy.el
 :PROPERTIES:
 :header-args: :tangle user-lisp/init-proxy.el
@@ -4774,6 +4783,9 @@ xx <=> Option<xx>
 *** docs
 这里放org配置相关的内容, 在config.el中以load!宏来加载.
 
+关于Tab键
+- 默认是expand outline. 如果连续按会展开更深层的. 此时可移动下光标, 再回去按TAB就会缩回outline状态.
+
 配置参考:
 - [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]
 - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][.emacs.d/setup-org.el at master · kaushalmodi/.emacs.d]]
@@ -4990,6 +5002,12 @@ If on a:
 (map! :map org-mode-map
       :localleader
       "o" #'gwp::org-open-at-point-dwim)
+#+end_src
+*** move
+#+name: bbdcd834
+#+begin_src elisp
+(map! :n "M-k" #'org-metaup)
+(map! :n "M-j" #'org-metadown)
 #+end_src
 
 *** screenshot

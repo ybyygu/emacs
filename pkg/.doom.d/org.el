@@ -197,6 +197,11 @@ If on a:
       "o" #'gwp::org-open-at-point-dwim)
 ;; 2f61258f ends here
 
+;; [[file:../../doom.note::bbdcd834][bbdcd834]]
+(map! :n "M-k" #'org-metaup)
+(map! :n "M-j" #'org-metadown)
+;; bbdcd834 ends here
+
 ;; [[file:../../doom.note::*screenshot][screenshot:1]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."

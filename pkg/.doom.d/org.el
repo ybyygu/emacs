@@ -1238,8 +1238,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
-      :desc "previous block" "C-p" #'org-previous-block
-      :desc "next block" "C-n" #'org-next-block
+      :desc "previous block" "M-p" #'org-previous-block
+      :desc "next block" "M-n" #'org-next-block
       (:prefix ("b" . "babel/buffer")
        :desc "check src block headers"    "c" #'org-babel-check-src-block
        :desc "insert header argument"     "i" #'org-babel-insert-header-arg

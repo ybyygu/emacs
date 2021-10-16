@@ -1,8 +1,43 @@
+;; [[file:../../doom.note::3eff5fa2][3eff5fa2]]
+(defun gwp::duplicate-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let* ((beg (or beg (region-beginning)))
+           (end (or end (region-end)))
+           (region (buffer-substring beg end)))
+      (goto-char end)
+      (insert region))))
+
+(defun gwp::duplicate-line (&optional stay)
+  (save-excursion
+    (move-end-of-line nil)
+    (save-excursion
+      (insert (buffer-substring (point-at-bol) (point-at-eol))))
+    (newline)))
+
+(defun gwp::duplicate-line-or-region()
+  "复制当前行或选定区域"
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'gwp::duplicate-region)
+    (gwp::duplicate-line)))
+
+(map! :leader "C-d" #'delete-duplicate-lines)
+
+;; (use-package move-dup
+;;   :config
+;;   (map! :iv "M-j" #'move-dup-move-lines-down)
+;;   (map! :iv "M-k" #'move-dup-move-lines-up)
+;;   (map! :iv "C-M-j" #'move-dup-duplicate-down)
+;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
+;; 3eff5fa2 ends here
+
 ;; [[file:../../doom.note::b5a74212][b5a74212]]
 (setq kill-ring-max 999)
 
 ;; 粘贴时删除区域中的内容, 不污染clipboard, 方便连续yank.
 (defun gwp::yank-dwim (arg)
+  "粘贴并覆盖选定区域. 如果以C-u调用则提示从kill-ring中选择"
   (interactive "P")
   (when (region-active-p)
     (call-interactively #'delete-region))
@@ -10,12 +45,14 @@
       (call-interactively #'counsel-yank-pop)
     (call-interactively #'yank)))
 (map! :nv "C-y" #'gwp::yank-dwim)
+
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
 (defun gwp::ctrl-w-dwim ()
   (interactive)
   (if (region-active-p)
       (call-interactively #'kill-region)
     (call-interactively #'backward-kill-word)))
+
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
 ;; 默认为set-face之类的东西
 (map! "M-o" #'just-one-space)
@@ -27,23 +64,20 @@
 ;; b5a74212 ends here
 
 ;; [[file:../../doom.note::7d5caf69][7d5caf69]]
-(defun gwp::ctrl-d-dwim ()
-  (interactive)
+(defun gwp::ctrl-d-dwim (prefix)
+  "清除区域或复制区域"
+  (interactive "P")
+  (if prefix                  ; C-u
+      (call-interactively #'gwp::duplicate-line-or-region)
+    (call-interactively #'gwp::delete-char-or-region)))
+
+(defun gwp::delete-char-or-region(beg end)
+  "清除光标前字符或选定区域"
+  (interactive "r")
   (if (region-active-p)
-      (call-interactively #'delete-region)
-    (call-interactively #'delete-char)))
+      (delete-region beg end)
+    (delete-char 1)))
 ;; 7d5caf69 ends here
-
-;; [[file:../../doom.note::3eff5fa2][3eff5fa2]]
-(use-package move-dup
-  :config
-  (map! :iv "M-j" #'move-dup-move-lines-down)
-  (map! :iv "M-k" #'move-dup-move-lines-up)
-  (map! :iv "C-M-j" #'move-dup-duplicate-down)
-  (map! :iv "C-M-k" #'move-dup-duplicate-up))
-
-(map! :leader "C-d" #'delete-duplicate-lines)
-;; 3eff5fa2 ends here
 
 ;; [[file:../../doom.note::73388047][73388047]]
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.

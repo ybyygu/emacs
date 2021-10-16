@@ -2744,6 +2744,18 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+end_src
 
 * gwp
+** dwim
+临时按键绑定. 这和hydra等类似了
+#+begin_src elisp :tangle no
+(defun gwp::dwim ()
+  (interactive)
+  (set-temporary-overlay-map
+   (let ((map (make-sparse-keymap)))
+     (define-key map (kbd "<right>")	'org-next-block)
+     (define-key map (kbd "<left>") 	'org-previous-block)
+     map) t))
+#+end_src
+
 ** packages.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/packages.el :comments nil
@@ -3347,6 +3359,45 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
+*** duplicate
+可用的
+- delete-duplicate-lines
+
+#+name: 3eff5fa2
+#+begin_src elisp
+(defun gwp::duplicate-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let* ((beg (or beg (region-beginning)))
+           (end (or end (region-end)))
+           (region (buffer-substring beg end)))
+      (goto-char end)
+      (insert region))))
+
+(defun gwp::duplicate-line (&optional stay)
+  (save-excursion
+    (move-end-of-line nil)
+    (save-excursion
+      (insert (buffer-substring (point-at-bol) (point-at-eol))))
+    (newline)))
+
+(defun gwp::duplicate-line-or-region()
+  "复制当前行或选定区域"
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'gwp::duplicate-region)
+    (gwp::duplicate-line)))
+
+(map! :leader "C-d" #'delete-duplicate-lines)
+
+;; (use-package move-dup
+;;   :config
+;;   (map! :iv "M-j" #'move-dup-move-lines-down)
+;;   (map! :iv "M-k" #'move-dup-move-lines-up)
+;;   (map! :iv "C-M-j" #'move-dup-duplicate-down)
+;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
+#+end_src
+
 *** kill/delete/yank
 #+name: b5a74212
 #+begin_src elisp
@@ -3354,6 +3405,7 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 
 ;; 粘贴时删除区域中的内容, 不污染clipboard, 方便连续yank.
 (defun gwp::yank-dwim (arg)
+  "粘贴并覆盖选定区域. 如果以C-u调用则提示从kill-ring中选择"
   (interactive "P")
   (when (region-active-p)
     (call-interactively #'delete-region))
@@ -3361,12 +3413,14 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
       (call-interactively #'counsel-yank-pop)
     (call-interactively #'yank)))
 (map! :nv "C-y" #'gwp::yank-dwim)
+
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
 (defun gwp::ctrl-w-dwim ()
   (interactive)
   (if (region-active-p)
       (call-interactively #'kill-region)
     (call-interactively #'backward-kill-word)))
+
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
 ;; 默认为set-face之类的东西
 (map! "M-o" #'just-one-space)
@@ -3384,11 +3438,19 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 比如, 希望删除选定内容, 粘贴之前复制的内容. 因为不污染clipboard, 这样就没必要从clipboard中选择内容了.
 #+name: 7d5caf69
 #+begin_src elisp
-(defun gwp::ctrl-d-dwim ()
-  (interactive)
+(defun gwp::ctrl-d-dwim (prefix)
+  "清除区域或复制区域"
+  (interactive "P")
+  (if prefix                  ; C-u
+      (call-interactively #'gwp::duplicate-line-or-region)
+    (call-interactively #'gwp::delete-char-or-region)))
+
+(defun gwp::delete-char-or-region(beg end)
+  "清除光标前字符或选定区域"
+  (interactive "r")
   (if (region-active-p)
-      (call-interactively #'delete-region)
-    (call-interactively #'delete-char)))
+      (delete-region beg end)
+    (delete-char 1)))
 #+end_src
 
 供参考
@@ -3405,22 +3467,6 @@ If a prefix argument is given, don't change the kill-ring."
   (if prefix
       (delete-region beg end)
     (kill-region beg end)))
-#+end_src
-
-*** duplicate
-可用的
-- delete-duplicate-lines
-
-#+name: 3eff5fa2
-#+begin_src elisp
-(use-package move-dup
-  :config
-  (map! :iv "M-j" #'move-dup-move-lines-down)
-  (map! :iv "M-k" #'move-dup-move-lines-up)
-  (map! :iv "C-M-j" #'move-dup-duplicate-down)
-  (map! :iv "C-M-k" #'move-dup-duplicate-up))
-
-(map! :leader "C-d" #'delete-duplicate-lines)
 #+end_src
 
 *** evil
@@ -6426,8 +6472,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 ;; 更多的命令定义在org-babel-map
 (map! :map org-mode-map
       :localleader
-      :desc "previous block" "C-p" #'org-previous-block
-      :desc "next block" "C-n" #'org-next-block
+      :desc "previous block" "M-p" #'org-previous-block
+      :desc "next block" "M-n" #'org-next-block
       (:prefix ("b" . "babel/buffer")
        :desc "check src block headers"    "c" #'org-babel-check-src-block
        :desc "insert header argument"     "i" #'org-babel-insert-header-arg
@@ -6618,6 +6664,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "Save buffer" "SPC"         #'gwp::mark-and-save-buffer
       :desc "Universal argument"    "u" #'universal-argument
       :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
+      :desc "Jump to previous mark" "," #'gwp::jump-to-previous-mark
       :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer)
 
 (map!

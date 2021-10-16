@@ -3084,7 +3084,6 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 默认使用 Ctrl-\ 切换输入法
 **** rime
 可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点. 在输入过程中, 按z键临时拼音模式.
-
 #+name: 155b72b3
 #+begin_src elisp
 (use-package! rime
@@ -3349,15 +3348,20 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/edit.el
 :END:
-*** kill ring
+*** kill/delete/yank
 #+name: b5a74212
 #+begin_src elisp
 (setq kill-ring-max 999)
-#+end_src
 
-*** core
-#+name: 69dc0b95
-#+begin_src elisp
+;; 粘贴时删除区域中的内容, 不污染clipboard, 方便连续yank.
+(defun gwp::yank-dwim (arg)
+  (interactive "P")
+  (when (region-active-p)
+    (call-interactively #'delete-region))
+  (if (equal arg '(4))                  ; C-u
+      (call-interactively #'counsel-yank-pop)
+    (call-interactively #'yank)))
+(map! :nv "C-y" #'gwp::yank-dwim)
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
 (defun gwp::ctrl-w-dwim ()
   (interactive)
@@ -3365,16 +3369,13 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
       (call-interactively #'kill-region)
     (call-interactively #'backward-kill-word)))
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
-
 ;; 默认为set-face之类的东西
 (map! "M-o" #'just-one-space)
-
 ;; 删除到行尾
 (map! :i "C-k"  #'kill-line)
-
 ; 删除多余空行, 仅保留一行
 ;; C-x C-o
-(map! :leader :ni "C-o" #'delete-blank-lines)
+(map! :leader "C-o" #'delete-blank-lines)
 #+end_src
 
 删除字符或选定区域, 但不经过kill-ring
@@ -3407,7 +3408,6 @@ If a prefix argument is given, don't change the kill-ring."
     (kill-region beg end)))
 #+end_src
 
-
 *** duplicate
 可用的
 - delete-duplicate-lines
@@ -3419,8 +3419,9 @@ If a prefix argument is given, don't change the kill-ring."
   (map! :iv "M-j" #'move-dup-move-lines-down)
   (map! :iv "M-k" #'move-dup-move-lines-up)
   (map! :iv "C-M-j" #'move-dup-duplicate-down)
-  (map! :iv "C-M-k" #'move-dup-duplicate-up)
-  )
+  (map! :iv "C-M-k" #'move-dup-duplicate-up))
+
+(map! :leader "C-d" #'delete-duplicate-lines)
 #+end_src
 
 *** evil
@@ -5003,11 +5004,14 @@ If on a:
       :localleader
       "o" #'gwp::org-open-at-point-dwim)
 #+end_src
-*** move
+*** move/movment
 #+name: bbdcd834
 #+begin_src elisp
 (map! :n "M-k" #'org-metaup)
 (map! :n "M-j" #'org-metadown)
+
+(map! :n "M-p" #'org-previous-visible-heading)
+(map! :n "M-n" #'org-next-visible-heading)
 #+end_src
 
 *** screenshot
@@ -6538,6 +6542,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (defun gwp::new-memo-time-stamp (arg)
   "Insert a new org-mode memo entry under heading at point."
   (interactive "P")
+  (org-up-element)
   (call-interactively 'evil-open-below)
   (call-interactively 'org-insert-todo-subheading)
   (call-interactively 'org-time-stamp-inactive)
@@ -7026,7 +7031,7 @@ SPC-s-s和SPC-s-b有什么区别?
 (map! :leader
       (:prefix-map ("y" . "yank")
        :desc "Snippet"                       "s"   #'yas-insert-snippet
-       :desc "From clipboard"                "y"   #'+default/yank-pop
+       :desc "From clipboard"                "y"   #'gwp::yank-dwim
        :desc "Current file name"             "f"   #'+default/insert-file-path
        :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
        :desc "Evil ex path"                  "p"   (cmd! (evil-ex "R!echo "))

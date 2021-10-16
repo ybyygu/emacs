@@ -1,8 +1,15 @@
 ;; [[file:../../doom.note::b5a74212][b5a74212]]
 (setq kill-ring-max 999)
-;; b5a74212 ends here
 
-;; [[file:../../doom.note::69dc0b95][69dc0b95]]
+;; 粘贴时删除区域中的内容, 不污染clipboard, 方便连续yank.
+(defun gwp::yank-dwim (arg)
+  (interactive "P")
+  (when (region-active-p)
+    (call-interactively #'delete-region))
+  (if (equal arg '(4))                  ; C-u
+      (call-interactively #'counsel-yank-pop)
+    (call-interactively #'yank)))
+(map! :nv "C-y" #'gwp::yank-dwim)
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
 (defun gwp::ctrl-w-dwim ()
   (interactive)
@@ -10,17 +17,14 @@
       (call-interactively #'kill-region)
     (call-interactively #'backward-kill-word)))
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
-
 ;; 默认为set-face之类的东西
 (map! "M-o" #'just-one-space)
-
 ;; 删除到行尾
 (map! :i "C-k"  #'kill-line)
-
 ; 删除多余空行, 仅保留一行
 ;; C-x C-o
-(map! :leader :ni "C-o" #'delete-blank-lines)
-;; 69dc0b95 ends here
+(map! :leader "C-o" #'delete-blank-lines)
+;; b5a74212 ends here
 
 ;; [[file:../../doom.note::7d5caf69][7d5caf69]]
 (defun gwp::ctrl-d-dwim ()
@@ -36,8 +40,9 @@
   (map! :iv "M-j" #'move-dup-move-lines-down)
   (map! :iv "M-k" #'move-dup-move-lines-up)
   (map! :iv "C-M-j" #'move-dup-duplicate-down)
-  (map! :iv "C-M-k" #'move-dup-duplicate-up)
-  )
+  (map! :iv "C-M-k" #'move-dup-duplicate-up))
+
+(map! :leader "C-d" #'delete-duplicate-lines)
 ;; 3eff5fa2 ends here
 
 ;; [[file:../../doom.note::73388047][73388047]]

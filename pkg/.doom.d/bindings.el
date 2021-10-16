@@ -377,7 +377,7 @@
 (map! :leader
       (:prefix-map ("y" . "yank")
        :desc "Snippet"                       "s"   #'yas-insert-snippet
-       :desc "From clipboard"                "y"   #'+default/yank-pop
+       :desc "From clipboard"                "y"   #'gwp::yank-dwim
        :desc "Current file name"             "f"   #'+default/insert-file-path
        :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
        :desc "Evil ex path"                  "p"   (cmd! (evil-ex "R!echo "))

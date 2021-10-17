@@ -27,7 +27,8 @@
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 - [ ] https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
-- [ ] [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
+- [X] [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
+  这里提到了基于mupdf的一个模块, 可以关注. pdf-tools太慢了
 - [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [ ] [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [ ] [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
@@ -103,6 +104,14 @@ magit-section-initial-visibility-alist
 
 ** DONE [2021-10-09 Sat] 使用rime做为默认的输入法
 - State "DONE"       from "TODO"       [2021-10-09 Sat 19:31]
+
+- [[https://sunyour.org/post/emacs-%E5%86%85%E7%BD%AE%E8%BE%93%E5%85%A5%E6%B3%95%E6%AD%A3%E5%BC%8F%E6%94%B9%E7%94%A8-emacs-rime/][我的 emacs 内置输入法正式改用 emacs-rime - 凡·记 - 墩墩家的幸福生活]]
+- [[https://manateelazycat.github.io/emacs/2020/03/22/emacs-rime.html][折腾emacs-rime]]
+- [[https://blindwith.science/2020/12/460.html/][从 pyim 换到 emacs-rime 了 - Blind with Science]]
+- [[https://sunyour.org/post/%E7%BB%99-emacs-rime-%E5%A2%9E%E5%8A%A0%E7%B1%BB%E4%BC%BC-pyim-%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%BD%93%E5%89%8D%E8%8B%B1%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%BA%E4%B8%AD%E6%96%87%E7%9A%84%E5%8A%9F%E8%83%BD/][给 emacs-rime 增加类似 pyim 的转换当前英文字符串为中文的功能 - 凡·记 - 墩墩家的幸福生活]]
+- [[https://wiki.archlinux.org/title/Rime][Rime - ArchWiki]]
+- [[https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md][Rime_collections/Rime_description.md at master · LEOYoon-Tsaw/Rime_collections]]
+
 优点:
 - 相比于fcitx table不再有掉字的问题.
 - 可以配合emacs-rime这个包来精细调整, 实现更佳的输入体验.
@@ -598,14 +607,6 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 较好的解决这个问题.
 
 - [[https://emacs-china.org/t/os-smart-input-source/13436/37][中英文混打：OS输入法管理包 smart-input-source - Emacs-general - Emacs China]]
-
-*** rime
-- [[https://sunyour.org/post/emacs-%E5%86%85%E7%BD%AE%E8%BE%93%E5%85%A5%E6%B3%95%E6%AD%A3%E5%BC%8F%E6%94%B9%E7%94%A8-emacs-rime/][我的 emacs 内置输入法正式改用 emacs-rime - 凡·记 - 墩墩家的幸福生活]]
-- [[https://manateelazycat.github.io/emacs/2020/03/22/emacs-rime.html][折腾emacs-rime]]
-- [[https://blindwith.science/2020/12/460.html/][从 pyim 换到 emacs-rime 了 - Blind with Science]]
-- [[https://sunyour.org/post/%E7%BB%99-emacs-rime-%E5%A2%9E%E5%8A%A0%E7%B1%BB%E4%BC%BC-pyim-%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%BD%93%E5%89%8D%E8%8B%B1%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%BA%E4%B8%AD%E6%96%87%E7%9A%84%E5%8A%9F%E8%83%BD/][给 emacs-rime 增加类似 pyim 的转换当前英文字符串为中文的功能 - 凡·记 - 墩墩家的幸福生活]]
-- [[https://wiki.archlinux.org/title/Rime][Rime - ArchWiki]]
-- [[https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md][Rime_collections/Rime_description.md at master · LEOYoon-Tsaw/Rime_collections]]
 
 用fcitx rime不会掉字? 也许直接用fcitx5-rime就可以了?
 
@@ -3201,7 +3202,15 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 #+end_src
 
 **** rime
+- [[https://github.com/DogLooksGood/emacs-rime][DogLooksGood/emacs-rime: RIME ㄓ in Emacs]]
+
 可以用TAB来临时输入英文. 可以用Ctrl-.来临时切换中英文标点. 在输入过程中, 按z键临时拼音模式.
+rime-inline-predicates
+
+rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i 键来强制临时录入(一个)
+中文单字, 随后继续英文输入模式. 为了更济的中英文状态智能切换, 得记得使用空格分隔
+中英文字符这一优秀传统.
+
 #+name: 155b72b3
 #+begin_src elisp
 (use-package! rime
@@ -3225,7 +3234,43 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
               :foreground-color "#dcdccc"
               :internal-border-width 10))
   (setq default-input-method "rime"
-        rime-show-candidate 'posframe))
+        rime-show-candidate 'posframe)
+
+  ;; 在英文模式下强制进入中文状态
+  (defun gwp::rime-force-enable ()
+    "强制 rime 使用中文输入状态."
+    (interactive)
+    (let ((input-method "rime"))
+      (unless (string= current-input-method input-method)
+        (activate-input-method input-method))
+      (when (rime-predicate-evil-mode-p)
+        (if (= (+ 1 (point)) (line-end-position))
+            (evil-append 1)
+          (evil-insert 1)))
+      (rime-force-enable)))
+  (map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
+
+  ;; 自动进入英文录入状态, 相当于直接输入英文
+  (setq rime-disable-predicates
+        '(
+          evil-normal-state-p
+          ;; 首字母为是英文字母时进入英文模式
+          rime-predicate-after-alphabet-char-p
+          ;; 将要输入的为大写字母时
+          rime-predicate-current-uppercase-letter-p
+          ;; 在 prog-mode 和 conf-mode 中除了注释和引号内字符串之外的区域
+          rime-predicate-prog-in-code-p
+          ;; 在 (La)TeX 数学环境中或者输入 (La)TeX 命令时
+          rime-predicate-tex-math-or-command-p
+          ;; 在中文字符且有空格之后
+          ;; rime-predicate-space-after-cc-p
+          ))
+  ;; 进入连续英文状态, 空格或回车键上屏
+  (setq rime-inline-predicates
+        '(
+          rime-predicate-space-after-cc-p
+          )))
+
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
 (map! :nieg "C-SPC" 'gwp::evil-toggle-input-method)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
@@ -6827,9 +6872,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 
 (defun gwp::find-last-killed-file ()
   (interactive)
-  (let ((active-files (loop for buf in (buffer-list)
+  (let ((active-files (cl-loop for buf in (buffer-list)
                             when (buffer-file-name buf) collect it)))
-    (loop for file in recentf-list
+    (cl-loop for file in recentf-list
           unless (member file active-files) return (find-file file))))
 
 (map! :leader
@@ -7202,8 +7247,8 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "Indent style"               "I" #'doom/toggle-indent-style
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
-       :desc "Spell checker"              "s" #'spell-fu-mode
-       ;; :desc "Spell checker"              "s" #'flyspell-mode
+       ;; :desc "Spell checker"              "s" #'spell-fu-mode
+       :desc "Spell checker"              "s" #'flyspell-mode
        :desc "Socks proxy"                "p" #'proxy-socks-toggle
        :desc "Soft line wrapping"         "w" #'visual-line-mode
        :desc "Zen mode"                   "z" #'+zen/toggle

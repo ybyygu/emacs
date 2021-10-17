@@ -167,7 +167,43 @@
               :foreground-color "#dcdccc"
               :internal-border-width 10))
   (setq default-input-method "rime"
-        rime-show-candidate 'posframe))
+        rime-show-candidate 'posframe)
+
+  ;; 在英文模式下强制进入中文状态
+  (defun gwp::rime-force-enable ()
+    "强制 rime 使用中文输入状态."
+    (interactive)
+    (let ((input-method "rime"))
+      (unless (string= current-input-method input-method)
+        (activate-input-method input-method))
+      (when (rime-predicate-evil-mode-p)
+        (if (= (+ 1 (point)) (line-end-position))
+            (evil-append 1)
+          (evil-insert 1)))
+      (rime-force-enable)))
+  (map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
+
+  ;; 自动进入英文录入状态, 相当于直接输入英文
+  (setq rime-disable-predicates
+        '(
+          evil-normal-state-p
+          ;; 首字母为是英文字母时进入英文模式
+          rime-predicate-after-alphabet-char-p
+          ;; 将要输入的为大写字母时
+          rime-predicate-current-uppercase-letter-p
+          ;; 在 prog-mode 和 conf-mode 中除了注释和引号内字符串之外的区域
+          rime-predicate-prog-in-code-p
+          ;; 在 (La)TeX 数学环境中或者输入 (La)TeX 命令时
+          rime-predicate-tex-math-or-command-p
+          ;; 在中文字符且有空格之后
+          ;; rime-predicate-space-after-cc-p
+          ))
+  ;; 进入连续英文状态, 空格或回车键上屏
+  (setq rime-inline-predicates
+        '(
+          rime-predicate-space-after-cc-p
+          )))
+
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
 (map! :nieg "C-SPC" 'gwp::evil-toggle-input-method)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换

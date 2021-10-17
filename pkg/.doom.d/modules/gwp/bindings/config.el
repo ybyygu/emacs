@@ -25,9 +25,9 @@
 
 (defun gwp::find-last-killed-file ()
   (interactive)
-  (let ((active-files (loop for buf in (buffer-list)
+  (let ((active-files (cl-loop for buf in (buffer-list)
                             when (buffer-file-name buf) collect it)))
-    (loop for file in recentf-list
+    (cl-loop for file in recentf-list
           unless (member file active-files) return (find-file file))))
 
 (map! :leader
@@ -363,8 +363,8 @@
        :desc "Indent style"               "I" #'doom/toggle-indent-style
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
-       :desc "Spell checker"              "s" #'spell-fu-mode
-       ;; :desc "Spell checker"              "s" #'flyspell-mode
+       ;; :desc "Spell checker"              "s" #'spell-fu-mode
+       :desc "Spell checker"              "s" #'flyspell-mode
        :desc "Socks proxy"                "p" #'proxy-socks-toggle
        :desc "Soft line wrapping"         "w" #'visual-line-mode
        :desc "Zen mode"                   "z" #'+zen/toggle

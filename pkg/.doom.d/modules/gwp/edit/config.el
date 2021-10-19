@@ -78,11 +78,11 @@
       (call-interactively #'gwp::duplicate-line-or-region)
     (call-interactively #'gwp::delete-char-or-region)))
 
-(defun gwp::delete-char-or-region(beg end)
+(defun gwp::delete-char-or-region()
   "清除光标前字符或选定区域"
-  (interactive "r")
-  (if (region-active-p)
-      (delete-region beg end)
+  (interactive)
+  (if mark-active
+      (call-interactively #'delete-region)
     (delete-char 1)))
 ;; 7d5caf69 ends here
 

@@ -4282,7 +4282,7 @@ xx <=> Option<xx>
 (defun gwp::delete-char-or-region()
   "清除光标前字符或选定区域"
   (interactive)
-  (if (use-region-p)
+  (if mark-active
       (call-interactively #'delete-region)
     (delete-char 1)))
 #+end_src

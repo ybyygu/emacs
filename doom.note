@@ -10,12 +10,13 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [5/5]
+* Tasks [5/6]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
 - [X] tab不能cycle item及properties
 - [X] 在magit commit环境中不能使用C-d
+- [ ] agenda 中的按键有些问题
 
 * 配置参考
 - [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
@@ -41,6 +42,10 @@
 ** TODO [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
 基于 mupdf, 比 pdf-tools 快多了. 支持文本高亮, 支持与 org 互动, 这样与 org-noter
 配合就没什么问题了.
+
+: okular foo.pdf -p 5
+: evince foo.pdf -p 5
+: llpp foo.pdf -page 5
 
 ** DONE [2021-10-16 Sat] 如何重新打开关闭的buffer?
 - State "DONE"       from "TODO"       [2021-10-17 Sun 07:04]
@@ -2661,7 +2666,7 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+begin_src elisp
 (require 'init-proxy)
 (require 'init-dired)
-(require 'init-eaf)
+;; (require 'init-eaf)
 #+end_src
 
 ** packages.el
@@ -3009,8 +3014,8 @@ github支持, 减慢速度.
   :config
   ;;(use-package eaf-video-player)
   ;; (require 'eaf-file-manager)
-  (require 'eaf-browser)
-  (require 'eaf-image-viewer)
+  ;; (require 'eaf-browser)
+  ;; (require 'eaf-image-viewer)
   (require 'eaf-pdf-viewer)
   (require 'eaf-demo)
   (require 'eaf-org)
@@ -3024,23 +3029,12 @@ github支持, 减慢速度.
   ;; use `emacs-application-framework' to open PDF file: link
   (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
 
-  ;; 修复 evil 按键问题. 这里需要启用 eaf-browser 支持, 不然会报错
-  (require 'eaf-evil)
-  (define-key key-translation-map (kbd "SPC")
-    (lambda (prompt)
-      (if (derived-mode-p 'eaf-mode)
-          (pcase eaf--buffer-app-name
-            ("pdf-viewer" (kbd eaf-evil-leader-key))
-            (_  (kbd "SPC")))
-        (kbd "SPC"))))
-
   :custom
   ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  ;; (eaf-browser-continue-where-left-off t)
-  ;; (eaf-browser-enable-adblocker t)
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
   (eaf-pdf-dark-mode nil)
-  ;; (browse-url-browser-function 'eaf-open-browser)
-  )
+  (browse-url-browser-function 'eaf-open-browser))
 
 (provide 'init-eaf)
 #+end_src
@@ -5772,6 +5766,53 @@ pdf-view-fit-width-to-window
          )))
 #+end_src
 
+**** org-noter/hack
+pdf-tools 的缺点是太慢了, llpp 要快得多, 适合看稍大一些的文件. 使用 llpp 来打开
+org-noter 生成的note, 用于打开打定的 PDF 页面.
+
+: okular foo.pdf -p 5
+: evince foo.pdf -p 5
+: llpp foo.pdf -page 5
+
+#+name: 7115b5b1
+#+begin_src elisp
+(defun gwp::org-noter::open-pdf ()
+  "使用 llpp 来打开当前笔记对应的 pdf 文件, 并转到指定的页码"
+  (interactive)
+  (let ((page (gwp::org-noter::get-pdf-page))
+        (pdf (gwp::org-noter::get-pdf-file)))
+    (if page
+        (start-process "llpp" nil "llpp" pdf "-page" (format "%s" page))
+      ;; (start-process "okular" nil "okular" pdf "-p" (format "%s" page))
+      (start-process "llpp" nil "llpp" pdf)
+      ;; (start-process "okular" nil "okular" pdf)
+      )))
+
+(defun gwp::org-noter::get-pdf-file ()
+  (save-excursion
+    (if (search-backward ":NOTER_DOCUMENT" nil t)
+        (progn
+          (org-back-to-heading)
+          (let ((pdf (org-element-property :NOTER_DOCUMENT (org-element-at-point))))
+            (message "%s" pdf)))
+      (message "no pdf doc found"))))
+
+(defun gwp::org-noter::get-pdf-page ()
+  (save-excursion
+    (org-back-to-heading)
+    (let ((property (org-element-property :NOTER_PAGE (org-element-at-point))))
+      (let ((value (car (read-from-string property))))
+        (cond
+         ((consp value) (car value))
+         (t value))))))
+
+(defun gwp::org-noter::new-note ()
+  "插入新的文献阅读笔记"
+  (interactive)
+  (call-interactively 'org-insert-heading)
+  (org-set-property "NOTER_PAGE" "1"))
+#+end_src
+
 **** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
@@ -6768,6 +6809,16 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        "D" #'gwp/org-delete-link-file
        ))
 #+end_src
+***** note
+#+name: ac0d3d18
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("n" . "note/noter")
+       "o" #'gwp::org-noter::open-pdf
+       "i" #'gwp::org-noter::new-note
+       ))
+#+end_src
 
 ***** subtree/search
 #+name: a393f96d
@@ -6892,6 +6943,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+begin_src elisp
 (package! org)
 (package! websocket)
+;; (package! evil-org)
 (package! org-roam)
 (package! org-roam-ui)
 (package! org-superstar)
@@ -6960,6 +7012,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Switch workspace buffer"     "b"   #'persp-switch-to-buffer
        :desc "Switch buffer"               "B"   #'switch-to-buffer
        :desc "Kill buffer"                 "d"   #'kill-current-buffer
+       :desc "delete buffer file"          "D"   #'doom/delete-this-file
        :desc "Kill buffer"                 "k"   #'kill-current-buffer
        :desc "Kill all buffers"            "K"   #'doom/kill-all-buffers
        :desc "Revert buffer"               "r"   #'revert-buffer

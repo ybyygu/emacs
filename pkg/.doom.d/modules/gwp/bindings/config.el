@@ -35,6 +35,7 @@
        :desc "Switch workspace buffer"     "b"   #'persp-switch-to-buffer
        :desc "Switch buffer"               "B"   #'switch-to-buffer
        :desc "Kill buffer"                 "d"   #'kill-current-buffer
+       :desc "delete buffer file"          "D"   #'doom/delete-this-file
        :desc "Kill buffer"                 "k"   #'kill-current-buffer
        :desc "Kill all buffers"            "K"   #'doom/kill-all-buffers
        :desc "Revert buffer"               "r"   #'revert-buffer

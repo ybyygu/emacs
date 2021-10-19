@@ -577,6 +577,44 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
          )))
 ;; 37fef008 ends here
 
+;; [[file:../../../../../doom.note::7115b5b1][7115b5b1]]
+(defun gwp::org-noter::open-pdf ()
+  "使用 llpp 来打开当前笔记对应的 pdf 文件, 并转到指定的页码"
+  (interactive)
+  (let ((page (gwp::org-noter::get-pdf-page))
+        (pdf (gwp::org-noter::get-pdf-file)))
+    (if page
+        (start-process "llpp" nil "llpp" pdf "-page" (format "%s" page))
+      ;; (start-process "okular" nil "okular" pdf "-p" (format "%s" page))
+      (start-process "llpp" nil "llpp" pdf)
+      ;; (start-process "okular" nil "okular" pdf)
+      )))
+
+(defun gwp::org-noter::get-pdf-file ()
+  (save-excursion
+    (if (search-backward ":NOTER_DOCUMENT" nil t)
+        (progn
+          (org-back-to-heading)
+          (let ((pdf (org-element-property :NOTER_DOCUMENT (org-element-at-point))))
+            (message "%s" pdf)))
+      (message "no pdf doc found"))))
+
+(defun gwp::org-noter::get-pdf-page ()
+  (save-excursion
+    (org-back-to-heading)
+    (let ((property (org-element-property :NOTER_PAGE (org-element-at-point))))
+      (let ((value (car (read-from-string property))))
+        (cond
+         ((consp value) (car value))
+         (t value))))))
+
+(defun gwp::org-noter::new-note ()
+  "插入新的文献阅读笔记"
+  (interactive)
+  (call-interactively 'org-insert-heading)
+  (org-set-property "NOTER_PAGE" "1"))
+;; 7115b5b1 ends here
+
 ;; [[file:../../../../../doom.note::*narrow][narrow:1]]
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.
@@ -1284,6 +1322,15 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        "D" #'gwp/org-delete-link-file
        ))
 ;; 32a3b56a ends here
+
+;; [[file:../../../../../doom.note::ac0d3d18][ac0d3d18]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix ("n" . "note/noter")
+       "o" #'gwp::org-noter::open-pdf
+       "i" #'gwp::org-noter::new-note
+       ))
+;; ac0d3d18 ends here
 
 ;; [[file:../../../../../doom.note::a393f96d][a393f96d]]
 (map! :map org-mode-map

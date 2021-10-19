@@ -1,6 +1,7 @@
 ;; [[file:../../../../../doom.note::c98fa262][c98fa262]]
 (package! org)
 (package! websocket)
+;; (package! evil-org)
 (package! org-roam)
 (package! org-roam-ui)
 (package! org-superstar)

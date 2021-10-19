@@ -10,15 +10,15 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [5/8]
+* Tasks [8/8]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
 - [X] tab不能cycle item及properties
 - [X] 在magit commit环境中不能使用C-d
-- [ ] 添加 dired link to home 的功能, 方便 virtualbox 中打开文件
-- [ ] agenda 中的按键有些问题
-- [ ] image 大小不能控制
+- [X] 添加 dired link to home 的功能, 方便 virtualbox 中打开文件
+- [X] agenda 中的按键有些问题
+- [X] image 大小不能控制
 
 * 配置参考
 - [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
@@ -44,6 +44,8 @@
 ** TODO [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
 基于 mupdf, 比 pdf-tools 快多了. 支持文本高亮, 支持与 org 互动, 这样与 org-noter
 配合就没什么问题了.
+
+[2021-10-19 Tue] 感觉安装挺容易的, 依赖带来的麻烦不大. 挺值得一用. 不过除了 pdf 外, 还没什么杀手级的应用.
 
 : okular foo.pdf -p 5
 : evince foo.pdf -p 5
@@ -2984,6 +2986,19 @@ github支持, 减慢速度.
           :nv "DEL"   #'dired-up-directory       ; BACKSPACE
           :nv "C-S-n" #'dired-create-directory
           )))
+
+;;;###autoload
+(defun gwp::dired::symbol-link-at-point-to-home ()
+  "在 dired 中, 将光前文件软链接到 HOME 下, 方便快速访问(比如在
+virtualbox /windows 中)"
+  (interactive)
+
+  (if (derived-mode-p 'dired-mode)
+      (let ((this-file (dired-get-file-for-visit))
+            (target-path "~/00-dired-tmp-entry-point"))
+        (make-symbolic-link this-file target-path)
+        (message "symlink to: %s" target-path))
+    (user-error "not in dired buffer")))
 #+end_src
 
 隐藏.dotfiles, doom中默认omit的太少
@@ -2994,8 +3009,7 @@ github支持, 减慢速度.
   (progn
     (setq dired-omit-verbose t)
     ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
-  )
+    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))))
 
 (provide 'init-dired)
 #+end_src
@@ -3285,26 +3299,13 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 #+end_src
 
 ***** convert string at point
+有时没开中文输入, 会误输几个英文, 此时切换中文时自动将误录的英文转成中文
+#+name: b254d4bc
 #+begin_src elisp
-;; 在英文模式下强制进入中文状态
-(defun gwp::rime-force-enable ()
-  "强制 rime 使用中文输入状态."
-  (interactive)
-  (let ((input-method "rime"))
-    (unless (string= current-input-method input-method)
-      (activate-input-method input-method))
-    (when (rime-predicate-evil-mode-p)
-      (if (= (+ 1 (point)) (line-end-position))
-          (evil-append 1)
-        (evil-insert 1)))
-    (rime-force-enable)))
-
-;; 有时没开中文输入, 会误输几个英文, 以下切换时将其转成中文
 ;; https://github.com/jadestrong/dotfiles/blob/master/home/.doom.d/modules/input/chinese2/config.el
 (defun gwp::rime-convert-string-at-point (&optional return-cregexp)
   "将光标前的字符串转换为中文."
   (interactive "P")
-  ;; (gwp::rime-force-enable)
   (let ((string
          (if mark-active
              (buffer-substring-no-properties
@@ -3354,6 +3355,7 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 #+end_src
 
 ***** bindings
+#+name: c457613c
 #+begin_src elisp
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
 (map! :nieg "C-SPC" 'gwp::rime-toggle-input)
@@ -3365,8 +3367,10 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 ;; NOTE: 可用M-RET来预览选中条目, 而不退出ivy窗口
 (map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
 
+;; 将光标英文字符转化为中文录入
 (map! :map rime-mode-map "M-i" #'gwp::rime-convert-string-at-point)
-(map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
+;; 在自动英文模式下强制进入中文状态
+(map! :map rime-mode-map "C-i" #'rime-force-enable)
 #+end_src
 
 **** pyim
@@ -5049,11 +5053,11 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+name: 1c79ba79
 #+begin_src elisp
 (defhydra gwp::hydra-last-change ()
-  ("p" goto-last-change "last change")
+  ("N" goto-last-change "last change")  ; 用 p 按键容易误操作, 用N 安全些
   ("n" goto-last-change-reverse "previous change")
   ("c" recenter "recenter")
-  ("q" nil "quit")
-  )
+  ("o" gwp::org-show-context-at-point "org show context")
+  ("q" nil "quit"))
 #+end_src
 *** packages
 :PROPERTIES:

@@ -160,26 +160,11 @@
           )))
 ;; 155b72b3 ends here
 
-;; [[file:../../../../../doom.note::*convert string at point][convert string at point:1]]
-;; 在英文模式下强制进入中文状态
-(defun gwp::rime-force-enable ()
-  "强制 rime 使用中文输入状态."
-  (interactive)
-  (let ((input-method "rime"))
-    (unless (string= current-input-method input-method)
-      (activate-input-method input-method))
-    (when (rime-predicate-evil-mode-p)
-      (if (= (+ 1 (point)) (line-end-position))
-          (evil-append 1)
-        (evil-insert 1)))
-    (rime-force-enable)))
-
-;; 有时没开中文输入, 会误输几个英文, 以下切换时将其转成中文
+;; [[file:../../../../../doom.note::b254d4bc][b254d4bc]]
 ;; https://github.com/jadestrong/dotfiles/blob/master/home/.doom.d/modules/input/chinese2/config.el
 (defun gwp::rime-convert-string-at-point (&optional return-cregexp)
   "将光标前的字符串转换为中文."
   (interactive "P")
-  ;; (gwp::rime-force-enable)
   (let ((string
          (if mark-active
              (buffer-substring-no-properties
@@ -201,7 +186,7 @@
                    (append (listify-key-sequence code)
                            unread-command-events))))
           (t (message "`rime-convert-string-at-point' did nothing.")))))
-;; convert string at point:1 ends here
+;; b254d4bc ends here
 
 ;; [[file:../../../../../doom.note::37aafacc][37aafacc]]
 (defun gwp::rime-toggle-input ()
@@ -226,7 +211,7 @@
       (message "IME off"))))
 ;; 37aafacc ends here
 
-;; [[file:../../../../../doom.note::*bindings][bindings:1]]
+;; [[file:../../../../../doom.note::c457613c][c457613c]]
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
 (map! :nieg "C-SPC" 'gwp::rime-toggle-input)
 ;; (map! :nieg "C-SPC" 'gwp::rime-force-enable)
@@ -237,9 +222,11 @@
 ;; NOTE: 可用M-RET来预览选中条目, 而不退出ivy窗口
 (map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
 
+;; 将光标英文字符转化为中文录入
 (map! :map rime-mode-map "M-i" #'gwp::rime-convert-string-at-point)
-(map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
-;; bindings:1 ends here
+;; 在自动英文模式下强制进入中文状态
+(map! :map rime-mode-map "C-i" #'rime-force-enable)
+;; c457613c ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390

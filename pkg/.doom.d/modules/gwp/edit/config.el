@@ -638,9 +638,9 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 ;; [[file:../../../../../doom.note::1c79ba79][1c79ba79]]
 (defhydra gwp::hydra-last-change ()
-  ("p" goto-last-change "last change")
+  ("N" goto-last-change "last change")  ; 用 p 按键容易误操作, 用N 安全些
   ("n" goto-last-change-reverse "previous change")
   ("c" recenter "recenter")
-  ("q" nil "quit")
-  )
+  ("o" gwp::org-show-context-at-point "org show context")
+  ("q" nil "quit"))
 ;; 1c79ba79 ends here

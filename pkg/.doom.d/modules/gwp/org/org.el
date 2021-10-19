@@ -40,6 +40,9 @@
 ;; d3c71916 ends here
 
 ;; [[file:../../../../../doom.note::7341aa84][7341aa84]]
+;; 方便用 property 来控制 image 显示大小
+(setq org-image-actual-width nil)
+
 ;; 2021-10-13: 现不用doom中的org module了
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:

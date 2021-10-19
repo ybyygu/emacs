@@ -17,4 +17,11 @@
   :after org-roam ;; or :after org
   :hook (org-roam . org-roam-ui-mode)
   :config)
+
+(use-package! evil-org-agenda
+  :hook (org-agenda-mode . evil-org-agenda-mode)
+  :config
+  (evil-org-agenda-set-keys)
+  (evil-define-key* 'motion evil-org-agenda-mode-map
+    (kbd doom-leader-key) nil))
 ;; abd5e254 ends here

@@ -114,37 +114,6 @@
   (display-buffer-other-frame (current-buffer)))
 ;; 19e08aef ends here
 
-;; [[file:../../../../../doom.note::6c522fd8][6c522fd8]]
-;; taken from https://github.com/redguardtoo/emacs.d
-(defun gwp::evil-toggle-input-method ()
-  "When input method is on, goto `evil-insert-state'."
-  (interactive)
-
-  ;; some guys don't use evil-mode at all
-  (cond
-   ((and (boundp 'evil-mode) evil-mode)
-    ;; evil-mode
-    (cond
-     ((eq evil-state 'insert)
-      (toggle-input-method))
-     (t
-      (evil-insert-state)
-      (unless current-input-method
-        (toggle-input-method))))
-    (cond
-     (current-input-method
-      ;; evil-escape and pyim may conflict
-      ;; @see https://github.com/redguardtoo/emacs.d/issues/629
-      (evil-escape-mode -1)
-      (message "IME on!"))
-     (t
-      (evil-escape-mode 1)
-      (message "IME off!"))))
-   (t
-    ;; NOT evil-mode
-    (toggle-input-method))))
-;; 6c522fd8 ends here
-
 ;; [[file:../../../../../doom.note::155b72b3][155b72b3]]
 (use-package! rime
   :custom
@@ -169,20 +138,6 @@
   (setq default-input-method "rime"
         rime-show-candidate 'posframe)
 
-  ;; 在英文模式下强制进入中文状态
-  (defun gwp::rime-force-enable ()
-    "强制 rime 使用中文输入状态."
-    (interactive)
-    (let ((input-method "rime"))
-      (unless (string= current-input-method input-method)
-        (activate-input-method input-method))
-      (when (rime-predicate-evil-mode-p)
-        (if (= (+ 1 (point)) (line-end-position))
-            (evil-append 1)
-          (evil-insert 1)))
-      (rime-force-enable)))
-  (map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
-
   ;; 自动进入英文录入状态, 相当于直接输入英文
   (setq rime-disable-predicates
         '(
@@ -203,16 +158,88 @@
         '(
           rime-predicate-space-after-cc-p
           )))
+;; 155b72b3 ends here
 
+;; [[file:../../../../../doom.note::*convert string at point][convert string at point:1]]
+;; 在英文模式下强制进入中文状态
+(defun gwp::rime-force-enable ()
+  "强制 rime 使用中文输入状态."
+  (interactive)
+  (let ((input-method "rime"))
+    (unless (string= current-input-method input-method)
+      (activate-input-method input-method))
+    (when (rime-predicate-evil-mode-p)
+      (if (= (+ 1 (point)) (line-end-position))
+          (evil-append 1)
+        (evil-insert 1)))
+    (rime-force-enable)))
+
+;; 有时没开中文输入, 会误输几个英文, 以下切换时将其转成中文
+;; https://github.com/jadestrong/dotfiles/blob/master/home/.doom.d/modules/input/chinese2/config.el
+(defun gwp::rime-convert-string-at-point (&optional return-cregexp)
+  "将光标前的字符串转换为中文."
+  (interactive "P")
+  ;; (gwp::rime-force-enable)
+  (let ((string
+         (if mark-active
+             (buffer-substring-no-properties
+              (region-beginning) (region-end))
+           (buffer-substring-no-properties
+            (point) (max (line-beginning-position) (- (point) 80)))))
+        code
+        length)
+    (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\) *$" string)
+           (setq code (match-string 0 string))
+           (setq length (length code))
+           (setq code (replace-regexp-in-string " +" "" code))
+           (if mark-active
+               (delete-region (region-beginning) (region-end))
+             (when (> length 0)
+               (delete-char (- 0 length))))
+           (when (> length 0)
+             (setq unread-command-events
+                   (append (listify-key-sequence code)
+                           unread-command-events))))
+          (t (message "`rime-convert-string-at-point' did nothing.")))))
+;; convert string at point:1 ends here
+
+;; [[file:../../../../../doom.note::37aafacc][37aafacc]]
+(defun gwp::rime-toggle-input ()
+  "切换 rime 中文输入状态."
+  (interactive)
+
+  (let ((input-method "rime"))
+    (toggle-input-method)
+    ;; evil 下, 直接进入 insert 模式
+    (when (rime-predicate-evil-mode-p)
+      (if (= (+ 1 (point)) (line-end-position))
+          (evil-append 1)
+        (evil-insert 1)))
+
+    ;; 进入 rime 输入状态后, 把误按的字符转换中文
+    (when (string= current-input-method input-method)
+      (gwp::rime-convert-string-at-point))
+
+    ;; 提示当前输入状态, 比看图标更醒目
+    (if current-input-method
+        (message "IME on")
+      (message "IME off"))))
+;; 37aafacc ends here
+
+;; [[file:../../../../../doom.note::*bindings][bindings:1]]
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-(map! :nieg "C-SPC" 'gwp::evil-toggle-input-method)
+(map! :nieg "C-SPC" 'gwp::rime-toggle-input)
+;; (map! :nieg "C-SPC" 'gwp::rime-force-enable)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
 ;; ivy-call-and-recenter
 ;; 2021-10-13: 直接map不太有效, 时灵不灵的
 ;; (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method)
 ;; NOTE: 可用M-RET来预览选中条目, 而不退出ivy窗口
 (map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
-;; 155b72b3 ends here
+
+(map! :map rime-mode-map "M-i" #'gwp::rime-convert-string-at-point)
+(map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
+;; bindings:1 ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
 ;; https://emacs-china.org/t/doom-emacs/10390

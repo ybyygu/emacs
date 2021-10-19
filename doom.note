@@ -10,13 +10,15 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [5/6]
+* Tasks [5/8]
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
 - [X] tab不能cycle item及properties
 - [X] 在magit commit环境中不能使用C-d
+- [ ] 添加 dired link to home 的功能, 方便 virtualbox 中打开文件
 - [ ] agenda 中的按键有些问题
+- [ ] image 大小不能控制
 
 * 配置参考
 - [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
@@ -3224,39 +3226,6 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 
 *** chinese/input method
 默认使用 Ctrl-\ 切换输入法
-**** toggle
-#+name: 6c522fd8
-#+begin_src elisp
-;; taken from https://github.com/redguardtoo/emacs.d
-(defun gwp::evil-toggle-input-method ()
-  "When input method is on, goto `evil-insert-state'."
-  (interactive)
-
-  ;; some guys don't use evil-mode at all
-  (cond
-   ((and (boundp 'evil-mode) evil-mode)
-    ;; evil-mode
-    (cond
-     ((eq evil-state 'insert)
-      (toggle-input-method))
-     (t
-      (evil-insert-state)
-      (unless current-input-method
-        (toggle-input-method))))
-    (cond
-     (current-input-method
-      ;; evil-escape and pyim may conflict
-      ;; @see https://github.com/redguardtoo/emacs.d/issues/629
-      (evil-escape-mode -1)
-      (message "IME on!"))
-     (t
-      (evil-escape-mode 1)
-      (message "IME off!"))))
-   (t
-    ;; NOT evil-mode
-    (toggle-input-method))))
-#+end_src
-
 **** rime
 - [[https://github.com/DogLooksGood/emacs-rime][DogLooksGood/emacs-rime: RIME ㄓ in Emacs]]
 
@@ -3267,6 +3236,7 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 中文单字, 随后继续英文输入模式. 为了更流畅的中英文状态智能切换, 得记得回归空格分
 隔中英文字符这一优秀传统.
 
+***** setup
 #+name: 155b72b3
 #+begin_src elisp
 (use-package! rime
@@ -3292,20 +3262,6 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
   (setq default-input-method "rime"
         rime-show-candidate 'posframe)
 
-  ;; 在英文模式下强制进入中文状态
-  (defun gwp::rime-force-enable ()
-    "强制 rime 使用中文输入状态."
-    (interactive)
-    (let ((input-method "rime"))
-      (unless (string= current-input-method input-method)
-        (activate-input-method input-method))
-      (when (rime-predicate-evil-mode-p)
-        (if (= (+ 1 (point)) (line-end-position))
-            (evil-append 1)
-          (evil-insert 1)))
-      (rime-force-enable)))
-  (map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
-
   ;; 自动进入英文录入状态, 相当于直接输入英文
   (setq rime-disable-predicates
         '(
@@ -3326,15 +3282,91 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
         '(
           rime-predicate-space-after-cc-p
           )))
+#+end_src
 
+***** convert string at point
+#+begin_src elisp
+;; 在英文模式下强制进入中文状态
+(defun gwp::rime-force-enable ()
+  "强制 rime 使用中文输入状态."
+  (interactive)
+  (let ((input-method "rime"))
+    (unless (string= current-input-method input-method)
+      (activate-input-method input-method))
+    (when (rime-predicate-evil-mode-p)
+      (if (= (+ 1 (point)) (line-end-position))
+          (evil-append 1)
+        (evil-insert 1)))
+    (rime-force-enable)))
+
+;; 有时没开中文输入, 会误输几个英文, 以下切换时将其转成中文
+;; https://github.com/jadestrong/dotfiles/blob/master/home/.doom.d/modules/input/chinese2/config.el
+(defun gwp::rime-convert-string-at-point (&optional return-cregexp)
+  "将光标前的字符串转换为中文."
+  (interactive "P")
+  ;; (gwp::rime-force-enable)
+  (let ((string
+         (if mark-active
+             (buffer-substring-no-properties
+              (region-beginning) (region-end))
+           (buffer-substring-no-properties
+            (point) (max (line-beginning-position) (- (point) 80)))))
+        code
+        length)
+    (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\) *$" string)
+           (setq code (match-string 0 string))
+           (setq length (length code))
+           (setq code (replace-regexp-in-string " +" "" code))
+           (if mark-active
+               (delete-region (region-beginning) (region-end))
+             (when (> length 0)
+               (delete-char (- 0 length))))
+           (when (> length 0)
+             (setq unread-command-events
+                   (append (listify-key-sequence code)
+                           unread-command-events))))
+          (t (message "`rime-convert-string-at-point' did nothing.")))))
+#+end_src
+
+***** toggle
+#+name: 37aafacc
+#+begin_src elisp
+(defun gwp::rime-toggle-input ()
+  "切换 rime 中文输入状态."
+  (interactive)
+
+  (let ((input-method "rime"))
+    (toggle-input-method)
+    ;; evil 下, 直接进入 insert 模式
+    (when (rime-predicate-evil-mode-p)
+      (if (= (+ 1 (point)) (line-end-position))
+          (evil-append 1)
+        (evil-insert 1)))
+
+    ;; 进入 rime 输入状态后, 把误按的字符转换中文
+    (when (string= current-input-method input-method)
+      (gwp::rime-convert-string-at-point))
+
+    ;; 提示当前输入状态, 比看图标更醒目
+    (if current-input-method
+        (message "IME on")
+      (message "IME off"))))
+#+end_src
+
+***** bindings
+#+begin_src elisp
 ;; 这里需要与fcitx配合: 去掉GTK_IM_MODULE, XMODIFIERS等FCITX输入法设置变量.
-(map! :nieg "C-SPC" 'gwp::evil-toggle-input-method)
+(map! :nieg "C-SPC" 'gwp::rime-toggle-input)
+;; (map! :nieg "C-SPC" 'gwp::rime-force-enable)
 ;; NOTE: 因为与ivy的默认绑定有冲突, minibuffer下不能切换
 ;; ivy-call-and-recenter
 ;; 2021-10-13: 直接map不太有效, 时灵不灵的
 ;; (map! :map ivy-minibuffer-map "C-SPC" #'toggle-input-method)
 ;; NOTE: 可用M-RET来预览选中条目, 而不退出ivy窗口
 (map! :after ivy :map ivy-minibuffer-map [remap ivy-call-and-recenter] 'toggle-input-method)
+
+(map! :map rime-mode-map "M-i" #'gwp::rime-convert-string-at-point)
+(map! :map rime-mode-map "C-i" #'gwp::rime-force-enable)
 #+end_src
 
 **** pyim
@@ -5059,6 +5091,13 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   :after org-roam ;; or :after org
   :hook (org-roam . org-roam-ui-mode)
   :config)
+
+(use-package! evil-org-agenda
+  :hook (org-agenda-mode . evil-org-agenda-mode)
+  :config
+  (evil-org-agenda-set-keys)
+  (evil-define-key* 'motion evil-org-agenda-mode-map
+    (kbd doom-leader-key) nil))
 #+end_src
 
 *** org.el
@@ -5123,6 +5162,9 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 **** view
 #+name: 7341aa84
 #+begin_src elisp
+;; 方便用 property 来控制 image 显示大小
+(setq org-image-actual-width nil)
+
 ;; 2021-10-13: 现不用doom中的org module了
 ;; 可以设置 :VISIBILITY: 属性来控制subtree的可视度. doom里修改了startup设置, 起
 ;; 反作用, 去掉:
@@ -6943,7 +6985,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+begin_src elisp
 (package! org)
 (package! websocket)
-;; (package! evil-org)
+(package! evil-org)
 (package! org-roam)
 (package! org-roam-ui)
 (package! org-superstar)

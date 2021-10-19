@@ -133,4 +133,5 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; [[file:../../doom.note::c54f13b5][c54f13b5]]
 (require 'init-proxy)
 (require 'init-dired)
+(require 'init-eaf)
 ;; c54f13b5 ends here

@@ -90,6 +90,10 @@
            :branch "main"
            :files ("*.el")))
 
+;; [[file:../../doom.note::*vterm][vterm:1]]
+(package! vterm-toggle)
+;; vterm:1 ends here
+
 ;; [[file:../../doom.note::*screenshot][screenshot:2]]
 (package! org-download)
 ;; screenshot:2 ends here
@@ -97,7 +101,3 @@
 ;; [[file:../../doom.note::*pairs][pairs:1]]
 (package! smartparens-org :ignore t)
 ;; pairs:1 ends here
-
-;; [[file:../../doom.note::*vterm][vterm:1]]
-(package! vterm-toggle)
-;; vterm:1 ends here

@@ -18,6 +18,7 @@
 - [X] 在magit commit环境中不能使用C-d
 
 * 配置参考
+- [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
 - [ ] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
 - [ ] [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
 - [ ] [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
@@ -37,6 +38,10 @@
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
 * Memo [57/69]
+** TODO [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
+基于 mupdf, 比 pdf-tools 快多了. 支持文本高亮, 支持与 org 互动, 这样与 org-noter
+配合就没什么问题了.
+
 ** DONE [2021-10-16 Sat] 如何重新打开关闭的buffer?
 - State "DONE"       from "TODO"       [2021-10-17 Sun 07:04]
 - [[https://github.com/mrkkrp/kill-or-bury-alive][mrkkrp/kill-or-bury-alive: Precise control over buffer killing in Emacs]]
@@ -1488,6 +1493,9 @@ References
    可以为zotero链接. 但在格式化时不能正常生成odt文件, 这可能是一个bug.
 
 * TODO Research Literature Management Workflow
+- [[https://github.com/joostkremers/ebib][joostkremers/ebib: A BibTeX database manager for Emacs.]]
+- [[https://emacs-china.org/t/emacs/12580][你的emacs文献/知识管理方案是什么？ - Emacs-general - Emacs China]]
+
 将annotation.note放到zotero内置库里的优点和问题:
 - 优点: 以zotero为中心进行数据管理. 从文献到笔记很方便.
 - 优点: note和pdf路径相对稳定, 不用担心更换系统后文件路径变化导致的问题.
@@ -2653,6 +2661,7 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+begin_src elisp
 (require 'init-proxy)
 (require 'init-dired)
+(require 'init-eaf)
 #+end_src
 
 ** packages.el
@@ -2983,6 +2992,59 @@ github支持, 减慢速度.
 
 (provide 'init-dired)
 #+end_src
+
+** init-eaf.el
+:PROPERTIES:
+:header-args: :tangle user-lisp/init-eaf.el
+:END:
+可以先用 eaf 安装脚本装好相关包即可正常使用.
+- [[https://github.com/emacs-eaf/eaf-pdf-viewer][emacs-eaf/eaf-pdf-viewer: Fastest PDF Viewer in Emacs]]
+- [[https://github.com/emacs-eaf/emacs-application-framework/pull/267][Eaf interleave by luhuaei · Pull Request #267 · emacs-eaf/emacs-application-framework]]
+
+#+name: 7d6d2068
+#+begin_src elisp
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :after org
+  :config
+  ;;(use-package eaf-video-player)
+  ;; (require 'eaf-file-manager)
+  (require 'eaf-browser)
+  (require 'eaf-image-viewer)
+  (require 'eaf-pdf-viewer)
+  (require 'eaf-demo)
+  (require 'eaf-org)
+  (require 'eaf-interleave)
+  ;; (require 'eaf-terminal)
+
+  (defun eaf-org-open-file (file &optional link)
+    "An wrapper function on `eaf-open'."
+    (eaf-open file))
+
+  ;; use `emacs-application-framework' to open PDF file: link
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+
+  ;; 修复 evil 按键问题. 这里需要启用 eaf-browser 支持, 不然会报错
+  (require 'eaf-evil)
+  (define-key key-translation-map (kbd "SPC")
+    (lambda (prompt)
+      (if (derived-mode-p 'eaf-mode)
+          (pcase eaf--buffer-app-name
+            ("pdf-viewer" (kbd eaf-evil-leader-key))
+            (_  (kbd "SPC")))
+        (kbd "SPC"))))
+
+  :custom
+  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  ;; (eaf-browser-continue-where-left-off t)
+  ;; (eaf-browser-enable-adblocker t)
+  (eaf-pdf-dark-mode nil)
+  ;; (browse-url-browser-function 'eaf-open-browser)
+  )
+
+(provide 'init-eaf)
+#+end_src
+
 * modules/gwp
 使用doom的方式来组织代码, 这样的好处是packages可以模块化来定义, 避免tangle时不小心出问题.
 ** ui
@@ -3208,8 +3270,8 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
 rime-inline-predicates
 
 rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i 键来强制临时录入(一个)
-中文单字, 随后继续英文输入模式. 为了更济的中英文状态智能切换, 得记得使用空格分隔
-中英文字符这一优秀传统.
+中文单字, 随后继续英文输入模式. 为了更流畅的中英文状态智能切换, 得记得回归空格分
+隔中英文字符这一优秀传统.
 
 #+name: 155b72b3
 #+begin_src elisp
@@ -5004,11 +5066,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   :hook (org-roam . org-roam-ui-mode)
   :config)
 #+end_src
-
-*** packages.el
-:PROPERTIES:
-:header-args: :tangle pkg/.doom.d/modules/gwp/org/packages.el
-:END:
 
 *** org.el
 :PROPERTIES:
@@ -6825,6 +6882,27 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :n "RET" #'org-sidebar-tree-jump
       :n [return] #'org-sidebar-tree-jump
       )
+#+end_src
+
+*** packages.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/org/packages.el
+:END:
+#+name: c98fa262
+#+begin_src elisp
+(package! org)
+(package! websocket)
+(package! org-roam)
+(package! org-roam-ui)
+(package! org-superstar)
+(package! org-pdftools)
+(package! org-download)
+(package! org-noter)
+(package! orgit)
+(package! ob-ipython)
+
+(package! org-contrib
+  :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))
 #+end_src
 
 ** bindings

@@ -95,8 +95,9 @@
 (map! :n "e" #'evil-forward-sentence-begin)
 (map! :n "E" #'evil-backward-sentence-begin)
 
-(map! :n "w" #'evil-forward-word-begin)
-(map! :n "W" #'evil-backward-word-begin)
+;; 下面可以用 M-f/M-b 代替
+;; (map! :n "w" #'evil-forward-word-begin)
+;; (map! :n "W" #'evil-backward-word-begin)
 
 ;; C-v: evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)

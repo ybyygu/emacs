@@ -103,15 +103,6 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
   (setq ffip-use-rust-fd t))
 ;; 81cb1ab5 ends here
 
-;; [[file:../../../../../doom.note::4bae51e2][4bae51e2]]
-(use-package magit
-  :config
-  ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
-  (setq magit-section-initial-visibility-alist (quote ((untracked . hide))))
-  ;;禁用magit中的gravatars支持, 响应能快一些.
-  (setq magit-revision-show-gravatars nil))
-;; 4bae51e2 ends here
-
 ;; [[file:../../../../../doom.note::3ac9a958][3ac9a958]]
 (use-package vc
   :init
@@ -272,6 +263,11 @@ The org src will be tangled first before compiling.
   (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
   ;; 无效
   ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
+  )
+
+(gwp-leader-def
+  :keymaps 'rust-mode-map
+  "f" 'rust-format-buffer
   )
 ;; 151a16d0 ends here
 

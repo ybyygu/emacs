@@ -1,4 +1,5 @@
 ;; [[file:../../../../../doom.note::e86dc54d][e86dc54d]]
+(package! magit)
 (package! cargo)
 (package! racer)
 (package! rust-mode)

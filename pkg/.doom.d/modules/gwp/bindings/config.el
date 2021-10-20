@@ -65,6 +65,7 @@
        :desc "Align the current region regexp"       "a"   #'align-regexp
        :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
+       :desc "将TAB转为空格"                         "SPC" #'untabify
        :desc "indent region"                         "TAB" #'indent-region ; 有用
        :desc "indent region"                         [tab] #'indent-region ; 有用
        :desc "Compile"                               "c"   #'compile
@@ -277,7 +278,6 @@
 (map! :leader
       (:prefix-map ("o" . "org/open")
        :desc "Org attachment"        "a" #'org-attach
-       :desc "Todo list"             "t" #'org-todo-list
        :desc "org-agenda (GTD)"      "n" (cmd! (org-agenda nil "gt"))
        :desc "org-capture"           "c" #'org-capture
        :desc "Tags search"           "m" #'org-tags-view

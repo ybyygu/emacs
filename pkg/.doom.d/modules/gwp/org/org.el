@@ -28,15 +28,6 @@
 ;; [[file:../../../../../doom.note::d3c71916][d3c71916]]
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
-
-(map! :map org-mode-map
-      :n "gh" #'org-up-element
-      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
-      :n "gk" #'org-previous-visible-heading
-      :n "gj" #'org-next-visible-heading
-      :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
-      :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
-      )
 ;; d3c71916 ends here
 
 ;; [[file:../../../../../doom.note::7341aa84][7341aa84]]
@@ -91,7 +82,7 @@
 
 ;; [[file:../../../../../doom.note::fbbec921][fbbec921]]
 ;; 取自doom org moudle
-(defun gwp::dwim-at-point (&optional arg)
+(defun gwp::org-dwim-at-point (&optional arg)
   "Do-what-I-mean at point.
 
 If on a:
@@ -166,8 +157,8 @@ If on a:
            ))))))
 
 (map! :map org-mode-map
-      :n [return]   #'gwp::dwim-at-point
-      :n "RET"      #'gwp::dwim-at-point
+      :n [return]   #'gwp::org-dwim-at-point
+      :n "RET"      #'gwp::org-dwim-at-point
       )
 ;; fbbec921 ends here
 
@@ -201,13 +192,18 @@ If on a:
 ;; 2f61258f ends here
 
 ;; [[file:../../../../../doom.note::bbdcd834][bbdcd834]]
-(map! :n "M-k" #'org-metaup)
-(map! :n "M-j" #'org-metadown)
-
-;; (map! :n "M-p" #'org-previous-visible-heading)
-;; (map! :n "M-n" #'org-next-visible-heading)
-(map! :map org-mode-map :n "M-p" #'org-backward-element)
-(map! :map org-mode-map :n "M-n" #'org-forward-element)
+(map! :map org-mode-map
+      :n "gh" #'org-up-element
+      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      :n "gk" #'org-backward-heading-same-level
+      :n "gj" #'org-forward-heading-same-level
+      :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
+      :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
+      :n "M-k" #'org-metaup
+      :n "M-j" #'org-metadown
+      :n "M-p" #'org-backward-element
+      :n "M-n" #'org-forward-element
+      )
 ;; bbdcd834 ends here
 
 ;; [[file:../../../../../doom.note::*screenshot][screenshot:1]]
@@ -285,6 +281,17 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :comments "link")
 ;; init:1 ends here
 
+;; [[file:../../../../../doom.note::0d8e352a][0d8e352a]]
+;; activate languages for evaluation
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (python . t)
+   (shell . t)
+   (emacs-lisp . t) ;; this is the default
+   ))
+;; 0d8e352a ends here
+
 ;; [[file:../../../../../doom.note::*enter][enter:1]]
 ;; 禁用代码着色, 影响速度
 ;; (setq org-src-fontify-natively nil)
@@ -323,11 +330,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       ";" #'org-edit-src-exit
       "k" #'org-edit-src-abort
       )
-
-(map! :map org-src-mode-map
-      :leader
-      ";" #'org-edit-src-exit
-      )
+(gwp-leader-def
+  :keymaps 'org-src-mode-map
+  "q" #'org-edit-src-exit
+  )
 ;; 84623fc4 ends here
 
 ;; [[file:../../../../../doom.note::8aa4aca8][8aa4aca8]]
@@ -344,13 +350,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   ("p" org-previous-link "prev link")
   ("q" nil "quit")
   )
-
-(map! :map org-mode-map
-      :localleader
-      (:prefix-map ("j" . "org jump")
-       :desc "跳转至代码块" "b"   #'gwp/org-jump-block/body
-       :desc "跳转至链接"   "l"   #'gwp/org-jump-link/body
-       ))
 ;; 8aa4aca8 ends here
 
 ;; [[file:../../../../../doom.note::fa928b1c][fa928b1c]]
@@ -398,19 +397,19 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 	start body-start end target-buffer target-char link block-name body)
     (save-window-excursion
       (save-excursion
-	(while (and (re-search-backward org-link-bracket-re nil t)
-		    (not ; ever wider searches until matching block comments
-		     (and (setq start (line-beginning-position))
-			  (setq body-start (line-beginning-position 2))
-			  (setq link (match-string 0))
-			  (setq block-name (match-string 2))
-			  (save-excursion
-			    (save-match-data
-			      (re-search-forward
-			       (concat " " (regexp-quote block-name)
-				       " ends here")
-			       nil t)
-			      (setq end (line-beginning-position))))))))
+    (while (and (re-search-backward org-link-bracket-re nil t)
+            (not ; ever wider searches until matching block comments
+             (and (setq start (line-beginning-position))
+              (setq body-start (line-beginning-position 2))
+              (setq link (match-string 0))
+              (setq block-name (match-string 2))
+              (save-excursion
+                (save-match-data
+                  (re-search-forward
+                   (concat " " (regexp-quote block-name)
+                       " ends here")
+                   nil t)
+                  (setq end (line-beginning-position))))))))
 	(unless (and start (< start mid) (< mid end))
 	  (error "Not in tangled code"))
         (setq body (buffer-substring body-start end)))
@@ -1237,15 +1236,17 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; misc:2 ends here
 
 ;; [[file:../../../../../doom.note::917381e9][917381e9]]
+;; 2021-10-20: 可用 gwp-leader-def 来代替
 ;; 定义一些特别常用的命令, 仅在org-mode中显示
-(defun gwp/org-mode-keys-hook ()
-  (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
-  (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
-  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
-(add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
-(defun gwp/org-src-mode-keys-hook ()
-  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
-(add-hook 'org-src-mode-hook 'gwp/org-mode-keys-hook)
+;; (defun gwp/org-mode-keys-hook ()
+;;   ;; (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
+;;   ;; (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
+;;   ;; (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim)
+;; )
+;; (add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
+;; (defun gwp/org-src-mode-keys-hook ()
+;;   (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
+;; (add-hook 'org-src-mode-hook 'gwp/org-mode-keys-hook)
 
 ;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
 ;; (map! :mode org-mode
@@ -1315,6 +1316,16 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        ))
 ;; a02d9b1f ends here
 
+;; [[file:../../../../../doom.note::3bbc773a][3bbc773a]]
+(map! :map org-mode-map
+      :localleader
+      (:prefix-map ("j" . "org jump")
+       :desc "跳转至代码块"              "b"   #'gwp/org-jump-block/body
+       :desc "跳转至链接"                "l"   #'gwp/org-jump-link/body
+       :desc "跳转至 tangled 代码文件"   "t"   #'gwp/org-babel-tangle-jump-to-file
+       ))
+;; 3bbc773a ends here
+
 ;; [[file:../../../../../doom.note::32a3b56a][32a3b56a]]
 (map! :map org-mode-map
       :localleader
@@ -1361,12 +1372,13 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 (map! :map org-mode-map
       :localleader
+      :desc "TODO" "C-t" #'org-todo
       (:prefix ("t" . "todo/toggle/tag")
        :desc "TODO" "t" #'org-todo
        :desc "heading" "h" #'org-toggle-heading
        :desc "item" "i" #'org-toggle-item
        :desc "tag" "s" #'counsel-org-tag
-       :desc "fixed-width markup (:)" "f" #'org-toggle-fixed-width
+       :desc "fixed-width markup (:)" ":" #'org-toggle-fixed-width
        "c" #'gwp::org-toggle-checkbox))
 ;; ebc6075d ends here
 
@@ -1426,3 +1438,20 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :desc "Paste image from clipboard"  "C-v"   #'org-download-clipboard
       )
 ;; 1e605e7a ends here
+
+;; [[file:../../../../../doom.note::fdd56fa5][fdd56fa5]]
+(gwp-leader-def
+  :keymaps 'org-mode-map
+  "g" 'counsel-org-goto                 ; goto
+  "t" 'org-todo                         ; todo
+  "b" 'gwp/org-babel-tangle-dwim        ; babel
+  "e" 'org-edit-special                 ; edit
+  "a" 'org-attach                       ; attach
+  "n" 'ap/org-tree-to-indirect-buffer   ; narrow
+  )
+
+(gwp-leader-def
+  :keymaps 'org-src-mode-map
+  "b" 'gwp/org-babel-tangle-dwim
+  )
+;; fdd56fa5 ends here

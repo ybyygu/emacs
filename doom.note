@@ -22,6 +22,7 @@
 
 * 配置参考
 - [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
+- [ ] [[https://github.com/bodnarlajos/emacs-pure][bodnarlajos/emacs-pure]]
 - [ ] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
 - [ ] [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
 - [ ] [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
@@ -40,8 +41,11 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [57/69]
-** TODO [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
+* Memo [58/70]
+** DONE [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
+- Note taken on [2021-10-20 Wed 18:59] \\
+  挺好的, 主要是 eaf-pdf-viewer 好用. 不过暂时可以不用.
+- State "DONE"       from "TODO"       [2021-10-20 Wed 18:59]
 基于 mupdf, 比 pdf-tools 快多了. 支持文本高亮, 支持与 org 互动, 这样与 org-noter
 配合就没什么问题了.
 
@@ -197,168 +201,6 @@ strace -f -s 1000 -tt xdg-open http://www.baidu.com &>/tmp/a.log
 ** TODO [2021-10-06 Wed] 优化按键布局
 可以考虑去掉q命令, 很少用, 还经常错按. 可以用evil-forward-*之类的代替?
 evil-forward-paragraph
-
- 516081    6.94%  evil-next-visual-line                                   g <down>
- 329382    4.43%  evil-previous-visual-line                               g <up>
-  62733    0.84%  save-buffer                                             SPC SPC, SPC f s, <motion-state> SPC SPC, <visual-state> SPC SPC, <normal-state> SPC SPC, <emacs-state> M-SPC SPC, <insert-state> M-SPC SPC, <motion-state> SPC f s, <visual-state> SPC f s, <normal-state> SPC f s, <emacs-state> M-SPC f s, <insert-state> M-SPC f s, C-x C-s, <menu-bar> <file> <save-buffer>
-  30436    0.41%  evil-mouse-drag-region                                  <down-mouse-1>
-  23408    0.31%  gwp/org-babel-tangle-dwim                               SPC d d, SPC o b, SPC m b b, <motion-state> SPC d d, <visual-state> SPC d d, <normal-state> SPC d d, <emacs-state> M-SPC d d, <insert-state> M-SPC d d, <insert-state> M-SPC m b b, <emacs-state> M-SPC m b b, <motion-state> SPC m b b, <visual-state> SPC m b b, <normal-state> SPC m b b
-  22998    0.31%  ivy-next-line
-  19272    0.26%  org-up-element                                          g h, <motion-state> g h, C-c C-^, <normal-state> g h
-  17401    0.23%  org-edit-src-exit                                       SPC ;, <motion-state> SPC ;, <visual-state> SPC ;, <normal-state> SPC ;, <emacs-state> M-SPC ;, <insert-state> M-SPC ;
-  15148    0.20%  doom/forward-to-last-non-comment-or-eol                 C-e
-  15108    0.20%  evil-delete-char                                        <deletechar>
-  14831    0.20%  evil-open-below
-  14510    0.20%  +org/dwim-at-point                                      SPC RET, RET, <return>, <normal-state> RET, <normal-state> <return>
-  12956    0.17%  rust-format-buffer
-  12877    0.17%  dired-next-line
-  12734    0.17%  dired-previous-line
-  11969    0.16%  evil-visual-char                                        v
-  11372    0.15%  evil-org-open-below                                     o, <normal-state> o
-  11140    0.15%  evil-org-delete                                         d, <normal-state> d
-  11072    0.15%  +magit/quit
-  10785    0.15%  magit-status                                            SPC g g, <motion-state> SPC g g, <visual-state> SPC g g, <normal-state> SPC g g, <emacs-state> M-SPC g g, <insert-state> M-SPC g g, C-x g
-   9645    0.13%  org-end-of-line                                         C-e
-   9361    0.13%  evil-change                                             c
-   9197    0.12%  evil-visual-line                                        V
-   8741    0.12%  evil-paste-after                                        p
-   8741    0.12%  evil-append                                             a
-   7517    0.10%  evil-ex-search-next                                     n
-   7492    0.10%  newline-and-indent
-   7045    0.09%  handle-switch-frame                                     <switch-frame>
-   6590    0.09%  ivy-previous-line
-   6254    0.08%  evil-yank                                               y
-   6242    0.08%  backward-kill-word                                      <C-backspace>, M-DEL
-   5892    0.08%  evil-goto-first-line                                    g g
-   5680    0.08%  evil-collection-pdf-view-next-line-or-next-page
-   5457    0.07%  doom/escape                                             C-g
-   5135    0.07%  minibuffer-keyboard-quit
-   5085    0.07%  mouse-drag-mode-line                                    <bottom-divider> <down-mouse-1>, <mode-line> <down-mouse-1>
-   4997    0.07%  kill-current-buffer                                     SPC b k, SPC b d, z x, <motion-state> SPC b k, <motion-state> SPC b d, <visual-state> SPC b k, <visual-state> SPC b d, <normal-state> SPC b k, <normal-state> SPC b d, <emacs-state> M-SPC b k, <emacs-state> M-SPC b d, <insert-state> M-SPC b k, <insert-state> M-SPC b d
-   4942    0.07%  evil-replace                                            r
-   4228    0.06%  gwp/dwim-at-point
-   3927    0.05%  evil-window-left                                        SPC w C-h, SPC w h, C-w C-h, C-w h, <motion-state> SPC w C-h, <motion-state> SPC w h, <visual-state> SPC w C-h, <visual-state> SPC w h, <normal-state> SPC w C-h, <normal-state> SPC w h, <emacs-state> M-SPC w C-h, <emacs-state> M-SPC w h, <insert-state> M-SPC w C-h, <insert-state> M-SPC w h
-   3926    0.05%  org-yank                                                <S-insertchar>, <S-insert>, <menu-bar> <edit> <paste>
-   3912    0.05%  evil-window-right                                       SPC w C-l, SPC w l, C-w C-l, C-w l, <motion-state> SPC w C-l, <motion-state> SPC w l, <visual-state> SPC w C-l, <visual-state> SPC w l, <normal-state> SPC w C-l, <normal-state> SPC w l, <emacs-state> M-SPC w C-l, <emacs-state> M-SPC w l, <insert-state> M-SPC w C-l, <insert-state> M-SPC w l
-   3900    0.05%  yank                                                    <S-insertchar>, <S-insert>, <menu-bar> <edit> <paste>
-   3895    0.05%  evil-undo                                               u
-   3840    0.05%  kill-word                                               <C-delete>
-   3801    0.05%  evilnc-comment-or-uncomment-lines                       SPC c l, <motion-state> SPC c l, <visual-state> SPC c l, <normal-state> SPC c l, <emacs-state> M-SPC c l, <insert-state> M-SPC c l, C-x C-;
-   3776    0.05%  +format/region-or-buffer                                SPC c f, <motion-state> SPC c f, <visual-state> SPC c f, <normal-state> SPC c f, <emacs-state> M-SPC c f, <insert-state> M-SPC c f
-   3755    0.05%  evil-window-down                                        SPC w C-j, SPC w j, C-w C-j, C-w j, <motion-state> SPC w C-j, <motion-state> SPC w j, <visual-state> SPC w C-j, <visual-state> SPC w j, <normal-state> SPC w C-j, <normal-state> SPC w j, <emacs-state> M-SPC w C-j, <emacs-state> M-SPC w j, <insert-state> M-SPC w C-j, <insert-state> M-SPC w j
-   3737    0.05%  +popup/toggle                                           SPC ~, <motion-state> SPC ~, <visual-state> SPC ~, <normal-state> SPC ~, <emacs-state> M-SPC ~, <insert-state> M-SPC ~, C-`
-   3686    0.05%  dabbrev-expand
-   3533    0.05%  evil-goto-line                                          G
-   3445    0.05%  undo-tree-undo
-   3368    0.05%  mouse-set-region                                        <drag-mouse-1>
-   3358    0.05%  dired-find-file
-   3340    0.04%  swiper-isearch
-   3128    0.04%  evil-window-up                                          SPC w C-k, SPC w k, C-w C-k, C-w k, <motion-state> SPC w C-k, <motion-state> SPC w k, <visual-state> SPC w C-k, <visual-state> SPC w k, <normal-state> SPC w C-k, <normal-state> SPC w k, <emacs-state> M-SPC w C-k, <emacs-state> M-SPC w k, <insert-state> M-SPC w C-k, <insert-state> M-SPC w k
-   3006    0.04%  evil-collection-pdf-view-previous-line-or-previous-page
-   2673    0.04%  +workspace/other                                        SPC l `, SPC l b, <motion-state> SPC l `, <motion-state> SPC l b, <visual-state> SPC l `, <visual-state> SPC l b, <normal-state> SPC l `, <normal-state> SPC l b, <emacs-state> M-SPC l `, <emacs-state> M-SPC l b, <insert-state> M-SPC l `, <insert-state> M-SPC l b
-   2612    0.04%  magit-commit-create                                     SPC g c c, <motion-state> SPC g c c, <visual-state> SPC g c c, <normal-state> SPC g c c, <emacs-state> M-SPC g c c, <insert-state> M-SPC g c c
-   2498    0.03%  yas-expand                                              <menu-bar> <YASnippet> <Expand trigger>
-   2346    0.03%  org-meta-return                                         <M-return>, M-RET
-   2301    0.03%  exit-minibuffer
-   2248    0.03%  evil-force-normal-state                                 <escape>
-   2221    0.03%  yas-next-field-or-maybe-expand
-   2205    0.03%  magit-mode-bury-buffer
-   2179    0.03%  evil-ex-search-word-forward                             *
-   2073    0.03%  doom/silent-backward-delete-char
-   2038    0.03%  kill-ring-save                                          <C-insertchar>, <C-insert>, M-w, <menu-bar> <edit> <copy>
-   2019    0.03%  org-fill-paragraph                                      g Q, <normal-state> g Q, M-q
-   1931    0.03%  magit-log
-   1913    0.03%  +workspace/display                                      SPC l ., <motion-state> SPC l ., <visual-state> SPC l ., <normal-state> SPC l ., <emacs-state> M-SPC l ., <insert-state> M-SPC l .
-   1845    0.02%  magit-log-current
-   1773    0.02%  magit-commit-extend
-   1737    0.02%  gwp/org-open-at-point-dwim                              SPC m o, C-c C-o, <insert-state> M-SPC m o, <emacs-state> M-SPC m o, <motion-state> SPC m o, <visual-state> SPC m o, <normal-state> SPC m o
-   1636    0.02%  scroll-up-command                                       <next>
-   1588    0.02%  with-editor-finish
-   1549    0.02%  backward-button
-   1548    0.02%  counsel-recentf                                         SPC f r, <motion-state> SPC f r, <visual-state> SPC f r, <normal-state> SPC f r, <emacs-state> M-SPC f r, <insert-state> M-SPC f r
-   1431    0.02%  evil-ret
-   1429    0.02%  +dired/quit-all
-   1424    0.02%  ace-window                                              SPC w C-w, C-w C-w, <motion-state> SPC w C-w, <visual-state> SPC w C-w, <normal-state> SPC w C-w, <emacs-state> M-SPC w C-w, <insert-state> M-SPC w C-w, C-x o, SPC w w, C-w w, <motion-state> SPC w w, <visual-state> SPC w w, <normal-state> SPC w w, <emacs-state> M-SPC w w, <insert-state> M-SPC w w
-   1404    0.02%  org-ctrl-c-ctrl-c                                       C-c C-c, <menu-bar> <Table> <Align>
-   1372    0.02%  dired-up-directory
-   1304    0.02%  evil-switch-to-windows-last-buffer                      SPC `, SPC b l, C-6, <motion-state> SPC `, <visual-state> SPC `, <normal-state> SPC `, <emacs-state> M-SPC `, <insert-state> M-SPC `, <motion-state> SPC b l, <visual-state> SPC b l, <normal-state> SPC b l, <emacs-state> M-SPC b l, <insert-state> M-SPC b l
-   1263    0.02%  ap/org-tree-to-indirect-buffer                          z n, SPC m s n, <normal-state> z n, <insert-state> M-SPC m s n, <emacs-state> M-SPC m s n, <motion-state> SPC m s n, <visual-state> SPC m s n, <normal-state> SPC m s n
-   1245    0.02%  evil-first-non-blank                                    ^
-   1176    0.02%  dired-jump                                              SPC f j, <motion-state> SPC f j, <visual-state> SPC f j, <normal-state> SPC f j, <emacs-state> M-SPC f j, <insert-state> M-SPC f j, C-x C-j
-   1167    0.02%  profiler-report-next-entry
-   1127    0.02%  evil-escape
-   1109    0.01%  er/expand-region                                        SPC v v, <motion-state> SPC v v, <visual-state> SPC v v, <normal-state> SPC v v, <emacs-state> M-SPC v v, <insert-state> M-SPC v v
-   1029    0.01%  evil-multiedit-match-and-next
-   1001    0.01%  +workspace/switch-to                                    SPC l TAB, <motion-state> SPC l TAB, <visual-state> SPC l TAB, <normal-state> SPC l TAB, <emacs-state> M-SPC l TAB, <insert-state> M-SPC l TAB
-    992    0.01%  org-next-visible-heading                                g j, <normal-state> g j, C-c C-n, <menu-bar> <Org> <Navigate Headings> <Next>
-    975    0.01%  +workspace/load
-    968    0.01%  delete-char                                             C-d
-    964    0.01%  evil-visual-block                                       C-v
-    948    0.01%  +popup/quit-window
-    917    0.01%  evil-join                                               J
-    916    0.01%  backward-word                                           M-b, ESC <left>
-    915    0.01%  golden-ratio                                            SPC w z, C-w z, <motion-state> SPC w z, <visual-state> SPC w z, <normal-state> SPC w z, <emacs-state> M-SPC w z, <insert-state> M-SPC w z
-    913    0.01%  company-select-next
-    912    0.01%  indent-for-tab-command
-    906    0.01%  scroll-down-command                                     <prior>, M-v
-    891    0.01%  profiler-report-toggle-entry
-    874    0.01%  pdf-view-mouse-set-region
-    857    0.01%  org-insert-link                                         SPC m l l, C-c C-l, <menu-bar> <Org> <Hyperlinks> <Insert Link>, <insert-state> M-SPC m l l, <emacs-state> M-SPC m l l, <motion-state> SPC m l l, <visual-state> SPC m l l, <normal-state> SPC m l l
-    851    0.01%  comment-dwim                                            M-;
-    827    0.01%  evil-visual-screen-line
-    800    0.01%  y-or-n-p-insert-y
-    782    0.01%  profiler-report-previous-entry
-    782    0.01%  kill-line                                               C-k, <deleteline>
-    761    0.01%  +snippets/delete-backward-char
-    755    0.01%  org-edit-special                                        C-c C-;, C-c ;, SPC m ;, SPC m ', C-c ', <insert-state> C-c C-;, <insert-state> C-c ;, <normal-state> C-c C-;, <normal-state> C-c ;, <insert-state> M-SPC m ;, <insert-state> M-SPC m ', <emacs-state> M-SPC m ;, <emacs-state> M-SPC m ', <motion-state> SPC m ;, <motion-state> SPC m ', <visual-state> SPC m ;, <visual-state> SPC m ', <normal-state> SPC m ;, <normal-state> SPC m ', <menu-bar> <Table> <Calculate> <Edit Formulas>, <menu-bar> <Org> <Editing> <Edit Source Example>
-    749    0.01%  rust-dbg-wrap-or-unwrap
-    731    0.01%  org-metaright                                           M-l, <insert-state> C-t, <visual-state> M-l, <normal-state> M-l, <M-right>, ESC <right>, <menu-bar> <Table> <Column> <Move Column Right>, <menu-bar> <Org> <Edit Structure> <Demote Heading>
-    726    0.01%  ivy-resume                                              SPC ', SPC r l, <motion-state> SPC ', <visual-state> SPC ', <normal-state> SPC ', <emacs-state> M-SPC ', <insert-state> M-SPC ', <motion-state> SPC r l, <visual-state> SPC r l, <normal-state> SPC r l, <emacs-state> M-SPC r l, <insert-state> M-SPC r l
-    715    0.01%  gwp/workspace/load-or-switch                            SPC l l, <motion-state> SPC l l, <visual-state> SPC l l, <normal-state> SPC l l, <emacs-state> M-SPC l l, <insert-state> M-SPC l l
-    702    0.01%  magit-show-commit                                       SPC g f c, <motion-state> SPC g f c, <visual-state> SPC g f c, <normal-state> SPC g f c, <emacs-state> M-SPC g f c, <insert-state> M-SPC g f c
-    685    0.01%  counsel-org-goto                                        SPC m ., SPC m g j, SPC m g g, <insert-state> M-SPC m ., <emacs-state> M-SPC m ., <motion-state> SPC m ., <visual-state> SPC m ., <normal-state> SPC m ., <insert-state> M-SPC m g j, <insert-state> M-SPC m g g, <emacs-state> M-SPC m g j, <emacs-state> M-SPC m g g, <motion-state> SPC m g j, <motion-state> SPC m g g, <visual-state> SPC m g j, <visual-state> SPC m g g, <normal-state> SPC m g j, <normal-state> SPC m g g, C-c C-j, <menu-bar> <Org> <Navigate Headings> <Jump>
-    668    0.01%  +ivy/switch-workspace-buffer                            SPC ,, SPC b b, <motion-state> SPC ,, <visual-state> SPC ,, <normal-state> SPC ,, <emacs-state> M-SPC ,, <insert-state> M-SPC ,, <motion-state> SPC b b, <visual-state> SPC b b, <normal-state> SPC b b, <emacs-state> M-SPC b b, <insert-state> M-SPC b b, C-c p b
-    660    0.01%  gwp/search-all-notes                                    SPC s n, <motion-state> SPC s n, <visual-state> SPC s n, <normal-state> SPC s n, <emacs-state> M-SPC s n, <insert-state> M-SPC s n
-    657    0.01%  gwp/org-babel-tangle-no                                 SPC m b n, <insert-state> M-SPC m b n, <emacs-state> M-SPC m b n, <motion-state> SPC m b n, <visual-state> SPC m b n, <normal-state> SPC m b n
-    650    0.01%  edebug-step-mode
-    645    0.01%  kill-visual-line
-    637    0.01%  flyspell-correct-at-point                               z =, M-$, <menu-bar> <tools> <spell> <ispell-word>
-    634    0.01%  org-latex-preview                                       z l, SPC m L, <normal-state> z l, C-c C-x C-l, <insert-state> M-SPC m L, <emacs-state> M-SPC m L, <motion-state> SPC m L, <visual-state> SPC m L, <normal-state> SPC m L
-    630    0.01%  vterm-send-return
-    605    0.01%  org-todo                                                SPC m t, C-c C-t, <insert-state> M-SPC m t, <emacs-state> M-SPC m t, <motion-state> SPC m t, <visual-state> SPC m t, <normal-state> SPC m t, <menu-bar> <Org> <TODO Lists> <TODO/DONE/->
-    585    0.01%  ediff-previous-difference
-    570    0.01%  delete-backward-char
-    549    0.01%  org-agenda-next-line
-    535    0.01%  fill-paragraph                                          g Q, <normal-state> g Q, M-q
-    533    0.01%  gwp/rust-cargo-transient                                SPC m 1, <insert-state> M-SPC m 1, <emacs-state> M-SPC m 1, <motion-state> SPC m 1, <visual-state> SPC m 1, <normal-state> SPC m 1
-    532    0.01%  magit-commit-amend
-    530    0.01%  doom/silent-delete-char
-    528    0.01%  gwp/org-babel-tangle-jump-to-file                       SPC j t, SPC m b j, <motion-state> SPC j t, <visual-state> SPC j t, <normal-state> SPC j t, <emacs-state> M-SPC j t, <insert-state> M-SPC j t, <insert-state> M-SPC m b j, <emacs-state> M-SPC m b j, <motion-state> SPC m b j, <visual-state> SPC m b j, <normal-state> SPC m b j
-    511    0.01%  backward-delete-char-untabify
-    501    0.01%  org-metaup                                              M-k, <insert-state> M-k, <visual-state> M-k, <normal-state> M-k, <M-up>, ESC <up>, <menu-bar> <Table> <Row> <Move Row Up>, <menu-bar> <Org> <Edit Structure> <Move Subtree Up>
-    489    0.01%  org-toggle-item                                         SPC m i, <insert-state> M-SPC m i, <emacs-state> M-SPC m i, <motion-state> SPC m i, <visual-state> SPC m i, <normal-state> SPC m i
-    485    0.01%  ediff-next-difference
-    482    0.01%  org-metaleft                                            M-h, <insert-state> M-h, <visual-state> M-h, <normal-state> M-h, <M-left>, <menu-bar> <Table> <Column> <Move Column Left>, <menu-bar> <Org> <Edit Structure> <Promote Heading>
-    482    0.01%  compilation-previous-error
-    479    0.01%  +workspace/switch-to-0                                  SPC l 1, <motion-state> SPC l 1, <visual-state> SPC l 1, <normal-state> SPC l 1, <emacs-state> M-SPC l 1, <insert-state> M-SPC l 1
-    472    0.01%  spacemacs/open-file-or-directory-in-external-app        SPC f o, <motion-state> SPC f o, <visual-state> SPC f o, <normal-state> SPC f o, <emacs-state> M-SPC f o, <insert-state> M-SPC f o
-    467    0.01%  org-return-indent
-    467    0.01%  forward-word                                            M-f
-    455    0.01%  org-babel-next-src-block                                ] c, <motion-state> ] c, C-c C-v C-n, C-c C-v n
-    445    0.01%  +lookup/file                                            g f
-    444    0.01%  next-line                                               C-n
-    444    0.01%  ivy-backward-kill-word
-    442    0.01%  +default/newline-below
-    438    0.01%  magit-push
-    427    0.01%  org-time-stamp-inactive                                 SPC m d T, C-c !, <menu-bar> <Org> <Dates and Scheduling> <Timestamp (inactive)>, <insert-state> M-SPC m d T, <emacs-state> M-SPC m d T, <motion-state> SPC m d T, <visual-state> SPC m d T, <normal-state> SPC m d T
-    420    0.01%  org-attach                                              SPC o a, SPC m a a, <motion-state> SPC o a, <visual-state> SPC o a, <normal-state> SPC o a, <emacs-state> M-SPC o a, <insert-state> M-SPC o a, C-c C-a, <insert-state> M-SPC m a a, <emacs-state> M-SPC m a a, <motion-state> SPC m a a, <visual-state> SPC m a a, <normal-state> SPC m a a
-    415    0.01%  evil-multiedit-match-symbol-and-next                    M-d
-    401    0.01%  gwp/open-terminal-here                                  SPC o T, <motion-state> SPC o T, <visual-state> SPC o T, <normal-state> SPC o T, <emacs-state> M-SPC o T, <insert-state> M-SPC o T
-    392    0.01%  vterm-toggle                                            SPC t t, <motion-state> SPC t t, <visual-state> SPC t t, <normal-state> SPC t t, <emacs-state> M-SPC t t, <insert-state> M-SPC t t
-    389    0.01%  gwp/new-memo                                            SPC m SPC m, <insert-state> M-SPC m SPC m, <emacs-state> M-SPC m SPC m, <motion-state> SPC m SPC m, <visual-state> SPC m SPC m, <normal-state> SPC m SPC m
-    387    0.01%  evil-snipe-repeat                                       ;, <motion-state> ;
-    377    0.01%  org-metadown                                            M-j, <insert-state> M-j, <visual-state> M-j, <normal-state> M-j, <M-down>, ESC <down>, <menu-bar> <Table> <Row> <Move Row Down>, <menu-bar> <Org> <Edit Structure> <Move Subtree Down>
-    377    0.01%  doom/backward-to-bol-or-indent                          C-a
 
 ** DONE [2021-10-06 Wed] Rust编辑优化
 - State "DONE"       from "TODO"       [2021-10-07 Thu 09:22]
@@ -1131,6 +973,11 @@ javascript:void function(){var a=window.getSelection();""==a%26%26(a=document.ti
 ~SPC h d~
 ** Universal arguments
 SPC-u, C-u
+** general: keybindings
+为各种按键生成一个漂亮的 org 文档
+: general-describe-keybindings
+
+使用 general-def 或 bind-key! 来定义按键
 
 ** 统计字符数
 g C-g
@@ -1216,6 +1063,9 @@ marking ring跳转
 
 ** evil功能
 查看evil-visual-state-map帮助
+*** evil-set-initial-state
+设置不同模式对的初始按键模式
+
 *** 快速移动
 跳转至某行(G):
 : evil-goto-line
@@ -2405,6 +2255,15 @@ gwp-merge:
 ;;               doom-leader-alt "<f13>"
 ;;               doom-localleader-key ""
 ;;               doom-localleader-alt-key "<M-f13>")
+
+;; 自定义 leader key, 用于模式下最常用的命令(w: wo, 我)
+(after! evil
+  (general-create-definer gwp-leader-def
+    :states '(normal insert emacs)
+    :keymaps 'override                  ; prevent your leader keybindings from ever being overridden
+    :prefix "w"
+    :non-normal-prefix "<f4>"
+    ))
 #+end_src
 
 ** config.el
@@ -2670,6 +2529,7 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+begin_src elisp
 (require 'init-proxy)
 (require 'init-dired)
+(require 'init-magit)
 ;; (require 'init-eaf)
 #+end_src
 
@@ -2822,7 +2682,7 @@ github支持, 减慢速度.
            :files ("*.el")))
 #+end_src
 * user-lisp
-小玩意可以放在这里
+配置各种包或自定义的包
 ** dwim
 临时按键绑定. 这和hydra等类似了
 #+begin_src elisp :tangle no
@@ -3045,14 +2905,47 @@ virtualbox /windows 中)"
   ;; use `emacs-application-framework' to open PDF file: link
   (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
 
+  ;; 修复 evil 按键问题. 这里需要启用 eaf-browser 支持, 不然会报错
+  (require 'eaf-evil)
+  (define-key key-translation-map (kbd "SPC")
+    (lambda (prompt)
+      (if (derived-mode-p 'eaf-mode)
+          (pcase eaf--buffer-app-name
+            ("pdf-viewer" (kbd eaf-evil-leader-key))
+            (_  (kbd "SPC")))
+        (kbd "SPC"))))
+
   :custom
   ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  (eaf-browser-continue-where-left-off t)
-  (eaf-browser-enable-adblocker t)
+  ;; (eaf-browser-continue-where-left-off t)
+  ;; (eaf-browser-enable-adblocker t)
   (eaf-pdf-dark-mode nil)
-  (browse-url-browser-function 'eaf-open-browser))
+  ;; (browse-url-browser-function 'eaf-open-browser)
+  )
 
 (provide 'init-eaf)
+#+end_src
+** init-magit.el
+:PROPERTIES:
+:header-args: :tangle user-lisp/init-magit.el
+:END:
+git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
+
+magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
+- [[https://github.com/alphapapa/magit-todos][alphapapa/magit-todos: Show source files' TODOs (and FIXMEs, etc) in Magit status buffer]]
+
+magit-status-mode-map
+
+#+name: 5587631c
+#+begin_src elisp
+(use-package magit
+  :config
+  ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
+  (setq magit-section-initial-visibility-alist (quote ((untracked . hide))))
+  ;;禁用magit中的gravatars支持, 响应能快一些.
+  (setq magit-revision-show-gravatars nil))
+
+(provide 'init-magit)
 #+end_src
 
 * modules/gwp
@@ -3733,27 +3626,6 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
   (setq ffip-use-rust-fd t))
 #+end_src
 
-*** magit
-#+name: 4bae51e2
-#+begin_src elisp
-(use-package magit
-  :config
-  ;; 隐藏untracked文件列表. 更多时候的操作是stage/commit
-  (setq magit-section-initial-visibility-alist (quote ((untracked . hide))))
-  ;;禁用magit中的gravatars支持, 响应能快一些.
-  (setq magit-revision-show-gravatars nil))
-#+end_src
-
-git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
-
-magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
-- [[https://github.com/alphapapa/magit-todos][alphapapa/magit-todos: Show source files' TODOs (and FIXMEs, etc) in Magit status buffer]]
-
-magit-todos已在magit modules定义.
-#+begin_src elisp :tangle no
-(package! magit-todos)
-#+end_src
-
 *** vc commit
 自动更新时间戳
 #+name: 3ac9a958
@@ -3784,6 +3656,10 @@ magit-todos已在magit modules定义.
 #+end_src
 
 *** rust-mode
+**** task [0/2]
+- [ ] (define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
+- [ ] [[https://github.com/ayrat555/cargo-mode][ayrat555/cargo-mode: Emacs minor mode which allows to dynamically select cargo command]]
+
 **** docs
 - 关于补全: lsp/rust-analyze太重了, racer更简单一些.
 - 解决花括号中 "{|}" 中换行行为, 与spacemacs保持一致.
@@ -4057,6 +3933,11 @@ rust版比doom版的更好, 可自动跳转到出错点(c-c c-n)
   ;; 无效
   ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
   )
+
+(gwp-leader-def
+  :keymaps 'rust-mode-map
+  "f" 'rust-format-buffer
+  )
 #+end_src
 
 **** edit
@@ -4178,6 +4059,8 @@ xx <=> Option<xx>
 需要安装cargo.el等包
 #+name: e86dc54d
 #+begin_src elisp
+(package! magit)
+(package! magit-todos)
 (package! cargo)
 (package! racer)
 (package! rust-mode)
@@ -4308,6 +4191,17 @@ If a prefix argument is given, don't change the kill-ring."
 #+end_src
 
 *** evil
+可以用来定义 leader 的键
+- z
+- b: evil-backward-word-begin
+- w/W
+- q/Q
+- ,
+- \: evil-execute-in-emacs-state
+- -: evil-previous-line-first-non-blank
+- =: evil-indent
+- F5
+
 #+name: 73388047
 #+begin_src elisp
 ;; 默认q为macro键, 我很少用. 改为快速移动类按键.
@@ -4318,8 +4212,9 @@ If a prefix argument is given, don't change the kill-ring."
 (map! :n "e" #'evil-forward-sentence-begin)
 (map! :n "E" #'evil-backward-sentence-begin)
 
-(map! :n "w" #'evil-forward-word-begin)
-(map! :n "W" #'evil-backward-word-begin)
+;; 下面可以用 M-f/M-b 代替
+;; (map! :n "w" #'evil-forward-word-begin)
+;; (map! :n "W" #'evil-backward-word-begin)
 
 ;; C-v: evil默认为quoted-insert, 可以 ctrl-q代替
 (map! :i "C-v" #'yank)
@@ -5152,15 +5047,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+begin_src elisp
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
-
-(map! :map org-mode-map
-      :n "gh" #'org-up-element
-      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
-      :n "gk" #'org-previous-visible-heading
-      :n "gj" #'org-next-visible-heading
-      :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
-      :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
-      )
 #+end_src
 
 **** view
@@ -5222,7 +5108,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+name: fbbec921
 #+begin_src elisp
 ;; 取自doom org moudle
-(defun gwp::dwim-at-point (&optional arg)
+(defun gwp::org-dwim-at-point (&optional arg)
   "Do-what-I-mean at point.
 
 If on a:
@@ -5297,8 +5183,8 @@ If on a:
            ))))))
 
 (map! :map org-mode-map
-      :n [return]   #'gwp::dwim-at-point
-      :n "RET"      #'gwp::dwim-at-point
+      :n [return]   #'gwp::org-dwim-at-point
+      :n "RET"      #'gwp::org-dwim-at-point
       )
 #+end_src
 
@@ -5337,13 +5223,18 @@ If on a:
 **** move/movment
 #+name: bbdcd834
 #+begin_src elisp
-(map! :n "M-k" #'org-metaup)
-(map! :n "M-j" #'org-metadown)
-
-;; (map! :n "M-p" #'org-previous-visible-heading)
-;; (map! :n "M-n" #'org-next-visible-heading)
-(map! :map org-mode-map :n "M-p" #'org-backward-element)
-(map! :map org-mode-map :n "M-n" #'org-forward-element)
+(map! :map org-mode-map
+      :n "gh" #'org-up-element
+      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      :n "gk" #'org-backward-heading-same-level
+      :n "gj" #'org-forward-heading-same-level
+      :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
+      :n "M-h" #'org-metaleft    ; doom中默认为 promote-subtree
+      :n "M-k" #'org-metaup
+      :n "M-j" #'org-metadown
+      :n "M-p" #'org-backward-element
+      :n "M-n" #'org-forward-element
+      )
 #+end_src
 
 **** screenshot
@@ -5450,6 +5341,19 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (help/set-org-babel-default-header-args :mkdirp "yes")
 (help/set-org-babel-default-header-args :comments "link")
 #+end_src
+***** load
+方便在 org 中直接执行某些脚本操作.
+#+name: 0d8e352a
+#+begin_src elisp
+;; activate languages for evaluation
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (python . t)
+   (shell . t)
+   (emacs-lisp . t) ;; this is the default
+   ))
+#+end_src
 
 ***** enter
 #+begin_src emacs-lisp
@@ -5497,11 +5401,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       ";" #'org-edit-src-exit
       "k" #'org-edit-src-abort
       )
-
-(map! :map org-src-mode-map
-      :leader
-      ";" #'org-edit-src-exit
-      )
+(gwp-leader-def
+  :keymaps 'org-src-mode-map
+  "q" #'org-edit-src-exit
+  )
 #+end_src
 
 ***** jump to org blocks/links
@@ -5520,13 +5423,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   ("p" org-previous-link "prev link")
   ("q" nil "quit")
   )
-
-(map! :map org-mode-map
-      :localleader
-      (:prefix-map ("j" . "org jump")
-       :desc "跳转至代码块" "b"   #'gwp/org-jump-block/body
-       :desc "跳转至链接"   "l"   #'gwp/org-jump-link/body
-       ))
 #+end_src
 
 ***** jump to file
@@ -5607,19 +5503,19 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 	start body-start end target-buffer target-char link block-name body)
     (save-window-excursion
       (save-excursion
-	(while (and (re-search-backward org-link-bracket-re nil t)
-		    (not ; ever wider searches until matching block comments
-		     (and (setq start (line-beginning-position))
-			  (setq body-start (line-beginning-position 2))
-			  (setq link (match-string 0))
-			  (setq block-name (match-string 2))
-			  (save-excursion
-			    (save-match-data
-			      (re-search-forward
-			       (concat " " (regexp-quote block-name)
-				       " ends here")
-			       nil t)
-			      (setq end (line-beginning-position))))))))
+    (while (and (re-search-backward org-link-bracket-re nil t)
+            (not ; ever wider searches until matching block comments
+             (and (setq start (line-beginning-position))
+              (setq body-start (line-beginning-position 2))
+              (setq link (match-string 0))
+              (setq block-name (match-string 2))
+              (save-excursion
+                (save-match-data
+                  (re-search-forward
+                   (concat " " (regexp-quote block-name)
+                       " ends here")
+                   nil t)
+                  (setq end (line-beginning-position))))))))
 	(unless (and start (< start mid) (< mid end))
 	  (error "Not in tangled code"))
         (setq body (buffer-substring body-start end)))
@@ -6756,15 +6652,17 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 ***** core
 #+name: 917381e9
 #+begin_src elisp
+;; 2021-10-20: 可用 gwp-leader-def 来代替
 ;; 定义一些特别常用的命令, 仅在org-mode中显示
-(defun gwp/org-mode-keys-hook ()
-  (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
-  (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
-  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
-(add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
-(defun gwp/org-src-mode-keys-hook ()
-  (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
-(add-hook 'org-src-mode-hook 'gwp/org-mode-keys-hook)
+;; (defun gwp/org-mode-keys-hook ()
+;;   ;; (evil-local-set-key 'normal (kbd "SPC RET") '+org/dwim-at-point)
+;;   ;; (evil-local-set-key 'normal (kbd "SPC j t") 'gwp/org-babel-tangle-jump-to-file)
+;;   ;; (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim)
+;; )
+;; (add-hook 'org-mode-hook 'gwp/org-mode-keys-hook)
+;; (defun gwp/org-src-mode-keys-hook ()
+;;   (evil-local-set-key 'normal (kbd "SPC d d") 'gwp/org-babel-tangle-dwim))
+;; (add-hook 'org-src-mode-hook 'gwp/org-mode-keys-hook)
 
 ;; [2021-10-04 Mon] leader map是全局性的, 不能动态加载和卸载
 ;; (map! :mode org-mode
@@ -6842,6 +6740,17 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Jump to org heading"  "g" #'counsel-org-goto
        ))
 #+end_src
+***** jump
+#+name: 3bbc773a
+#+begin_src elisp
+(map! :map org-mode-map
+      :localleader
+      (:prefix-map ("j" . "org jump")
+       :desc "跳转至代码块"              "b"   #'gwp/org-jump-block/body
+       :desc "跳转至链接"                "l"   #'gwp/org-jump-link/body
+       :desc "跳转至 tangled 代码文件"   "t"   #'gwp/org-babel-tangle-jump-to-file
+       ))
+#+end_src
 
 ***** link
 #+name: 32a3b56a
@@ -6896,12 +6805,13 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 
 (map! :map org-mode-map
       :localleader
+      :desc "TODO" "C-t" #'org-todo
       (:prefix ("t" . "todo/toggle/tag")
        :desc "TODO" "t" #'org-todo
        :desc "heading" "h" #'org-toggle-heading
        :desc "item" "i" #'org-toggle-item
        :desc "tag" "s" #'counsel-org-tag
-       :desc "fixed-width markup (:)" "f" #'org-toggle-fixed-width
+       :desc "fixed-width markup (:)" ":" #'org-toggle-fixed-width
        "c" #'gwp::org-toggle-checkbox))
 #+end_src
 
@@ -6979,6 +6889,25 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :n "RET" #'org-sidebar-tree-jump
       :n [return] #'org-sidebar-tree-jump
       )
+#+end_src
+***** gwp leader key
+最常用的按键
+#+name: fdd56fa5
+#+begin_src elisp
+(gwp-leader-def
+  :keymaps 'org-mode-map
+  "g" 'counsel-org-goto                 ; goto
+  "t" 'org-todo                         ; todo
+  "b" 'gwp/org-babel-tangle-dwim        ; babel
+  "e" 'org-edit-special                 ; edit
+  "a" 'org-attach                       ; attach
+  "n" 'ap/org-tree-to-indirect-buffer   ; narrow
+  )
+
+(gwp-leader-def
+  :keymaps 'org-src-mode-map
+  "b" 'gwp/org-babel-tangle-dwim
+  )
 #+end_src
 
 *** packages.el
@@ -7090,6 +7019,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Align the current region regexp"       "a"   #'align-regexp
        :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
+       :desc "将TAB转为空格"                         "SPC" #'untabify
        :desc "indent region"                         "TAB" #'indent-region ; 有用
        :desc "indent region"                         [tab] #'indent-region ; 有用
        :desc "Compile"                               "c"   #'compile
@@ -7326,7 +7256,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (map! :leader
       (:prefix-map ("o" . "org/open")
        :desc "Org attachment"        "a" #'org-attach
-       :desc "Todo list"             "t" #'org-todo-list
        :desc "org-agenda (GTD)"      "n" (cmd! (org-agenda nil "gt"))
        :desc "org-capture"           "c" #'org-capture
        :desc "Tags search"           "m" #'org-tags-view
@@ -7564,29 +7493,30 @@ $0
 : pkg/.doom.d/snippets/rust-mode/cfg
 *** impl Default
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/impl_default
-  # -*- mode: snippet -*-
-  # name: impl Default
-  # key: Default
-  # --
-  impl Default for ${1:Type} {
-      fn default() -> Self {
-          ${0:Self::new()}
-      }
-  }
+# -*- mode: snippet -*-
+# name: impl Default
+# key: Default
+# --
+impl Default for ${1:Type} {
+    fn default() -> Self {
+        ${0:Self::new()}
+    }
+}
 #+END_SRC
 
 *** structopt
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/structopt
-  # -*- mode: snippet -*-
-  # name: #[derive(StructOpt)]
-  # key: structopt
-  # --
-  #[derive(StructOpt, Debug, Clone)]
-  struct ${1:Cli} {
-      #[structopt(long, short)]
-      ${2:n}: ${0:usize}
-  }
+# -*- mode: snippet -*-
+# name: #[derive(StructOpt)]
+# key: structopt
+# --
+#[derive(StructOpt, Debug, Clone)]
+struct ${1:Cli} {
+    #[structopt(long, short)]
+    ${2:n}: ${0:usize}
+}
 #+END_SRC
+
 *** if let
 : pkg/.doom.d/snippets/rust-mode/if_let
 *** deprecated
@@ -7600,13 +7530,13 @@ $0
 
 *** for
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/for
-  # -*- mode: snippet -*-
-  # name: for var in iterable { ... }
-  # key: for
-  # --
-  for ${1:var} in ${2:iterable} {
-      $0
-  }
+# -*- mode: snippet -*-
+# name: for var in iterable { ... }
+# key: for
+# --
+for ${1:var} in ${2:iterable} {
+    $0
+}
 #+END_SRC
 
 *** print
@@ -7620,11 +7550,11 @@ print!("${1:{}}", $2);
 
 *** println
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/println
-  # -*- mode: snippet -*-
-  # name: println!("{}", value);
-  # key: println
-  # --
-  println!("${1:{}}", $2);
+# -*- mode: snippet -*-
+# name: println!("{}", value);
+# key: println
+# --
+println!("${1:{}}", $2);
 #+END_SRC
 
 *** eprintln
@@ -7660,13 +7590,13 @@ fn ${1:name}($2) -> ${3:Result<${4:()}>} {
 
 *** fnw
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/fnw
-  # -*- mode: snippet -*-
-  # name: fn name<T>(x: T) where T: Clone { ... }
-  # key: fnw
-  # --
-  fn ${1:name}<${2:T}>(${3:x: T}) where ${4:T: Clone} {
-       $0
-  }
+# -*- mode: snippet -*-
+# name: fn name<T>(x: T) where T: Clone { ... }
+# key: fnw
+# --
+fn ${1:name}<${2:T}>(${3:x: T}) where ${4:T: Clone} {
+     $0
+}
 #+END_SRC
 
 *** test
@@ -7692,13 +7622,13 @@ fn ${1:test_name}() {
 
 *** main
 #+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/main
-  # -*- mode: snippet -*-
-  # name: fn main() { ... }
-  # key: main
-  # --
-  fn main() {
-     $0
-  }
+# -*- mode: snippet -*-
+# name: fn main() { ... }
+# key: main
+# --
+fn main() {
+   $0
+}
 #+END_SRC
 
 ** prog-mode

@@ -204,3 +204,12 @@
 ;;               doom-leader-alt "<f13>"
 ;;               doom-localleader-key ""
 ;;               doom-localleader-alt-key "<M-f13>")
+
+;; 自定义 leader key, 用于模式下最常用的命令(w: wo, 我)
+(after! evil
+  (general-create-definer gwp-leader-def
+    :states '(normal insert emacs)
+    :keymaps 'override                  ; prevent your leader keybindings from ever being overridden
+    :prefix "w"
+    :non-normal-prefix "<f4>"
+    ))

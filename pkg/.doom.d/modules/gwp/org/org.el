@@ -62,7 +62,7 @@
 (use-package org-superstar
   :init
   ;; ◉ ○ ◆ » ◇ ▶ ▷
-  (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
+  (setq org-superstar-headline-bullets-list '("☰" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
 ;; 显示光标所在处的headline
@@ -647,6 +647,26 @@ selected instead of creating a new buffer."
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
 ;; narrow:1 ends here
 
+;; [[file:../../../../../doom.note::ab0515d6][ab0515d6]]
+;;;###autoload
+(defun gwp::org-babel-narrow-to-tangle-heading ()
+  "narrow至当前代码块对应的 tangle 文件所在级别"
+  (interactive)
+  (save-excursion
+    (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
+          (start-position (point)))
+      (if tangle-file
+          (progn
+            (if (search-backward (format ":tangle %s" tangle-file) nil t)
+                (progn
+                  (setq offset (- start-position (point)))
+                  (ap/org-tree-to-indirect-buffer)
+                  (forward-char offset)
+                  (message "narrowed to heading: %s" tangle-file))
+              (message "no root headline found")))
+        (message "no src block at point")))))
+;; ab0515d6 ends here
+
 ;; [[file:../../../../../doom.note::*zotero/ui][zotero/ui:1]]
 ;; rust-modules
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
@@ -1013,7 +1033,11 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (user-error "Point is not on a file link"))))
 ;; delete link file:1 ends here
 
-;; [[file:../../../../../doom.note::*capture & protocol][capture & protocol:1]]
+;; [[file:../../../../../doom.note::d3403c99][d3403c99]]
+(require 'org-protocol)
+;; d3403c99 ends here
+
+;; [[file:../../../../../doom.note::*capture][capture:1]]
 (setq org-capture-templates
       '(
         ("n" "Note" entry (file "~/Notes/refile.note")
@@ -1028,7 +1052,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
          "* %u %? %(org-get-x-clipboard 'CLIPBOARD)\n  %i\n" :prepend t)
         ("N" "Note from protocol" entry (file "~/Notes/refile.note")
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
-;; capture & protocol:1 ends here
+;; capture:1 ends here
 
 ;; [[file:../../../../../doom.note::568eea25][568eea25]]
 (defun gwp/org-get-refile-targets ()
@@ -1442,12 +1466,12 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; [[file:../../../../../doom.note::fdd56fa5][fdd56fa5]]
 (gwp-leader-def
   :keymaps 'org-mode-map
-  "g" 'counsel-org-goto                 ; goto
-  "t" 'org-todo                         ; todo
-  "b" 'gwp/org-babel-tangle-dwim        ; babel
-  "e" 'org-edit-special                 ; edit
-  "a" 'org-attach                       ; attach
-  "n" 'ap/org-tree-to-indirect-buffer   ; narrow
+  "g" 'counsel-org-goto                        ; goto
+  "t" 'org-todo                                ; todo
+  "b" 'gwp/org-babel-tangle-dwim               ; babel
+  "e" 'org-edit-special                        ; edit
+  "a" 'org-attach                              ; attach
+  "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
   )
 
 (gwp-leader-def

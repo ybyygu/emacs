@@ -23,6 +23,7 @@
 * 配置参考
 - [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
 - [ ] [[https://github.com/bodnarlajos/emacs-pure][bodnarlajos/emacs-pure]]
+- [ ] [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
 - [ ] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
 - [ ] [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
 - [ ] [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
@@ -41,7 +42,7 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [58/70]
+* Memo [59/70]
 ** DONE [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
 - Note taken on [2021-10-20 Wed 18:59] \\
   挺好的, 主要是 eaf-pdf-viewer 好用. 不过暂时可以不用.
@@ -198,7 +199,8 @@ strace -f -s 1000 -tt xdg-open http://www.baidu.com &>/tmp/a.log
 - State "DONE"       from "TODO"       [2021-10-08 Fri 18:40]
 应先进入org-src-edit模式后再处理
 
-** TODO [2021-10-06 Wed] 优化按键布局
+** DONE [2021-10-06 Wed] 优化按键布局
+- State "DONE"       from "TODO"       [2021-10-20 Wed 19:01]
 可以考虑去掉q命令, 很少用, 还经常错按. 可以用evil-forward-*之类的代替?
 evil-forward-paragraph
 
@@ -1790,6 +1792,7 @@ Terminal=false
 MimeType=x-scheme-handler/org-protocol;
 #+END_SRC
 
+测试
 : xdg-open 'org-protocol://store-link?url=https%3A%2F%2Forgmode.org%2Fworg%2Forg-contrib%2Forg-protocol.html'
 : xdg-open 'org-protocol:///capture?template=n&url=http://www.baidu.com'
 
@@ -5083,7 +5086,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (use-package org-superstar
   :init
   ;; ◉ ○ ◆ » ◇ ▶ ▷
-  (setq org-superstar-headline-bullets-list '("◉" "▶" "▷" "»"))
+  (setq org-superstar-headline-bullets-list '("☰" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
 ;; 显示光标所在处的headline
@@ -5769,9 +5772,7 @@ doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一�
     (sp-local-pair "=" nil :actions :rem)
     (sp-local-pair "~" nil :actions :rem)
     (sp-local-pair "*" nil :actions :rem)
-    (sp-local-pair "_" nil :actions :rem)
-    )
-  )
+    (sp-local-pair "_" nil :actions :rem)))
 #+end_src
 
 **** narrow
@@ -5808,6 +5809,28 @@ selected instead of creating a new buffer."
       (org-narrow-to-subtree))))
 
 (advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
+#+end_src
+
+narrow 到当前代码块对应的 tangle 文件所在的层级. 专注编辑, 也不用担心 tangle 出的代码不全的问题.
+#+name: ab0515d6
+#+begin_src elisp
+;;;###autoload
+(defun gwp::org-babel-narrow-to-tangle-heading ()
+  "narrow至当前代码块对应的 tangle 文件所在级别"
+  (interactive)
+  (save-excursion
+    (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
+          (start-position (point)))
+      (if tangle-file
+          (progn
+            (if (search-backward (format ":tangle %s" tangle-file) nil t)
+                (progn
+                  (setq offset (- start-position (point)))
+                  (ap/org-tree-to-indirect-buffer)
+                  (forward-char offset)
+                  (message "narrowed to heading: %s" tangle-file))
+              (message "no root headline found")))
+        (message "no src block at point")))))
 #+end_src
 
 **** zotero/ui                                                          :ATTACH:
@@ -6295,8 +6318,13 @@ file-exists-p函数对symlink的特殊性:
           (error "No such attachment: %s" file))
       (user-error "Point is not on a file link"))))
 #+end_src
+**** protocol
+#+name: d3403c99
+#+begin_src elisp
+(require 'org-protocol)
+#+end_src
 
-**** capture & protocol
+**** capture
 占位符:
 | %:link                            | URL of the web-page                                  |
 | %:description                     | The title of the web-page                            |
@@ -6896,12 +6924,12 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+begin_src elisp
 (gwp-leader-def
   :keymaps 'org-mode-map
-  "g" 'counsel-org-goto                 ; goto
-  "t" 'org-todo                         ; todo
-  "b" 'gwp/org-babel-tangle-dwim        ; babel
-  "e" 'org-edit-special                 ; edit
-  "a" 'org-attach                       ; attach
-  "n" 'ap/org-tree-to-indirect-buffer   ; narrow
+  "g" 'counsel-org-goto                        ; goto
+  "t" 'org-todo                                ; todo
+  "b" 'gwp/org-babel-tangle-dwim               ; babel
+  "e" 'org-edit-special                        ; edit
+  "a" 'org-attach                              ; attach
+  "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
   )
 
 (gwp-leader-def

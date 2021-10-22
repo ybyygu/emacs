@@ -7,6 +7,10 @@
 (add-hook 'org-mode-hook 'gwp::turn-off-wrap-long-line)
 ;; a6f83332 ends here
 
+;; [[file:../../../../../doom.note::4e3b4060][4e3b4060]]
+(blink-cursor-mode 1)
+;; 4e3b4060 ends here
+
 ;; [[file:../../../../../doom.note::885c9fa9][885c9fa9]]
 ;; 方便绑定到 SPC-t-l
 ;;

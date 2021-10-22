@@ -1,8 +1,4 @@
 ;; [[file:../../../../../doom.note::b28b06dc][b28b06dc]]
-;; treat .note files as org-mode
-(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
-
 (setq org-blank-before-new-entry nil)
 (setq org-default-notes-file (concat org-directory "/life.note"))
 
@@ -579,44 +575,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
          )))
 ;; 37fef008 ends here
 
-;; [[file:../../../../../doom.note::7115b5b1][7115b5b1]]
-(defun gwp::org-noter::open-pdf ()
-  "使用 llpp 来打开当前笔记对应的 pdf 文件, 并转到指定的页码"
-  (interactive)
-  (let ((page (gwp::org-noter::get-pdf-page))
-        (pdf (gwp::org-noter::get-pdf-file)))
-    (if page
-        (start-process "llpp" nil "llpp" pdf "-page" (format "%s" page))
-      ;; (start-process "okular" nil "okular" pdf "-p" (format "%s" page))
-      (start-process "llpp" nil "llpp" pdf)
-      ;; (start-process "okular" nil "okular" pdf)
-      )))
-
-(defun gwp::org-noter::get-pdf-file ()
-  (save-excursion
-    (if (search-backward ":NOTER_DOCUMENT" nil t)
-        (progn
-          (org-back-to-heading)
-          (let ((pdf (org-element-property :NOTER_DOCUMENT (org-element-at-point))))
-            (message "%s" pdf)))
-      (message "no pdf doc found"))))
-
-(defun gwp::org-noter::get-pdf-page ()
-  (save-excursion
-    (org-back-to-heading)
-    (let ((property (org-element-property :NOTER_PAGE (org-element-at-point))))
-      (let ((value (car (read-from-string property))))
-        (cond
-         ((consp value) (car value))
-         (t value))))))
-
-(defun gwp::org-noter::new-note ()
-  "插入新的文献阅读笔记"
-  (interactive)
-  (call-interactively 'org-insert-heading)
-  (org-set-property "NOTER_PAGE" "1"))
-;; 7115b5b1 ends here
-
 ;; [[file:../../../../../doom.note::*narrow][narrow:1]]
 (defun ap/org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.
@@ -655,7 +613,8 @@ selected instead of creating a new buffer."
   (save-excursion
     (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
           (start-position (point)))
-      (if tangle-file
+      ;; :tangle no 不能算
+      (if (and tangle-file (not (string= tangle-file "no")))
           (progn
             (if (search-backward (format ":tangle %s" tangle-file) nil t)
                 (progn
@@ -664,7 +623,7 @@ selected instead of creating a new buffer."
                   (forward-char offset)
                   (message "narrowed to heading: %s" tangle-file))
               (message "no root headline found")))
-        (message "no src block at point")))))
+        (message "no tangled src block at point")))))
 ;; ab0515d6 ends here
 
 ;; [[file:../../../../../doom.note::*zotero/ui][zotero/ui:1]]
@@ -1365,8 +1324,14 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (map! :map org-mode-map
       :localleader
       (:prefix ("n" . "note/noter")
-       "o" #'gwp::org-noter::open-pdf
-       "i" #'gwp::org-noter::new-note
+       "o" #'gwp::org-note::open-pdf
+       "i" #'gwp::org-note::new-note
+       ))
+
+(map! :map dired-mode-map
+      :localleader
+      (:prefix ("n" . "note/noter")
+       "n" #'gwp::org-note::dired-annotate-file-at-point
        ))
 ;; ac0d3d18 ends here
 

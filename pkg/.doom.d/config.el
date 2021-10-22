@@ -43,11 +43,6 @@
 ;; they are implemented.
 ;; b70e7222 ends here
 
-;; [[file:../../doom.note::af34cd47][af34cd47]]
-(setq gwp-emacs-directory "~/Workspace/Programming/emacs/")
-(push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)
-;; af34cd47 ends here
-
 ;; [[file:../../doom.note::11b27926][11b27926]]
 (setq doom-scratch-initial-major-mode 'emacs-lisp)
 ;; 11b27926 ends here

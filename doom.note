@@ -42,7 +42,13 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [59/70]
+* Memo [60/71]
+** DONE [2021-10-21 Thu] 实现 org-noter 最基本的功能, 方便 pdf 批注.
+- State "DONE"       from "TODO"       [2021-10-22 Fri 17:18]
+- [X] 可自动生成 annotation.note 文件
+- [X] 可插入指向 pdf 某页的 headline
+- [X] 可由 headline 使用外部的 pdf 阅读器来打开指定文件及页面
+
 ** DONE [2021-10-17 Sun] 尝试 eaf 中的 pdf-viewer
 - Note taken on [2021-10-20 Wed 18:59] \\
   挺好的, 主要是 eaf-pdf-viewer 好用. 不过暂时可以不用.
@@ -1255,6 +1261,12 @@ C-z
 
 : reset: O
 : discard: x
+: git rm --cached: K
+
+timemachine:
+<normal-state> C-n    git-timemachine-show-next-revision
+<normal-state> C-p    git-timemachine-show-previous-revision
+
 
 处理当前文件的编辑历史:
 : magit-file-dispatch
@@ -2269,6 +2281,14 @@ gwp-merge:
     ))
 #+end_src
 
+*** load path
+自定义的el文件放在user-lisp下, 可自动加载
+#+name: af34cd47
+#+begin_src elisp
+(setq gwp-emacs-directory "~/Workspace/Programming/emacs/")
+(push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)
+#+end_src
+
 ** config.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/config.el
@@ -2337,6 +2357,9 @@ gwp-merge:
 #+end_src
 
 *** load path
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 自定义的el文件放在user-lisp下, 可自动加载
 #+name: af34cd47
 #+begin_src elisp
@@ -2954,6 +2977,110 @@ magit-status-mode-map
 (provide 'init-magit)
 #+end_src
 
+** init-note.el
+:PROPERTIES:
+:header-args: :tangle user-lisp/init-note.el
+:END:
+*** docs
+仿 org-noter 但, 简化操作, 不依赖于 pdf-tools 等包, 可使用外部的 pdf 阅读器来处
+理 pdf 文件.
+
+pdf-tools 的缺点是太慢了, llpp 要快得多, 适合看稍大一些的文件. 使用 llpp 来打开
+org-noter 生成的note, 用于打开打定的 PDF 页面.
+
+: okular foo.pdf -p 5
+: evince foo.pdf -p 5
+: llpp foo.pdf -page 5
+
+批注流程
+- 使用 dired 打开某个 pdf 文件, 然后 ",nn", 在 pdf 所在目录生成并打开 annotation.note.
+- 在 org-mode 下, 自建 heading, ",ni", 插入 property, 标明 pdf 页码信息.
+- 在某 heading 下, ",no", 打开该 heading 对应的 pdf 文件及相应的页码
+
+另外, 通过 [[https://github.com/ymarco/paper-mode][ymarco/paper-mode]], 也可以把 llpp 放到 emacs buffer 中.
+
+*** require
+还是基于 org-noter 来开发, 能省一些事是一些.
+#+begin_src elisp
+(require 'org-noter)
+#+end_src
+
+*** create file
+#+name: 8a535ad4
+#+begin_src elisp
+(defun gwp::org-note::create-annotation-file (document-path)
+  (let* ((note-file "annotation.note")
+         (document-name (file-name-nondirectory document-path))
+         (document-base (file-name-base document-name)))
+    (with-current-buffer (switch-to-buffer (find-file-noselect note-file))
+      (goto-char (point-max))
+      (insert "* " document-base)
+      (org-set-property org-noter-property-doc-file document-name)
+      (save-buffer))))
+
+;;;###autoload
+(defun gwp::org-note::dired-annotate-file-at-point ()
+  "标注 dired buffer 中所定的(pdf)文件"
+  (interactive)
+  (if (derived-mode-p 'dired-mode)
+      (gwp::org-note::create-annotation-file (dired-get-file-for-visit))
+    (user-error "not in dired buffer")))
+#+end_src
+
+*** open
+#+name: 1773f1a3
+#+begin_src elisp
+(defun gwp::org-note::get-pdf-file ()
+  (save-excursion
+    (if (search-backward ":NOTER_DOCUMENT" nil t)
+        (progn
+          (org-back-to-heading)
+          (let ((pdf (org-element-property :NOTER_DOCUMENT (org-element-at-point))))
+            (message "%s" pdf)))
+      (message "no pdf doc found"))))
+
+(defun gwp::org-note::get-pdf-page ()
+  (save-excursion
+    (org-back-to-heading)
+    (let ((property (org-element-property :NOTER_PAGE (org-element-at-point))))
+      (let ((value (car (read-from-string property))))
+        (cond
+         ((consp value) (car value))
+         (t value))))))
+
+;;;###autoload
+(defun gwp::org-note::new-note ()
+  "在当前 heading 下插入新的文献阅读笔记"
+  (interactive)
+  ;; (let ((current-prefix-arg '(4)))     ; C-u
+  ;;   (call-interactively #'org-insert-heading))
+  ;; (insert (read-string "笔记标题: "))
+  (if (org-at-heading-p)
+      (let ((page (read-number "PDF 页码: " 1)))
+        (org-set-property "NOTER_PAGE" (number-to-string page)))
+    (user-error "not at org heading.")))
+
+;;;###autoload
+(defun gwp::org-note::open-pdf ()
+  "使用 llpp 来打开当前笔记对应的 pdf 文件, 并转到指定的页码"
+  (interactive)
+  (let ((page (gwp::org-note::get-pdf-page))
+        (pdf (gwp::org-note::get-pdf-file)))
+    (if page
+        (start-process "llpp" nil "llpp" pdf "-page" (format "%s" page))
+      ;; (start-process "okular" nil "okular" pdf "-p" (format "%s" page))
+      (start-process "llpp" nil "llpp" pdf)
+      ;; (start-process "okular" nil "okular" pdf)
+      )))
+#+end_src
+
+
+*** provide
+#+name: 8d4b377b
+#+begin_src elisp
+(provide 'init-note)
+#+end_src
+
 * modules/gwp
 使用doom的方式来组织代码, 这样的好处是packages可以模块化来定义, 避免tangle时不小心出问题.
 ** ui
@@ -2970,6 +3097,12 @@ magit-status-mode-map
 (defun gwp::turn-off-wrap-long-line()
   (global-visual-line-mode -1))
 (add-hook 'org-mode-hook 'gwp::turn-off-wrap-long-line)
+#+end_src
+*** blink cursor
+让光标动起来, 更醒目
+#+name: 4e3b4060
+#+begin_src elisp
+(blink-cursor-mode 1)
 #+end_src
 
 *** line numbers
@@ -4378,9 +4511,11 @@ emacs 的 mark ring [[http://www.gnu.org/software/emacs/manual/html_node/emacs/M
 C-x C-@: 这是轮换全局 mark
 C-u C-@: 这是轮换当前的 mark ring
 
+- [[https://github.com/rolandwalker/back-button][rolandwalker/back-button: Visual navigation through mark rings in Emacs]]
 - [[https://stackoverflow.com/questions/3393834/how-to-move-forward-and-backward-in-emacs-mark-ring][How to move forward and backward in Emacs' mark ring - Stack Overflow]]
 - https://github.com/rolandwalker/back-button/blob/master/back-button.el
 - [[https://github.com/slewsys/emacs-extensions/blob/main/mark-navigation.el][emacs-extensions/mark-navigation.el]]
+- [[https://github.com/rolandwalker/back-button][rolandwalker/back-button: Visual navigation through mark rings in Emacs]]
 
 **** core
 #+name: e4fc036b
@@ -4985,6 +5120,10 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (setq org-roam-file-extensions '("note" "org"))
 
 (use-package! org
+  :init
+  ;; treat .note files as org-mode
+  (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
   :config
   (load! "org"))
 
@@ -5003,6 +5142,8 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   (evil-org-agenda-set-keys)
   (evil-define-key* 'motion evil-org-agenda-mode-map
     (kbd doom-leader-key) nil))
+
+(use-package! init-note)
 #+end_src
 
 *** org.el
@@ -5022,10 +5163,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 **** 基本设置
 #+name: b28b06dc
 #+begin_src elisp
-;; treat .note files as org-mode
-(add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("NOTE" . org-mode))
-
 (setq org-blank-before-new-entry nil)
 (setq org-default-notes-file (concat org-directory "/life.note"))
 
@@ -5714,53 +5851,6 @@ pdf-view-fit-width-to-window
          )))
 #+end_src
 
-**** org-noter/hack
-pdf-tools 的缺点是太慢了, llpp 要快得多, 适合看稍大一些的文件. 使用 llpp 来打开
-org-noter 生成的note, 用于打开打定的 PDF 页面.
-
-: okular foo.pdf -p 5
-: evince foo.pdf -p 5
-: llpp foo.pdf -page 5
-
-#+name: 7115b5b1
-#+begin_src elisp
-(defun gwp::org-noter::open-pdf ()
-  "使用 llpp 来打开当前笔记对应的 pdf 文件, 并转到指定的页码"
-  (interactive)
-  (let ((page (gwp::org-noter::get-pdf-page))
-        (pdf (gwp::org-noter::get-pdf-file)))
-    (if page
-        (start-process "llpp" nil "llpp" pdf "-page" (format "%s" page))
-      ;; (start-process "okular" nil "okular" pdf "-p" (format "%s" page))
-      (start-process "llpp" nil "llpp" pdf)
-      ;; (start-process "okular" nil "okular" pdf)
-      )))
-
-(defun gwp::org-noter::get-pdf-file ()
-  (save-excursion
-    (if (search-backward ":NOTER_DOCUMENT" nil t)
-        (progn
-          (org-back-to-heading)
-          (let ((pdf (org-element-property :NOTER_DOCUMENT (org-element-at-point))))
-            (message "%s" pdf)))
-      (message "no pdf doc found"))))
-
-(defun gwp::org-noter::get-pdf-page ()
-  (save-excursion
-    (org-back-to-heading)
-    (let ((property (org-element-property :NOTER_PAGE (org-element-at-point))))
-      (let ((value (car (read-from-string property))))
-        (cond
-         ((consp value) (car value))
-         (t value))))))
-
-(defun gwp::org-noter::new-note ()
-  "插入新的文献阅读笔记"
-  (interactive)
-  (call-interactively 'org-insert-heading)
-  (org-set-property "NOTER_PAGE" "1"))
-#+end_src
-
 **** pairs
 doom加了很多没用的pair, 比如 /, ~, *等. [2020-03-13 Fri] 折腾了一晚上才试好.
 #+begin_src elisp :tangle pkg/.doom.d/packages.el
@@ -5824,7 +5914,8 @@ narrow 到当前代码块对应的 tangle 文件所在的层级. 专注编辑, �
   (save-excursion
     (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
           (start-position (point)))
-      (if tangle-file
+      ;; :tangle no 不能算
+      (if (and tangle-file (not (string= tangle-file "no")))
           (progn
             (if (search-backward (format ":tangle %s" tangle-file) nil t)
                 (progn
@@ -5833,7 +5924,7 @@ narrow 到当前代码块对应的 tangle 文件所在的层级. 专注编辑, �
                   (forward-char offset)
                   (message "narrowed to heading: %s" tangle-file))
               (message "no root headline found")))
-        (message "no src block at point")))))
+        (message "no tangled src block at point")))))
 #+end_src
 
 **** zotero/ui                                                          :ATTACH:
@@ -6801,8 +6892,14 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (map! :map org-mode-map
       :localleader
       (:prefix ("n" . "note/noter")
-       "o" #'gwp::org-noter::open-pdf
-       "i" #'gwp::org-noter::new-note
+       "o" #'gwp::org-note::open-pdf
+       "i" #'gwp::org-note::new-note
+       ))
+
+(map! :map dired-mode-map
+      :localleader
+      (:prefix ("n" . "note/noter")
+       "n" #'gwp::org-note::dired-annotate-file-at-point
        ))
 #+end_src
 

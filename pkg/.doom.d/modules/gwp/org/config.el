@@ -6,6 +6,10 @@
 (setq org-roam-file-extensions '("note" "org"))
 
 (use-package! org
+  :init
+  ;; treat .note files as org-mode
+  (add-to-list 'auto-mode-alist '("\\.note\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("NOTE" . org-mode))
   :config
   (load! "org"))
 
@@ -24,4 +28,6 @@
   (evil-org-agenda-set-keys)
   (evil-define-key* 'motion evil-org-agenda-mode-map
     (kbd doom-leader-key) nil))
+
+(use-package! init-note)
 ;; abd5e254 ends here

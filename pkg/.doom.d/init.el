@@ -213,3 +213,6 @@
     :prefix "w"
     :non-normal-prefix "<f4>"
     ))
+
+(setq gwp-emacs-directory "~/Workspace/Programming/emacs/")
+(push (expand-file-name "user-lisp" gwp-emacs-directory) load-path)

@@ -42,14 +42,14 @@
        :desc "Previous buffer"             "p"   #'previous-buffer
        :desc "Next buffer"                 "n"   #'next-buffer
        :desc "Save buffer"                 "s"   #'basic-save-buffer
-       :desc "Clone indirect buffer"       "c"   #'clone-indirect-buffer
+       :desc "Save file as..."             "S"   #'write-file
+       :desc "Clone indirect buffer"       "c"   #'clone-indirect-buffer-other-window
        :desc "Toggle narrowing"            "-"   #'doom/toggle-narrow-buffer
        :desc "Switch to last buffer"       "l"   #'evil-switch-to-windows-last-buffer
        :desc "New empty buffer"            "N"   #'evil-buffer-new
        :desc "ibuffer"                     "i"   #'ibuffer
-       :desc "Open in new frame"           "o"   #'gwp/display-current-buffer-other-frame
+       :desc "Open in new frame"           "o"   #'gwp::display-current-buffer-other-frame
        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
-       :desc "Save all buffers"            "S"   #'evil-write-all
        :desc "reopen killed file"          "u"   #'gwp::find-last-killed-file
        :desc "copy file path"              "y"   #'+default/yank-buffer-path
        :desc "Bury buffer"                 "z"   #'bury-buffer

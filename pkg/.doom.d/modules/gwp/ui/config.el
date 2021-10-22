@@ -112,11 +112,27 @@
 ;; f07dc327 ends here
 
 ;; [[file:../../../../../doom.note::19e08aef][19e08aef]]
-(defun gwp/display-current-buffer-other-frame ()
-  "display current buffer on other frame"
+(defun gwp::display-current-buffer-other-frame ()
+  "在其它 frame 中显式当前 buffer"
   (interactive)
-  (display-buffer-other-frame (current-buffer)))
+  (switch-to-buffer-other-frame (current-buffer)))
 ;; 19e08aef ends here
+
+;; [[file:../../../../../doom.note::bf66c13f][bf66c13f]]
+(require 'ivy)
+(ivy-set-actions
+ ;; 以下会覆盖默认定义的, 所以需要补回
+ 'ivy-switch-buffer
+ '(
+   ("f" ivy--find-file-action "find file")
+   ("j" switch-to-buffer-other-window "other window")
+   ("k" ivy--kill-buffer-action "kill")
+   ("r" ivy--rename-buffer-action "rename")
+   ("x" counsel-open-buffer-file-externally "open externally")
+   ("f" switch-to-buffer-other-frame "other frame") ; 默认没有
+   ("t" switch-to-buffer-other-tab "other tab")     ; 默认没有
+   ))
+;; bf66c13f ends here
 
 ;; [[file:../../../../../doom.note::155b72b3][155b72b3]]
 (use-package! rime

@@ -5,6 +5,7 @@
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 - 从零开始 [[file:~/Install/configs/emacs/gwp/gwp.note][gwp.note]]
+- https://github.com/rolandwalker/back-button
 
 * Portal
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
@@ -3246,13 +3247,48 @@ hydra特别适合需要重复按键来完成的操作, 比如调整窗口大小.
       )
 #+end_src
 
-**** 新开frame
+**** new frame
+tear-off-window
 #+name: 19e08aef
 #+begin_src elisp
-(defun gwp/display-current-buffer-other-frame ()
-  "display current buffer on other frame"
+(defun gwp::display-current-buffer-other-frame ()
+  "在其它 frame 中显式当前 buffer"
   (interactive)
-  (display-buffer-other-frame (current-buffer)))
+  (switch-to-buffer-other-frame (current-buffer)))
+#+end_src
+
+**** clone buffer
+clone 出的 buffer 可独立编辑, 视图变化互不影响. 有用.
+: clone-indirect-buffer-other-window
+: clone-indirect-buffer
+
+**** switch buffer
+这几个命令挺有用, 不过在 ivy 框架下使用应更便利. 比如 ivy-switch-buffer 时, 可按
+C-o 选取相应的 action, 来操作选定的 buffer.
+
+: switch-to-buffer-other-window
+: switch-to-buffer-other-frame
+: switch-to-buffer-other-tab
+: switch-to-buffer
+
+从以下变量可查看 ivy 默认定义的 actions
+: ivy--actions-list
+
+#+name: bf66c13f
+#+begin_src elisp
+(require 'ivy)
+(ivy-set-actions
+ ;; 以下会覆盖默认定义的, 所以需要补回
+ 'ivy-switch-buffer
+ '(
+   ("f" ivy--find-file-action "find file")
+   ("j" switch-to-buffer-other-window "other window")
+   ("k" ivy--kill-buffer-action "kill")
+   ("r" ivy--rename-buffer-action "rename")
+   ("x" counsel-open-buffer-file-externally "open externally")
+   ("f" switch-to-buffer-other-frame "other frame") ; 默认没有
+   ("t" switch-to-buffer-other-tab "other tab")     ; 默认没有
+   ))
 #+end_src
 
 *** big font mode
@@ -7122,14 +7158,14 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "Previous buffer"             "p"   #'previous-buffer
        :desc "Next buffer"                 "n"   #'next-buffer
        :desc "Save buffer"                 "s"   #'basic-save-buffer
-       :desc "Clone indirect buffer"       "c"   #'clone-indirect-buffer
+       :desc "Save file as..."             "S"   #'write-file
+       :desc "Clone indirect buffer"       "c"   #'clone-indirect-buffer-other-window
        :desc "Toggle narrowing"            "-"   #'doom/toggle-narrow-buffer
        :desc "Switch to last buffer"       "l"   #'evil-switch-to-windows-last-buffer
        :desc "New empty buffer"            "N"   #'evil-buffer-new
        :desc "ibuffer"                     "i"   #'ibuffer
-       :desc "Open in new frame"           "o"   #'gwp/display-current-buffer-other-frame
+       :desc "Open in new frame"           "o"   #'gwp::display-current-buffer-other-frame
        :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
-       :desc "Save all buffers"            "S"   #'evil-write-all
        :desc "reopen killed file"          "u"   #'gwp::find-last-killed-file
        :desc "copy file path"              "y"   #'+default/yank-buffer-path
        :desc "Bury buffer"                 "z"   #'bury-buffer

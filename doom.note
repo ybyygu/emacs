@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       911405a5-0bd8-4575-9f6f-f4e83891a93e
+:END:
 #+TITLE: 个人文本交互系统(based on doom-emacs)
 #+SETUPFILE: ~/Notes/common.org
 
@@ -10,8 +13,8 @@
 - [[https://github.com/davidshepherd7/terminal-here][davidshepherd7/terminal-here: An Emacs package to open an external terminal emulator in the current directory]]
 
 * Portal
-- note [[zotero://select/items/1_MG5FH5V9][@emacs]]
-- [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
+- note [[zotero://select/items/1_MG5FH5V9][@emacs]] [[id:e8cab7e9-2b5a-4566-ade2-f9dd8c42a2ae][emacs.note]]
+- [[zotero://select/library/collections/Z8UFNPZ4][@zotero::collection]]
 
 * Tasks [9/9]
 - [X] insert 状态下无法输入z
@@ -47,6 +50,23 @@
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
 * Memo [60/71]
+** TODO [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
+- [ ] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
+- [X] 可搜索本地所有 .note 文件, 实现 sidebar 式的可视化
+
+** TODO [2021-10-23 Sat] comment 的问题
+不能处理 elisp region 中的情况
+  ^(
+   "/home/ybyygu/Workspace/Programming/emacs/doom.note"
+   "/home/ybyygu/Notes/scratch.note"
+   )^)
+
+比如以上^号选中的区域, 用默认的 comment-dwim 会将最后一个 ")" 放在下一行.
+
+问题
+- 如果在 comment 环境上添加一行, 比如用 O 命令, 而不生成新的 comment
+
+
 ** DONE [2021-10-21 Thu] 实现 org-noter 最基本的功能, 方便 pdf 批注.
 - State "DONE"       from "TODO"       [2021-10-22 Fri 17:18]
 - [X] 可自动生成 annotation.note 文件
@@ -4244,6 +4264,9 @@ xx <=> Option<xx>
 (package! rust-mode)
 (package! citre)
 (package! find-file-in-project)
+;; 这两个包安装报错, 临时禁用
+(package! gitconfig-mode :ignore t)
+(package! gitignore-mode :ignore t)
 #+end_src
 
 ** edit
@@ -6787,6 +6810,91 @@ deadgrep与doom有冲突, 不能用了.
   (interactive) (doom-project-find-file "~/.cache/notes"))
 #+end_src
 
+**** backlinks
+:PROPERTIES:
+:ID:       87c3209e-56e0-438e-bc9e-1a8143e22b9f
+:END:
+双向链接/反向链接是 roam research 里重要的特性.
+
+[[https://github.com/landakram/org-z][landakram/org-z: Lightweight, Org-mode flavored zettelkasten links.]]
+
+org-z 可以使用唯一的 ID 来管理 org heading 链接, 不依赖于文件名或 heading 字串, 可以保持链接的稳定性.
+
+修改了 org-id-link-to-org-use-id
+#+name: ac1d0086
+#+begin_src elisp
+(use-package org-id
+  :custom
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+#+end_src
+
+使用 counsel-org-link 也可用 ID 链接至本文档的 heading.
+
+如何打开 ID 链接呢?
+: org-id-track-globally
+: org-link-parameters
+: org-id-open
+: org-id-find
+: org-id-find-id-file
+: org-id-locations-file
+
+org 生成 ID 链接时, 会记录对应的文件路径, 然后在文件中搜索相应的 ID.
+org-id-locations-file 默认在 doom-emacs/.org-id-locations
+
+org 会自动扫描 org-directory 中的 org 文件, 找到有 ID 的文件名.
+
+org-sidebar 出现后可按在 item 上按 TAB 访问链接的文件位置.
+
+#+name: a4f269ca
+#+begin_src elisp
+(use-package org-sidebar
+  :custom
+  (org-sidebar-side 'left)
+  (org-ql-sidebar-buffer-setup-hook nil)
+  ;; (org-sidebar-default-fns '(gwp::org-sidebar-backlinks org-sidebar--todo-items))
+  :config
+  (map! :map org-sidebar-tree-map
+        :localleader
+        :n "RET" #'org-sidebar-tree-jump
+        :n [return] #'org-sidebar-tree-jump
+        ))
+
+
+;;;###autoload
+(defun gwp::org-backlinks ()
+  "显示指向当前 heading 的反向链接"
+  (interactive)
+
+  (require 'org-sidebar)
+  (let* ((id (org-entry-get (point) "ID"))
+         (custom-id (org-entry-get (point) "CUSTOM_ID"))
+         ;; FIXME: Do CUSTOM_ID links also have an "id:" prefix?
+         (query (cond ((and id custom-id)
+                       ;; This will be slow because it isn't optimized to a single regexp.  :(
+                       (warn "Entry has both ID and CUSTOM_ID set; query will be slow")
+                       `(or (link :target ,(concat "id:" id))
+                            (link :target ,(concat "id:" custom-id))))
+                      ((or id custom-id)
+                       `(link :target ,(concat "id:" (or id custom-id))))
+                      (t (error "Entry has no ID nor CUSTOM_ID property")))))
+    (org-sidebar-ql (gwp::org-backlinks-search-files id)
+      query :title (concat "Links to: " (org-get-heading t t)))))
+
+;; reference:
+;; (collection (funcall ffip-project-search-function cmd))
+(defun gwp::org-backlinks-search-files (keyword)
+  "搜索文件系统中所有的.note文件, 返回包含引用 keyword 的文件名"
+  (let* (
+         (rg-command (format "/usr/bin/rg --follow -l --color never -e %s /home/ybyygu/.cache/notes 2>/dev/null" keyword))
+         (output (shell-command-to-string rg-command))
+         (collection (split-string output "[\r\n]+" t))
+         result)
+    (message "shell output:\n%s\nshell output ends here" output)
+    (dolist (file collection result) (push file result))
+    result))
+#+end_src
+
+
 **** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
 #+begin_src emacs-lisp
@@ -6934,6 +7042,8 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       (:prefix ("n" . "note/noter")
        "o" #'gwp::org-note::open-pdf
        "i" #'gwp::org-note::new-note
+       "b" #'gwp::org-backlinks
+       "s" #'org-sidebar-tree-toggle
        ))
 
 (map! :map dired-mode-map
@@ -7048,17 +7158,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       )
 #+end_src
 
-***** org-sidebar
-用的不多
-#+name: 1a561e81
-#+begin_src elisp :tangle no
-(map! :map org-sidebar-tree-map
-      :localleader
-      :n "RET" #'org-sidebar-tree-jump
-      :n [return] #'org-sidebar-tree-jump
-      )
-#+end_src
-
 ***** gwp leader key
 最常用的按键
 #+name: fdd56fa5
@@ -7097,6 +7196,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (package! orgit)
 (package! ob-ipython)
 (package! org-sidebar)
+;; (package! org-z :recipe (:host github :repo "landakram/org-z"))
+;; (package! org-z-selectrum :recipe (:host github :repo "landakram/org-z"))
+
 
 (package! org-contrib
   :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))
@@ -7193,6 +7295,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        :desc "indent region"                         "TAB" #'indent-region ; 有用
        :desc "indent region"                         [tab] #'indent-region ; 有用
        :desc "Compile"                               "c"   #'compile
+       :desc "统计字数"                              "g"   #'count-words
        :desc "Recompile"                             "C"   #'recompile
        :desc "highlight"                             "h"   gwp::symbol-overlay-map
        :desc "Jump to definition"                    "d"   #'+lookup/definition
@@ -7296,7 +7399,6 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
         :desc "Git unstage file"          "U"   #'magit-unstage-file
         (:prefix ("f" . "find")
          :desc "Find file"                 "f"   #'magit-find-file
-         :desc "Find gitconfig file"       "g"   #'magit-find-git-config-file
          :desc "Find commit"               "c"   #'magit-show-commit
          :desc "Find issue"                "i"   #'forge-visit-issue
          :desc "Find pull request"         "p"   #'forge-visit-pullreq)
@@ -7494,7 +7596,7 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "Search current directory"     "d" #'+default/search-cwd
        :desc "Search other directory"       "D" #'+default/search-other-cwd
        :desc "Search .emacs.d"              "e" #'+default/search-emacsd
-       :desc "fd in current dir"            "f" #'find-file-in-project-by-selected ; 搜索文件名
+       :desc "搜索当前文件夹文件名"         "f" #'find-file-in-current-directory-by-selected ; 搜索文件名
        :desc "Jump to symbol"               "i" #'imenu
        :desc "Locate file"                  "l" #'counsel-locate
        :desc "Jump list"                    "j" #'evil-show-jumps

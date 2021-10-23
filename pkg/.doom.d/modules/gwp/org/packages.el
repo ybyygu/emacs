@@ -11,6 +11,9 @@
 (package! orgit)
 (package! ob-ipython)
 (package! org-sidebar)
+;; (package! org-z :recipe (:host github :repo "landakram/org-z"))
+;; (package! org-z-selectrum :recipe (:host github :repo "landakram/org-z"))
+
 
 (package! org-contrib
   :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))

@@ -1211,6 +1211,60 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (interactive) (doom-project-find-file "~/.cache/notes"))
 ;; 05419467 ends here
 
+;; [[file:../../../../../doom.note::ac1d0086][ac1d0086]]
+(use-package org-id
+  :custom
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+;; ac1d0086 ends here
+
+;; [[file:../../../../../doom.note::a4f269ca][a4f269ca]]
+(use-package org-sidebar
+  :custom
+  (org-sidebar-side 'left)
+  (org-ql-sidebar-buffer-setup-hook nil)
+  ;; (org-sidebar-default-fns '(gwp::org-sidebar-backlinks org-sidebar--todo-items))
+  :config
+  (map! :map org-sidebar-tree-map
+        :localleader
+        :n "RET" #'org-sidebar-tree-jump
+        :n [return] #'org-sidebar-tree-jump
+        ))
+
+
+;;;###autoload
+(defun gwp::org-backlinks ()
+  "显示指向当前 heading 的反向链接"
+  (interactive)
+
+  (require 'org-sidebar)
+  (let* ((id (org-entry-get (point) "ID"))
+         (custom-id (org-entry-get (point) "CUSTOM_ID"))
+         ;; FIXME: Do CUSTOM_ID links also have an "id:" prefix?
+         (query (cond ((and id custom-id)
+                       ;; This will be slow because it isn't optimized to a single regexp.  :(
+                       (warn "Entry has both ID and CUSTOM_ID set; query will be slow")
+                       `(or (link :target ,(concat "id:" id))
+                            (link :target ,(concat "id:" custom-id))))
+                      ((or id custom-id)
+                       `(link :target ,(concat "id:" (or id custom-id))))
+                      (t (error "Entry has no ID nor CUSTOM_ID property")))))
+    (org-sidebar-ql (gwp::org-backlinks-search-files id)
+      query :title (concat "Links to: " (org-get-heading t t)))))
+
+;; reference:
+;; (collection (funcall ffip-project-search-function cmd))
+(defun gwp::org-backlinks-search-files (keyword)
+  "搜索文件系统中所有的.note文件, 返回包含引用 keyword 的文件名"
+  (let* (
+         (rg-command (format "/usr/bin/rg --follow -l --color never -e %s /home/ybyygu/.cache/notes 2>/dev/null" keyword))
+         (output (shell-command-to-string rg-command))
+         (collection (split-string output "[\r\n]+" t))
+         result)
+    (message "shell output:\n%s\nshell output ends here" output)
+    (dolist (file collection result) (push file result))
+    result))
+;; a4f269ca ends here
+
 ;; [[file:../../../../../doom.note::*misc][misc:1]]
 ;; (require 'org-man)
 ;; misc:1 ends here
@@ -1327,6 +1381,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (:prefix ("n" . "note/noter")
        "o" #'gwp::org-note::open-pdf
        "i" #'gwp::org-note::new-note
+       "b" #'gwp::org-backlinks
+       "s" #'org-sidebar-tree-toggle
        ))
 
 (map! :map dired-mode-map

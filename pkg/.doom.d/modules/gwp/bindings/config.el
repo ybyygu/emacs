@@ -69,6 +69,7 @@
        :desc "indent region"                         "TAB" #'indent-region ; 有用
        :desc "indent region"                         [tab] #'indent-region ; 有用
        :desc "Compile"                               "c"   #'compile
+       :desc "统计字数"                              "g"   #'count-words
        :desc "Recompile"                             "C"   #'recompile
        :desc "highlight"                             "h"   gwp::symbol-overlay-map
        :desc "Jump to definition"                    "d"   #'+lookup/definition
@@ -165,7 +166,6 @@
         :desc "Git unstage file"          "U"   #'magit-unstage-file
         (:prefix ("f" . "find")
          :desc "Find file"                 "f"   #'magit-find-file
-         :desc "Find gitconfig file"       "g"   #'magit-find-git-config-file
          :desc "Find commit"               "c"   #'magit-show-commit
          :desc "Find issue"                "i"   #'forge-visit-issue
          :desc "Find pull request"         "p"   #'forge-visit-pullreq)
@@ -337,7 +337,7 @@
        :desc "Search current directory"     "d" #'+default/search-cwd
        :desc "Search other directory"       "D" #'+default/search-other-cwd
        :desc "Search .emacs.d"              "e" #'+default/search-emacsd
-       :desc "fd in current dir"            "f" #'find-file-in-project-by-selected ; 搜索文件名
+       :desc "搜索当前文件夹文件名"         "f" #'find-file-in-current-directory-by-selected ; 搜索文件名
        :desc "Jump to symbol"               "i" #'imenu
        :desc "Locate file"                  "l" #'counsel-locate
        :desc "Jump list"                    "j" #'evil-show-jumps

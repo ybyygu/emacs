@@ -58,7 +58,6 @@
 (package! material-theme
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 
-(package! org-sidebar)
 (package! el-patch)
 
 (package! keyfreq)

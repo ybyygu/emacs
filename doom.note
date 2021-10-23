@@ -5,13 +5,16 @@
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
 - 从零开始 [[file:~/Install/configs/emacs/gwp/gwp.note][gwp.note]]
-- https://github.com/rolandwalker/back-button
+
+待考
+- [[https://github.com/davidshepherd7/terminal-here][davidshepherd7/terminal-here: An Emacs package to open an external terminal emulator in the current directory]]
 
 * Portal
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]]
 - [[zotero://select/library/collections/Z8UFNPZ4][zotero collection]]
 
-* Tasks [8/8]
+* Tasks [9/9]
+- [X] insert 状态下无法输入z
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
 - [X] org-capture clipboard不正常
@@ -2646,8 +2649,8 @@ narrowed buffer中tangle.
           :recipe (:host github :repo "ybyygu/emacs-material-theme"))
 #+end_src
 
+#+name: 8192c3d2
 #+begin_src elisp
-(package! org-sidebar)
 (package! el-patch)
 #+end_src
 
@@ -2956,7 +2959,7 @@ virtualbox /windows 中)"
 :PROPERTIES:
 :header-args: :tangle user-lisp/init-magit.el
 :END:
-git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map
+git-timemachine可用来看文件的不同版本(C-n, C-p): git-timemache-mode-map. 默认用 SPC-g-t 来激活.
 
 magit-todos用来查看代码的TODO, FIXME等标记. 按键: SPC-p-t
 - [[https://github.com/alphapapa/magit-todos][alphapapa/magit-todos: Show source files' TODOs (and FIXMEs, etc) in Magit status buffer]]
@@ -5276,8 +5279,8 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   (call-interactively 'org-reveal))
 
 (map! :map org-mode-map
-      :ng "zo" #'gwp::org-show-context-at-point
-      :ng "zc" #'org-hide-entry)
+      :n "zo" #'gwp::org-show-context-at-point
+      :n "zc" #'org-hide-entry)
 #+end_src
 
 **** dwim
@@ -5947,20 +5950,21 @@ narrow 到当前代码块对应的 tangle 文件所在的层级. 专注编辑, �
 (defun gwp::org-babel-narrow-to-tangle-heading ()
   "narrow至当前代码块对应的 tangle 文件所在级别"
   (interactive)
-  (save-excursion
-    (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
-          (start-position (point)))
-      ;; :tangle no 不能算
-      (if (and tangle-file (not (string= tangle-file "no")))
-          (progn
-            (if (search-backward (format ":tangle %s" tangle-file) nil t)
-                (progn
-                  (setq offset (- start-position (point)))
-                  (ap/org-tree-to-indirect-buffer)
-                  (forward-char offset)
-                  (message "narrowed to heading: %s" tangle-file))
-              (message "no root headline found")))
-        (message "no tangled src block at point")))))
+  (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
+        (start-position (point))
+        offset)
+    ;; :tangle no 不能算
+    (if (and tangle-file (not (string= tangle-file "no")))
+        (save-excursion
+          (if (search-backward (format ":tangle %s" tangle-file) nil t)
+              (progn
+                (setq offset (- start-position (point)))
+                (ap/org-tree-to-indirect-buffer)
+                (forward-char offset)
+                (message "narrowed to heading: %s" tangle-file))
+            (message "no root headline found")))
+      (message "narrowed to headline at point")
+      (ap/org-tree-to-indirect-buffer))))
 #+end_src
 
 **** zotero/ui                                                          :ATTACH:
@@ -7054,6 +7058,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :n [return] #'org-sidebar-tree-jump
       )
 #+end_src
+
 ***** gwp leader key
 最常用的按键
 #+name: fdd56fa5
@@ -7091,6 +7096,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (package! org-noter)
 (package! orgit)
 (package! ob-ipython)
+(package! org-sidebar)
 
 (package! org-contrib
   :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))

@@ -10,6 +10,7 @@
 (package! org-noter)
 (package! orgit)
 (package! ob-ipython)
+(package! org-sidebar)
 
 (package! org-contrib
   :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))

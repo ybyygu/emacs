@@ -72,8 +72,8 @@
   (call-interactively 'org-reveal))
 
 (map! :map org-mode-map
-      :ng "zo" #'gwp::org-show-context-at-point
-      :ng "zc" #'org-hide-entry)
+      :n "zo" #'gwp::org-show-context-at-point
+      :n "zc" #'org-hide-entry)
 ;; 7341aa84 ends here
 
 ;; [[file:../../../../../doom.note::fbbec921][fbbec921]]
@@ -610,20 +610,21 @@ selected instead of creating a new buffer."
 (defun gwp::org-babel-narrow-to-tangle-heading ()
   "narrow至当前代码块对应的 tangle 文件所在级别"
   (interactive)
-  (save-excursion
-    (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
-          (start-position (point)))
-      ;; :tangle no 不能算
-      (if (and tangle-file (not (string= tangle-file "no")))
-          (progn
-            (if (search-backward (format ":tangle %s" tangle-file) nil t)
-                (progn
-                  (setq offset (- start-position (point)))
-                  (ap/org-tree-to-indirect-buffer)
-                  (forward-char offset)
-                  (message "narrowed to heading: %s" tangle-file))
-              (message "no root headline found")))
-        (message "no tangled src block at point")))))
+  (let ((tangle-file (cdr (assq :tangle (nth 2 (org-babel-get-src-block-info 'light)))))
+        (start-position (point))
+        offset)
+    ;; :tangle no 不能算
+    (if (and tangle-file (not (string= tangle-file "no")))
+        (save-excursion
+          (if (search-backward (format ":tangle %s" tangle-file) nil t)
+              (progn
+                (setq offset (- start-position (point)))
+                (ap/org-tree-to-indirect-buffer)
+                (forward-char offset)
+                (message "narrowed to heading: %s" tangle-file))
+            (message "no root headline found")))
+      (message "narrowed to headline at point")
+      (ap/org-tree-to-indirect-buffer))))
 ;; ab0515d6 ends here
 
 ;; [[file:../../../../../doom.note::*zotero/ui][zotero/ui:1]]

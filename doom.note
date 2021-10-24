@@ -4,10 +4,10 @@
 #+TITLE: 个人文本交互系统(based on doom-emacs)
 #+SETUPFILE: ~/Notes/common.org
 
-历史设置
+* 历史设置
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
-- 从零开始 [[file:~/Install/configs/emacs/gwp/gwp.note][gwp.note]]
+- 从零开始 [[id:a58b86ad-a96e-4b4f-b9de-acbaf9e5910f][gwp.note]]
 
 待考
 - [[https://github.com/davidshepherd7/terminal-here][davidshepherd7/terminal-here: An Emacs package to open an external terminal emulator in the current directory]]
@@ -5386,11 +5386,6 @@ If on a:
            ;;  (org-element-property :begin context)
            ;;  (org-element-property :end context))
            ))))))
-
-(map! :map org-mode-map
-      :n [return]   #'gwp::org-dwim-at-point
-      :n "RET"      #'gwp::org-dwim-at-point
-      )
 #+end_src
 
 
@@ -6818,9 +6813,7 @@ deadgrep与doom有冲突, 不能用了.
 
 [[https://github.com/landakram/org-z][landakram/org-z: Lightweight, Org-mode flavored zettelkasten links.]]
 
-org-z 可以使用唯一的 ID 来管理 org heading 链接, 不依赖于文件名或 heading 字串, 可以保持链接的稳定性.
-
-修改了 org-id-link-to-org-use-id
+使用唯一的 ID 来管理 org heading 链接, 不依赖于文件名或 heading 字串, 可以保持链接的稳定性.
 #+name: ac1d0086
 #+begin_src elisp
 (use-package org-id
@@ -6843,42 +6836,47 @@ org-id-locations-file 默认在 doom-emacs/.org-id-locations
 
 org 会自动扫描 org-directory 中的 org 文件, 找到有 ID 的文件名.
 
-org-sidebar 出现后可按在 item 上按 TAB 访问链接的文件位置.
+org-sidebar 出现后可按在 item 上按 TAB 访问链接的文件位置(继承自 org-agenda?).
 
 #+name: a4f269ca
 #+begin_src elisp
+(require 'org-sidebar)
+
 (use-package org-sidebar
   :custom
-  (org-sidebar-side 'left)
-  (org-ql-sidebar-buffer-setup-hook nil)
-  ;; (org-sidebar-default-fns '(gwp::org-sidebar-backlinks org-sidebar--todo-items))
+  (org-sidebar-side 'left)                                                         ; 新版中 left 是默认
+  (org-ql-sidebar-buffer-setup-hook nil)                                           ; 避免多行显示, 太乱
+  (org-sidebar-default-fns '(gwp::org-sidebar--backlinks org-sidebar--todo-items)) ; 使用反链视图
+  (org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)                         ; 跳至源文件对应的位置, 而不是 narrowed heding
   :config
+  ;; 避免误按
   (map! :map org-sidebar-tree-map
-        :localleader
-        :n "RET" #'org-sidebar-tree-jump
-        :n [return] #'org-sidebar-tree-jump
+        [mouse-1] nil
+        [drag-mouse-1] nil
         ))
-
 
 ;;;###autoload
 (defun gwp::org-backlinks ()
   "显示指向当前 heading 的反向链接"
   (interactive)
 
-  (require 'org-sidebar)
-  (let* ((id (org-entry-get (point) "ID"))
+  (let* ((org-sidebar-side 'right)
+         (id (org-entry-get (point) "ID"))
          (custom-id (org-entry-get (point) "CUSTOM_ID"))
-         ;; FIXME: Do CUSTOM_ID links also have an "id:" prefix?
-         (query (cond ((and id custom-id)
-                       ;; This will be slow because it isn't optimized to a single regexp.  :(
-                       (warn "Entry has both ID and CUSTOM_ID set; query will be slow")
-                       `(or (link :target ,(concat "id:" id))
-                            (link :target ,(concat "id:" custom-id))))
-                      ((or id custom-id)
-                       `(link :target ,(concat "id:" (or id custom-id))))
-                      (t (error "Entry has no ID nor CUSTOM_ID property")))))
+         (query (gwp::org-backlinks--get-query id custom-id)))
     (org-sidebar-ql (gwp::org-backlinks-search-files id)
       query :title (concat "Links to: " (org-get-heading t t)))))
+
+(defun gwp::org-backlinks--get-query (id custom-id)
+  (cond ((and id custom-id)
+         ;; This will be slow because it isn't optimized to a single regexp.  :(
+         (warn "Entry has both ID and CUSTOM_ID set; query will be slow")
+         `(or (link :target ,(concat "id:" id))
+              (link :target ,(concat "id:" custom-id))))
+        ((or id custom-id)
+         `(link :target ,(concat "id:" (or id custom-id))))
+        (t (error "Entry has no ID nor CUSTOM_ID property"))))
+
 
 ;; reference:
 ;; (collection (funcall ffip-project-search-function cmd))
@@ -6889,11 +6887,34 @@ org-sidebar 出现后可按在 item 上按 TAB 访问链接的文件位置.
          (output (shell-command-to-string rg-command))
          (collection (split-string output "[\r\n]+" t))
          result)
-    (message "shell output:\n%s\nshell output ends here" output)
+    ;; (message "shell output:\n%s\nshell output ends here" output)
     (dolist (file collection result) (push file result))
     result))
-#+end_src
 
+(defun gwp::org-sidebar--backlinks (source-buffer)
+  "在 org-sidebar 中显示 backlinks buffer"
+  (let* ((display-buffer (generate-new-buffer (format "org-sidebar<%s>" (buffer-name source-buffer))))
+         (title (propertize (concat "反链条目: " (buffer-name source-buffer)) 'help-echo "含有指向当前heading链接的条目"))
+         (id (org-entry-get (point) "ID"))
+         (custom-id (org-entry-get (point) "CUSTOM_ID"))
+         (source-buffers (gwp::org-backlinks-search-files id))
+         query)
+    (with-current-buffer display-buffer
+      (setf org-sidebar-source-buffer source-buffer))
+
+    ;; 如果当前 heading 无 ID, 不报错
+    (condition-case err
+        (setq query (gwp::org-backlinks--get-query id custom-id))
+      (error
+       (message "%s" (error-message-string err))
+       (setq source-buffers nil)))
+    (org-ql-search source-buffers
+      query
+      :buffer display-buffer
+      :title title)
+
+    display-buffer))
+#+end_src
 
 **** misc
 Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.html][doc]]
@@ -6953,6 +6974,14 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       "-" #'org-ctrl-c-minus            ; toggle item (-)
       "*" #'org-ctrl-c-star             ; toggle headline (*)
       )
+
+(map! :map org-mode-map
+      :n [return]   #'gwp::org-dwim-at-point
+      :n "RET"      #'gwp::org-dwim-at-point)
+
+;; 避免与 org-sidebar 的设置冲突
+(map! :map org-sidebar-tree-map
+      :n [return] nil)
 #+end_src
 
 ***** attach/agenda

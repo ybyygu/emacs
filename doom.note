@@ -49,7 +49,7 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [60/71]
+* Memo [61/73]
 ** TODO [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
 - [ ] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
 - [X] 可搜索本地所有 .note 文件, 实现 sidebar 式的可视化
@@ -94,10 +94,16 @@
 ** DONE [2021-10-15 Fri] 实现当前目录下搜索文件名功能
 
 - State "DONE"       from "TODO"       [2021-10-17 Sun 07:03]
-** TODO [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
+** DONE [2021-10-13 Wed] 找时间逃离doom-emacs, 自己搭一个?
+- State "DONE"       from "TODO"       [2021-10-24 Sun 19:54]
+- Note taken on [2021-10-24 Sun 19:54] \\
+  现用 v2raya, 可启用透明代理, emacs 什么也不用设置. 现在无障碍了.
+- Note taken on [2021-10-15 Fri 19:53] \\
+  可启用代理, 在emacs中reload (doom/reload).
+
 doom-emacs问题
-- 依赖于straight, github, 装包太痛苦 [2021-10-15 Fri] 可启有代理, 在emacs中reload (doom/reload)
-- 自定义设置太多, 难以尽如心意.
+- [X] 依赖于straight, github, 装包太痛苦
+- [ ] 自定义设置太多, 难以尽如心意.
 
 参考:
 - [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
@@ -1882,6 +1888,7 @@ xdg-desktop-menu install gwp-emacsclient.desktop
 - stow再 "install" 到主目录下.
 
 ** docker
+[2021-10-24 Sun] 不太好用
 [[https://github.com/JAremko/docker-emacs][JAremko/docker-emacs: Dockerized Emacs (GUI)]]
 #+name: bec94355
 #+begin_src bash :tangle /tmp/run.sh
@@ -5198,12 +5205,16 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   :hook (org-roam . org-roam-ui-mode)
   :config)
 
-(use-package! evil-org-agenda
-  :hook (org-agenda-mode . evil-org-agenda-mode)
+(use-package! evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  ;; :hook (org-agenda-mode . evil-org-agenda-mode)
   :config
+  (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
-  (evil-define-key* 'motion evil-org-agenda-mode-map
-    (kbd doom-leader-key) nil))
+  ;; (evil-define-key* 'motion evil-org-agenda-mode-map
+  ;;   (kbd doom-leader-key) nil)
+  )
 
 (use-package! init-note)
 #+end_src
@@ -7216,6 +7227,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (package! org)
 (package! websocket)
 (package! evil-org)
+(package! evil-org-agenda :recipe (:host github :repo "Somelauw/evil-org-mode"))
 (package! org-roam)
 (package! org-roam-ui)
 (package! org-superstar)

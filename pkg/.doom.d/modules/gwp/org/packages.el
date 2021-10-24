@@ -2,6 +2,7 @@
 (package! org)
 (package! websocket)
 (package! evil-org)
+(package! evil-org-agenda :recipe (:host github :repo "Somelauw/evil-org-mode"))
 (package! org-roam)
 (package! org-roam-ui)
 (package! org-superstar)

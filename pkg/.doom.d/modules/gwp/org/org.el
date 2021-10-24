@@ -1414,7 +1414,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
        "o" #'gwp::org-note::open-pdf
        "i" #'gwp::org-note::new-note
        "b" #'gwp::org-backlinks
-       ;; "s" #'org-sidebar-toggle
+       "s" #'org-sidebar-tree-toggle
        ))
 
 (map! :map dired-mode-map

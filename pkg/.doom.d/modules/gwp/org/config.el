@@ -22,12 +22,16 @@
   :hook (org-roam . org-roam-ui-mode)
   :config)
 
-(use-package! evil-org-agenda
-  :hook (org-agenda-mode . evil-org-agenda-mode)
+(use-package! evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  ;; :hook (org-agenda-mode . evil-org-agenda-mode)
   :config
+  (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
-  (evil-define-key* 'motion evil-org-agenda-mode-map
-    (kbd doom-leader-key) nil))
+  ;; (evil-define-key* 'motion evil-org-agenda-mode-map
+  ;;   (kbd doom-leader-key) nil)
+  )
 
 (use-package! init-note)
 ;; abd5e254 ends here

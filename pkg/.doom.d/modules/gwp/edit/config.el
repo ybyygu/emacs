@@ -35,8 +35,11 @@
 ;; [[file:../../../../../doom.note::d1047b4d][d1047b4d]]
 (use-package crux
   :config
+  (define-key! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  ;; 这个不管用, define-key! 管用
   ;; (map! :ni "C-a" 'crux-move-beginning-of-line)
-  (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line))
+  ;; (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  )
 ;; d1047b4d ends here
 
 ;; [[file:../../../../../doom.note::e571c476][e571c476]]

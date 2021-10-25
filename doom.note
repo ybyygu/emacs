@@ -4338,8 +4338,11 @@ xx <=> Option<xx>
 #+begin_src elisp
 (use-package crux
   :config
+  (define-key! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  ;; 这个不管用, define-key! 管用
   ;; (map! :ni "C-a" 'crux-move-beginning-of-line)
-  (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line))
+  ;; (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  )
 #+end_src
 
 *** clipboard
@@ -5302,6 +5305,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+begin_src elisp
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
+(define-key! :keymaps 'org-mode-map "C-a" #'crux-move-beginning-of-line)
 #+end_src
 
 **** view
@@ -6282,6 +6286,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 
 注意latex公式图片对应的目录ltxpng在ox-odt.el代码里写死了, 没法修改为其它的.
 
+#+name: 8fc79737
 #+begin_src emacs-lisp
 (use-package ox-odt
   :config
@@ -6291,9 +6296,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 
     ;; useful for odt export using dvipng
     (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
-    (setq org-odt-pixels-per-inch 300.0)
-    )
-  )
+    (setq org-odt-pixels-per-inch 300.0)))
 #+end_src
 
 由于手动换行的原因, odt导出时, 中文字符间会有多余的空格. 下面的设置用于解决这个问题:

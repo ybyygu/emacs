@@ -24,6 +24,7 @@
 ;; [[file:../../../../../doom.note::d3c71916][d3c71916]]
 ;; 经常按错这个键, 禁用之 (Ctrl-c ;)
 (put 'org-toggle-comment 'disabled t)
+(define-key! :keymaps 'org-mode-map "C-a" #'crux-move-beginning-of-line)
 ;; d3c71916 ends here
 
 ;; [[file:../../../../../doom.note::7341aa84][7341aa84]]
@@ -829,7 +830,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   )
 ;; zotero/export:1 ends here
 
-;; [[file:../../../../../doom.note::*odt export][odt export:1]]
+;; [[file:../../../../../doom.note::8fc79737][8fc79737]]
 (use-package ox-odt
   :config
   (progn
@@ -838,10 +839,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
     ;; useful for odt export using dvipng
     (setq org-format-latex-options (plist-put org-format-latex-options :html-scale 3.0))
-    (setq org-odt-pixels-per-inch 300.0)
-    )
-  )
-;; odt export:1 ends here
+    (setq org-odt-pixels-per-inch 300.0)))
+;; 8fc79737 ends here
 
 ;; [[file:../../../../../doom.note::*odt export][odt export:2]]
 ;; adopted from https://github.com/tumashu/emacs-helper/blob/master/eh-org.el

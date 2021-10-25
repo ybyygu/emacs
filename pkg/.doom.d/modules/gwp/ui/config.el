@@ -134,6 +134,12 @@
    ))
 ;; bf66c13f ends here
 
+;; [[file:../../../../../doom.note::a207c706][a207c706]]
+(use-package burly
+  :config
+  (map! :map ctl-x-5-map "s" #'burly-bookmark-windows))
+;; a207c706 ends here
+
 ;; [[file:../../../../../doom.note::155b72b3][155b72b3]]
 (use-package! rime
   :custom

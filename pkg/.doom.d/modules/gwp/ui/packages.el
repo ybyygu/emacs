@@ -1,5 +1,6 @@
 ;; [[file:../../../../../doom.note::d6a037d0][d6a037d0]]
 ;; (package! fcitx)
+(package! burly :recipe (:host github :repo "alphapapa/burly.el"))
 (package! rime)
 (package! golden-ratio)
 ; (package! pyim)

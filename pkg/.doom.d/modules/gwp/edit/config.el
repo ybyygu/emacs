@@ -32,6 +32,13 @@
 ;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
 ;; 3eff5fa2 ends here
 
+;; [[file:../../../../../doom.note::d1047b4d][d1047b4d]]
+(use-package crux
+  :config
+  ;; (map! :ni "C-a" 'crux-move-beginning-of-line)
+  (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line))
+;; d1047b4d ends here
+
 ;; [[file:../../../../../doom.note::e571c476][e571c476]]
 (use-package simpleclip)
 
@@ -61,8 +68,6 @@
     (call-interactively #'backward-kill-word)))
 
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
-;; 默认为set-face之类的东西
-(map! "M-o" #'just-one-space)
 ;; 删除到行尾
 (map! :i "C-k"  #'kill-line)
 ; 删除多余空行, 仅保留一行
@@ -138,7 +143,23 @@
 ;; 9f41280c ends here
 
 ;; [[file:../../../../../doom.note::1a0721e0][1a0721e0]]
-(map! :ni  "C-j"           #'+default/newline-below)
+(defun gwp::smart-open-line-above ()
+  (interactive)
+  (when (evil-normal-state-p)
+    (evil-insert 1))
+  (call-interactively #'crux-smart-open-line-above))
+
+(defun gwp::smart-open-line ()
+  (interactive)
+  (if (featurep 'evil)
+      (call-interactively 'evil-open-below)
+    (end-of-line)
+    (newline-and-indent)))
+
+;; 默认为set-face之类的东西
+;; (map! "M-o" #'just-one-space)
+(map! :ni "M-o" #'gwp::smart-open-line-above)
+(map! :ni "C-j" #'gwp::smart-open-line)
 ;; 1a0721e0 ends here
 
 ;; [[file:../../../../../doom.note::b23f833f][b23f833f]]

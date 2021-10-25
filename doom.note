@@ -3320,6 +3320,17 @@ C-o 选取相应的 action, 来操作选定的 buffer.
    ("t" switch-to-buffer-other-tab "other tab")     ; 默认没有
    ))
 #+end_src
+**** save layout
+可保存窗口的布局及对应的 buffer, 可正常处理 narrowed, indirect buffers 等特殊情
+况.
+
+使用 SPC-W-s 来保存窗口布局, 使用 SPC-r-b 加载.
+#+name: a207c706
+#+begin_src elisp
+(use-package burly
+  :config
+  (map! :map ctl-x-5-map "s" #'burly-bookmark-windows))
+#+end_src
 
 *** big font mode
 :PROPERTIES:
@@ -3689,6 +3700,7 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 #+name: d6a037d0
 #+begin_src elisp
 ;; (package! fcitx)
+(package! burly :recipe (:host github :repo "alphapapa/burly.el"))
 (package! rime)
 (package! golden-ratio)
 ; (package! pyim)
@@ -4318,6 +4330,18 @@ xx <=> Option<xx>
 ;;   (map! :iv "C-M-j" #'move-dup-duplicate-down)
 ;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
 #+end_src
+
+*** movement
+[[https://github.com/bbatsov/crux][bbatsov/crux: A Collection of Ridiculously Useful eXtensions for Emacs]]
+: back-to-indentation
+#+name: d1047b4d
+#+begin_src elisp
+(use-package crux
+  :config
+  ;; (map! :ni "C-a" 'crux-move-beginning-of-line)
+  (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line))
+#+end_src
+
 *** clipboard
 #+name: e571c476
 #+begin_src elisp
@@ -4351,8 +4375,6 @@ xx <=> Option<xx>
     (call-interactively #'backward-kill-word)))
 
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
-;; 默认为set-face之类的东西
-(map! "M-o" #'just-one-space)
 ;; 删除到行尾
 (map! :i "C-k"  #'kill-line)
 ; 删除多余空行, 仅保留一行
@@ -4471,11 +4493,27 @@ C-u C-/ 如果选中区域, 则仅撤销当前内容.
 (setq evil-want-fine-undo t)
 #+end_src
 
-*** newline
-在注释环境下更容易使用, 用ctrl-enter容易误按.
+*** newline in comment
+在注释环境下如何在行上或行下开新行, 而非延续注释
 #+name: 1a0721e0
 #+begin_src elisp
-(map! :ni  "C-j"           #'+default/newline-below)
+(defun gwp::smart-open-line-above ()
+  (interactive)
+  (when (evil-normal-state-p)
+    (evil-insert 1))
+  (call-interactively #'crux-smart-open-line-above))
+
+(defun gwp::smart-open-line ()
+  (interactive)
+  (if (featurep 'evil)
+      (call-interactively 'evil-open-below)
+    (end-of-line)
+    (newline-and-indent)))
+
+;; 默认为set-face之类的东西
+;; (map! "M-o" #'just-one-space)
+(map! :ni "M-o" #'gwp::smart-open-line-above)
+(map! :ni "C-j" #'gwp::smart-open-line)
 #+end_src
 
 *** search/replace
@@ -5170,6 +5208,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 :END:
 #+name: 1dfc22ab
 #+begin_src elisp
+(package! crux)
 (package! symbol-overlay)
 (package! move-dup)
 (package! simpleclip)

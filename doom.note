@@ -4283,6 +4283,7 @@ xx <=> Option<xx>
 (package! rust-mode)
 (package! citre)
 (package! find-file-in-project)
+;; 2021-10-26 上游更新所致 https://github.com/magit/git-modes
 ;; 这两个包安装报错, 临时禁用
 (package! gitconfig-mode :ignore t)
 (package! gitignore-mode :ignore t)
@@ -4318,6 +4319,7 @@ xx <=> Option<xx>
   "复制当前行或选定区域"
   (interactive)
   (if (region-active-p)
+      ;; 也可用 crux-duplicate-current-line-or-region
       (call-interactively #'gwp::duplicate-region)
     (gwp::duplicate-line)))
 
@@ -4378,11 +4380,8 @@ xx <=> Option<xx>
     (call-interactively #'backward-kill-word)))
 
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
-;; 删除到行尾
-(map! :i "C-k"  #'kill-line)
-; 删除多余空行, 仅保留一行
-;; C-x C-o
-(map! :leader "C-o" #'delete-blank-lines)
+;; 删除到行尾或删除整行
+(map! :i "C-k"  #'crux-smart-kill-line)
 #+end_src
 
 删除字符或选定区域, 但不经过kill-ring
@@ -4914,12 +4913,20 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
 #+end_src
 
 *** white space
+just-one-space
+cycle-spacing
 #+name: f75f80bd
 #+begin_src emacs-lisp
 (setq show-trailing-whitespace t)
 ;; 保留时会自动清理, 以下已不必要
 ;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+
+(map! :ni "C-o" #'cycle-spacing)
+(map! :ni "C-x C-o" #'delete-blank-lines)
+
+;; 删除多余空行, 仅保留一行
 ;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+(map! :leader "C-o" #'delete-blank-lines)
 #+end_src
 
 *** join next line

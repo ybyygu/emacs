@@ -19,6 +19,7 @@
   "复制当前行或选定区域"
   (interactive)
   (if (region-active-p)
+      ;; 也可用 crux-duplicate-current-line-or-region
       (call-interactively #'gwp::duplicate-region)
     (gwp::duplicate-line)))
 
@@ -71,11 +72,8 @@
     (call-interactively #'backward-kill-word)))
 
 (map! :vi "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
-;; 删除到行尾
-(map! :i "C-k"  #'kill-line)
-; 删除多余空行, 仅保留一行
-;; C-x C-o
-(map! :leader "C-o" #'delete-blank-lines)
+;; 删除到行尾或删除整行
+(map! :i "C-k"  #'crux-smart-kill-line)
 ;; b5a74212 ends here
 
 ;; [[file:../../../../../doom.note::7d5caf69][7d5caf69]]
@@ -469,7 +467,13 @@
 (setq show-trailing-whitespace t)
 ;; 保留时会自动清理, 以下已不必要
 ;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+
+(map! :ni "C-o" #'cycle-spacing)
+(map! :ni "C-x C-o" #'delete-blank-lines)
+
+;; 删除多余空行, 仅保留一行
 ;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+(map! :leader "C-o" #'delete-blank-lines)
 ;; f75f80bd ends here
 
 ;; [[file:../../../../../doom.note::2286a7d2][2286a7d2]]

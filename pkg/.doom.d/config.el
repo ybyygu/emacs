@@ -110,17 +110,31 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; 12a811d1 ends here
 
 ;; [[file:../../doom.note::493c2a26][493c2a26]]
-(require 'recentf)
-;; the default is only 20
-(setq recentf-max-saved-items 9000)
-(add-to-list 'recentf-exclude "autosave$")
-(add-to-list 'recentf-exclude "\\.png$")
-(add-to-list 'recentf-exclude "\\.pdf$")
-(add-to-list 'recentf-exclude "\\.svg$")
-(add-to-list 'recentf-exclude "\\.odt$")
-(add-to-list 'recentf-exclude "/tmp/")
-(add-to-list 'recentf-exclude "/ssh:")
-(add-to-list 'recentf-exclude "/sudo:")
+(use-package recentf
+  :custom
+  ;; then run M-x recentf-cleanup to make it work.
+  (recentf-exclude '("/tmp/"
+                     "/ssh:"
+                     "/sudo:"
+                     "/scp:"
+                     "/scpx:"
+                     "/ssh:"
+                     "\\.pdf$"
+                     "\\.png$"
+                     "autosave$"
+                     "\\.odt$"
+                     ".*/COMMIT_EDITMSG$" ; magit 临时编辑文件
+                     ".*/$"               ; 剔除目录
+                     ))
+  (recentf-max-saved-items 9999)   ; the default is only 20
+  (recentf-keep '(gwp::recentf-keep-p))
+  ;; clean up items when has been idle 1 hour
+  (recentf-auto-cleanup 3600))
+
+(defun gwp::recentf-keep-p (file)
+  "仅保留本地可读文件"
+  (and (not (file-remote-p file))
+       (not (file-directory-p file))))
 ;; 493c2a26 ends here
 
 ;; [[file:../../doom.note::38a0a087][38a0a087]]

@@ -2490,17 +2490,31 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 *** recent files
 #+name: 493c2a26
 #+begin_src emacs-lisp
-(require 'recentf)
-;; the default is only 20
-(setq recentf-max-saved-items 9000)
-(add-to-list 'recentf-exclude "autosave$")
-(add-to-list 'recentf-exclude "\\.png$")
-(add-to-list 'recentf-exclude "\\.pdf$")
-(add-to-list 'recentf-exclude "\\.svg$")
-(add-to-list 'recentf-exclude "\\.odt$")
-(add-to-list 'recentf-exclude "/tmp/")
-(add-to-list 'recentf-exclude "/ssh:")
-(add-to-list 'recentf-exclude "/sudo:")
+(use-package recentf
+  :custom
+  ;; then run M-x recentf-cleanup to make it work.
+  (recentf-exclude '("/tmp/"
+                     "/ssh:"
+                     "/sudo:"
+                     "/scp:"
+                     "/scpx:"
+                     "/ssh:"
+                     "\\.pdf$"
+                     "\\.png$"
+                     "autosave$"
+                     "\\.odt$"
+                     ".*/COMMIT_EDITMSG$" ; magit 临时编辑文件
+                     ".*/$"               ; 剔除目录
+                     ))
+  (recentf-max-saved-items 9999)   ; the default is only 20
+  (recentf-keep '(gwp::recentf-keep-p))
+  ;; clean up items when has been idle 1 hour
+  (recentf-auto-cleanup 3600))
+
+(defun gwp::recentf-keep-p (file)
+  "仅保留本地可读文件"
+  (and (not (file-remote-p file))
+       (not (file-directory-p file))))
 #+end_src
 
 *** TODO bm
@@ -3137,8 +3151,7 @@ org-noter 生成的note, 用于打开打定的 PDF 页面.
   (let* ((recent-dirs
           (mapcar (lambda (file)
                     (if (file-directory-p file) file (file-name-directory file)))
-                  recentf-list)))
-    recent-dirs))
+                  recentf-list)))))
 
 (defun gwp::zoxide-add-directory (dir)
   "将 dir 加入 zoxide 数据库中"
@@ -3155,8 +3168,7 @@ org-noter 生成的note, 用于打开打定的 PDF 页面.
           (append (gwp::zoxide-recent-directories) (gwp::dired-recent-directories)))))
     (let ((dir (ivy-read "Directory: " recent-dirs
                          :sort nil
-                         :action '(1 ("o" gwp::zoxide-add-directory "open"))
-                         :initial-input nil)))
+                         :action '(1 ("o" gwp::zoxide-add-directory "open")))))
       (dired dir))))
 
 (provide 'init-search)

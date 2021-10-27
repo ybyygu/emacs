@@ -2492,12 +2492,15 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
 #+begin_src emacs-lisp
 (require 'recentf)
 ;; the default is only 20
-(setq recentf-max-saved-items 1000)
+(setq recentf-max-saved-items 9000)
 (add-to-list 'recentf-exclude "autosave$")
-(add-to-list 'recentf-exclude "\.png$")
-(add-to-list 'recentf-exclude "\.pdf$")
-(add-to-list 'recentf-exclude "\.svg$")
-(add-to-list 'recentf-exclude "\.odt$")
+(add-to-list 'recentf-exclude "\\.png$")
+(add-to-list 'recentf-exclude "\\.pdf$")
+(add-to-list 'recentf-exclude "\\.svg$")
+(add-to-list 'recentf-exclude "\\.odt$")
+(add-to-list 'recentf-exclude "/tmp/")
+(add-to-list 'recentf-exclude "/ssh:")
+(add-to-list 'recentf-exclude "/sudo:")
 #+end_src
 
 *** TODO bm
@@ -2587,6 +2590,7 @@ Argument E is a mouse event used by `mouse-set-point'."
 (require 'init-proxy)
 (require 'init-dired)
 (require 'init-magit)
+;; (require 'init-search)
 ;; (require 'init-eaf)
 #+end_src
 
@@ -2857,30 +2861,33 @@ github支持, 减慢速度.
 :END:
 - [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
 
+*** use-package
 #+name: edd7000d
 #+begin_src emacs-lisp
 (use-package dired
-  :config
+  :custom
+  ;; 方便多个文件夹文件互动
   ;; Set this variable to non-nil, Dired will try to guess a default
   ;; target directory. This means: if there is a dired buffer
   ;; displayed in the next window, use its current subdir, instead
   ;; of the current subdir of this dired buffer. The target is used
   ;; in the prompt for file copy, rename etc.
+  (dired-dwim-target t)
+
+  ;; Dired listing switches
+  ;;  -a : Do not ignore entries starting with .
+  ;;  -l : Use long listing format.
+  ;;  -G : Do not print group names like 'users'
+  ;;  -h : Human-readable sizes like 1K, 234M, ..
+  ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+  ;;  -F : Classify filenames by appending '*' to executables,
+  ;;       '/' to directories, etc.
+  (dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+
+  :config
   (progn
     ;; 安全第一
     (setq delete-by-moving-to-trash t)
-    ;; 方便多个文件夹文件互动
-    (setq dired-dwim-target t)
-
-    ;; Dired listing switches
-    ;;  -a : Do not ignore entries starting with .
-    ;;  -l : Use long listing format.
-    ;;  -G : Do not print group names like 'users'
-    ;;  -h : Human-readable sizes like 1K, 234M, ..
-    ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-    ;;  -F : Classify filenames by appending '*' to executables,
-    ;;       '/' to directories, etc.
-    (setq dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
 
     ;; 用于在dired中复制当前文件的全路径.
     (defun gwp/dired-copy-file-path()
@@ -2901,8 +2908,7 @@ github支持, 减慢速度.
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
           :nv "DEL"   #'dired-up-directory       ; BACKSPACE
-          :nv "C-S-n" #'dired-create-directory
-          )))
+          :nv "C-S-n" #'dired-create-directory)))
 
 ;;;###autoload
 (defun gwp::dired::symbol-link-at-point-to-home ()
@@ -2918,7 +2924,7 @@ virtualbox /windows 中)"
     (user-error "not in dired buffer")))
 #+end_src
 
-隐藏.dotfiles, doom中默认omit的太少
+*** 隐藏.dotfiles, doom中默认omit的太少
 #+name: 67102cd3
 #+begin_src emacs-lisp
 (use-package dired-x
@@ -3110,6 +3116,50 @@ org-noter 生成的note, 用于打开打定的 PDF 页面.
 #+name: 8d4b377b
 #+begin_src elisp
 (provide 'init-note)
+#+end_src
+
+** init-search.el
+:PROPERTIES:
+:header-args: :tangle user-lisp/init-search.el
+:END:
+*** recent directories
+访问 zoxide 的最近文件夹数据
+- [[https://github.com/Soft/emacs.d/blob/master/modules/helm-zoxide.el][emacs.d/helm-zoxide.el at master · Soft/emacs.d]]
+
+#+name: 6194c32a
+#+begin_src elisp
+(defun gwp::zoxide-recent-directories ()
+  (let* ((output (shell-command-to-string "zoxide query --list"))
+         (dirs (split-string output "[\r\n]+" t)))
+    dirs))
+
+(defun gwp::dired-recent-directories ()
+  (let* ((recent-dirs
+          (mapcar (lambda (file)
+                    (if (file-directory-p file) file (file-name-directory file)))
+                  recentf-list)))
+    recent-dirs))
+
+(defun gwp::zoxide-add-directory (dir)
+  "将 dir 加入 zoxide 数据库中"
+  (when dir (call-process "zoxide" nil nil nil "add" dir)))
+
+;; open recent directory, requires ivy (part of swiper)
+;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
+;;;###autoload
+(defun gwp::ivy-recent-dirs ()
+  "Present a list of recently used directories and open the selected one in dired"
+  (interactive)
+  (let ((recent-dirs
+         (delete-dups
+          (append (gwp::zoxide-recent-directories) (gwp::dired-recent-directories)))))
+    (let ((dir (ivy-read "Directory: " recent-dirs
+                         :sort nil
+                         :action '(1 ("o" gwp::zoxide-add-directory "open"))
+                         :initial-input nil)))
+      (dired dir))))
+
+(provide 'init-search)
 #+end_src
 
 * modules/gwp
@@ -3689,7 +3739,7 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 ;; View images inside Emacs
 (auto-image-file-mode t)
 
-;; set line space wider than default
+;; 相当于行间距
 (setq-default line-spacing 4)
 #+end_src
 
@@ -5314,6 +5364,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (put 'org-toggle-comment 'disabled t)
 (define-key! :keymaps 'org-mode-map "C-a" #'crux-move-beginning-of-line)
 #+end_src
+
 
 **** view
 #+name: 7341aa84
@@ -7406,11 +7457,13 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 *** d: dodo
 #+name: 5e265fdb
 #+begin_src elisp
+(require 'init-search)
 (map! :leader
       (:prefix-map ("d" . "dodo")
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
+       :desc "recent dirs"   "r" #'gwp::ivy-recent-dirs
        ))
 #+end_src
 

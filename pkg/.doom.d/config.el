@@ -112,12 +112,15 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; [[file:../../doom.note::493c2a26][493c2a26]]
 (require 'recentf)
 ;; the default is only 20
-(setq recentf-max-saved-items 1000)
+(setq recentf-max-saved-items 9000)
 (add-to-list 'recentf-exclude "autosave$")
-(add-to-list 'recentf-exclude "\.png$")
-(add-to-list 'recentf-exclude "\.pdf$")
-(add-to-list 'recentf-exclude "\.svg$")
-(add-to-list 'recentf-exclude "\.odt$")
+(add-to-list 'recentf-exclude "\\.png$")
+(add-to-list 'recentf-exclude "\\.pdf$")
+(add-to-list 'recentf-exclude "\\.svg$")
+(add-to-list 'recentf-exclude "\\.odt$")
+(add-to-list 'recentf-exclude "/tmp/")
+(add-to-list 'recentf-exclude "/ssh:")
+(add-to-list 'recentf-exclude "/sudo:")
 ;; 493c2a26 ends here
 
 ;; [[file:../../doom.note::38a0a087][38a0a087]]
@@ -129,5 +132,6 @@ If two universal prefix arguments are used, then prompt for command to use."
 (require 'init-proxy)
 (require 'init-dired)
 (require 'init-magit)
+;; (require 'init-search)
 ;; (require 'init-eaf)
 ;; c54f13b5 ends here

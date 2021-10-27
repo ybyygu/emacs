@@ -88,11 +88,13 @@
 ;; e78a01dd ends here
 
 ;; [[file:../../../../../doom.note::5e265fdb][5e265fdb]]
+(require 'init-search)
 (map! :leader
       (:prefix-map ("d" . "dodo")
        :desc "select text"   "s" #'gwp/advanced-selection
        :desc "resize window" "w" #'gwp/adjust-window-size/body
        :desc "smart parents" "p" #'gwp/hydra-smartparens/body
+       :desc "recent dirs"   "r" #'gwp::ivy-recent-dirs
        ))
 ;; 5e265fdb ends here
 

@@ -363,6 +363,6 @@
 ;; View images inside Emacs
 (auto-image-file-mode t)
 
-;; set line space wider than default
+;; 相当于行间距
 (setq-default line-spacing 4)
 ;; 6013493c ends here

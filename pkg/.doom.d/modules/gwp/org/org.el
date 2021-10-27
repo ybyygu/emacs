@@ -198,7 +198,7 @@ If on a:
       )
 ;; bbdcd834 ends here
 
-;; [[file:../../../../../doom.note::*screenshot][screenshot:1]]
+;; [[file:../../../../../doom.note::3b3471ee][3b3471ee]]
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
   "Annotate LINK with the time of download."
@@ -226,20 +226,20 @@ If on a:
   org-download-delete
   org-download-yank
   org-download-clipboard
+  :hook ((org-mode . org-download-enable)) ; 启用拖放功能
   :bind (:map org-mode-map
          ("C-c v" . org-download-clipboard))
   :config
-  (progn
-    (setq org-download-method 'attach
-          org-download-annotate-function 'gwp/org-download-annotate
-          ;; org-download-image-html-width 900 ; in px
-          ;; org-download-image-latex-width 16 ; in cm
-          ;; 2021-09-03: 直接调用org-download-clipboard即可, 以下代码不必要
-          ;; org-download-screenshot-method
-          ;; (cond ((executable-find "txclip")  "txclip paste --image -o %s")
-          ;;       ((executable-find "scrot") "scrot -s %s"))
-          )))
-;; screenshot:1 ends here
+  (setq org-download-method 'attach
+        org-download-annotate-function 'gwp/org-download-annotate
+        ;; org-download-image-html-width 900 ; in px
+        ;; org-download-image-latex-width 16 ; in cm
+        ;; 2021-09-03: 直接调用org-download-clipboard即可, 以下代码不必要
+        ;; org-download-screenshot-method
+        ;; (cond ((executable-find "txclip")  "txclip paste --image -o %s")
+        ;;       ((executable-find "scrot") "scrot -s %s"))
+        ))
+;; 3b3471ee ends here
 
 ;; [[file:../../../../../doom.note::*latex preview][latex preview:1]]
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
@@ -879,20 +879,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 ;; odt export:2 ends here
 
-;; [[file:../../../../../doom.note::*encryption][encryption:1]]
-(require 'org-crypt)
-(require 'epa-file)
-(epa-file-enable)
-
-;; Encrypt all entries before saving
-(org-crypt-use-before-save-magic)
-(setq org-crypt-tag-matcher "crypt")
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
-                                        ; GPG key to use for encryption
-(setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
-(setq org-crypt-disable-auto-save nil)
-;; encryption:1 ends here
-
 ;; [[file:../../../../../doom.note::*setup][setup:1]]
 (require 'org-attach)
 ;; setup:1 ends here
@@ -918,14 +904,13 @@ DESC. FORMATs understood are 'odt','latex and 'html."
     (zotero-attach-txclip-paste-files current-dir)))
 ;; copy & paste attachments:1 ends here
 
-;; [[file:../../../../../doom.note::*从当前位置文件链接提取文件名.][从当前位置文件链接提取文件名.:1]]
+;; [[file:../../../../../doom.note::b47bc445][b47bc445]]
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
     (and (eq (org-element-type el) 'link)
          (or
           (string= (org-element-property :type el) "file")
-          (string= (org-element-property :type el) "attachment")
-          ))))
+          (string= (org-element-property :type el) "attachment")))))
 
 (defun gwp/org-file-path-at-point()
   "get file path from link at point"
@@ -934,9 +919,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (cond
        ((string= (org-element-property :type el) "file") (org-element-property :path el))
        ((string= (org-element-property :type el) "attachment") (org-attach-expand (org-element-property :path el)))
-       (t nil)
-       ))))
-;; 从当前位置文件链接提取文件名.:1 ends here
+       (t nil)))))
+;; b47bc445 ends here
 
 ;; [[file:../../../../../doom.note::*使用org-attach将文件move到当到附录中并更新文件链接][使用org-attach将文件move到当到附录中并更新文件链接:1]]
 ;; (require 'org-download)
@@ -971,21 +955,22 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (user-error "Point is not on a link"))))
 ;; 使用org-attach将文件move到当到附录中并更新文件链接:1 ends here
 
-;; [[file:../../../../../doom.note::*delete link file][delete link file:1]]
+;; [[file:../../../../../doom.note::27b50206][27b50206]]
 (defun gwp/org-delete-link-file (arg)
   "Delete the file that link points to."
   (interactive "P")
 
-  (let ((file (gwp/org-file-path-at-point)))
-    (if file
-        (if (file-exists-p file)
-            (when (yes-or-no-p (format "Delete link file: %s?" file))
-              (progn (delete-file file)
-                     (message "File deleted"))
-              )
-          (error "No such attachment: %s" file))
-      (user-error "Point is not on a file link"))))
-;; delete link file:1 ends here
+  (save-excursion
+    (org-next-link)
+    (let ((file (gwp/org-file-path-at-point)))
+      (if file
+          (if (file-exists-p file)
+              (when (yes-or-no-p (format "Delete link file: %s?" file))
+                (progn (delete-file file)
+                       (message "File deleted")))
+            (error "No such attachment: %s" file))
+        (user-error "Point is not on a file link")))))
+;; 27b50206 ends here
 
 ;; [[file:../../../../../doom.note::d3403c99][d3403c99]]
 (require 'org-protocol)
@@ -1402,6 +1387,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :desc "prev link"           [backtab]   #'org-previous-link
       (:prefix ("l" . "links")
        "l" #'org-insert-link
+       "r" #'org-download-rename-at-point
        "D" #'gwp/org-delete-link-file
        ))
 ;; 32a3b56a ends here

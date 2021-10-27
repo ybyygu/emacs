@@ -50,6 +50,7 @@
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
 * Memo [61/73]
+** TODO [2021-10-27 Wed] 临时禁用 org-encrypt: 可能会导致无法正常保存
 ** TODO [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
 - [ ] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
 - [X] 可搜索本地所有 .note 文件, 实现 sidebar 式的可视化
@@ -5569,11 +5570,13 @@ If on a:
 - 调用org-download-clipboard完成图片插入操作.
   - 图片自动保存到org attachment目录
   - 自动添加图片显示参数, 设定在org中显示的大小
+- 也可用 drag-and-drop 的方式来插入图片, 非常方便.
 - 可以使用org-download-delete来删除当前image
 
 目前的问题 ([2020-03-06 Fri])
 - 第二次执行截图时, 如果clipboard无图, emacs会挂住, 现在无解.
 
+#+name: 3b3471ee
 #+begin_src emacs-lisp
 (defun gwp/org-image-attributes-default (&optional caption)
   "default image attributes: caption, name label, width ..."
@@ -5602,19 +5605,19 @@ If on a:
   org-download-delete
   org-download-yank
   org-download-clipboard
+  :hook ((org-mode . org-download-enable)) ; 启用拖放功能
   :bind (:map org-mode-map
          ("C-c v" . org-download-clipboard))
   :config
-  (progn
-    (setq org-download-method 'attach
-          org-download-annotate-function 'gwp/org-download-annotate
-          ;; org-download-image-html-width 900 ; in px
-          ;; org-download-image-latex-width 16 ; in cm
-          ;; 2021-09-03: 直接调用org-download-clipboard即可, 以下代码不必要
-          ;; org-download-screenshot-method
-          ;; (cond ((executable-find "txclip")  "txclip paste --image -o %s")
-          ;;       ((executable-find "scrot") "scrot -s %s"))
-          )))
+  (setq org-download-method 'attach
+        org-download-annotate-function 'gwp/org-download-annotate
+        ;; org-download-image-html-width 900 ; in px
+        ;; org-download-image-latex-width 16 ; in cm
+        ;; 2021-09-03: 直接调用org-download-clipboard即可, 以下代码不必要
+        ;; org-download-screenshot-method
+        ;; (cond ((executable-find "txclip")  "txclip paste --image -o %s")
+        ;;       ((executable-find "scrot") "scrot -s %s"))
+        ))
 #+end_src
 
 安装org-download包
@@ -6408,6 +6411,9 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+end_src
 
 **** encryption
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 #+begin_src emacs-lisp
 (require 'org-crypt)
 (require 'epa-file)
@@ -6522,14 +6528,14 @@ file-exists-p函数对symlink的特殊性:
 ***** take file link as attachment
 [2020-03-21 Sat] org里有对应的功能: [[file:doom-emacs/.local/straight/repos/org-mode/contrib/lisp/org-attach-embedded-images.el][org-attach-embedded-images.el]]
 ****** 从当前位置文件链接提取文件名.
+#+name: b47bc445
 #+begin_src emacs-lisp
 (defun gwp/org-file-link-p (&optional element)
   (let ((el (or element (org-element-context))))
     (and (eq (org-element-type el) 'link)
          (or
           (string= (org-element-property :type el) "file")
-          (string= (org-element-property :type el) "attachment")
-          ))))
+          (string= (org-element-property :type el) "attachment")))))
 
 (defun gwp/org-file-path-at-point()
   "get file path from link at point"
@@ -6538,8 +6544,7 @@ file-exists-p函数对symlink的特殊性:
       (cond
        ((string= (org-element-property :type el) "file") (org-element-property :path el))
        ((string= (org-element-property :type el) "attachment") (org-attach-expand (org-element-property :path el)))
-       (t nil)
-       ))))
+       (t nil)))))
 #+end_src
 
 ****** 使用org-attach将文件move到当到附录中并更新文件链接
@@ -6577,22 +6582,25 @@ file-exists-p函数对symlink的特殊性:
 #+end_src
 
 ***** delete link file
-删除当前所在链接对应的文件. org-download-delete现在不可用(attachment link).
+删除当前所在链接对应的文件. org-download-delete现在不可用(由于 attachment link).
+#+name: 27b50206
 #+begin_src elisp
 (defun gwp/org-delete-link-file (arg)
   "Delete the file that link points to."
   (interactive "P")
 
-  (let ((file (gwp/org-file-path-at-point)))
-    (if file
-        (if (file-exists-p file)
-            (when (yes-or-no-p (format "Delete link file: %s?" file))
-              (progn (delete-file file)
-                     (message "File deleted"))
-              )
-          (error "No such attachment: %s" file))
-      (user-error "Point is not on a file link"))))
+  (save-excursion
+    (org-next-link)
+    (let ((file (gwp/org-file-path-at-point)))
+      (if file
+          (if (file-exists-p file)
+              (when (yes-or-no-p (format "Delete link file: %s?" file))
+                (progn (delete-file file)
+                       (message "File deleted")))
+            (error "No such attachment: %s" file))
+        (user-error "Point is not on a file link")))))
 #+end_src
+
 **** protocol
 #+name: d3403c99
 #+begin_src elisp
@@ -7183,9 +7191,11 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "prev link"           [backtab]   #'org-previous-link
       (:prefix ("l" . "links")
        "l" #'org-insert-link
+       "r" #'org-download-rename-at-point
        "D" #'gwp/org-delete-link-file
        ))
 #+end_src
+
 ***** note
 #+name: ac0d3d18
 #+begin_src elisp

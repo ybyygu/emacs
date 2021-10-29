@@ -32,12 +32,10 @@
 
     (map! :map dired-mode-map
           :localleader
-          :desc "Copy file path"
-          :n "y" #'gwp/dired-copy-file-path
-          :desc "Make symlink"
-          :n "l" #'dired-do-symlink
-          :desc "Async shell command"
-          :n "!" #'dired-do-async-shell-command
+          :desc "Copy file path" :n "y" #'gwp/dired-copy-file-path
+          :desc "Make symlink" :n "l" #'dired-do-symlink
+          :desc "display in other window" :n "o" #'dired-find-file-other-window
+          :desc "Async shell command" :n "!" #'dired-do-async-shell-command
           )
 
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
@@ -57,6 +55,11 @@ virtualbox /windows 中)"
         (make-symbolic-link this-file target-path)
         (message "symlink to: %s" target-path))
     (user-error "not in dired buffer")))
+
+;; dired 默认用 emacs 模式
+;; (use-package evil
+;;   :config
+;;   (evil-set-initial-state 'dired-mode 'emacs))
 ;; edd7000d ends here
 
 ;; [[file:../doom.note::67102cd3][67102cd3]]

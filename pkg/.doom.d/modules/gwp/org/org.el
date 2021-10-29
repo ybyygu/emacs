@@ -186,7 +186,8 @@ If on a:
 ;; [[file:../../../../../doom.note::bbdcd834][bbdcd834]]
 (map! :map org-mode-map
       :n "gh" #'org-up-element
-      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      ;; :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      :n "gl" #'org-next-visible-heading ; doom中默认为: evil-lion-left
       :n "gk" #'org-backward-heading-same-level
       :n "gj" #'org-forward-heading-same-level
       :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
@@ -278,9 +279,13 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
+   (emacs-lisp . t) ;; this is the default
    (python . t)
    (shell . t)
-   (emacs-lisp . t) ;; this is the default
+   (sqlite . t)
+   (R . t)
+   (restclient . t)                     ; 测试 http API
+   (gnuplot . t)                        ; 需要安装 gnuplot 对应的两个包
    ))
 ;; 0d8e352a ends here
 

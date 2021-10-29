@@ -12,10 +12,18 @@
 (package! orgit)
 (package! ob-ipython)
 (package! org-sidebar)
+
+;; for http api hacking
+(package! restclient)
+(package! ob-restclient)
+
 ;; (package! org-z :recipe (:host github :repo "landakram/org-z"))
 ;; (package! org-z-selectrum :recipe (:host github :repo "landakram/org-z"))
 
-
 (package! org-contrib
   :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))
+
+;; for org-babel gnuplot
+(package! gnuplot-mode)
+(package! gnuplot)
 ;; c98fa262 ends here

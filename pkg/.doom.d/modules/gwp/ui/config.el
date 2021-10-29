@@ -366,3 +366,15 @@
 ;; 相当于行间距
 (setq-default line-spacing 4)
 ;; 6013493c ends here
+
+;; [[file:../../../../../doom.note::79a17a52][79a17a52]]
+(defun gwp::switch-to-messages-buffer (&optional arg)
+  (interactive "P")
+  (with-current-buffer (messages-buffer)
+    (goto-char (point-max))
+    (if arg
+        (switch-to-buffer-other-frame (current-buffer))
+      (switch-to-buffer (current-buffer)))))
+
+(map! :leader :desc "switch *Message* buffer" "M" #'gwp::switch-to-messages-buffer)
+;; 79a17a52 ends here

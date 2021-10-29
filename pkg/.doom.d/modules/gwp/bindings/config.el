@@ -10,7 +10,9 @@
       :desc "Universal argument"    "u" #'universal-argument
       :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
       :desc "Jump to previous mark" "," #'gwp::jump-to-previous-mark
-      :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer)
+      ;; :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer
+      :desc "Switch to last buffer" "`" #'switch-to-prev-buffer
+      )
 
 (map!
  "C-`"                             #'+popup/toggle

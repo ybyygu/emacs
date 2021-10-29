@@ -50,6 +50,7 @@
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
 * Memo [61/73]
+** TODO [2021-10-28 Thu] org-down-element 不是很顺手
 ** TODO [2021-10-27 Wed] 临时禁用 org-encrypt: 可能会导致无法正常保存
 ** TODO [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
 - [ ] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
@@ -67,6 +68,7 @@
 问题
 - 如果在 comment 环境上添加一行, 比如用 O 命令, 而不生成新的 comment
 
+也许可以用 newcomment?
 
 ** DONE [2021-10-21 Thu] 实现 org-noter 最基本的功能, 方便 pdf 批注.
 - State "DONE"       from "TODO"       [2021-10-22 Fri 17:18]
@@ -2160,7 +2162,8 @@ gwp-merge:
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired)           ; making dired pretty [functional]
+       ;; (dired +icons)           ; making dired pretty [functional]
+       ;; (dired)           ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        ;; ibuffer           ; interactive buffer management
        ;undo              ; persistent, smarter undo for your inevitable mistakes
@@ -2281,6 +2284,7 @@ gwp-merge:
        org
        develop
        edit
+       dired
        bindings
        )
 #+end_src
@@ -2510,7 +2514,9 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
   (recentf-max-saved-items 9999)   ; the default is only 20
   (recentf-keep '(gwp::recentf-keep-p))
   ;; clean up items when has been idle 1 hour
-  (recentf-auto-cleanup 3600))
+  ;; (recentf-auto-cleanup 3600)
+  (recentf-auto-cleanup 'never)         ; doom 在退出时清理
+  )
 
 (defun gwp::recentf-keep-p (file)
   "仅保留本地可读文件"
@@ -2603,8 +2609,8 @@ Argument E is a mouse event used by `mouse-set-point'."
 #+name: c54f13b5
 #+begin_src elisp
 (require 'init-proxy)
-(require 'init-dired)
 (require 'init-magit)
+;; (require 'init-dired)
 ;; (require 'init-search)
 ;; (require 'init-eaf)
 #+end_src
@@ -2875,6 +2881,10 @@ github支持, 减慢速度.
 :header-args: :tangle user-lisp/init-dired.el
 :END:
 - [[https://www.emacswiki.org/emacs/DiredOmitMode][EmacsWiki: Dired Omit Mode]]
+- note: [[id:2d226fe6-2010-490e-99cf-1a53b511cc8c][dired 文件管理]]
+
+常用命令:
+- 在其它窗口打开文件: ,o 或 M-RET
 
 *** use-package
 #+name: edd7000d
@@ -2912,12 +2922,11 @@ github支持, 减慢速度.
 
     (map! :map dired-mode-map
           :localleader
-          :desc "Copy file path"
-          :n "y" #'gwp/dired-copy-file-path
-          :desc "Make symlink"
-          :n "l" #'dired-do-symlink
-          :desc "Async shell command"
-          :n "!" #'dired-do-async-shell-command
+          :desc "Copy file path" :n "y" #'gwp/dired-copy-file-path
+          :desc "Make symlink" :n "l" #'dired-do-symlink
+          :desc "display in other window" :n "o" #'dired-find-file-other-window
+          :desc "preview file" :n "SPC" #'dired-view-file
+          :desc "Async shell command" :n "!" #'dired-do-async-shell-command
           )
 
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
@@ -2937,6 +2946,11 @@ virtualbox /windows 中)"
         (make-symbolic-link this-file target-path)
         (message "symlink to: %s" target-path))
     (user-error "not in dired buffer")))
+
+;; dired 默认用 emacs 模式
+;; (use-package evil
+;;   :config
+;;   (evil-set-initial-state 'dired-mode 'emacs))
 #+end_src
 
 *** 隐藏.dotfiles, doom中默认omit的太少
@@ -3755,6 +3769,19 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 ;; 相当于行间距
 (setq-default line-spacing 4)
 #+end_src
+*** switch to message buffer
+#+name: 79a17a52
+#+begin_src elisp
+(defun gwp::switch-to-messages-buffer (&optional arg)
+  (interactive "P")
+  (with-current-buffer (messages-buffer)
+    (goto-char (point-max))
+    (if arg
+        (switch-to-buffer-other-frame (current-buffer))
+      (switch-to-buffer (current-buffer)))))
+
+(map! :leader :desc "switch *Message* buffer" "M" #'gwp::switch-to-messages-buffer)
+#+end_src
 
 *** packages.el
 :PROPERTIES:
@@ -4350,6 +4377,230 @@ xx <=> Option<xx>
 ;; 这两个包安装报错, 临时禁用
 (package! gitconfig-mode :ignore t)
 (package! gitignore-mode :ignore t)
+#+end_src
+** dired
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/dired/config.el
+:END:
+- [[https://github.com/Fuco1/dired-hacks][Fuco1/dired-hacks: Collection of useful dired additions]]
+- [[https://www.emacswiki.org/emacs/DiredPlus][EmacsWiki: Dired Plus]]
+
+dired 会生成很多 buffer. 此时可用 alternative 类命令.
+- [ ] emacs 28 可以用 ired-kill-when-opening-new-dired-buffer.
+
+*** dwim
+#+name: 303a749e
+#+begin_src elisp
+(defun gwp::dired-hook ()
+  ;; 高亮当前行, 醒目
+  (hl-line-mode 1)
+  ;; 不显示隐藏文件
+  (dired-omit-mode 1)
+  ;; 启用折叠空目录模式
+  (dired-collapse-mode 1))
+
+;;;###autoload
+(defun gwp::dired-quit-all ()
+  "Kill all `dired-mode' buffers."
+  (interactive)
+  (mapc #'kill-buffer (doom-buffers-in-mode 'dired-mode))
+  (message "Killed all dired buffers"))
+
+;;;###autoload
+(defun gwp::dired-quit-window ()
+  "退出 dired 时, kill 对应的 buffer"
+  (interactive)
+  ;; 在 split window 情况下, 我希望仅关掉当前窗口, 而非 bury 或 kill 对应的 buffer
+  (let* ((same-buffer-in-window (delq (selected-window) (get-buffer-window-list))))
+    (if same-buffer-in-window
+        (progn
+          (message "keep window buffer alive")
+          (delete-window))
+      ;; kill dired buffer
+      (quit-window t))))
+
+;;;###autoload
+(defun gwp::dired-find-alternate-file ()
+  "访问文件时避免新开多余的 buffer"
+  (interactive)
+  (cond
+   ;; if the same buffer in other window
+   ((delq (selected-window) (get-buffer-window-list))
+    (dired-find-file))
+   (t
+    (dired-find-alternate-file))))
+
+;; (defun gwp::dired-up-directory ()
+;;   (interactive)
+;;   (let* ((dir (dired-current-directory))
+;;          (orig (current-buffer))
+;;          (up (file-name-directory (directory-file-name dir))))
+;;     (or (dired-goto-file (directory-file-name dir))
+;;         ;; Only try dired-goto-subdir if buffer has more than one dir.
+;;         (and (cdr dired-subdir-alist)
+;;              (dired-goto-subdir up))
+;;         (progn
+;;           (kill-buffer orig)
+;;           (dired up)
+;;           (dired-goto-file dir)))))
+
+;; https://www.emacswiki.org/emacs/DiredReuseDirectoryBuffer
+;;;###autoload
+(defun gwp::dired-up-directory ()
+  (interactive)
+  (cond
+   ;; if the same buffer in other window
+   ((delq (selected-window) (get-buffer-window-list))
+    (dired-up-directory))
+   (t
+    (find-alternate-file ".."))))
+
+;;;###autoload
+(defun gwp::dired::symbol-link-at-point-to-home ()
+  "在 dired 中, 将光前文件软链接到 HOME 下, 方便快速访问(比如在
+virtualbox /windows 中)"
+  (interactive)
+
+  (if (derived-mode-p 'dired-mode)
+      (let ((this-file (dired-get-file-for-visit))
+            (target-path "~/00-dired-tmp-entry-point"))
+        (make-symbolic-link this-file target-path)
+        (message "symlink to: %s" target-path))
+    (user-error "not in dired buffer")))
+
+;;;###autoload
+(defun gwp::dired-fd ()
+  "用于递归搜索文件名, 生成 dired 视图"
+  (interactive)
+  (require 'fd-dired)
+  (let ((args (read-string
+               "Run fd (with args and search): "
+               fd-dired-input-fd-args
+               '(fd-dired-args-history . 1))))
+    (fd-dired "." args)))
+#+end_src
+
+*** dired
+#+name: edd7000d
+#+begin_src emacs-lisp
+(use-package dired
+  :custom
+  ;; 方便多个文件夹文件互动
+  ;; Set this variable to non-nil, Dired will try to guess a default
+  ;; target directory. This means: if there is a dired buffer
+  ;; displayed in the next window, use its current subdir, instead
+  ;; of the current subdir of this dired buffer. The target is used
+  ;; in the prompt for file copy, rename etc.
+  (dired-dwim-target t)
+  (dired-auto-revert-buffer t)          ; don't prompt to revert; just do it
+  (dired-recursive-copies  'always)
+  (dired-recursive-deletes 'top)
+
+  ;; Dired listing switches
+  ;;  -a : Do not ignore entries starting with .
+  ;;  -l : Use long listing format.
+  ;;  -G : Do not print group names like 'users'
+  ;;  -h : Human-readable sizes like 1K, 234M, ..
+  ;;  -v : Do natural sort .. so the file names starting with . will show up first.
+  ;;  -F : Classify filenames by appending '*' to executables,
+  ;;       '/' to directories, etc.
+  (dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+
+  :config
+  (add-hook! 'dired-mode-hook #'gwp::dired-hook)
+  ;; Don't complain about this command being disabled when we use it
+  (put 'dired-find-alternate-file 'disabled nil)
+  ;; 安全第一
+  (setq delete-by-moving-to-trash t)
+  (progn
+    ;; 用于在dired中复制当前文件的全路径.
+    (defun gwp/dired-copy-file-path()
+      (interactive)
+      (let ((current-prefix-arg '(0)))
+        (call-interactively 'dired-copy-filename-as-kill)))
+
+    (map! :map dired-mode-map
+          :localleader
+          :desc "kill all dired buffers" "k" #'gwp::dired-quit-all
+          :desc "collapse empty dirs" "c" #'dired-collapse-mode
+          :desc "toggle hidden files" "h" #'dired-omit-mode
+          :desc "fd files" "f" #'gwp::dired-fd
+          :desc "Copy file path" "y" #'gwp/dired-copy-file-path
+          :desc "Make symlink" "l" #'dired-do-symlink
+          :desc "display in other window" "o" #'dired-find-file-other-window
+          :desc "preview file" "SPC" #'dired-view-file
+          :desc "Async shell command" "!" #'dired-do-async-shell-command
+          )
+
+    ;; 很有用
+    (gwp-leader-def
+      :keymaps 'dired-mode-map
+      "SPC" #'dired-view-file)
+
+    ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
+    (map! :map dired-mode-map
+          :nv "q" #'gwp::dired-quit-window
+          :nv "j" #'dired-hacks-next-file       ; 下一文件, 忽略非文件行
+          :nv "k" #'dired-hacks-previous-file   ; 上一文件, 忽略非文件行
+          :nv "DEL"   #'gwp::dired-up-directory ; BACKSPACE
+          :nv "RET"   #'gwp::dired-find-alternate-file
+          :nv "C-S-n" #'dired-create-directory
+          :nv "C-S-f" #'dired-create-empty-file
+          )))
+
+
+;; dired 默认用 emacs 模式
+;; (use-package evil
+;;   :config
+;;   (evil-set-initial-state 'dired-mode 'emacs))
+#+end_src
+
+*** dired-x
+隐藏.dotfiles, doom中默认omit的太少
+#+name: 67102cd3
+#+begin_src emacs-lisp
+(use-package dired-x
+  :config
+  (progn
+    (setq dired-omit-verbose t)
+    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
+    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))))
+#+end_src
+
+*** dired-filter
+#+name: d356ffd8
+#+begin_src elisp
+;; 可生成的文件过滤视图
+(use-package dired-filter
+  :config
+  (map! :map dired-mode-map
+        :localleader
+        (:prefix-map ("/" . "dired-filter")
+         :desc "by file" "f" #'dired-filter-by-file
+         :desc "by name" "n" #'dired-filter-by-name
+         :desc "by extension" "e" #'dired-filter-by-extension
+         :desc "by regexp" "r" #'dired-filter-by-regexp
+         :desc "by directory" "d" #'dired-filter-by-directory
+         :desc "reset" "/" #'dired-filter-pop-all
+         )))
+
+#+end_src
+*** dired-collapse
+#+name: 102cb018
+#+begin_src elisp
+(use-package dired-collapse
+  :hook (dired-mode-hook . dired-collapse-mode))
+#+end_src
+
+*** packages.el
+:PROPERTIES:
+:header-args: :tangle pkg/.doom.d/modules/gwp/dired/packages.el
+:END:
+#+name: 6c6adad5
+#+begin_src elisp
+(package! dired-filter)
+(package! dired-collapse)
+(package! fd-dired)
 #+end_src
 
 ** edit
@@ -5550,7 +5801,8 @@ If on a:
 #+begin_src elisp
 (map! :map org-mode-map
       :n "gh" #'org-up-element
-      :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      ;; :n "gl" #'org-down-element ; doom中默认为: evil-lion-left
+      :n "gl" #'org-next-visible-heading ; doom中默认为: evil-lion-left
       :n "gk" #'org-backward-heading-same-level
       :n "gj" #'org-forward-heading-same-level
       :n "M-l" #'org-metaright   ; doom中默认为 demote-subtree
@@ -5670,15 +5922,22 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 #+end_src
 ***** load
 方便在 org 中直接执行某些脚本操作.
+
+- [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html][Org-babel-gnuplot]]
+
 #+name: 0d8e352a
 #+begin_src elisp
 ;; activate languages for evaluation
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
+   (emacs-lisp . t) ;; this is the default
    (python . t)
    (shell . t)
-   (emacs-lisp . t) ;; this is the default
+   (sqlite . t)
+   (R . t)
+   (restclient . t)                     ; 测试 http API
+   (gnuplot . t)                        ; 需要安装 gnuplot 对应的两个包
    ))
 #+end_src
 
@@ -5700,6 +5959,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       :localleader ";" #'org-edit-special
       )
 #+end_src
+***** rest api
+[[https://github.com/pashky/restclient.el][pashky/restclient.el: HTTP REST client tool for emacs]]
 
 ***** toml
 方便写Cargo.toml, 指定为toml为conf-toml-mode, 而不用写全 "conf-toml".
@@ -7359,12 +7620,20 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 (package! orgit)
 (package! ob-ipython)
 (package! org-sidebar)
+
+;; for http api hacking
+(package! restclient)
+(package! ob-restclient)
+
 ;; (package! org-z :recipe (:host github :repo "landakram/org-z"))
 ;; (package! org-z-selectrum :recipe (:host github :repo "landakram/org-z"))
 
-
 (package! org-contrib
   :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"))
+
+;; for org-babel gnuplot
+(package! gnuplot-mode)
+(package! gnuplot)
 #+end_src
 
 ** bindings
@@ -7394,7 +7663,9 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :desc "Universal argument"    "u" #'universal-argument
       :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
       :desc "Jump to previous mark" "," #'gwp::jump-to-previous-mark
-      :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer)
+      :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer
+      ;; :desc "Switch to last buffer" "`" #'switch-to-prev-buffer
+      )
 
 (map!
  "C-`"                             #'+popup/toggle

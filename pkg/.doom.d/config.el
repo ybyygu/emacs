@@ -129,7 +129,9 @@ If two universal prefix arguments are used, then prompt for command to use."
   (recentf-max-saved-items 9999)   ; the default is only 20
   (recentf-keep '(gwp::recentf-keep-p))
   ;; clean up items when has been idle 1 hour
-  (recentf-auto-cleanup 3600))
+  ;; (recentf-auto-cleanup 3600)
+  (recentf-auto-cleanup 'never)         ; doom 在退出时清理
+  )
 
 (defun gwp::recentf-keep-p (file)
   "仅保留本地可读文件"
@@ -144,8 +146,8 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 ;; [[file:../../doom.note::c54f13b5][c54f13b5]]
 (require 'init-proxy)
-(require 'init-dired)
 (require 'init-magit)
+;; (require 'init-dired)
 ;; (require 'init-search)
 ;; (require 'init-eaf)
 ;; c54f13b5 ends here

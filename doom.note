@@ -4529,6 +4529,7 @@ virtualbox /windows 中)"
           :desc "Make symlink" "l" #'dired-do-symlink
           :desc "display in other window" "o" #'dired-find-file-other-window
           :desc "preview file" "SPC" #'dired-view-file
+          :desc "sudo open file" "S" #'gwp::dired-open-current-as-sudo
           :desc "Async shell command" "!" #'dired-do-async-shell-command
           )
 
@@ -4583,13 +4584,22 @@ virtualbox /windows 中)"
          :desc "by directory" "d" #'dired-filter-by-directory
          :desc "reset" "/" #'dired-filter-pop-all
          )))
-
 #+end_src
+
 *** dired-collapse
 #+name: 102cb018
 #+begin_src elisp
 (use-package dired-collapse
   :hook (dired-mode-hook . dired-collapse-mode))
+#+end_src
+
+*** dired sudo
+#+name: d7711b52
+#+begin_src elisp
+(defun gwp::dired-open-current-as-sudo ()
+  "open current file as sudo"
+  (interactive)
+  (doom/sudo-find-file (dired-file-name-at-point)))
 #+end_src
 
 *** packages.el

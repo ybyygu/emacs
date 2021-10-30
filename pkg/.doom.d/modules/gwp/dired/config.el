@@ -135,6 +135,7 @@ virtualbox /windows 中)"
           :desc "Make symlink" "l" #'dired-do-symlink
           :desc "display in other window" "o" #'dired-find-file-other-window
           :desc "preview file" "SPC" #'dired-view-file
+          :desc "sudo open file" "S" #'gwp::dired-open-current-as-sudo
           :desc "Async shell command" "!" #'dired-do-async-shell-command
           )
 
@@ -190,3 +191,10 @@ virtualbox /windows 中)"
 (use-package dired-collapse
   :hook (dired-mode-hook . dired-collapse-mode))
 ;; 102cb018 ends here
+
+;; [[file:../../../../../doom.note::d7711b52][d7711b52]]
+(defun gwp::dired-open-current-as-sudo ()
+  "open current file as sudo"
+  (interactive)
+  (doom/sudo-find-file (dired-file-name-at-point)))
+;; d7711b52 ends here

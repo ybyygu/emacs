@@ -10,8 +10,8 @@
       :desc "Universal argument"    "u" #'universal-argument
       :desc "Pop up scratch buffer" "x" #'doom/open-scratch-buffer
       :desc "Jump to previous mark" "," #'gwp::jump-to-previous-mark
-      ;; :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer
-      :desc "Switch to last buffer" "`" #'switch-to-prev-buffer
+      :desc "Switch to last buffer" "`" #'evil-switch-to-windows-last-buffer
+      ;; :desc "Switch to last buffer" "`" #'switch-to-prev-buffer
       )
 
 (map!
@@ -396,6 +396,7 @@
 ;; [[file:../../../../../doom.note::bc190292][bc190292]]
 (map! :leader
       (:prefix-map ("y" . "yank")
+       :desc "goldendict word"               "g"   #'gwp::goldendict-from-clipboard
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'gwp::yank-dwim
        :desc "Current file name"             "f"   #'+default/insert-file-path

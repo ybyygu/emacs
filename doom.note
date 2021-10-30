@@ -3693,6 +3693,32 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
         doom-big-font (font-spec :family user-font :size big-font-size))
   )
 #+end_src
+*** chinese/goldendict
+[[https://github.com/stardiviner/goldendict.el][stardiviner/goldendict.el: Query word at point or region selected with goldendict.]]
+#+name: 725e9ab6
+#+begin_src elisp
+;; https://github.com/stardiviner/goldendict.el
+(defun goldendict-ensure ()
+  "Ensure goldendict is running."
+  (unless (string-match "goldendict" (shell-command-to-string "ps -C 'goldendict' | sed -n '2p'"))
+    (start-process-shell-command
+     "*goldendict*"
+     " *goldendict*"
+     "goldendict")))
+
+;;;###autoload
+(defun gwp::goldendict (word)
+  (interactive (list (read-string "word: ")))
+  (goldendict-ensure)
+  ;; use Goldendict API: "Scan Popup"
+  (call-process "goldendict" nil nil nil word))
+
+;;;###autoload
+(defun gwp::goldendict-from-clipboard ()
+  (interactive)
+  (let ((word (simpleclip-get-contents)))
+    (gwp::goldendict word)))
+#+end_src
 
 *** theme
 #+begin_src elisp
@@ -8131,6 +8157,7 @@ SPC-s-s和SPC-s-b有什么区别?
 #+begin_src elisp
 (map! :leader
       (:prefix-map ("y" . "yank")
+       :desc "goldendict word"               "g"   #'gwp::goldendict-from-clipboard
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'gwp::yank-dwim
        :desc "Current file name"             "f"   #'+default/insert-file-path

@@ -301,6 +301,30 @@
         doom-big-font (font-spec :family user-font :size big-font-size))
   )
 
+;; [[file:../../../../../doom.note::725e9ab6][725e9ab6]]
+;; https://github.com/stardiviner/goldendict.el
+(defun goldendict-ensure ()
+  "Ensure goldendict is running."
+  (unless (string-match "goldendict" (shell-command-to-string "ps -C 'goldendict' | sed -n '2p'"))
+    (start-process-shell-command
+     "*goldendict*"
+     " *goldendict*"
+     "goldendict")))
+
+;;;###autoload
+(defun gwp::goldendict (word)
+  (interactive (list (read-string "word: ")))
+  (goldendict-ensure)
+  ;; use Goldendict API: "Scan Popup"
+  (call-process "goldendict" nil nil nil word))
+
+;;;###autoload
+(defun gwp::goldendict-from-clipboard ()
+  (interactive)
+  (let ((word (simpleclip-get-contents)))
+    (gwp::goldendict word)))
+;; 725e9ab6 ends here
+
 ;; [[file:../../../../../doom.note::*theme][theme:1]]
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the

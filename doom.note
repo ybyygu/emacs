@@ -3503,7 +3503,7 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
             (point) (max (line-beginning-position) (- (point) 80)))))
         code
         length)
-    (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\) *$" string)
+    (cond ((string-match "\\([a-z]+\\) *$" string)
            (setq code (match-string 0 string))
            (setq length (length code))
            (setq code (replace-regexp-in-string " +" "" code))

@@ -199,7 +199,7 @@
             (point) (max (line-beginning-position) (- (point) 80)))))
         code
         length)
-    (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\) *$" string)
+    (cond ((string-match "\\([a-z]+\\) *$" string)
            (setq code (match-string 0 string))
            (setq length (length code))
            (setq code (replace-regexp-in-string " +" "" code))

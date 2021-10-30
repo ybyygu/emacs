@@ -15,6 +15,18 @@
   (message "Killed all dired buffers"))
 
 ;;;###autoload
+(defun gwp::dired-goto-first ()
+  (interactive)
+  (goto-char (point-min))
+  (dired-hacks-next-file))
+
+;;;###autoload
+(defun gwp::dired-goto-last ()
+  (interactive)
+  (goto-char (point-max))
+  (dired-hacks-previous-file))
+
+;;;###autoload
 (defun gwp::dired-quit-window ()
   "退出 dired 时, kill 对应的 buffer"
   (interactive)
@@ -88,6 +100,13 @@ virtualbox /windows 中)"
     (fd-dired "." args)))
 ;; 303a749e ends here
 
+;; [[file:../../../../../doom.note::23a898ff][23a898ff]]
+(defun gwp::dired-remove-empty-dirs ()
+  (interactive)
+  (when (equal major-mode 'dired-mode)
+    (dired-do-shell-command "rmdir -p")))
+;; 23a898ff ends here
+
 ;; [[file:../../../../../doom.note::edd7000d][edd7000d]]
 (use-package dired
   :custom
@@ -153,8 +172,10 @@ virtualbox /windows 中)"
           :nv "RET"   #'gwp::dired-find-alternate-file
           :nv "C-S-n" #'dired-create-directory
           :nv "C-S-f" #'dired-create-empty-file
+          :n "gh" #'gwp::dired-goto-first
+          :n "gg" #'gwp::dired-goto-first
+          :n "G" #'gwp::dired-goto-last
           )))
-
 
 ;; dired 默认用 emacs 模式
 ;; (use-package evil
@@ -196,5 +217,6 @@ virtualbox /windows 中)"
 (defun gwp::dired-open-current-as-sudo ()
   "open current file as sudo"
   (interactive)
-  (doom/sudo-find-file (dired-file-name-at-point)))
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name (dired-file-name-at-point)))))
+    (find-file tramp-file-name)))
 ;; d7711b52 ends here

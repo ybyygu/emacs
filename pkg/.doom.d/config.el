@@ -124,7 +124,7 @@ If two universal prefix arguments are used, then prompt for command to use."
                      "autosave$"
                      "\\.odt$"
                      ".*/COMMIT_EDITMSG$" ; magit 临时编辑文件
-                     ".*/$"               ; 剔除目录
+                     ;; ".*/$"               ; 剔除目录
                      ))
   (recentf-max-saved-items 9999)   ; the default is only 20
   (recentf-keep '(gwp::recentf-keep-p))
@@ -135,8 +135,10 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 (defun gwp::recentf-keep-p (file)
   "仅保留本地可读文件"
-  (and (not (file-remote-p file))
-       (not (file-directory-p file))))
+  (not (file-remote-p file))
+  ;; (and (not (file-remote-p file))
+  ;;      (not (file-directory-p file)))
+  )
 ;; 493c2a26 ends here
 
 ;; [[file:../../doom.note::38a0a087][38a0a087]]

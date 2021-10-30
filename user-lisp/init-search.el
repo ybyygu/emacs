@@ -8,7 +8,8 @@
   (let* ((recent-dirs
           (mapcar (lambda (file)
                     (if (file-directory-p file) file (file-name-directory file)))
-                  recentf-list)))))
+                  recentf-list)))
+    recent-dirs))
 
 (defun gwp::zoxide-add-directory (dir)
   "将 dir 加入 zoxide 数据库中"

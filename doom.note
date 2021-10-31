@@ -4413,9 +4413,21 @@ xx <=> Option<xx>
 :END:
 - [[https://github.com/Fuco1/dired-hacks][Fuco1/dired-hacks: Collection of useful dired additions]]
 - [[https://www.emacswiki.org/emacs/DiredPlus][EmacsWiki: Dired Plus]]
+ note: [[id:2d226fe6-2010-490e-99cf-1a53b511cc8c][dired 文件管理]]
 
 dired 会生成很多 buffer. 此时可用 alternative 类命令.
 - [ ] emacs 28 可以用 ired-kill-when-opening-new-dired-buffer.
+
+视图过滤
+- 可以用 dired-filter
+- 也可用 dired-kill-line, dired-do-kill-lines, 选择性地隐藏某些文件.
+- revert-buffer 可重置视图
+
+*** go back?
+
+#+begin_src elisp
+
+#+end_src
 
 *** dwim
 #+name: 303a749e
@@ -4551,9 +4563,7 @@ virtualbox /windows 中)"
   ;;  -G : Do not print group names like 'users'
   ;;  -h : Human-readable sizes like 1K, 234M, ..
   ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-  ;;  -F : Classify filenames by appending '*' to executables,
-  ;;       '/' to directories, etc.
-  (dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+  (dired-listing-switches "-alhvG --group-directories-first") ; default: "-al"
 
   :config
   (add-hook! 'dired-mode-hook #'gwp::dired-hook)
@@ -4589,16 +4599,19 @@ virtualbox /windows 中)"
 
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
-          :nv "q" #'gwp::dired-quit-window
-          :nv "j" #'dired-hacks-next-file       ; 下一文件, 忽略非文件行
-          :nv "k" #'dired-hacks-previous-file   ; 上一文件, 忽略非文件行
-          :nv "DEL"   #'gwp::dired-up-directory ; BACKSPACE
+          :nv "q"     #'gwp::dired-quit-window
+          :nv "j"     #'dired-hacks-next-file     ; 下一文件, 忽略非文件行
+          :nv "k"     #'dired-hacks-previous-file ; 上一文件, 忽略非文件行
+          :nv "h"     #'gwp::dired-up-directory
+          :nv "l"     #'gwp::dired-find-alternate-file
+          :nv "DEL"   #'gwp::dired-up-directory   ; BACKSPACE
           :nv "RET"   #'gwp::dired-find-alternate-file
+          :nv "K"     #'dired-kill-line           ; 移除 dired buffer 中某行, 不影响文件, 相当于过滤
           :nv "C-S-n" #'dired-create-directory
           :nv "C-S-f" #'dired-create-empty-file
-          :n "gh" #'gwp::dired-goto-first
-          :n "gg" #'gwp::dired-goto-first
-          :n "G" #'gwp::dired-goto-last
+          :n "gh"     #'gwp::dired-goto-first
+          :n "gg"     #'gwp::dired-goto-first
+          :n "G"      #'gwp::dired-goto-last
           )))
 
 ;; dired 默认用 emacs 模式
@@ -4607,16 +4620,17 @@ virtualbox /windows 中)"
 ;;   (evil-set-initial-state 'dired-mode 'emacs))
 #+end_src
 
-*** dired-x
+*** dired-omit
 隐藏.dotfiles, doom中默认omit的太少
 #+name: 67102cd3
 #+begin_src emacs-lisp
 (use-package dired-x
-  :config
-  (progn
-    (setq dired-omit-verbose t)
-    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))))
+  :custom
+  (dired-omit-verbose t)
+  (dired-omit-files (rx (or
+                         (seq bol (? ".") "#")
+                         (seq bol "." (* anychar) eol) ; example: ".", "..", ".foo"
+                         ))))
 #+end_src
 
 *** dired-filter
@@ -4634,7 +4648,13 @@ virtualbox /windows 中)"
          :desc "by regexp" "r" #'dired-filter-by-regexp
          :desc "by directory" "d" #'dired-filter-by-directory
          :desc "reset" "/" #'dired-filter-pop-all
+         :desc "clone filtered buffer" "c" #'dired-filter-clone-filtered-buffer
          )))
+#+end_src
+*** dired-subtree
+#+name: cbc05841
+#+begin_src elisp
+(use-package dired-subtree)
 #+end_src
 
 *** dired-collapse

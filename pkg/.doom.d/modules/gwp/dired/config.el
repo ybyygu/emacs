@@ -1,3 +1,7 @@
+;; [[file:../../../../../doom.note::*go back?][go back?:1]]
+
+;; go back?:1 ends here
+
 ;; [[file:../../../../../doom.note::303a749e][303a749e]]
 (defun gwp::dired-hook ()
   ;; 高亮当前行, 醒目
@@ -127,9 +131,7 @@ virtualbox /windows 中)"
   ;;  -G : Do not print group names like 'users'
   ;;  -h : Human-readable sizes like 1K, 234M, ..
   ;;  -v : Do natural sort .. so the file names starting with . will show up first.
-  ;;  -F : Classify filenames by appending '*' to executables,
-  ;;       '/' to directories, etc.
-  (dired-listing-switches "-alGhvF --group-directories-first") ; default: "-al"
+  (dired-listing-switches "-alhvG --group-directories-first") ; default: "-al"
 
   :config
   (add-hook! 'dired-mode-hook #'gwp::dired-hook)
@@ -165,16 +167,19 @@ virtualbox /windows 中)"
 
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
-          :nv "q" #'gwp::dired-quit-window
-          :nv "j" #'dired-hacks-next-file       ; 下一文件, 忽略非文件行
-          :nv "k" #'dired-hacks-previous-file   ; 上一文件, 忽略非文件行
-          :nv "DEL"   #'gwp::dired-up-directory ; BACKSPACE
+          :nv "q"     #'gwp::dired-quit-window
+          :nv "j"     #'dired-hacks-next-file     ; 下一文件, 忽略非文件行
+          :nv "k"     #'dired-hacks-previous-file ; 上一文件, 忽略非文件行
+          :nv "h"     #'gwp::dired-up-directory
+          :nv "l"     #'gwp::dired-find-alternate-file
+          :nv "DEL"   #'gwp::dired-up-directory   ; BACKSPACE
           :nv "RET"   #'gwp::dired-find-alternate-file
+          :nv "K"     #'dired-kill-line           ; 移除 dired buffer 中某行, 不影响文件, 相当于过滤
           :nv "C-S-n" #'dired-create-directory
           :nv "C-S-f" #'dired-create-empty-file
-          :n "gh" #'gwp::dired-goto-first
-          :n "gg" #'gwp::dired-goto-first
-          :n "G" #'gwp::dired-goto-last
+          :n "gh"     #'gwp::dired-goto-first
+          :n "gg"     #'gwp::dired-goto-first
+          :n "G"      #'gwp::dired-goto-last
           )))
 
 ;; dired 默认用 emacs 模式
@@ -185,11 +190,12 @@ virtualbox /windows 中)"
 
 ;; [[file:../../../../../doom.note::67102cd3][67102cd3]]
 (use-package dired-x
-  :config
-  (progn
-    (setq dired-omit-verbose t)
-    ;; (add-hook 'dired-mode-hook #'dired-omit-mode)
-    (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))))
+  :custom
+  (dired-omit-verbose t)
+  (dired-omit-files (rx (or
+                         (seq bol (? ".") "#")
+                         (seq bol "." (* anychar) eol) ; example: ".", "..", ".foo"
+                         ))))
 ;; 67102cd3 ends here
 
 ;; [[file:../../../../../doom.note::d356ffd8][d356ffd8]]
@@ -205,8 +211,13 @@ virtualbox /windows 中)"
          :desc "by regexp" "r" #'dired-filter-by-regexp
          :desc "by directory" "d" #'dired-filter-by-directory
          :desc "reset" "/" #'dired-filter-pop-all
+         :desc "clone filtered buffer" "c" #'dired-filter-clone-filtered-buffer
          )))
 ;; d356ffd8 ends here
+
+;; [[file:../../../../../doom.note::cbc05841][cbc05841]]
+(use-package dired-subtree)
+;; cbc05841 ends here
 
 ;; [[file:../../../../../doom.note::102cb018][102cb018]]
 (use-package dired-collapse

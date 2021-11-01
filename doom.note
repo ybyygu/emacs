@@ -6778,8 +6778,11 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+end_src
 
 ***** copy & paste attachments
+#+name: aae629f1
 #+begin_src emacs-lisp
 (setq org-attach-store-link-p 'attached)
+;; 子节点可使用父节点的 attach 目录
+(setq org-attach-use-inheritance t)
 
 ;; 1. store the ataach files into clipboard
 (defun gwp/org-attach-copy (&optional force)

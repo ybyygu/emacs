@@ -888,8 +888,10 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (require 'org-attach)
 ;; setup:1 ends here
 
-;; [[file:../../../../../doom.note::*copy & paste attachments][copy & paste attachments:1]]
+;; [[file:../../../../../doom.note::aae629f1][aae629f1]]
 (setq org-attach-store-link-p 'attached)
+;; 子节点可使用父节点的 attach 目录
+(setq org-attach-use-inheritance t)
 
 ;; 1. store the ataach files into clipboard
 (defun gwp/org-attach-copy (&optional force)
@@ -907,7 +909,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   (interactive "P")
   (let ((current-dir (file-name-directory buffer-file-name)))
     (zotero-attach-txclip-paste-files current-dir)))
-;; copy & paste attachments:1 ends here
+;; aae629f1 ends here
 
 ;; [[file:../../../../../doom.note::b47bc445][b47bc445]]
 (defun gwp/org-file-link-p (&optional element)

@@ -1481,9 +1481,14 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 (defun gwp::new-item-time-stamp (arg)
   (interactive "P")
-  (evil-first-non-blank)
-  (call-interactively 'org-insert-item)
+  (if (org-in-item-p)
+      (progn
+        (call-interactively 'org-beginning-of-item)
+        (call-interactively 'org-insert-item))
+    (insert "- "))
   (call-interactively 'org-time-stamp-inactive)
+  (when (evil-normal-state-p)
+    (evil-insert 1))
   (insert " "))
 
 (map! :map org-mode-map

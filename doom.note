@@ -28,24 +28,23 @@
 - [X] image 大小不能控制
 
 * 配置参考
-- [ ] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
-- [ ] [[https://github.com/bodnarlajos/emacs-pure][bodnarlajos/emacs-pure]]
-- [ ] [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
-- [ ] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
-- [ ] [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
-- [ ] [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
 - [ ] [[https://github.com/hlissner/doom-emacs][doom-emacs: An Emacs configuration for the stubborn martian vimmer]]
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org][doom-emacs/faq.org]]
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][doom-emacs/getting_started.org]]
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
-- [ ] https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
-- [X] [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
-  这里提到了基于mupdf的一个模块, 可以关注. pdf-tools太慢了
 - [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [ ] [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [ ] [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - [ ] 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
+- [X] [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
+- [X] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
+- [X] https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
+- [X] [[https://github.com/purcell/emacs.d][purcell/emacs.d: An Emacs configuration bundle with batteries included]]
+- [X] [[https://git.sr.ht/~technomancy/better-defaults][~technomancy/better-defaults - sourcehut git]]
+- [X] [[https://tecosaur.github.io/emacs-config/config.html][Doom Emacs Configuration]] by tecosaur
+  这里提到了基于mupdf的一个模块, 可以关注. pdf-tools太慢了
+- [X] [[https://github.com/tshu-w/.emacs.d/tree/master/lisp][.emacs.d/lisp at master · tshu-w/.emacs.d]]
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
@@ -3272,20 +3271,71 @@ doom内置了几个命令:
 - 水平放大: SPC-w-m-s
 - 垂直放大: SPC-w-m-v
 
-#+name: 9f0e3550
+#+name: 9a32eb12
 #+begin_src elisp
+;; 新建frame时最大化窗口
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; 切换窗口最大化状态
+;; ;; from https://gist.github.com/3402786
+;; (defun gwp::toggle-maximize-window ()
+;;   (interactive)
+;;   (save-excursion
+;;     (if (and (= 1 (length (window-list)))
+;;              (assoc ?_ register-alist))
+;;         (jump-to-register ?_)
+;;       (progn
+;;         (window-configuration-to-register ?_)
+;;         (delete-other-windows)))))
+
+;;;###autoload
+(defun gwp::toggle-maximize-window ()
+  "仅显示当前窗口?"
+  (interactive)
+  ;; (if (= 1 (length (window-list)))
+  ;;     (winner-undo)
+  ;;   (delete-other-windows))
+  (if (and winner-mode
+           (equal (selected-window) (next-window)))
+      (winner-undo)
+    (delete-other-windows)))
+
+(defun gwp::maximize-window-vertically ()
+  "纵向仅显示当前窗口"
+  (interactive)
+  (require 'windmove)
+  (let* ((w1 (window-in-direction 'below))
+         (w2 (window-in-direction 'above)))
+    (cond ((or w1 w2)
+           (save-excursion
+             (while (ignore-errors (windmove-up)) (delete-window))
+             (while (ignore-errors (windmove-down)) (delete-window))))
+          ((and (not w1) (not w2))
+           ;; 手动 undo 更合适些
+           ;; (winner-undo)
+           ))))
+
+;; https://github.com/purcell/emacs.d/blob/master/lisp/init-windows.el
+(defun sanityinc/split-window()
+  "Split the window to see the most recent buffer in the other window.
+Call a second time to restore the original window configuration."
+  (interactive)
+  (if (eq last-command 'sanityinc/split-window)
+      (progn
+        (jump-to-register :sanityinc/split-window)
+        (setq this-command 'sanityinc/unsplit-window))
+    (window-configuration-to-register :sanityinc/split-window)
+    (switch-to-buffer-other-window nil)
+    ))
+
 (map! :map evil-window-map
-      "1"       #'doom/window-maximize-buffer
-      "o"       #'doom/window-maximize-buffer ;show "only"
-      "t"       #'doom/window-maximize-vertically ;show top
+      "1"       #'gwp::toggle-maximize-window
+      "o"       #'gwp::toggle-maximize-window     ; show "only"
+      "t"       #'gwp::maximize-window-vertically ; show top
+      "`"       #'sanityinc/split-window
       )
 #+end_src
 
-新建frame时最大化窗口
-#+name: 9a32eb12
-#+begin_src elisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-#+end_src
 
 **** 窗口管理
 [[https://github.com/abo-abo/ace-window][abo-abo/ace-window: Quickly switch windows in Emacs]]

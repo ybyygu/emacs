@@ -51,16 +51,68 @@
         "z" #'golden-ratio))
 ;; bfacbb8e ends here
 
-;; [[file:../../../../../doom.note::9f0e3550][9f0e3550]]
-(map! :map evil-window-map
-      "1"       #'doom/window-maximize-buffer
-      "o"       #'doom/window-maximize-buffer ;show "only"
-      "t"       #'doom/window-maximize-vertically ;show top
-      )
-;; 9f0e3550 ends here
-
 ;; [[file:../../../../../doom.note::9a32eb12][9a32eb12]]
+;; 新建frame时最大化窗口
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; 切换窗口最大化状态
+;; ;; from https://gist.github.com/3402786
+;; (defun gwp::toggle-maximize-window ()
+;;   (interactive)
+;;   (save-excursion
+;;     (if (and (= 1 (length (window-list)))
+;;              (assoc ?_ register-alist))
+;;         (jump-to-register ?_)
+;;       (progn
+;;         (window-configuration-to-register ?_)
+;;         (delete-other-windows)))))
+
+;;;###autoload
+(defun gwp::toggle-maximize-window ()
+  "仅显示当前窗口?"
+  (interactive)
+  ;; (if (= 1 (length (window-list)))
+  ;;     (winner-undo)
+  ;;   (delete-other-windows))
+  (if (and winner-mode
+           (equal (selected-window) (next-window)))
+      (winner-undo)
+    (delete-other-windows)))
+
+(defun gwp::maximize-window-vertically ()
+  "纵向仅显示当前窗口"
+  (interactive)
+  (require 'windmove)
+  (let* ((w1 (window-in-direction 'below))
+         (w2 (window-in-direction 'above)))
+    (cond ((or w1 w2)
+           (save-excursion
+             (while (ignore-errors (windmove-up)) (delete-window))
+             (while (ignore-errors (windmove-down)) (delete-window))))
+          ((and (not w1) (not w2))
+           ;; 手动 undo 更合适些
+           ;; (winner-undo)
+           ))))
+
+;; https://github.com/purcell/emacs.d/blob/master/lisp/init-windows.el
+(defun sanityinc/split-window()
+  "Split the window to see the most recent buffer in the other window.
+Call a second time to restore the original window configuration."
+  (interactive)
+  (if (eq last-command 'sanityinc/split-window)
+      (progn
+        (jump-to-register :sanityinc/split-window)
+        (setq this-command 'sanityinc/unsplit-window))
+    (window-configuration-to-register :sanityinc/split-window)
+    (switch-to-buffer-other-window nil)
+    ))
+
+(map! :map evil-window-map
+      "1"       #'gwp::toggle-maximize-window
+      "o"       #'gwp::toggle-maximize-window     ; show "only"
+      "t"       #'gwp::maximize-window-vertically ; show top
+      "`"       #'sanityinc/split-window
+      )
 ;; 9a32eb12 ends here
 
 ;; [[file:../../../../../doom.note::19f082d3][19f082d3]]

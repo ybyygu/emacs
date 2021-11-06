@@ -3945,8 +3945,23 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
   (recenter))
 
 ;; vim里没有Alt修饰, M-x类绑定可以放心用
-(map! :n "M-n" #'gwp::imenu-goto-next)
-(map! :n "M-p" #'gwp::imenu-goto-prev)
+;; (map! :n "M-n" #'gwp::imenu-goto-next)
+;; (map! :n "M-p" #'gwp::imenu-goto-prev)
+#+end_src
+
+*** nav
+#+name: d95b49c5
+#+begin_src elisp
+(use-package block-nav
+  :custom
+  (block-nav-skip-comment t)
+  (block-nav-move-skip-shallower  t)
+  :config
+  (map! :n "M-n" #'block-nav-next-block)
+  (map! :n "M-p" #'block-nav-previous-block)
+  (map! :n "M-l" #'block-nav-next-indentation-level)
+  (map! :n "M-h" #'block-nav-previous-indentation-level)
+  )
 #+end_src
 
 *** vterm
@@ -4457,6 +4472,8 @@ xx <=> Option<xx>
 ;; 这两个包安装报错, 临时禁用
 (package! gitconfig-mode :ignore t)
 (package! gitignore-mode :ignore t)
+
+(package! block-nav :recipe (:host github :repo "nixin72/block-nav.el"))
 #+end_src
 ** dired
 :PROPERTIES:

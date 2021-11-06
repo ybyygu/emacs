@@ -7,7 +7,7 @@
 
 ;; 禁用字词检查, 需要了再开
 (remove-hook! 'org-mode-hook #'flyspell-mode)
-(flyspell-mode 0)
+(remove-hook! 'text-mode-hook #'spell-fu-mode)
 
 ;; https://orgmode.org/manual/Clean-view.html
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup

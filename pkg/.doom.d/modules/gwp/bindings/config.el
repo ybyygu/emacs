@@ -363,13 +363,11 @@
        :desc "切换终端(vterm)"            "t" #'vterm-toggle
        :desc "Big mode"                   "b" #'doom-big-font-mode
        :desc "Debug on error"             "d" #'toggle-debug-on-error
-       :desc "Flycheck"                   "f" #'flycheck-mode
        :desc "Frame fullscreen"           "F" #'toggle-frame-fullscreen
        :desc "Indent style"               "I" #'doom/toggle-indent-style
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
-       ;; :desc "Spell checker"              "s" #'spell-fu-mode
-       :desc "Spell checker"              "s" #'flyspell-mode
+       :desc "Spell checker"              "s" #'spell-fu-mode
        :desc "Socks proxy"                "p" #'proxy-socks-toggle
        :desc "Soft line wrapping"         "w" #'visual-line-mode
        :desc "Zen mode"                   "z" #'+zen/toggle

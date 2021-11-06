@@ -2176,7 +2176,8 @@ gwp-merge:
 
        :checkers
        ;;syntax              ; tasing you for every semicolon you forget
-       (spell +flyspell)     ; tasing you for misspelling mispelling
+       ;; (spell +flyspell)     ; tasing you for misspelling mispelling
+       (spell)     ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -5739,7 +5740,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 ;; 禁用字词检查, 需要了再开
 (remove-hook! 'org-mode-hook #'flyspell-mode)
-(flyspell-mode 0)
+(remove-hook! 'text-mode-hook #'spell-fu-mode)
 
 ;; https://orgmode.org/manual/Clean-view.html
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
@@ -8196,13 +8197,11 @@ SPC-s-s和SPC-s-b有什么区别?
        :desc "切换终端(vterm)"            "t" #'vterm-toggle
        :desc "Big mode"                   "b" #'doom-big-font-mode
        :desc "Debug on error"             "d" #'toggle-debug-on-error
-       :desc "Flycheck"                   "f" #'flycheck-mode
        :desc "Frame fullscreen"           "F" #'toggle-frame-fullscreen
        :desc "Indent style"               "I" #'doom/toggle-indent-style
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
        :desc "Read-only mode"             "r" #'read-only-mode
-       ;; :desc "Spell checker"              "s" #'spell-fu-mode
-       :desc "Spell checker"              "s" #'flyspell-mode
+       :desc "Spell checker"              "s" #'spell-fu-mode
        :desc "Socks proxy"                "p" #'proxy-socks-toggle
        :desc "Soft line wrapping"         "w" #'visual-line-mode
        :desc "Zen mode"                   "z" #'+zen/toggle

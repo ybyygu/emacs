@@ -48,7 +48,14 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [61/73]
+* Memo [62/76]
+** DONE [2021-11-07 Sun] org item 环境中反复闪动缩进的问题
+- State "DONE"       from "TODO"       [2021-11-07 Sun 11:15]
+比如有时:
+- 此时输入() 会触发缩进闪烁的问题
+
+与 git-gutter-mode 有关. 禁用之.
+
 ** TODO [2021-10-28 Thu] org-down-element 不是很顺手
 ** TODO [2021-10-27 Wed] 临时禁用 org-encrypt: 可能会导致无法正常保存
 ** TODO [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
@@ -1325,6 +1332,14 @@ emacs 默认使用 docview mode 来打开链接的文件, 比如 PDF 等, 不太
 全文搜索所有.note笔记
 - SPC-s-n (gwp/search-all-notes)
 
+更新笔记软链接
+#+begin_src makefile
+update:
+	rm ~/.cache/notes -rf
+	notesearch.py -r ~/.cache/notes
+#+end_src
+
+
 ** roam research/org-roam
 我觉得可以基于zotero来实现类似roam的组织方式. 在zotero中可以打标签, 也可以设置
 related items. 同时zotero中的items也是平级组织, 统一命名, 使用zotero uri可以在
@@ -1906,6 +1921,21 @@ docker run -ti --name emacs\
  # -v <path_to_your_workspace>:/mnt/workspace\
  centaur/emacs emacs
 #+end_src
+** pdf viewer
+*** zathura [[https://wiki.archlinux.org/title/Zathura][zathura - ArchWiki]]
+zathura-pdf-mupdf
+
+快捷键:
+- a: page fit
+- s: width fit
+
+*** llpp [[https://wiki.archlinux.org/title/Llpp][llpp - ArchWiki]]
+有 GPU 加速, 但比较难用, 用户也少.
+
+代码: [[https://github.com/moosotc/llpp][github moosotc/llpp: PDF pager]]
+
+- 进入 llpp 后, 按 F1 会出现使用帮助.
+- 按 "=" 显示阅读进度(页码等)
 
 ** 使用chemacs做emacs双启动 [[https://github.com/plexus/chemacs][plexus/chemacs: Emacs profile switcher]]
 - [[https://github.com/plexus/chemacs2][plexus/chemacs2: Emacs version switcher, improved]]
@@ -2140,7 +2170,7 @@ gwp-merge:
        ;;tabs              ; an tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
-       vc-gutter         ; vcs diff in the fringe
+       ;; vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
@@ -3882,6 +3912,7 @@ rime 会根据输入状态, 智能进入英文输入模式. 此时, 可用 C-i �
 ;; 避免与rime的设置有冲突
 (disable-packages! pyim)
 #+end_src
+
 ** develop
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/modules/gwp/develop/config.el

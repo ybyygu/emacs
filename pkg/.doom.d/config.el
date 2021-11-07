@@ -123,6 +123,8 @@ If two universal prefix arguments are used, then prompt for command to use."
                      "\\.png$"
                      "autosave$"
                      "\\.odt$"
+                     "\\.note_archive$"
+                     "_workspaces"
                      ".*/COMMIT_EDITMSG$" ; magit 临时编辑文件
                      ;; ".*/$"               ; 剔除目录
                      ))

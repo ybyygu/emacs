@@ -35,8 +35,8 @@
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 - [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
 - [ ] [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
-- [ ] [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - [ ] 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
+- [X] [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - [X] [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
 - [X] [[https://github.com/Wilfred/.emacs.d/tree/48e7eb583f6afdfa3257edd0b9e64b1f489c001a][Wilfred/.emacs.d]]
 - [X] https://github.com/gilbertw1/bmacs/blob/master/bmacs.org
@@ -48,7 +48,7 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [62/76]
+* Memo [65/76]
 ** DONE [2021-11-07 Sun] org item 环境中反复闪动缩进的问题
 - State "DONE"       from "TODO"       [2021-11-07 Sun 11:15]
 比如有时:
@@ -56,10 +56,13 @@
 
 与 git-gutter-mode 有关. 禁用之.
 
-** TODO [2021-10-28 Thu] org-down-element 不是很顺手
-** TODO [2021-10-27 Wed] 临时禁用 org-encrypt: 可能会导致无法正常保存
-** TODO [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
-- [ ] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
+** DONE [2021-10-28 Thu] org-down-element 不是很顺手
+- State "DONE"       from "TODO"       [2021-11-07 Sun 16:40]
+** DONE [2021-10-27 Wed] 临时禁用 org-encrypt: 可能会导致无法正常保存
+- State "DONE"       from "TODO"       [2021-11-07 Sun 16:40]
+** DONE [2021-10-23 Sat] 实现双向/反向链接功能 [[id:87c3209e-56e0-438e-bc9e-1a8143e22b9f][backlinks]]
+- State "DONE"       from "TODO"       [2021-11-07 Sun 16:41]
+- [X] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
 - [X] 可搜索本地所有 .note 文件, 实现 sidebar 式的可视化
 
 ** TODO [2021-10-23 Sat] comment 的问题
@@ -2538,6 +2541,8 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
                      "\\.png$"
                      "autosave$"
                      "\\.odt$"
+                     "\\.note_archive$"
+                     "_workspaces"
                      ".*/COMMIT_EDITMSG$" ; magit 临时编辑文件
                      ;; ".*/$"               ; 剔除目录
                      ))
@@ -7345,8 +7350,9 @@ org-open-file调用pdf-tools打开PDF文件
 搜索所有~/.cache/notes目录下所有.notes文件. 为了避免symlink文件不存在导致ivy报错,
 我们使用自定义脚本ripgrep, 强制命令退出码为0. 注意~/.local/bin应在PATH变量中.
 
+#+name: 21d90559
 #+begin_src shell :tangle ~/.local/bin/ripgrep :shebang #! /bin/bash
-/usr/bin/rg $@
+/usr/bin/rg --follow "$@"
 
 exit 0
 #+end_src
@@ -7354,12 +7360,21 @@ exit 0
 #+name: 4971b464
 #+begin_src emacs-lisp
 ;;;###autoload
-(defun gwp/search-all-notes ()
+(defun gwp/search-all-notes (&optional arg)
   "search all notes in ~/.cache/notes"
   (interactive)
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
-    (counsel-rg "" "~/.cache/notes")))
+  (let ((counsel-rg-base-command (list
+                                  "ripgrep"
+                                  "-M" "240"
+                                  "--with-filename"
+                                  "--no-heading"
+                                  "--line-number"
+                                  "--color" "never"
+                                  "%s")))
+    (if arg
+        (counsel-rg arg "~/.cache/notes")
+      (counsel-rg "" "~/.cache/notes"))))
 #+end_src
 
 deadgrep与doom有冲突, 不能用了.
@@ -7408,9 +7423,38 @@ deadgrep与doom有冲突, 不能用了.
 : org-id-locations-file
 
 org 生成 ID 链接时, 会记录对应的文件路径, 然后在文件中搜索相应的 ID.
-org-id-locations-file 默认在 doom-emacs/.org-id-locations
+org-id-locations-file 默认在 ~/emacs/.org-id-locations
 
-org 会自动扫描 org-directory 中的 org 文件, 找到有 ID 的文件名.
+org 会自动扫描 org-directory 中的 org 文件, 找到有 ID 的文件名(org-id-find,
+org-id-find-id-file).
+
+ripgrep --files-with-matches "^\s*:ID: +ed7c"
+
+以下代码用 patch 覆盖 org-id-find-id-file 函数, 让去从~/.cache/notes 下找?
+#+name: 98fd4d7a
+#+begin_src elisp
+(require 'el-patch)
+(defun gwp::org-id-find-id-file (id)
+  (let* ((rg-command (format "ripgrep -l --color never -e '^\s*:ID: +%s' /home/ybyygu/.cache/notes" id))
+         (output (shell-command-to-string rg-command))
+         (file (car (split-string output "[\r\n]+" t))))
+    file))
+
+(el-patch-feature org-id)
+(with-eval-after-load 'org-id
+  (el-patch-defun org-id-find-id-file (id)
+    "Query the id database for the file in which ID is located."
+    (unless org-id-locations (org-id-locations-load))
+    (or (and org-id-locations
+             (hash-table-p org-id-locations)
+             (gethash id org-id-locations))
+        ;; Fall back on current buffer
+        (or
+         (gwp::org-id-find-id-file id)
+         (buffer-file-name (or (buffer-base-buffer (current-buffer))
+                               (current-buffer)))))))
+#+end_src
+
 
 org-sidebar 出现后可按在 item 上按 TAB 访问链接的文件位置(继承自 org-agenda?).
 
@@ -7459,7 +7503,7 @@ org-sidebar 出现后可按在 item 上按 TAB 访问链接的文件位置(继�
 (defun gwp::org-backlinks-search-files (keyword)
   "搜索文件系统中所有的.note文件, 返回包含引用 keyword 的文件名"
   (let* (
-         (rg-command (format "/usr/bin/rg --follow -l --color never -e %s /home/ybyygu/.cache/notes 2>/dev/null" keyword))
+         (rg-command (format "ripgrep -l --color never -e %s /home/ybyygu/.cache/notes" keyword))
          (output (shell-command-to-string rg-command))
          (collection (split-string output "[\r\n]+" t))
          result)

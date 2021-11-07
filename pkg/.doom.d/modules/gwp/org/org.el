@@ -1183,12 +1183,21 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 ;; [[file:../../../../../doom.note::4971b464][4971b464]]
 ;;;###autoload
-(defun gwp/search-all-notes ()
+(defun gwp/search-all-notes (&optional arg)
   "search all notes in ~/.cache/notes"
   (interactive)
   ;; (defun counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-  (let ((counsel-rg-base-command (list "ripgrep" "--follow" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s")))
-    (counsel-rg "" "~/.cache/notes")))
+  (let ((counsel-rg-base-command (list
+                                  "ripgrep"
+                                  "-M" "240"
+                                  "--with-filename"
+                                  "--no-heading"
+                                  "--line-number"
+                                  "--color" "never"
+                                  "%s")))
+    (if arg
+        (counsel-rg arg "~/.cache/notes")
+      (counsel-rg "" "~/.cache/notes"))))
 ;; 4971b464 ends here
 
 ;; [[file:../../../../../doom.note::05419467][05419467]]
@@ -1202,6 +1211,30 @@ DESC. FORMATs understood are 'odt','latex and 'html."
   :custom
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 ;; ac1d0086 ends here
+
+;; [[file:../../../../../doom.note::98fd4d7a][98fd4d7a]]
+(require 'el-patch)
+(defun gwp::org-id-find-id-file (id)
+  (let* ((rg-command (format "ripgrep -l --color never -e '^\s*:ID: +%s' /home/ybyygu/.cache/notes" id))
+         (output (shell-command-to-string rg-command))
+         (file (car (split-string output "[\r\n]+" t))))
+    file))
+
+(el-patch-feature org-id)
+(with-eval-after-load 'org-id
+  (el-patch-defun org-id-find-id-file (id)
+    "Query the id database for the file in which ID is located."
+    ;; (gwp::org-id-find-id-file id)
+    (unless org-id-locations (org-id-locations-load))
+    (or (and org-id-locations
+             (hash-table-p org-id-locations)
+             (gethash id org-id-locations))
+        ;; Fall back on current buffer
+        (or
+         (gwp::org-id-find-id-file id)
+         (buffer-file-name (or (buffer-base-buffer (current-buffer))
+                               (current-buffer)))))))
+;; 98fd4d7a ends here
 
 ;; [[file:../../../../../doom.note::a4f269ca][a4f269ca]]
 (require 'org-sidebar)
@@ -1247,7 +1280,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (defun gwp::org-backlinks-search-files (keyword)
   "搜索文件系统中所有的.note文件, 返回包含引用 keyword 的文件名"
   (let* (
-         (rg-command (format "/usr/bin/rg --follow -l --color never -e %s /home/ybyygu/.cache/notes 2>/dev/null" keyword))
+         (rg-command (format "ripgrep -l --color never -e %s /home/ybyygu/.cache/notes" keyword))
          (output (shell-command-to-string rg-command))
          (collection (split-string output "[\r\n]+" t))
          result)

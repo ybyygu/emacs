@@ -16,7 +16,10 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]] [[id:e8cab7e9-2b5a-4566-ade2-f9dd8c42a2ae][emacs.note]]
 - [[zotero://select/library/collections/Z8UFNPZ4][@zotero::collection]]
 
-* Tasks [9/9]
+* Tasks [9/12]
+- [ ] note backlink: 可修改为 ivy 补全, 方便来回跳转.
+- [ ] org id link 仍有时不灵, 比如这里: [[id:577819f3-421f-4c73-835a-f901fd91f2d4][开源, 高效计算 SIESTA]]
+- [ ] SPC b d 按键无效(workspace 原因, not in a valid workspace)
 - [X] insert 状态下无法输入z
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
@@ -48,7 +51,11 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [65/76]
+* Memo [66/77]
+** DONE [2021-11-24 Wed] 添加 cp2k-mode
+- State "DONE"       from "TODO"       [2021-11-24 Wed 09:54]
+- [[https://www.cp2k.org/tools:emacs][tools:emacs CP2K Open Source Molecular Dynamics]]
+
 ** DONE [2021-11-07 Sun] org item 环境中反复闪动缩进的问题
 - State "DONE"       from "TODO"       [2021-11-07 Sun 11:15]
 比如有时:
@@ -2537,10 +2544,10 @@ emacs版的 "Open in Terminal": 在gnome-terminal中打开当前目录.
                      "/scp:"
                      "/scpx:"
                      "/ssh:"
-                     "\\.pdf$"
+                     ;; "\\.pdf$"
                      "\\.png$"
                      "autosave$"
-                     "\\.odt$"
+                     ;; "\\.odt$"
                      "\\.note_archive$"
                      "_workspaces"
                      ".*/COMMIT_EDITMSG$" ; magit 临时编辑文件
@@ -3226,7 +3233,6 @@ org-noter 生成的note, 用于打开打定的 PDF 页面.
 
 (provide 'init-search)
 #+end_src
-
 * modules/gwp
 使用doom的方式来组织代码, 这样的好处是packages可以模块化来定义, 避免tangle时不小心出问题.
 ** ui
@@ -4489,6 +4495,11 @@ xx <=> Option<xx>
   (kill-ring-save beg end)
   (+tmux/run "%paste"))
 #+end_src
+*** cp2k
+#+name: 423df247
+#+begin_src elisp
+(require 'cp2k-mode)
+#+end_src
 
 *** packages.el
 :PROPERTIES:
@@ -4707,7 +4718,7 @@ virtualbox /windows 中)"
           :nv "j"     #'dired-hacks-next-file     ; 下一文件, 忽略非文件行
           :nv "k"     #'dired-hacks-previous-file ; 上一文件, 忽略非文件行
           :nv "h"     #'gwp::dired-up-directory
-          :nv "l"     #'gwp::dired-find-alternate-file
+          :nv "l"     #'dired-view-file
           :nv "DEL"   #'gwp::dired-up-directory   ; BACKSPACE
           :nv "RET"   #'gwp::dired-find-alternate-file
           :nv "K"     #'dired-kill-line           ; 移除 dired buffer 中某行, 不影响文件, 相当于过滤

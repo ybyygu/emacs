@@ -364,3 +364,7 @@ The org src will be tangled first before compiling.
   (kill-ring-save beg end)
   (+tmux/run "%paste"))
 ;; 44b70ed9 ends here
+
+;; [[file:../../../../../doom.note::423df247][423df247]]
+(require 'cp2k-mode)
+;; 423df247 ends here

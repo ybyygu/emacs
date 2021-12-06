@@ -171,7 +171,7 @@ virtualbox /windows 中)"
           :nv "j"     #'dired-hacks-next-file     ; 下一文件, 忽略非文件行
           :nv "k"     #'dired-hacks-previous-file ; 上一文件, 忽略非文件行
           :nv "h"     #'gwp::dired-up-directory
-          :nv "l"     #'gwp::dired-find-alternate-file
+          :nv "l"     #'dired-view-file
           :nv "DEL"   #'gwp::dired-up-directory   ; BACKSPACE
           :nv "RET"   #'gwp::dired-find-alternate-file
           :nv "K"     #'dired-kill-line           ; 移除 dired buffer 中某行, 不影响文件, 相当于过滤

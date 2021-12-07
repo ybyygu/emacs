@@ -890,7 +890,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 ;; [[file:../../../../../doom.note::aae629f1][aae629f1]]
 (setq org-attach-store-link-p 'attached)
-;; 子节点可使用父节点的 attach 目录
+;; 子节点可使用父节点的 attach/ID 目录
 (setq org-attach-use-inheritance t)
 
 ;; 1. store the ataach files into clipboard

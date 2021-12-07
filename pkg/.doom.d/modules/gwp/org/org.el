@@ -1215,16 +1215,16 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 ;; [[file:../../../../../doom.note::98fd4d7a][98fd4d7a]]
 (require 'el-patch)
 (defun gwp::org-id-find-id-file (id)
-  (let* ((rg-command (format "ripgrep -l --color never -e '^\s*:ID: +%s' /home/ybyygu/.cache/notes" id))
+  (let* ((rg-command (format "ripgrep -l --color never -e '^\\s*:ID:\\s+%s' /home/ybyygu/.cache/notes" id))
          (output (shell-command-to-string rg-command))
          (file (car (split-string output "[\r\n]+" t))))
+    ;; (message "%s" rg-command)
     file))
 
 (el-patch-feature org-id)
 (with-eval-after-load 'org-id
   (el-patch-defun org-id-find-id-file (id)
     "Query the id database for the file in which ID is located."
-    ;; (gwp::org-id-find-id-file id)
     (unless org-id-locations (org-id-locations-load))
     (or (and org-id-locations
              (hash-table-p org-id-locations)

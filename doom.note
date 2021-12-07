@@ -16,11 +16,11 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]] [[id:e8cab7e9-2b5a-4566-ade2-f9dd8c42a2ae][emacs.note]]
 - [[zotero://select/library/collections/Z8UFNPZ4][@zotero::collection]]
 
-* Tasks [9/13]
-- [ ] note backlink: 可修改为 ivy 补全, 方便来回跳转.
-- [ ] org id link 仍有时不灵, 比如这里: [[id:577819f3-421f-4c73-835a-f901fd91f2d4][开源, 高效计算 SIESTA]]
+* Tasks [10/13]
 - [ ] ID 链接与 org-attach 系统冲突, 还有 ID 继承的问题
 - [ ] SPC b d 按键无效(workspace 原因, not in a valid workspace)
+- [ ] note backlink: 可修改为 ivy 补全, 方便来回跳转.
+- [X] org id link 仍有时不灵, 比如这里: [[id:577819f3-421f-4c73-835a-f901fd91f2d4][开源, 高效计算 SIESTA]]
 - [X] insert 状态下无法输入z
 - [X] 使用 transient 重写cargo (tangle)
 - [X] autosave空格丢失问题
@@ -7454,9 +7454,10 @@ ripgrep --files-with-matches "^\s*:ID: +ed7c"
 #+begin_src elisp
 (require 'el-patch)
 (defun gwp::org-id-find-id-file (id)
-  (let* ((rg-command (format "ripgrep -l --color never -e '^\s*:ID: +%s' /home/ybyygu/.cache/notes" id))
+  (let* ((rg-command (format "ripgrep -l --color never -e '^\\s*:ID:\\s+%s' /home/ybyygu/.cache/notes" id))
          (output (shell-command-to-string rg-command))
          (file (car (split-string output "[\r\n]+" t))))
+    ;; (message "%s" rg-command)
     file))
 
 (el-patch-feature org-id)

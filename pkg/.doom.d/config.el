@@ -48,7 +48,8 @@
 ;; 11b27926 ends here
 
 ;; [[file:../../doom.note::6b10b827][6b10b827]]
-(setq persp-auto-save-opt 0)
+(after! persp-mode
+  (setq persp-auto-save-opt 0))
 
 (defun gwp/workspace/load-or-switch (name)
   "Load or switch to a workspace."

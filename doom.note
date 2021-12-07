@@ -16,9 +16,10 @@
 - note [[zotero://select/items/1_MG5FH5V9][@emacs]] [[id:e8cab7e9-2b5a-4566-ade2-f9dd8c42a2ae][emacs.note]]
 - [[zotero://select/library/collections/Z8UFNPZ4][@zotero::collection]]
 
-* Tasks [9/12]
+* Tasks [9/13]
 - [ ] note backlink: 可修改为 ivy 补全, 方便来回跳转.
 - [ ] org id link 仍有时不灵, 比如这里: [[id:577819f3-421f-4c73-835a-f901fd91f2d4][开源, 高效计算 SIESTA]]
+- [ ] ID 链接与 org-attach 系统冲突, 还有 ID 继承的问题
 - [ ] SPC b d 按键无效(workspace 原因, not in a valid workspace)
 - [X] insert 状态下无法输入z
 - [X] 使用 transient 重写cargo (tangle)
@@ -51,7 +52,13 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [66/77]
+* Memo [67/78]
+** DONE [2021-12-07 Tue] doom 退出时会自动保存 workspace
+- State "DONE"       from "TODO"       [2021-12-07 Tue 10:15]
+是变量设置的原因, 将 persp-auto-save-opt 设置 0 才行.
+
+workspace 加载时会报错, "invalid read syntax #". 太不稳定了, 以后用 burly 的 bookmark-save 功能?
+
 ** DONE [2021-11-24 Wed] 添加 cp2k-mode
 - State "DONE"       from "TODO"       [2021-11-24 Wed 09:54]
 - [[https://www.cp2k.org/tools:emacs][tools:emacs CP2K Open Source Molecular Dynamics]]
@@ -2454,7 +2461,8 @@ gwp-merge:
 禁止workspace在退出emacs时自动保存, 避免不同机器同步冲突
 #+name: 6b10b827
 #+begin_src elisp
-(setq persp-auto-save-opt 0)
+(after! persp-mode
+  (setq persp-auto-save-opt 0))
 
 (defun gwp/workspace/load-or-switch (name)
   "Load or switch to a workspace."

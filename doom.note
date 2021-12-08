@@ -5681,7 +5681,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 (defhydra gwp::hydra-multiedit ()
   "resize-window"
-  ("i" evil-multiedit-toggle-marker-here "insert cursor here")
+  ("I" evil-multiedit-toggle-marker-here "insert cursor here")
   ("m" evil-multiedit-match-and-next "match symbol at point")
   ("r" evil-multiedit-restore "restore prev matches")
   ("q" nil "quit"))

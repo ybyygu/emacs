@@ -136,7 +136,7 @@ If on a:
                    (and path (image-type-from-file-name path)))
                (org-toggle-inline-images)
              ;; 强制在本窗口打开
-             (let ((current-prefix-arg '(4)))     ; C-u
+             (let ((current-prefix-arg '(16)))     ; C-u C-u
                (call-interactively #'gwp::org-open-at-point-dwim)))))
 
         ((guard (org-element-property :checkbox (org-element-lineage context '(item) t)))
@@ -159,11 +159,17 @@ If on a:
 ;; Depending on universal argument try opening link
 (defun gwp::org-open-at-point-dwim (&optional arg)
   (interactive "P")
-  (if arg (let ((org-link-frame-setup (quote ((file . find-file)))))
-            (org-open-at-point))
+  (cond
+   ((equal arg '(16))                    ; C-u C-u
+    (let ((org-link-frame-setup (quote ((file . find-file)))))
+      (org-open-at-point)))
+   ((equal arg '(4))                     ; C-u
+    (let ((org-link-frame-setup (quote ((file . find-file-other-frame)))))
+      (org-open-at-point)))
+   (t                                   ; the default behavior
     (let ((org-link-frame-setup (quote ((file . find-file-other-window)))))
       (org-open-at-point)
-      (golden-ratio))))
+      (golden-ratio)))))
 
 ;; 注释代码时, 在org code block下特殊处理. 不然光标会跳开很远.
 (defun gwp/comment-or-uncomment-dwim ()

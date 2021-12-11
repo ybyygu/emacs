@@ -368,3 +368,42 @@ The org src will be tangled first before compiling.
 ;; [[file:../../../../../doom.note::423df247][423df247]]
 (require 'cp2k-mode)
 ;; 423df247 ends here
+
+;; [[file:../../../../../doom.note::13061ec7][13061ec7]]
+(setq fortran-continuation-string "&")
+(setq fortran-do-indent 2)
+(setq fortran-if-indent 2)
+(setq fortran-structure-indent 2)
+
+;; Fortran 90 settings
+(setq f90-do-indent 2)
+(setq f90-if-indent 2)
+(setq f90-type-indent 2)
+(setq f90-program-indent 2)
+(setq f90-continuation-indent 4)
+(setq f90-smart-end 'blink)
+
+;; Set Fortran and Fortran 90 mode for appropriate extensions
+(setq auto-mode-alist
+      (cons '("\\.F90$" . f90-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.pf$" . f90-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.fpp$" . f90-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.F$" . f90-mode) auto-mode-alist))
+
+;; Swap Return and C-j in Fortran 90 mode
+(add-hook 'f90-mode-hook
+	  '(lambda ()
+	     (define-key f90-mode-map [return] 'f90-indent-new-line)
+	     (define-key f90-mode-map "\C-j" 'newline)
+	     (setq fill-column 180)
+             (abbrev-mode)
+             (setq-default indent-tabs-mode nil)
+             (setq whitespace-line-column 180)
+             (setq whitespace-style '(face tabs lines-tail empty))
+             (whitespace-mode)
+             ;;         (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+	     ))
+;; 13061ec7 ends here

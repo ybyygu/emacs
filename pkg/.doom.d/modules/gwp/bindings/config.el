@@ -233,14 +233,14 @@
 ;; [[file:../../../../../doom.note::2598d642][2598d642]]
 (map! :leader
       (:prefix-map ("l" . "load/workspace") ;; 用tab不方便
-       :desc "Load or witch workspace"   "l"   #'gwp/workspace/load-or-switch
+       :desc "Load or witch workspace"   "l"   #'gwp::workspace/load-or-switch
        :desc "Switch workspace"          "TAB" #'+workspace/switch-to ; 调整下
        :desc "Switch to last workspace"  "b"   #'+workspace/other ; 换个好按的
        :desc "Next workspace"            "n"   #'+workspace/switch-right
        :desc "Previous workspace"        "p"   #'+workspace/switch-left
        :desc "Display tab bar"           "."   #'+workspace/display
        :desc "Switch to last workspace"  "`"   #'+workspace/other
-       :desc "New named workspace"       "N"   #'+workspace/new-named
+       :desc "New named workspace"       "N"   #'gwp::workspace/new-named
        :desc "Save workspace to file"    "s"   #'+workspace/save
        :desc "Delete session"            "x"   #'+workspace/kill-session
        :desc "Delete this workspace"     "d"   #'+workspace/delete

@@ -38,7 +38,6 @@
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][doom-emacs/modules.org at develop]]
   - [ ] [[https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/org/README.org#description][doom-emacs/README.org at develop · hlissner/doom-emacs]]
 - [ ] [[https://noelwelsh.com/posts/2019-01-10-doom-emacs.html][Noel Welsh: Doom Emacs Workflows]]
-- [ ] [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 - [ ] 编码参考: [[https://github.com/bbatsov/emacs-lisp-style-guide][bbatsov/emacs-lisp-style-guide: A community-driven Emacs Lisp style guide]]
 - [X] [[https://develop.spacemacs.org/layers/+emacs/org/README.html][Org layer]]
 - [X] [[https://github.com/seagle0128/.emacs.d][seagle0128/.emacs.d: Centaur Emacs - A Fancy and Fast Emacs Configuration]]
@@ -2478,7 +2477,8 @@ gwp-merge:
 (after! persp-mode
   (setq persp-auto-save-opt 0))
 
-(defun gwp/workspace/load-or-switch (name)
+;;;###autoload
+(defun gwp::workspace/load-or-switch (name)
   "Load or switch to a workspace."
   (interactive
    (list
@@ -2492,6 +2492,13 @@ gwp-merge:
         (+workspace-error (format "Couldn't load workspace %s" name))
       (+workspace/switch-to name)))
   (+workspace/display))
+
+;;;###autoload
+(defun gwp::workspace/new-named (name)
+  "Create a new workspace with a given NAME."
+  (interactive "sWorkspace Name: ")
+  (+workspace/new name)
+  (+workspace/switch-to name))
 #+end_src
 
 *** re-open-current-file
@@ -5800,6 +5807,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 #+end_src
 
 ** org
+参考: [[https://github.com/grettke/help/blob/master/Org-Mode_Fundamentals.org][help/Org-Mode_Fundamentals.org at master · grettke/help]]
 *** config.el
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/modules/gwp/org/config.el
@@ -8224,14 +8232,14 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
 #+begin_src elisp
 (map! :leader
       (:prefix-map ("l" . "load/workspace") ;; 用tab不方便
-       :desc "Load or witch workspace"   "l"   #'gwp/workspace/load-or-switch
+       :desc "Load or witch workspace"   "l"   #'gwp::workspace/load-or-switch
        :desc "Switch workspace"          "TAB" #'+workspace/switch-to ; 调整下
        :desc "Switch to last workspace"  "b"   #'+workspace/other ; 换个好按的
        :desc "Next workspace"            "n"   #'+workspace/switch-right
        :desc "Previous workspace"        "p"   #'+workspace/switch-left
        :desc "Display tab bar"           "."   #'+workspace/display
        :desc "Switch to last workspace"  "`"   #'+workspace/other
-       :desc "New named workspace"       "N"   #'+workspace/new-named
+       :desc "New named workspace"       "N"   #'gwp::workspace/new-named
        :desc "Save workspace to file"    "s"   #'+workspace/save
        :desc "Delete session"            "x"   #'+workspace/kill-session
        :desc "Delete this workspace"     "d"   #'+workspace/delete

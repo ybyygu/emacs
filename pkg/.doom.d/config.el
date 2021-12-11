@@ -51,7 +51,8 @@
 (after! persp-mode
   (setq persp-auto-save-opt 0))
 
-(defun gwp/workspace/load-or-switch (name)
+;;;###autoload
+(defun gwp::workspace/load-or-switch (name)
   "Load or switch to a workspace."
   (interactive
    (list
@@ -65,6 +66,13 @@
         (+workspace-error (format "Couldn't load workspace %s" name))
       (+workspace/switch-to name)))
   (+workspace/display))
+
+;;;###autoload
+(defun gwp::workspace/new-named (name)
+  "Create a new workspace with a given NAME."
+  (interactive "sWorkspace Name: ")
+  (+workspace/new name)
+  (+workspace/switch-to name))
 ;; 6b10b827 ends here
 
 ;; [[file:../../doom.note::e13c7903][e13c7903]]

@@ -51,8 +51,14 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [68/80]
+* Memo [70/84]
+** TODO [2021-12-16 Thu] 研究下 [[https://www.reddit.com/r/emacs/comments/rgwlfx/dtacheel_a_package_for_detached_shell_commands/][dtache.el - A package for detached shell commands : emacs]]
+** TODO [2021-12-16 Thu] 研究下 [[https://github.com/ethan-leba/tree-edit][ethan-leba/tree-edit: Structural editing in Emacs for any language!]]
 ** TODO [2021-12-11 Sat] burly 保存窗口功能 bug: 不能处理中文 heading indirect buffer
+: Heading not found
+org-find-olp
+
+burly-follow-url-org-mode
 
 ** DONE [2021-12-11 Sat] 实现新功能: org 在新 frame 中打开链接文档
 - State "DONE"       from "TODO"       [2021-12-11 Sat 08:07]
@@ -255,7 +261,9 @@ strace -f -s 1000 -tt xdg-open http://www.baidu.com &>/tmp/a.log
 
 删除 ~/.emacs.d/local/env 文件, 重启后问题解决.
 
-** TODO [2021-10-08 Fri] 解决window layout保存问题
+** DONE [2021-10-08 Fri] 解决window layout保存问题
+- State "DONE"       from "TODO"       [2021-12-20 Mon 07:32] \\
+  burly 很好用
 - [[https://www.reddit.com/r/emacs/comments/q5l4mv/do_you_use_ivypushpopview/][(2) Do you use ivy-push/pop-view? : emacs]]
 - [[https://stackoverflow.com/questions/2572950/preserve-window-layout-in-emacs][Preserve window layout in Emacs - Stack Overflow]]
 - [[https://github.com/alphapapa/burly.el][alphapapa/burly.el: Save and restore frames and windows with their buffers in Emacs]]
@@ -294,7 +302,8 @@ evil-forward-paragraph
 - State "DONE"       from "TODO"       [2021-10-10 Sun 07:27]
 如果有多个Memo headline, 会选择最低的那个
 
-** TODO [2021-10-06 Wed] 鼓捣一下 [[https://github.com/stardiviner/goldendict.el][stardiviner/goldendict.el]]
+** DONE [2021-10-06 Wed] 鼓捣一下 [[https://github.com/stardiviner/goldendict.el][stardiviner/goldendict.el]]
+- State "DONE"       from "TODO"       [2021-12-20 Mon 07:32]
 - [[https://emacs-china.org/t/topic/18006][一个支持多词典的翻译插件(目前仅支持单词)]]
 
 goldendict就是命令调用, 非常简单
@@ -552,10 +561,16 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
   下字串转换为汉字"无".
 - 如果忘记五笔码，可输入拼音，按“/”键进入临时拼音输入模式.
 
-** [2021-01-09 Sat] 解决org-mode中Tab键乱窜的问题
+** TODO [2021-01-09 Sat] 解决org-mode中Tab键乱窜的问题
 : (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 
-[[https://github.com/hlissner/doom-emacs/issues/2775][TAB key is not behaving properly in org-mode when #+SETUPFILE keyword is present · Issue #2775 · hlissner/doom-emacs]]
+- [[https://github.com/hlissner/doom-emacs/issues/2775][TAB key is not behaving properly in org-mode when #+SETUPFILE keyword is present · Issue #2775 · hlissner/doom-emacs]]
+- [[https://github.com/hlissner/doom-emacs/issues/3260][TAB bound to evil-jump-forward instead of indentation · Issue #3260 · hlissner/doom-emacs]]
+
+[2021-12-24 Fri] 先禁用 yasnippet 中的 TAB 再说, 用 C-i 代替. [[id:63f45c9e-fbd3-41b5-93bf-50ae61557144][yasnippet]]
+
+[[https://github.com/cole-brown/.emacs.d/blob/master/personal/docs/issues/yasnippet/unbind-tab.org][.emacs.d/unbind-tab.org at master · cole-brown/.emacs.d]]
+
 
 ** DONE [2021-01-09 Sat] 解决join-line命令异常的问题
 - State "DONE"       from "TODO"       [2021-01-09 Sat 10:33]
@@ -2811,7 +2826,7 @@ org-noter
 github支持, 减慢速度.
 #+name: e5ee47b4
 #+begin_src emacs-lisp
-(package! forge :ignore t)
+;; (package! forge :ignore t)
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
 #+end_src
@@ -5794,6 +5809,24 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("o" gwp::org-show-context-at-point "org show context")
   ("q" nil "quit"))
 #+end_src
+*** yasnippet
+:PROPERTIES:
+:ID:       63f45c9e-fbd3-41b5-93bf-50ae61557144
+:END:
+#+name: 7db2aa5a
+#+begin_src elisp
+;; Get rid of `yas-expand' binding on TAB. Cannot do this from the `:bind'
+;; section, annoyingly. And other annoyinglies as well. See:
+;;   (spydez/help/issue/visit "yasnippet" "unbind-tab.org")
+;; for more details.
+(use-package yasnippet
+  :config
+  (unbind-key "TAB" yas-minor-mode-map)
+  (unbind-key "<tab>" yas-minor-mode-map)
+  (define-key yas-minor-mode-map (kbd "<C-i>") 'yas-expand)
+  )
+#+end_src
+
 *** packages
 :PROPERTIES:
 :header-args: :tangle pkg/.doom.d/modules/gwp/edit/packages.el

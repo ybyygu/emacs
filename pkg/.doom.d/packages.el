@@ -68,7 +68,7 @@
 
 (package! doom-snippets :ignore t)
 
-(package! forge :ignore t)
+;; (package! forge :ignore t)
 ;; 不能简单的禁用了事
 ;; (package! github-review :ignore t)
 

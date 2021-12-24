@@ -673,3 +673,16 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   ("o" gwp::org-show-context-at-point "org show context")
   ("q" nil "quit"))
 ;; 1c79ba79 ends here
+
+;; [[file:../../../../../doom.note::7db2aa5a][7db2aa5a]]
+;; Get rid of `yas-expand' binding on TAB. Cannot do this from the `:bind'
+;; section, annoyingly. And other annoyinglies as well. See:
+;;   (spydez/help/issue/visit "yasnippet" "unbind-tab.org")
+;; for more details.
+(use-package yasnippet
+  :config
+  (unbind-key "TAB" yas-minor-mode-map)
+  (unbind-key "<tab>" yas-minor-mode-map)
+  (define-key yas-minor-mode-map (kbd "<C-i>") 'yas-expand)
+  )
+;; 7db2aa5a ends here

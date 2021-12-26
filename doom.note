@@ -60,10 +60,16 @@ org-find-olp
 
 burly-follow-url-org-mode
 
-** DONE [2021-12-11 Sat] 实现新功能: org 在新 frame 中打开链接文档
-- State "DONE"       from "TODO"       [2021-12-11 Sat 08:07]
+** TODO [2021-01-09 Sat] 解决org-mode中Tab键乱窜的问题
+: (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 
-使用 C-u C-c C-o 在新 frame 中打开.
+- [[https://github.com/hlissner/doom-emacs/issues/2775][TAB key is not behaving properly in org-mode when #+SETUPFILE keyword is present · Issue #2775 · hlissner/doom-emacs]]
+- [[https://github.com/hlissner/doom-emacs/issues/3260][TAB bound to evil-jump-forward instead of indentation · Issue #3260 · hlissner/doom-emacs]]
+
+[2021-12-24 Fri] 可能和 better-jump 也有关系, 先禁用 yasnippet 中的 TAB 再说, 用 C-i 代替. [[id:63f45c9e-fbd3-41b5-93bf-50ae61557144][yasnippet]]
+
+[[https://github.com/cole-brown/.emacs.d/blob/master/personal/docs/issues/yasnippet/unbind-tab.org][.emacs.d/unbind-tab.org at master · cole-brown/.emacs.d]]
+
 
 ** TODO [2021-12-07 Tue] org-attach 与 ID link 之间有冲突
 "org-attach-use-inheritance"
@@ -71,6 +77,25 @@ burly-follow-url-org-mode
 如何与 attach 链接共存? 可以使用 :DIR: 属性.
 
 需要自定义 org-attach-set-directory 函数.
+
+** TODO [2021-10-23 Sat] comment 的问题
+不能处理 elisp region 中的情况
+  ^(
+   "/home/ybyygu/Workspace/Programming/emacs/doom.note"
+   "/home/ybyygu/Notes/scratch.note"
+   )^)
+
+比如以上^号选中的区域, 用默认的 comment-dwim 会将最后一个 ")" 放在下一行.
+
+问题
+- 如果在 comment 环境上添加一行, 比如用 O 命令, 而不生成新的 comment
+
+也许可以用 newcomment?
+
+** DONE [2021-12-11 Sat] 实现新功能: org 在新 frame 中打开链接文档
+- State "DONE"       from "TODO"       [2021-12-11 Sat 08:07]
+
+使用 C-u C-c C-o 在新 frame 中打开.
 
 ** DONE [2021-12-07 Tue] doom 退出时会自动保存 workspace
 - State "DONE"       from "TODO"       [2021-12-07 Tue 10:15]
@@ -97,20 +122,6 @@ workspace 加载时会报错, "invalid read syntax #". 太不稳定了, 以后�
 - State "DONE"       from "TODO"       [2021-11-07 Sun 16:41]
 - [X] 还搜索解决链接 visit 的问题, 比如 [[id:b13327a0-3542-48f7-b170-5b827f78f7ba][文件备份]]
 - [X] 可搜索本地所有 .note 文件, 实现 sidebar 式的可视化
-
-** TODO [2021-10-23 Sat] comment 的问题
-不能处理 elisp region 中的情况
-  ^(
-   "/home/ybyygu/Workspace/Programming/emacs/doom.note"
-   "/home/ybyygu/Notes/scratch.note"
-   )^)
-
-比如以上^号选中的区域, 用默认的 comment-dwim 会将最后一个 ")" 放在下一行.
-
-问题
-- 如果在 comment 环境上添加一行, 比如用 O 命令, 而不生成新的 comment
-
-也许可以用 newcomment?
 
 ** DONE [2021-10-21 Thu] 实现 org-noter 最基本的功能, 方便 pdf 批注.
 - State "DONE"       from "TODO"       [2021-10-22 Fri 17:18]
@@ -560,17 +571,6 @@ fcitx输入太快会掉字, 这可能是emacs输入机制的一个问题. 使用
 - 英文状态下，先录入五笔码，比如(fq), 然后按F2-SPC按键进入中文输入状态, 并将光标
   下字串转换为汉字"无".
 - 如果忘记五笔码，可输入拼音，按“/”键进入临时拼音输入模式.
-
-** TODO [2021-01-09 Sat] 解决org-mode中Tab键乱窜的问题
-: (add-hook 'org-mode-hook #'evil-normalize-keymaps)
-
-- [[https://github.com/hlissner/doom-emacs/issues/2775][TAB key is not behaving properly in org-mode when #+SETUPFILE keyword is present · Issue #2775 · hlissner/doom-emacs]]
-- [[https://github.com/hlissner/doom-emacs/issues/3260][TAB bound to evil-jump-forward instead of indentation · Issue #3260 · hlissner/doom-emacs]]
-
-[2021-12-24 Fri] 先禁用 yasnippet 中的 TAB 再说, 用 C-i 代替. [[id:63f45c9e-fbd3-41b5-93bf-50ae61557144][yasnippet]]
-
-[[https://github.com/cole-brown/.emacs.d/blob/master/personal/docs/issues/yasnippet/unbind-tab.org][.emacs.d/unbind-tab.org at master · cole-brown/.emacs.d]]
-
 
 ** DONE [2021-01-09 Sat] 解决join-line命令异常的问题
 - State "DONE"       from "TODO"       [2021-01-09 Sat 10:33]
@@ -8563,6 +8563,20 @@ $0
 impl Default for ${1:Type} {
     fn default() -> Self {
         ${0:Self::new()}
+    }
+}
+#+END_SRC
+
+*** impl Drop
+#+name: 01cd4f8a
+#+BEGIN_SRC snippet :tangle pkg/.doom.d/snippets/rust-mode/impl_drop
+# -*- mode: snippet -*-
+# name: impl Drop
+# key: Drop
+# --
+impl Drop for ${1:Type} {
+    fn drop(&mu self) {
+        ${0}
     }
 }
 #+END_SRC

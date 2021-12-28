@@ -890,6 +890,20 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 (add-hook 'org-export-filter-paragraph-functions #'gwp/ox-odt-wash-text)
 ;; odt export:2 ends here
 
+;; [[file:../../../../../doom.note::e121f679][e121f679]]
+(require 'org-crypt)
+(require 'epa-file)
+(epa-file-enable)
+
+;; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-crypt-tag-matcher "crypt")
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;; GPG key to use for encryption
+(setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
+(setq org-crypt-disable-auto-save nil)
+;; e121f679 ends here
+
 ;; [[file:../../../../../doom.note::*setup][setup:1]]
 (require 'org-attach)
 ;; setup:1 ends here

@@ -52,6 +52,12 @@
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
 * Memo [70/84]
+** TODO [2021-12-26 Sun] 多个窗口经常按键时突然跳转
+可以 SPC-h-l 命令查看事故命令.
+: (view-lossage)
+
+发现仅是 evil movement 按键. 怀疑与 avy-all-windows 有关?
+
 ** TODO [2021-12-16 Thu] 研究下 [[https://www.reddit.com/r/emacs/comments/rgwlfx/dtacheel_a_package_for_detached_shell_commands/][dtache.el - A package for detached shell commands : emacs]]
 ** TODO [2021-12-16 Thu] 研究下 [[https://github.com/ethan-leba/tree-edit][ethan-leba/tree-edit: Structural editing in Emacs for any language!]]
 ** TODO [2021-12-11 Sat] burly 保存窗口功能 bug: 不能处理中文 heading indirect buffer
@@ -6980,9 +6986,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 #+end_src
 
 **** encryption
-:PROPERTIES:
-:header-args: :tangle no
-:END:
+#+name: e121f679
 #+begin_src emacs-lisp
 (require 'org-crypt)
 (require 'epa-file)
@@ -6992,7 +6996,7 @@ odt使用dvipng导出公式时生成的图片分辨率太低, 这里放大3倍, 
 (org-crypt-use-before-save-magic)
 (setq org-crypt-tag-matcher "crypt")
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-                                        ; GPG key to use for encryption
+;; GPG key to use for encryption
 (setq org-crypt-key "38D95BC6411A87E7") ; ybyygu@gmail.com
 (setq org-crypt-disable-auto-save nil)
 #+end_src
@@ -8576,7 +8580,7 @@ impl Default for ${1:Type} {
 # --
 impl Drop for ${1:Type} {
     fn drop(&mu self) {
-        ${0}
+        ${0:todo!();}
     }
 }
 #+END_SRC

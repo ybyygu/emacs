@@ -999,6 +999,19 @@ DESC. FORMATs understood are 'odt','latex and 'html."
         (user-error "Point is not on a file link")))))
 ;; 27b50206 ends here
 
+;; [[file:../../../../../doom.note::55d587f4][55d587f4]]
+(defun gwp/org-attach-auto-directory ()
+  "为当前 headline 设置 DIR 属性 (基于 ID)"
+
+  (interactive)
+  (let* ((attach-dir (org-attach-dir-from-id (org-id-new)))
+         (current-dir (file-name-directory (or default-directory
+                                               buffer-file-name)))
+         (attach-dir-relative (file-relative-name attach-dir current-dir)))
+    (org-entry-put nil "DIR" attach-dir-relative)
+    attach-dir))
+;; 55d587f4 ends here
+
 ;; [[file:../../../../../doom.note::d3403c99][d3403c99]]
 (require 'org-protocol)
 ;; d3403c99 ends here
@@ -1386,7 +1399,7 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       :localleader
       (:prefix ("a" . "attach/agenda")
        :desc "attachment" "a" #'org-attach
-       :desc "agenda (next)"     "n" #'org-agenda
+       :desc "set attach directory" "n" #'gwp/org-attach-auto-directory
        ))
 ;; c09b236a ends here
 

@@ -51,7 +51,8 @@
 - [X] [[https://github.com/cnsunyour/.doom.d][cnsunyour/.doom.d: doom-emacs private configuration]]
 - [X] [[https://github.com/redguardtoo/emacs.d][redguardtoo/emacs.d: Fast and robust Emacs setup.]] [[file:redguardtoo-emacs.d][read codes]]
 
-* Memo [70/84]
+* Memo [71/86]
+** TODO [2021-12-30 Thu] 尝试下这个 dired 类工具 [[https://github.com/alexluigit/dirvish][alexluigit/dirvish: Dired can be a nice file manager.]]
 ** TODO [2021-12-26 Sun] 多个窗口经常按键时突然跳转
 可以 SPC-h-l 命令查看事故命令.
 : (view-lossage)
@@ -77,12 +78,19 @@ burly-follow-url-org-mode
 [[https://github.com/cole-brown/.emacs.d/blob/master/personal/docs/issues/yasnippet/unbind-tab.org][.emacs.d/unbind-tab.org at master · cole-brown/.emacs.d]]
 
 
-** TODO [2021-12-07 Tue] org-attach 与 ID link 之间有冲突
-"org-attach-use-inheritance"
-
+** DONE [2021-12-07 Tue] org-attach 与 ID link 之间有冲突
+- State "DONE"       from "TODO"       [2022-01-07 Fri 16:31]
+[2022-01-07 Fri] 先用 gwp/org-attach-auto-directory 来设置 headline 的目录. (,an)
 如何与 attach 链接共存? 可以使用 :DIR: 属性.
 
+"org-attach-use-inheritance"
+
 需要自定义 org-attach-set-directory 函数.
+
+: org-attach-dir
+: org-attach-dir-get-create
+
+代码: [[id:bb2e1c49-ddcf-4842-9c08-6cbfb4deb165][attach dir]]
 
 ** TODO [2021-10-23 Sat] comment 的问题
 不能处理 elisp region 中的情况
@@ -7176,6 +7184,23 @@ file-exists-p函数对symlink的特殊性:
             (error "No such attachment: %s" file))
         (user-error "Point is not on a file link")))))
 #+end_src
+***** attach dir
+:PROPERTIES:
+:ID:       bb2e1c49-ddcf-4842-9c08-6cbfb4deb165
+:END:
+#+name: 55d587f4
+#+begin_src elisp
+(defun gwp/org-attach-auto-directory ()
+  "为当前 headline 设置 DIR 属性 (基于 ID)"
+
+  (interactive)
+  (let* ((attach-dir (org-attach-dir-from-id (org-id-new)))
+         (current-dir (file-name-directory (or default-directory
+                                               buffer-file-name)))
+         (attach-dir-relative (file-relative-name attach-dir current-dir)))
+    (org-entry-put nil "DIR" attach-dir-relative)
+    attach-dir))
+#+end_src
 
 **** protocol
 #+name: d3403c99
@@ -7738,7 +7763,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
       :localleader
       (:prefix ("a" . "attach/agenda")
        :desc "attachment" "a" #'org-attach
-       :desc "agenda (next)"     "n" #'org-agenda
+       :desc "set attach directory" "n" #'gwp/org-attach-auto-directory
        ))
 #+end_src
 

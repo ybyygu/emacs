@@ -52,3 +52,40 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+
+(map! :leader
+      (:prefix-map ("w" . "window/frame")
+       :desc "split window below"
+       "s" #'split-window-below
+       :desc "split window right"
+       "v" #'split-window-right
+       :desc "delete this window"
+       "d" #'delete-window
+       :desc "golden ratio"
+       "z" #'golden-ratio
+       ))
+
+;; (after! meow
+;;   (
+;;    (meow-leader-define-key
+;;     ;; window
+;;     '("w s" . split-window-below)
+;;     '("w v" . split-window-right)
+;;     '("w d" . delete-window)
+;;     '("w z" . golden-ratio)
+;;     '("w h" . windmove-left)
+;;     '("w l" . windmove-right)
+;;     '("w k" . windmove-up)
+;;     '("w j" . windmove-down)
+;;     '("w f" . tear-off-window)
+;;     '("w w" . ace-window)
+;;     '("w u" . winner-undo)
+;;     '("w r" . ace-swap-window)
+;;     )
+;;    ))
+
+;; (use-package! golden-ratio
+;;   :config
+;;   (map! :map evil-window-map
+;;         "z" #'golden-ratio))

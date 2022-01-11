@@ -54,17 +54,17 @@
 ;; they are implemented.
 
 
-(map! :leader
-      (:prefix-map ("w" . "window/frame")
-       :desc "split window below"
-       "s" #'split-window-below
-       :desc "split window right"
-       "v" #'split-window-right
-       :desc "delete this window"
-       "d" #'delete-window
-       :desc "golden ratio"
-       "z" #'golden-ratio
-       ))
+;; (map! :leader
+;;       (:prefix-map ("w" . "window/frame")
+;;        :desc "split window below"
+;;        "s" #'split-window-below
+;;        :desc "split window right"
+;;        "v" #'split-window-right
+;;        :desc "delete this window"
+;;        "d" #'delete-window
+;;        :desc "golden ratio"
+;;        "z" #'golden-ratio
+;;        ))
 
 ;; (after! meow
 ;;   (

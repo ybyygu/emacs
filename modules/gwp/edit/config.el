@@ -15,6 +15,12 @@
   (deactivate-mark)
   )
 
+(defun gwp::mark-and-save-buffer()
+  "标记光标所在位置, 并保存buffer"
+  (interactive)
+  (call-interactively #'gwp::mark-current-position)
+  (save-buffer))
+
 (setq global-mark-ring-max 99
       mark-ring-max 99)
 ;; e4fc036b ends here
@@ -199,3 +205,13 @@
   ("o" gwp::org-show-context-at-point "org show context") ; 在org时: 跳转到被折叠的headline中很有用
   ("q" nil "quit"))
 ;; 00b43976 ends here
+
+;; [[file:../../../gwp.note::d1047b4d][d1047b4d]]
+(use-package crux
+  :config
+  (define-key! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  ;; 这个不管用, define-key! 管用
+  ;; (map! :ni "C-a" 'crux-move-beginning-of-line)
+  ;; (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  )
+;; d1047b4d ends here

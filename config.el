@@ -65,25 +65,25 @@
 ;;        :desc "golden ratio"
 ;;        "z" #'golden-ratio
 ;;        ))
+;;
 
-;; (after! meow
-;;   (
-;;    (meow-leader-define-key
-;;     ;; window
-;;     '("w s" . split-window-below)
-;;     '("w v" . split-window-right)
-;;     '("w d" . delete-window)
-;;     '("w z" . golden-ratio)
-;;     '("w h" . windmove-left)
-;;     '("w l" . windmove-right)
-;;     '("w k" . windmove-up)
-;;     '("w j" . windmove-down)
-;;     '("w f" . tear-off-window)
-;;     '("w w" . ace-window)
-;;     '("w u" . winner-undo)
-;;     '("w r" . ace-swap-window)
-;;     )
-;;    ))
+(use-package meow
+  :config
+  (setq meow-expand-hint-remove-delay 1.0)
+  ;; 没有选择时直接进入 KEYPAD 模式。
+  (setq meow-selection-command-fallback
+        ;; 默认设置
+        ;; '((meow-change . meow-change-char)
+        ;;   (meow-kill . meow-C-k)
+        ;;   (meow-cancel-selection . keyboard-quit)
+        ;;   (meow-pop-selection . meow-pop-grab)
+        ;;   (meow-beacon-change . meow-beacon-change-char))
+
+        '(
+          (meow-cancel-selection . end-of-buffer) ; g
+          ;; (meow-grab . end-of-buffer)             ; G
+          ))
+  )
 
 ;; (use-package! golden-ratio
 ;;   :config

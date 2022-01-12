@@ -399,7 +399,7 @@ Call a second time to restore the original window configuration."
   )
 
 (map! :map help-map
-      "desc" "highlight symbols"
+      :desc "highlight symbols"
       "h" gwp::symbol-overlay-map)
 ;; fae9a6ea ends here
 

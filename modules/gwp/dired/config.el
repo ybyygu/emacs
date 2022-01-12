@@ -135,20 +135,6 @@ virtualbox /windows 中)"
       (let ((current-prefix-arg '(0)))
         (call-interactively 'dired-copy-filename-as-kill)))
 
-    (map! :map dired-mode-map
-          :localleader
-          :desc "kill all dired buffers" "k" #'gwp::dired-quit-all
-          :desc "collapse empty dirs" "c" #'dired-collapse-mode
-          :desc "toggle hidden files" "h" #'dired-omit-mode
-          :desc "fd files" "f" #'gwp::dired-fd
-          :desc "Copy file path" "y" #'gwp/dired-copy-file-path
-          :desc "Make symlink" "l" #'dired-do-symlink
-          :desc "display in other window" "o" #'dired-find-file-other-window
-          :desc "preview file" "SPC" #'dired-view-file
-          :desc "sudo open file" "S" #'gwp::dired-open-current-as-sudo
-          :desc "Async shell command" "!" #'dired-do-async-shell-command
-          )
-
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
           "q"     #'gwp::dired-quit-window
@@ -161,10 +147,23 @@ virtualbox /windows 中)"
           "K"     #'dired-kill-line           ; 移除 dired buffer 中某行, 不影响文件, 相当于过滤
           "C-S-n" #'dired-create-directory
           "C-S-f" #'dired-create-empty-file
-          ;; "gh"     #'gwp::dired-goto-first
-          ;; "gg"     #'gwp::dired-goto-first
-          ;; "G"      #'gwp::dired-goto-last
-          )))
+          )
+
+    (gwp::localleader-def
+     :keymaps 'dired-mode-map
+     "k" '(gwp::dired-quit-all :which-key "kill all dired buffers")
+     "c" '(dired-collapse-mode :which-key "collapse empty dirs")
+     "h" '(dired-omit-mode :which-key "toggle hidden files")
+     "f" '(gwp::dired-fd :which-key "fd files")
+     "y" '(gwp/dired-copy-file-path :which-key "Copy file path")
+     "l" '(dired-do-symlink :which-key "Make symlink")
+     "o" '(dired-find-file-other-window :which-key "display in other window")
+     "SPC" '(dired-view-file :which-key "preview file")
+     "!" '(dired-do-async-shell-command :which-key "Async shell command")
+     "S" '(gwp::dired-open-current-as-sudo :which-key "sudo open file")
+     "g" '(gwp::dired-goto-first :which-key "goto first entry")
+     "G" '(gwp::dired-goto-last :which-key "goto last entry")
+     )))
 ;; 67caa559 ends here
 
 ;; [[file:../../../gwp.note::5af5f8db][5af5f8db]]

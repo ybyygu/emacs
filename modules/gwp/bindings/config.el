@@ -1,3 +1,34 @@
+;; [[file:../../../gwp.note::38249b42][38249b42]]
+(general-define-key :prefix-map 'gwp::goto-map)
+
+(map! :map gwp::goto-map
+      "g" #'beginning-of-buffer
+      "G" #'end-of-buffer
+      )
+;; 38249b42 ends here
+
+;; [[file:../../../gwp.note::2d76b8e4][2d76b8e4]]
+;; https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
+(defun gwp::switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+(map! :leader
+      :desc "Save buffer" "SPC"             #'gwp::mark-and-save-buffer
+      :desc "Universal argument"    "u"     #'universal-argument
+      :desc "Pop up scratch buffer" "x"     #'doom/open-scratch-buffer
+      :desc "Jump to previous mark" ","     #'gwp::jump-to-previous-mark
+      :desc "Switch to previous buffer" "`" #'gwp::switch-to-previous-buffer
+      )
+
+(map!
+ "C-`"                             #'+popup/toggle
+ "C-~"                             #'+popup/raise
+ "C-x p"                           #'+popup/other)
+;; 2d76b8e4 ends here
+
 ;; [[file:../../../gwp.note::46f457b2][46f457b2]]
 (map! :leader
       :desc "window/frame" "w" gwp::window-map
@@ -77,9 +108,6 @@
 (map! :leader
       :desc "help"                  "h"    help-map
       )
-(map! :leader
-      "desc" "highlight symbols"
-      "H" gwp::symbol-overlay-map)
 ;; e7792733 ends here
 
 ;; [[file:../../../gwp.note::19c9e88c][19c9e88c]]

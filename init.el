@@ -188,9 +188,11 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp
+       core
        ui
        edit
        dired
        org
+       develop
        bindings
        )

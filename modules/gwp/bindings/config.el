@@ -1,12 +1,3 @@
-;; [[file:../../../gwp.note::38249b42][38249b42]]
-(general-define-key :prefix-map 'gwp::goto-map)
-
-(map! :map gwp::goto-map
-      "g" #'beginning-of-buffer
-      "G" #'end-of-buffer
-      )
-;; 38249b42 ends here
-
 ;; [[file:../../../gwp.note::2d76b8e4][2d76b8e4]]
 ;; https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 (defun gwp::switch-to-previous-buffer ()

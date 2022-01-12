@@ -149,7 +149,7 @@ virtualbox /windows 中)"
           "C-S-f" #'dired-create-empty-file
           )
 
-    (gwp::localleader-def
+    (gwp::local-leader-def
      :keymaps 'dired-mode-map
      "k" '(gwp::dired-quit-all :which-key "kill all dired buffers")
      "c" '(dired-collapse-mode :which-key "collapse empty dirs")
@@ -161,8 +161,11 @@ virtualbox /windows 中)"
      "SPC" '(dired-view-file :which-key "preview file")
      "!" '(dired-do-async-shell-command :which-key "Async shell command")
      "S" '(gwp::dired-open-current-as-sudo :which-key "sudo open file")
+     )
+    (gwp::goto-leader-def
+     :keymaps 'dired-mode-map
      "g" '(gwp::dired-goto-first :which-key "goto first entry")
-     "G" '(gwp::dired-goto-last :which-key "goto last entry")
+     "e" '(gwp::dired-goto-last :which-key "goto last entry")
      )))
 ;; 67caa559 ends here
 

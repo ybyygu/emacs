@@ -52,7 +52,6 @@
        ;;zen               ; distraction-free coding or writing
 
        :editor
-       (meow +qwerty +keypad +leader)
        ;; (evil +everywhere); come to the dark side, we have cookies
        ;; file-templates    ; auto-snippets for empty files
        ;; fold              ; (nigh) universal code folding
@@ -188,7 +187,7 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :gwp
-       core
+       (core +leader)
        ui
        edit
        dired

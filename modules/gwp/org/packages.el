@@ -4,6 +4,8 @@
 (package! org-pdftools)
 (package! org-download)
 (package! org-noter)
+(package! org-sidebar)
+(package! el-patch)
 
 ;; for http api hacking
 (package! restclient)

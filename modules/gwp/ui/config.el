@@ -193,6 +193,7 @@
       "v" #'split-window-right
       :desc "delete this window"
       "d" #'delete-window
+      "q" #'delete-window
       "h" #'windmove-left
       "l" #'windmove-right
       "k" #'windmove-up

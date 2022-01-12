@@ -1,3 +1,15 @@
+;; [[file:../../../gwp.note::9f41280c][9f41280c]]
+(defun gwp::undo-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (let ((current-prefix-arg '(4)))     ; C-u
+        (call-interactively #'undo))
+    (call-interactively #'undo)))
+
+;; 默认evil的undo会将多个小操作合并为一个大的, undo时很不适应.
+;; (setq evil-want-fine-undo t)
+;; 9f41280c ends here
+
 ;; [[file:../../../gwp.note::e08c1132][e08c1132]]
 ;;; editor/core/config.el -*- lexical-binding: t; -*-
 
@@ -90,8 +102,7 @@
         "a" #'meow-append
         "y" #'meow-save
         "p" #'meow-yank
-        "u" #'meow-undo
-        "U" #'meow-undo-in-selection
+        "u" #'gwp::undo-dwim
         ;; "[" #'meow-beginning-of-thing
         ;; "]" #'meow-end-of-thing
         ;; "A" #'meow-open-below

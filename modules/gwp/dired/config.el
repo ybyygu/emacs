@@ -178,3 +178,8 @@ virtualbox /windows 中)"
                          (seq bol "." (* anychar) eol) ; example: ".", "..", ".foo"
                          ))))
 ;; 5af5f8db ends here
+
+;; [[file:../../../gwp.note::38a0a087][38a0a087]]
+(use-package dired-sidebar
+  :commands (dired-sidebar-toggle-sidebar))
+;; 38a0a087 ends here

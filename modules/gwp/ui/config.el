@@ -435,3 +435,8 @@ Call a second time to restore the original window configuration."
 ;; 相当于行间距
 (setq-default line-spacing 4)
 ;; 6013493c ends here
+
+;; [[file:../../../gwp.note::38a0a087][38a0a087]]
+(use-package dired-sidebar
+  :commands (dired-sidebar-toggle-sidebar))
+;; 38a0a087 ends here

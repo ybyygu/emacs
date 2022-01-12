@@ -195,3 +195,6 @@
        develop
        bindings
        )
+
+;; 方便调试自用代码
+(push (expand-file-name "user-lisp" doom-private-dir) load-path)

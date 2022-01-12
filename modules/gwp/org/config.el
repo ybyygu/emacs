@@ -775,6 +775,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (browse-url url))
 ;; 03af13ba ends here
 
+;; [[file:../../../gwp.note::*latex preview][latex preview:1]]
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+;; latex preview:1 ends here
+
 ;; [[file:../../../gwp.note::32a3b56a][32a3b56a]]
 (general-define-key :prefix-map 'gwp::org-link-map)
 
@@ -1399,10 +1403,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
  )
 ;; aa6a42b8 ends here
 
-;; [[file:../../../gwp.note::*latex preview][latex preview:1]]
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
-;; latex preview:1 ends here
-
 ;; [[file:../../../gwp.note::fbbec921][fbbec921]]
 ;; 取自doom org moudle
 (defun gwp::org-dwim-at-point (&optional arg)
@@ -1515,6 +1515,32 @@ If on a:
       "o" #'gwp::org-open-at-point-dwim)
 ;; 2f61258f ends here
 
+;; [[file:../../../gwp.note::c99c78d1][c99c78d1]]
+(map! :map org-mode-map
+      [return]   #'gwp::org-dwim-at-point
+      "RET"      #'gwp::org-dwim-at-point)
+
+;; 避免与 org-sidebar 的设置冲突
+(map! :map org-sidebar-tree-map
+      [return] nil)
+
+(gwp::dwim-leader-def
+  :keymaps 'org-mode-map
+  "g" 'counsel-org-goto                        ; goto
+  "t" 'org-todo                                ; todo
+  "b" 'gwp/org-babel-tangle-dwim               ; babel
+  "e" 'org-edit-special                        ; edit
+  "a" 'org-attach                              ; attach
+  "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
+  )
+
+(gwp::dwim-leader-def
+  :keymaps 'org-src-mode-map
+  "b" 'gwp/org-babel-tangle-dwim
+  "q" 'org-edit-src-exit
+  )
+;; c99c78d1 ends here
+
 ;; [[file:../../../gwp.note::e121f679][e121f679]]
 (require 'org-crypt)
 (require 'epa-file)
@@ -1594,13 +1620,3 @@ If on a:
       "M-n" #'org-forward-element
       )
 ;; bbdcd834 ends here
-
-;; [[file:../../../gwp.note::c99c78d1][c99c78d1]]
-(map! :map org-mode-map
-      [return]   #'gwp::org-dwim-at-point
-      "RET"      #'gwp::org-dwim-at-point)
-
-;; 避免与 org-sidebar 的设置冲突
-(map! :map org-sidebar-tree-map
-      [return] nil)
-;; c99c78d1 ends here

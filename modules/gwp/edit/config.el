@@ -215,3 +215,367 @@
   ;; (map! [remap move-beginning-of-line] #'crux-move-beginning-of-line)
   )
 ;; d1047b4d ends here
+
+;; [[file:../../../gwp.note::*auto-save][auto-save:1]]
+(setq
+ ;; doom里已默认为true
+ auto-save-default t
+ ;; 默认为5秒. 这里改大一些, 避免编辑时自动保存太快, 光标前的空格被吞掉
+ auto-save-visited-interval 30)
+
+;; 自动保存至当前文件名, 而临时文件
+(auto-save-visited-mode +1)
+;; auto-save:1 ends here
+
+;; [[file:../../../gwp.note::b5a74212][b5a74212]]
+(setq kill-ring-max 999)
+
+;; 粘贴时删除区域中的内容, 不污染clipboard, 方便连续yank.
+(defun gwp::yank-dwim (arg)
+  "粘贴并覆盖选定区域. 如果以C-u调用则提示从kill-ring中选择"
+  (interactive "P")
+  (when (region-active-p)
+    (call-interactively #'delete-region))
+  (if (equal arg '(4))                  ; C-u
+      (call-interactively #'counsel-yank-pop)
+    (call-interactively #'yank)))
+(map! "C-y" #'gwp::yank-dwim)
+
+;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
+(defun gwp::ctrl-w-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'kill-region)
+    (call-interactively #'backward-kill-word)))
+
+(map! "C-w" #'gwp::ctrl-w-dwim); cut, copy: Alt-w
+;; 删除到行尾或删除整行
+(map! "C-k"  #'crux-smart-kill-line)
+;; b5a74212 ends here
+
+;; [[file:../../../gwp.note::7d5caf69][7d5caf69]]
+(defun gwp::ctrl-d-dwim (prefix)
+  "清除区域或复制区域"
+  (interactive "P")
+  (if prefix                  ; C-u
+      (call-interactively #'gwp::duplicate-line-or-region)
+    (call-interactively #'gwp::delete-char-or-region)))
+
+(defun gwp::delete-char-or-region()
+  "清除光标前字符或选定区域"
+  (interactive)
+  (if mark-active
+      (call-interactively #'delete-region)
+    (delete-char 1)))
+
+(map! "C-d" #'gwp::ctrl-d-dwim)
+;; 7d5caf69 ends here
+
+;; [[file:../../../gwp.note::*keyfreq][keyfreq:1]]
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+;; keyfreq:1 ends here
+
+;; [[file:../../../gwp.note::ab440ea2][ab440ea2]]
+(defun gwp/insert-date (arg)
+  "Insert date at point. With prefix argument, insert date and time."
+  (interactive "P")
+  (insert (format-time-string "%Y-%m-%d"))
+  (when arg
+    (insert (format-time-string " %H:%M"))))
+
+;; make it easier to update time-stamp
+(map! "C-c i" #'gwp/insert-date)
+;; ab440ea2 ends here
+
+;; [[file:../../../gwp.note::7628d03d][7628d03d]]
+;; https://endlessparentheses.com/disable-mouse-only-inside-emacs.html
+(define-minor-mode disable-mouse-mode
+  "A minor-mode that disables all mouse keybinds."
+  :global t
+  :lighter " 🐭"
+  :keymap (make-sparse-keymap)
+
+  (dolist (type '(mouse
+                  down-mouse
+                  drag-mouse
+                  double-mouse
+                  triple-mouse))
+    (dolist (prefix '("" C- M- S- M-S- C-M- C-S- C-M-S-))
+      ;; Yes, I actually HAD to go up to 7 here.
+      (dotimes (n 3)
+        (let ((k (format "%s%s-%s" prefix type n)))
+          (define-key disable-mouse-mode-map
+            (vector (intern k)) #'ignore))))))
+
+(map! :leader
+      (:prefix-map ("t" . "toggle")
+       :desc "禁用鼠标" "m" #'disable-mouse-mode
+       ))
+
+(defun turn-off-disable-mouse-mode ()
+  (disable-mouse-mode -1))
+
+(defun turn-on-disable-mouse-mode ()
+  (disable-mouse-mode 1))
+
+;; 在insert状态下禁用鼠标, 避免误碰触控板
+(add-hook! 'evil-insert-state-entry-hook #'turn-on-disable-mouse-mode)
+(add-hook! 'evil-insert-state-exit-hook #'turn-off-disable-mouse-mode)
+;; 7628d03d ends here
+
+;; [[file:../../../gwp.note::1c79ba79][1c79ba79]]
+(defhydra gwp::hydra-last-change ()
+  ("N" goto-last-change "last change")  ; 用 p 按键容易误操作, 用N 安全些
+  ("n" goto-last-change-reverse "previous change")
+  ("c" recenter "recenter")
+  ("o" gwp::org-show-context-at-point "org show context")
+  ("q" nil "quit"))
+;; 1c79ba79 ends here
+
+;; [[file:../../../gwp.note::7db2aa5a][7db2aa5a]]
+;; Get rid of `yas-expand' binding on TAB. Cannot do this from the `:bind'
+;; section, annoyingly. And other annoyinglies as well. See:
+;;   (spydez/help/issue/visit "yasnippet" "unbind-tab.org")
+;; for more details.
+(use-package yasnippet
+  :config
+  (unbind-key "TAB" yas-minor-mode-map)
+  (unbind-key "<tab>" yas-minor-mode-map)
+  (define-key yas-minor-mode-map (kbd "<C-i>") 'yas-expand)
+  )
+;; 7db2aa5a ends here
+
+;; [[file:../../../gwp.note::9786fedc][9786fedc]]
+(defhydra gwp/hydra-smartparens (:hint nil)
+  ("v" evil-visual-char)
+  ("u" evil-undo)
+  ("h" evil-backward-char)
+  ("l" evil-forward-char)
+  ("j" evil-next-line)
+  ("k" evil-previous-line)
+  ("(" sp-wrap-round "wrap in (round)")
+  ("[" sp-wrap-square)
+  ("{" sp-wrap-curly)
+  ("'"  (lambda (&optional arg) (interactive "P") (sp-wrap-with-pair "'")))
+  ("\""  (lambda (&optional arg) (interactive "P") (sp-wrap-with-pair "\"")))
+  ("d" sp-unwrap-sexp "unwrap pair")
+  ("q" nil "quit")
+  )
+;; 9786fedc ends here
+
+;; [[file:../../../gwp.note::be09bc09][be09bc09]]
+;; expand selection
+;; http://xahlee.org/emacs/modernization_mark-word.html
+;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
+(defun semnav-up (arg)
+  (interactive "p")
+  (when (nth 3 (syntax-ppss))
+    (if (> arg 0)
+        (progn
+          (skip-syntax-forward "^\"")
+          (goto-char (1+ (point)))
+          (decf arg))
+      (skip-syntax-backward "^\"")
+      (goto-char (1- (point)))
+      (incf arg)))
+  (up-list arg))
+
+(defun gwp/select-text-in-quote ()
+  "Select text between the nearest left and right delimiters.
+Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
+  (interactive)
+  (let (b1)
+    (skip-chars-backward "^<>(“{[「«\"‘")
+    (setq b1 (point))
+    (skip-chars-forward "^<>)”}]」»\"’")
+    (point)
+    (set-mark (- b1 1))))
+
+(defun gwp/select-none-blank-text ()
+  "选择光标下非空格文字"
+  (interactive)
+  (let (b1)
+    (skip-chars-backward "^ \n")
+    (setq b1 (point))
+    (skip-chars-forward "^ \n")
+    (backward-char 1)
+    (point)
+    (set-mark b1)))
+
+(defun gwp/select-word-dwim ()
+  "选择连续的英文字词(不包括汉字)"
+  (interactive)
+  (let ((regexp "[\.-_A-Za-z0-9]") b1)
+    (when (or (looking-at regexp)
+              (er/looking-back-on-line regexp))
+      (skip-chars-backward regexp)
+      (setq b1 (point))
+      (skip-chars-forward regexp)
+      (backward-char)
+      (point)
+      (set-mark b1))))
+
+;; https://github.com/magnars/expand-region.el
+;; (require 'expand-region)
+;; (global-set-key (kbd "M-4") 'er/expand-region)
+;; be09bc09 ends here
+
+;; [[file:../../../gwp.note::8fac8bf1][8fac8bf1]]
+;; (use-package expand-region :after evil :config
+;;   (map! :leader :v "v"
+;;         (function er/expand-region)))
+
+(require 'transient)
+(transient-define-prefix gwp/advanced-selection ()
+  "Advanced selection"
+  [["常规选择"
+    ("p" "select paragraph" er/mark-paragraph)
+    ("c" "select comment" er/mark-comment)
+    ("b" "select none blank" gwp/select-none-blank-text)
+    ("t" "select text in quote" gwp/select-text-in-quote)
+    ("w" "select word" gwp/select-word-dwim)
+    ]]
+  [["特殊选择"
+    ("u" "mark url" er/mark-url)
+    ("c" "mark org code block" er/mark-org-code-block)
+    ("e" "mark email" er/mark-email)
+    ]]
+  )
+;; 8fac8bf1 ends here
+
+;; [[file:../../../gwp.note::b9054953][b9054953]]
+(map! "M-u" #'upcase-dwim
+      "M-l" #'downcase-dwim
+      "M-c" #'capitalize-dwim)
+;; b9054953 ends here
+
+;; [[file:../../../gwp.note::e571c476][e571c476]]
+(use-package simpleclip)
+
+;; 从其它程序复制的内容也放至在kill-ring中, 不会因为emacs的操作而覆盖之前的内容
+(setq save-interprogram-paste-before-kill t)
+;; e571c476 ends here
+
+;; [[file:../../../gwp.note::3eff5fa2][3eff5fa2]]
+(defun gwp::duplicate-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let* ((beg (or beg (region-beginning)))
+           (end (or end (region-end)))
+           (region (buffer-substring beg end)))
+      (goto-char end)
+      (insert region))))
+
+(defun gwp::duplicate-line (&optional stay)
+  (save-excursion
+    (move-end-of-line nil)
+    (save-excursion
+      (insert (buffer-substring (point-at-bol) (point-at-eol))))
+    (newline)))
+
+(defun gwp::duplicate-line-or-region()
+  "复制当前行或选定区域"
+  (interactive)
+  (if (region-active-p)
+      ;; 也可用 crux-duplicate-current-line-or-region
+      (call-interactively #'gwp::duplicate-region)
+    (gwp::duplicate-line)))
+
+(map! :leader "C-d" #'delete-duplicate-lines)
+
+;; (use-package move-dup
+;;   :config
+;;   (map! :iv "M-j" #'move-dup-move-lines-down)
+;;   (map! :iv "M-k" #'move-dup-move-lines-up)
+;;   (map! :iv "C-M-j" #'move-dup-duplicate-down)
+;;   (map! :iv "C-M-k" #'move-dup-duplicate-up))
+;; 3eff5fa2 ends here
+
+;; [[file:../../../gwp.note::6ded2bf1][6ded2bf1]]
+(map!
+      [M-mouse-4] #'better-jumper-jump-backward
+      [M-mouse-5] #'better-jumper-jump-forward)
+
+(map! :leader
+      (:prefix-map ("j" . "jump")
+       (:prefix-map ("a" . "avy")
+        :desc "Search and jump (pinyin)"        "c" #'evil-avy-goto-char-2
+        :desc "Search and jump"                 "s" #'evil-avy-goto-char-timer
+        :desc "jump to line"                    "l" #'avy-goto-line
+        )))
+;; 6ded2bf1 ends here
+
+;; [[file:../../../gwp.note::08a09ddb][08a09ddb]]
+(map! :map isearch-mode-map
+      :desc "avy跳转" "C-c ;" #'avy-isearch
+      )
+;; 08a09ddb ends here
+
+;; [[file:../../../gwp.note::0ed10c98][0ed10c98]]
+(defun gwp/evil-ex-search-avy-jump ()
+  (interactive)
+  (when evil-ex-search-pattern
+    (let ((regex (car evil-ex-search-pattern)))
+      (avy-jump regex)
+      (evil-ex-search-stop-session))))
+
+;; (map! :map evil-ex-search-keymap
+;;       :desc "avy jump" "C-c ;" #'gwp/evil-ex-search-avy-jump)
+;;
+;; 0ed10c98 ends here
+
+;; [[file:../../../gwp.note::dde3ee55][dde3ee55]]
+(map! :map ivy-minibuffer-map
+      ;; 修改后的命令会报错, 原按键可以. 原因不明.
+      ;; "C-c ;" #'ivy-avy
+      :desc "二次过滤" "C-c r" (general-simulate-key "S-SPC")
+      :desc "avy跳转" "C-c ;" (general-simulate-key "C-'")
+      :desc "上一页" "C-c C-p" #'ivy-scroll-down-command
+      :desc "下一页" "C-c C-n" #'ivy-scroll-up-command
+      )
+;; dde3ee55 ends here
+
+;; [[file:../../../gwp.note::1a0721e0][1a0721e0]]
+(defun gwp::smart-open-line-above ()
+  (interactive)
+  (if (featurep 'evil)
+      (when (evil-normal-state-p)
+        (evil-insert 1)))
+  (call-interactively #'crux-smart-open-line-above))
+
+(defun gwp::smart-open-line ()
+  (interactive)
+  (if (featurep 'evil)
+      (call-interactively 'evil-open-below)
+    (end-of-line)
+    (newline-and-indent)))
+
+;; 默认为set-face之类的东西
+;; (map! "M-o" #'just-one-space)
+(map! "M-o" #'gwp::smart-open-line-above)
+(map! "C-j" #'gwp::smart-open-line)
+;; 1a0721e0 ends here
+
+;; [[file:../../../gwp.note::b23f833f][b23f833f]]
+(defun gwp::swiper-from-clipboard (prefix)
+  "从clipboard取词来搜索"
+  (interactive "P")
+  (let ((keyword
+         (simpleclip-get-contents)))
+    (swiper-isearch keyword)))
+;; b23f833f ends here
+
+;; [[file:../../../gwp.note::f75f80bd][f75f80bd]]
+(setq show-trailing-whitespace t)
+;; 保留时会自动清理, 以下已不必要
+;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
+
+(map! "C-o" #'cycle-spacing)
+
+;; 删除多余空行, 仅保留一行
+(map! "C-x C-o" #'delete-blank-lines)
+;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
+(map! :leader "C-o" #'delete-blank-lines)
+;; f75f80bd ends here

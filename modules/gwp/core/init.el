@@ -3,18 +3,17 @@
 
 (use-package general
   :config
-  (general-create-definer gwp::local-leader-def
-    :keymaps 'override ; prevent your leader keybindings from ever being overridden
-    :prefix ",")
-  )
-
-(use-package general
-  :config
   ;;  prevent Key sequence starts with a non-prefix key errors
   (general-auto-unbind-keys)
   (general-create-definer gwp::goto-leader-def
     :keymaps 'override ; prevent your leader keybindings from ever being overridden
     :prefix "g")
+  (general-create-definer gwp::local-leader-def
+    :keymaps 'override ; prevent your leader keybindings from ever being overridden
+    :prefix ",")
+  (general-create-definer gwp::dwim-leader-def
+    :keymaps 'override ; prevent your leader keybindings from ever being overridden
+    :prefix "w")
   )
 
 ;; Rewriting the doom-localleader-key! macro to add support for meow mode

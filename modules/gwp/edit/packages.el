@@ -2,4 +2,6 @@
 (package! crux)
 (package! move-dup)
 (package! simpleclip)
+(package! keyfreq)
+(package! yasnippet)
 ;; 1dfc22ab ends here

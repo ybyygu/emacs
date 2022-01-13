@@ -571,8 +571,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 (gwp::local-leader-def
  :keymaps 'org-mode-map
- "P" '(org-previous-block :which-key "previous block")
- "N" '(org-next-block :which-key "next block")
+ "M-p" '(org-previous-block :which-key "previous block")
+ "M-n" '(org-next-block :which-key "next block")
 
  "b" '(:keymap gwp::org-babel-map :which-key "babel/buffer")
  )

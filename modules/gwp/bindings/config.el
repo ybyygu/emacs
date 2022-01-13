@@ -311,3 +311,145 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Open termerinal here"  "T" #'gwp/open-terminal-here ; 打开外部terminal
        ))
 ;; fc304196 ends here
+
+;; [[file:../../../gwp.note::e78a01dd][e78a01dd]]
+(map! :leader
+      (:prefix-map ("c" . "code/compile")
+       :desc "Align the current region regexp"       "a"   #'align-regexp
+       :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
+       :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
+       :desc "将TAB转为空格"                         "SPC" #'untabify
+       :desc "indent region"                         "TAB" #'indent-region ; 有用
+       :desc "indent region"                         [tab] #'indent-region ; 有用
+       :desc "Compile"                               "c"   #'compile
+       :desc "统计字数"                              "g"   #'count-words
+       :desc "Recompile"                             "C"   #'recompile
+       :desc "highlight"                             "h"   gwp::symbol-overlay-map
+       :desc "Jump to definition"                    "d"   #'+lookup/definition
+       :desc "Jump to references"                    "D"   #'+lookup/references
+       :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
+       :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
+       :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
+       :desc "Find implementations"                  "i"   #'+lookup/implementations
+       :desc "Jump to documentation"                 "k"   #'+lookup/documentation
+       :desc "Send to repl"                          "s"   #'gwp/tmux-ipython-paste-region ; 和tmux配合
+       :desc "Find type definition"                  "t"   #'+lookup/type-definition
+       :desc "Delete trailing whitespace"            "w"   #'delete-trailing-whitespace
+       :desc "Delete trailing newlines"              "W"   #'doom/delete-trailing-newlines
+       :desc "List errors"                           "x"   #'+default/diagnostics
+       ))
+;; e78a01dd ends here
+
+;; [[file:../../../gwp.note::5e265fdb][5e265fdb]]
+(require 'init-search)
+(map! :leader
+      (:prefix-map ("d" . "dodo")
+       :desc "select text"   "s" #'gwp/advanced-selection
+       :desc "resize window" "w" #'gwp/adjust-window-size/body
+       :desc "smart parents" "p" #'gwp/hydra-smartparens/body
+       :desc "recent dirs"   "r" #'gwp::ivy-recent-dirs
+       ))
+;; 5e265fdb ends here
+
+;; [[file:../../../gwp.note::ac7488a5][ac7488a5]]
+(map! :leader
+      (:prefix-map ("g" . "git")
+       :desc "Revert file"               "R"   #'vc-revert
+       :desc "Copy link to remote"       "y"   #'+vc/browse-at-remote-kill
+       :desc "Copy link to homepage"     "Y"   #'+vc/browse-at-remote-kill-homepage
+       :desc "Manage dotfiles (yadm)"    "y"   (cmd! (magit-status "/yadm::"))
+       :desc "Magit dispatch"            "/"   #'magit-dispatch
+       :desc "Magit file dispatch"       "."   #'magit-file-dispatch
+       :desc "Forge dispatch"            "'"   #'forge-dispatch
+       :desc "Magit switch branch"       "b"   #'magit-branch-checkout
+       :desc "Magit status"              "g"   #'magit-status
+       :desc "Magit status here"         "G"   #'magit-status-here
+       :desc "Magit file delete"         "D"   #'magit-file-delete
+       :desc "Magit blame"               "B"   #'magit-blame-addition
+       :desc "Magit clone"               "C"   #'magit-clone
+       :desc "Magit fetch"               "F"   #'magit-fetch
+       :desc "Magit buffer log"          "L"   #'magit-log-buffer-file
+       :desc "Git stage file"            "S"   #'magit-stage-file
+       :desc "Git unstage file"          "U"   #'magit-unstage-file
+       (:prefix ("f" . "find")
+        :desc "Find file"                 "f"   #'magit-find-file
+        :desc "Find commit"               "c"   #'magit-show-commit
+        :desc "Find issue"                "i"   #'forge-visit-issue
+        :desc "Find pull request"         "p"   #'forge-visit-pullreq)
+       (:prefix ("o" . "open in browser")
+        :desc "Browse file or region"     "o"   #'+vc/browse-at-remote
+        :desc "Browse homepage"           "h"   #'+vc/browse-at-remote-homepage
+        :desc "Browse remote"             "r"   #'forge-browse-remote
+        :desc "Browse commit"             "c"   #'forge-browse-commit
+        :desc "Browse an issue"           "i"   #'forge-browse-issue
+        :desc "Browse a pull request"     "p"   #'forge-browse-pullreq
+        :desc "Browse issues"             "I"   #'forge-browse-issues
+        :desc "Browse pull requests"      "P"   #'forge-browse-pullreqs)
+       (:prefix ("l" . "list")
+        :desc "List repositories"         "r"   #'magit-list-repositories
+        :desc "List submodules"           "s"   #'magit-list-submodules
+        :desc "List issues"               "i"   #'forge-list-issues
+        :desc "List pull requests"        "p"   #'forge-list-pullreqs
+        :desc "List notifications"        "n"   #'forge-list-notifications)
+       (:prefix ("c" . "create")
+        :desc "Initialize repo"           "r"   #'magit-init
+        :desc "Clone repo"                "R"   #'magit-clone
+        :desc "Commit"                    "c"   #'magit-commit-create
+        :desc "Fixup"                     "f"   #'magit-commit-fixup
+        :desc "Branch"                    "b"   #'magit-branch-and-checkout
+        :desc "Issue"                     "i"   #'forge-create-issue
+        :desc "Pull request"              "p"   #'forge-create-pullreq))
+      )
+;; ac7488a5 ends here
+
+;; [[file:../../../gwp.note::1ad72c87][1ad72c87]]
+(map! :leader
+      (:prefix-map ("n" . "note/next")
+       :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
+       :desc "Org agenda"                   "a" #'org-agenda
+       :desc "Find .note files"             "f" #'gwp/find-file-in-notes
+       :desc "Browse notes"                 "F" #'+default/browse-notes
+       :desc "Org store link"               "l" #'org-store-link
+       :desc "Tags search"                  "m" #'org-tags-view
+       :desc "Org capture"                  "c" #'org-capture
+       :desc "org-agenda"                   "n" (cmd! (org-agenda nil "gt"))
+       :desc "Goto capture"                 "N" #'org-capture-goto-target
+       :desc "Todo list"                    "t" #'org-todo-list
+       :desc "Search notes"                 "s" #'+default/org-notes-search
+       :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
+       :desc "View search"                  "v" #'org-search-view
+       ))
+;; 1ad72c87 ends here
+
+;; [[file:../../../gwp.note::6ea0d271][6ea0d271]]
+(map! :leader
+      (:prefix ("j" . "jump")
+       :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
+       :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
+       :desc "avy line"               "l" #'evil-avy-goto-line
+       :desc "emacs mark ring"        "m" #'gwp::hydra-mark-ring-pop/body
+       ))
+;; 6ea0d271 ends here
+
+;; [[file:../../../gwp.note::d2dc925d][d2dc925d]]
+(map! :leader
+      (:prefix-map ("v" . "visual")
+       :desc "expand region"            "v" #'er/expand-region
+       :desc "select text"              "s" #'gwp/advanced-selection
+       :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body
+       :desc "multi-cursor mode"        "m" #'gwp::hydra-multiedit/body))
+;; d2dc925d ends here
+
+;; [[file:../../../gwp.note::bc190292][bc190292]]
+(map! :leader
+      (:prefix-map ("y" . "yank")
+       :desc "goldendict word"               "g"   #'gwp::goldendict-from-clipboard
+       :desc "Snippet"                       "s"   #'yas-insert-snippet
+       :desc "From clipboard"                "y"   #'gwp::yank-dwim
+       :desc "Current file name"             "f"   #'+default/insert-file-path
+       :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
+       :desc "Evil ex path"                  "p"   (cmd! (evil-ex "R!echo "))
+       :desc "From evil register"            "r"   #'evil-ex-registers
+       :desc "Unicode"                       "u"   #'insert-char
+       ))
+;; bc190292 ends here

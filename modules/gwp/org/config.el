@@ -1607,13 +1607,12 @@ If on a:
 ;; [[file:../../../gwp.note::bbdcd834][bbdcd834]]
 (gwp::goto-leader-def
  :keymaps 'org-mode-map
+ "k" '(org-up-element :which-key "goto up element")
+ "j" '(org-next-visible-heading :which-key "next visible heading")
  "e" '(end-of-buffer :which-key "last line")
  "h" '(org-beginning-of-line :which-key "goto the beginning of visible line")
  "l" '(org-end-of-line :which-key "goto the end of visible line")
- "k" '(org-up-element :which-key "goto up element")
- "j" '(org-next-visible-heading :which-key "next visible heading")
  "g" '(beginning-of-buffer :which-key "first line")
- ;; "C-w" '(beginning-of-buffer :which-key "first line")
  ;; "k" '(org-backward-heading-same-level :which-key "backward heading")
  ;; "j" '(org-forward-heading-same-level :which-key "forward heading")
  )

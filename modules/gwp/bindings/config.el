@@ -1,3 +1,12 @@
+;; [[file:../../../gwp.note::38249b42][38249b42]]
+(gwp::goto-leader-def
+  :keymaps 'prog-mode-map
+  "g" '(beginning-of-buffer :which-key "goto first line")
+  "e" '(end-of-buffer :which-key "goto last line")
+  "l" '(end-of-line :which-key "goto the end of line")
+  "h" '(beginning-of-line :which-key "goto the beginning of line"))
+;; 38249b42 ends here
+
 ;; [[file:../../../gwp.note::2d76b8e4][2d76b8e4]]
 ;; https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 (require 'init-proxy)
@@ -159,8 +168,8 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 ;; [[file:../../../gwp.note::e7792733][e7792733]]
 (map! :leader
-      :desc "help"                  "h"    help-map
-      )
+      :desc "help"
+      "h" help-map)
 ;; e7792733 ends here
 
 ;; [[file:../../../gwp.note::19c9e88c][19c9e88c]]

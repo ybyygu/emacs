@@ -194,9 +194,7 @@ The org src will be tangled first before compiling.
   )
 
 (defun gwp/override-doom-format-buffer ()
-  (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
-  ;; 无效
-  ;; (evil-local-set-key 'normal (kbd "SPC c f") 'rust-format-buffer)
+  ;; (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
   )
 
 (gwp::dwim-leader-def

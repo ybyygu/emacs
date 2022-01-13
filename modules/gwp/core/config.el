@@ -15,18 +15,33 @@
 
 ;; Leader Key
 (defun meow/setup-leader ()
+  ;; 问题: meow 中的 keypad 与 which-key 配合不好
   (meow-normal-define-key
    ;; local leader keys
-   '("w" . "C-x M-t w")
-   '("g" . "C-x M-t g")
-   '("," . "C-x M-t ,")
+   ;; `("w" . ,gwp::dwim-leader-key)
+   ;; '("g" . "H-g")
+   ;; `("g" . ,gwp::goto-leader-key)
+   ;; '("," . "H-,")
+   ;; `("," . ,gwp::local-leader-key)
    )
+
+  ;; 与 which-key 配合更好
+  ;; FIXME: using predefined vars
+  (map! :map meow-normal-state-keymap
+        "," (general-simulate-key "s-,")
+        "g" (general-simulate-key "s-g")
+        "w" (general-simulate-key "s-w")
+        )
+
+  (map! :map meow-motion-state-keymap
+        "," (general-simulate-key "s-,")
+        "g" (general-simulate-key "s-g")
+        "w" (general-simulate-key "s-w")
+        )
 
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
-   ;; local leader
-   '("g" . "C-x M-t g")
    )
 
   (map! :leader

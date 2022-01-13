@@ -162,6 +162,7 @@ virtualbox /windows 中)"
      "!" '(dired-do-async-shell-command :which-key "Async shell command")
      "S" '(gwp::dired-open-current-as-sudo :which-key "sudo open file")
      )
+
     (gwp::goto-leader-def
      :keymaps 'dired-mode-map
      "g" '(gwp::dired-goto-first :which-key "goto first entry")

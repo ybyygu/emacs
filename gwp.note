@@ -485,8 +485,7 @@ C-u C-/ 如果选中区域, 则仅撤销当前内容.
 ** meow
 代码参考这里:
 - [[https://github.com/Not-Leader/doom-meow][Not-Leader/doom-meow: A meow module for Doom Emacs]]
-
-[2022-01-13 Thu] 问题: 不知如何在 meow 中使用 const
+- 如何使用常量: [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Backquote.html][Backquote]]
 
 #+name: e08c1132
 #+begin_src elisp
@@ -494,18 +493,33 @@ C-u C-/ 如果选中区域, 则仅撤销当前内容.
 
 ;; Leader Key
 (defun meow/setup-leader ()
+  ;; 问题: meow 中的 keypad 与 which-key 配合不好
   (meow-normal-define-key
    ;; local leader keys
-   '("w" . "C-x M-t w")
-   '("g" . "C-x M-t g")
-   '("," . "C-x M-t ,")
+   ;; `("w" . ,gwp::dwim-leader-key)
+   ;; '("g" . "H-g")
+   ;; `("g" . ,gwp::goto-leader-key)
+   ;; '("," . "H-,")
+   ;; `("," . ,gwp::local-leader-key)
    )
+
+  ;; 与 which-key 配合更好
+  ;; FIXME: using predefined vars
+  (map! :map meow-normal-state-keymap
+        "," (general-simulate-key "s-,")
+        "g" (general-simulate-key "s-g")
+        "w" (general-simulate-key "s-w")
+        )
+
+  (map! :map meow-motion-state-keymap
+        "," (general-simulate-key "s-,")
+        "g" (general-simulate-key "s-g")
+        "w" (general-simulate-key "s-w")
+        )
 
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
-   ;; local leader
-   '("g" . "C-x M-t g")
    )
 
   (map! :leader
@@ -1567,6 +1581,7 @@ virtualbox /windows 中)"
      "!" '(dired-do-async-shell-command :which-key "Async shell command")
      "S" '(gwp::dired-open-current-as-sudo :which-key "sudo open file")
      )
+
     (gwp::goto-leader-def
      :keymaps 'dired-mode-map
      "g" '(gwp::dired-goto-first :which-key "goto first entry")

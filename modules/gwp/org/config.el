@@ -571,8 +571,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 (gwp::local-leader-def
  :keymaps 'org-mode-map
- "M-p" '(org-previous-block :which-key "previous block")
- "M-n" '(org-next-block :which-key "next block")
+ "P" '(org-previous-block :which-key "previous block")
+ "N" '(org-next-block :which-key "next block")
 
  "b" '(:keymap gwp::org-babel-map :which-key "babel/buffer")
  )
@@ -1516,29 +1516,35 @@ If on a:
 ;; 2f61258f ends here
 
 ;; [[file:../../../gwp.note::c99c78d1][c99c78d1]]
-(map! :map org-mode-map
-      [return]   #'gwp::org-dwim-at-point
-      "RET"      #'gwp::org-dwim-at-point)
+;; (map! :map org-mode-map
+;;       [return]   #'gwp::org-dwim-at-point
+;;       "RET"      #'gwp::org-dwim-at-point)
 
 ;; 避免与 org-sidebar 的设置冲突
 (map! :map org-sidebar-tree-map
       [return] nil)
 
-(gwp::dwim-leader-def
-  :keymaps 'org-mode-map
-  "g" 'counsel-org-goto                        ; goto
-  "t" 'org-todo                                ; todo
-  "b" 'gwp/org-babel-tangle-dwim               ; babel
-  "e" 'org-edit-special                        ; edit
-  "a" 'org-attach                              ; attach
-  "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
-  )
+(gwp::local-leader-def
+ :keymaps 'org-mode-map
+ "RET"    #'gwp::org-dwim-at-point
+ [return] #'gwp::org-dwim-at-point
+ )
 
 (gwp::dwim-leader-def
-  :keymaps 'org-src-mode-map
-  "b" 'gwp/org-babel-tangle-dwim
-  "q" 'org-edit-src-exit
-  )
+ :keymaps 'org-mode-map
+ "g" 'counsel-org-goto                        ; goto
+ "t" 'org-todo                                ; todo
+ "b" 'gwp/org-babel-tangle-dwim               ; babel
+ "e" 'org-edit-special                        ; edit
+ "a" 'org-attach                              ; attach
+ "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
+ )
+
+(gwp::dwim-leader-def
+ :keymaps 'org-src-mode-map
+ "b" 'gwp/org-babel-tangle-dwim
+ "q" 'org-edit-src-exit
+ )
 ;; c99c78d1 ends here
 
 ;; [[file:../../../gwp.note::e121f679][e121f679]]
@@ -1601,12 +1607,13 @@ If on a:
 ;; [[file:../../../gwp.note::bbdcd834][bbdcd834]]
 (gwp::goto-leader-def
  :keymaps 'org-mode-map
- "g" '(beginning-of-buffer :which-key "first line")
  "e" '(end-of-buffer :which-key "last line")
  "h" '(org-beginning-of-line :which-key "goto the beginning of visible line")
  "l" '(org-end-of-line :which-key "goto the end of visible line")
  "k" '(org-up-element :which-key "goto up element")
  "j" '(org-next-visible-heading :which-key "next visible heading")
+ "g" '(beginning-of-buffer :which-key "first line")
+ ;; "C-w" '(beginning-of-buffer :which-key "first line")
  ;; "k" '(org-backward-heading-same-level :which-key "backward heading")
  ;; "j" '(org-forward-heading-same-level :which-key "forward heading")
  )

@@ -27,6 +27,8 @@
         '(
           ;; evil-normal-state-p
           meow-normal-mode-p
+          meow-motion-mode-p
+          meow-beacon-mode-p
           ;; 首字母为是英文字母时进入英文模式
           rime-predicate-after-alphabet-char-p
           ;; 将要输入的为大写字母时
@@ -87,8 +89,10 @@
         (evil-insert 1)))
 
     ;; 进入 rime 输入状态后, 把误按的字符转换中文
-    (when (string= current-input-method input-method)
+    (when (meow-insert-mode-p)
+      (when (string= current-input-method input-method)
       (gwp::rime-convert-string-at-point))
+      )
 
     ;; 提示当前输入状态, 比看图标更醒目
     (if current-input-method
@@ -110,7 +114,8 @@
 ;; 将光标英文字符转化为中文录入
 (map! :map rime-mode-map "M-i" #'gwp::rime-convert-string-at-point)
 ;; 在自动英文模式下强制进入中文状态
-(map! :map rime-mode-map "C-i" #'rime-force-enable)
+;; 2022-01-13: 在 org-mode + meow 中的 TAB 键有冲突
+;;(map! :map rime-mode-map "C-i" #'rime-force-enable)
 ;; c457613c ends here
 
 ;; 2021-08-25: 留着, 但暂时用不上
@@ -435,8 +440,3 @@ Call a second time to restore the original window configuration."
 ;; 相当于行间距
 (setq-default line-spacing 4)
 ;; 6013493c ends here
-
-;; [[file:../../../gwp.note::38a0a087][38a0a087]]
-(use-package dired-sidebar
-  :commands (dired-sidebar-toggle-sidebar))
-;; 38a0a087 ends here

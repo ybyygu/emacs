@@ -1,19 +1,19 @@
 ;; [[file:../../../gwp.note::6e0da3f7][6e0da3f7]]
 ;;; editor/core/init.el -*- lexical-binding: t; -*-
-
 (use-package general
   :config
   ;;  prevent Key sequence starts with a non-prefix key errors
   (general-auto-unbind-keys)
+  ;; (general-override-mode 1)
   (general-create-definer gwp::goto-leader-def
-    :keymaps 'override ; prevent your leader keybindings from ever being overridden
-    :prefix "g")
+    :keymaps 'general-override-mode-map
+    :prefix gwp::goto-leader-key)
   (general-create-definer gwp::local-leader-def
-    :keymaps 'override ; prevent your leader keybindings from ever being overridden
-    :prefix ",")
+    :keymaps 'general-override-mode-map
+    :prefix gwp::local-leader-key)
   (general-create-definer gwp::dwim-leader-def
-    :keymaps 'override ; prevent your leader keybindings from ever being overridden
-    :prefix "w")
+    :keymaps 'meow-normal-state-keymap
+    :prefix gwp::dwim-leader-key)
   )
 
 ;; Rewriting the doom-localleader-key! macro to add support for meow mode

@@ -198,3 +198,7 @@
 
 ;; 方便调试自用代码
 (push (expand-file-name "user-lisp" doom-private-dir) load-path)
+
+(defconst gwp::dwim-leader-key "C-x M-t w")
+(defconst gwp::goto-leader-key "C-x M-t g")
+(defconst gwp::local-leader-key "C-x M-t ,")

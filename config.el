@@ -67,24 +67,6 @@
 ;;        ))
 ;;
 
-(use-package meow
-  :config
-  (setq meow-expand-hint-remove-delay 1.0)
-  ;; 没有选择时直接进入 KEYPAD 模式。
-  (setq meow-selection-command-fallback
-        ;; 默认设置
-        ;; '((meow-change . meow-change-char)
-        ;;   (meow-kill . meow-C-k)
-        ;;   (meow-cancel-selection . keyboard-quit)
-        ;;   (meow-pop-selection . meow-pop-grab)
-        ;;   (meow-beacon-change . meow-beacon-change-char))
-
-        '(
-          (meow-cancel-selection . end-of-buffer) ; g
-          ;; (meow-grab . end-of-buffer)             ; G
-          ))
-  )
-
 ;; (use-package! golden-ratio
 ;;   :config
 ;;   (map! :map evil-window-map

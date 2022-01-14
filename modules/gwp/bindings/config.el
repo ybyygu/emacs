@@ -325,7 +325,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (map! :leader
       (:prefix-map ("c" . "code/compile")
        :desc "Align the current region regexp"       "a"   #'align-regexp
-       :desc "Comment or uncomment lines"            "l"   #'gwp/comment-or-uncomment-dwim
+       :desc "Comment or uncomment lines"            "l"   #'comment-dwim
        :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
        :desc "将TAB转为空格"                         "SPC" #'untabify
        :desc "indent region"                         "TAB" #'indent-region ; 有用

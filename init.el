@@ -203,3 +203,8 @@
 (defconst gwp::dwim-leader-key "s-w")
 (defconst gwp::goto-leader-key "s-g")
 (defconst gwp::local-leader-key "s-,")
+
+;; (setq doom-etc-dir "~/.doom.d/local/etc/")
+;; (setq doom-cache-dir "~/.doom.d/local/cache/")
+;; (setq bookmark-default-file (expand-file-name "bookmarks" doom-etc-dir))
+;; (setq recentf-save-file (expand-file-name "recentf" doom-cache-dir))

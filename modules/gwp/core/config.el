@@ -24,6 +24,12 @@
   (meow-join 1)
   (meow-append))
 
+;;;###autoload
+(defun gwp::meow-change-to-the-end ()
+  (interactive)
+  (meow-insert)
+  (kill-line))
+
 ;; Leader Key
 (defun meow/setup-leader ()
   ;; 问题: meow 中的 keypad 与 which-key 配合不好
@@ -119,28 +125,25 @@
    '("0" . meow-expand-0)
    '("-" . negative-argument)
    '("h" . meow-left)
-   '("H" . meow-left-expand)
    '("j" . meow-next)
-   '("J" . meow-next-expand)
    '("k" . meow-prev)
-   '("K" . meow-prev-expand)
    '("l" . meow-right)
-   '("L" . meow-right-expand)
    '("i" . meow-insert)
    '("I" . gwp::meow-insert-at-the-beginning)
-   '("A" . gwp::meow-insert-at-the-end)
-   '("x" . meow-line)
-   '("d" . meow-kill)
-   '("D" . meow-kill-whole-line)
-   '("c" . meow-change)
    '("a" . meow-append)
+   '("A" . gwp::meow-insert-at-the-end)
+   '("c" . meow-change)
+   '("d" . meow-kill)
+   '("x" . meow-line)
+   '("K" . gwp::meow-change-to-the-end) ; 像 C-k, 但进入 insert mode
+   '("D" . meow-kill-whole-line)
    '("y" . meow-save)
    '("p" . meow-yank)
    '("o" . meow-reverse)
    '("O" . meow-open-above)
    '("J" . crux-top-join-line)
    '("u" . gwp::undo-dwim)
-   '("U" . meow-pop-grab)               ; fallback to meow-pop-selection
+   '("U" . meow-pop-selection)
    '("/" . meow-visit)
    '("n" . meow-search)
    '("v" . meow-cancel-selection)       ; 仿 vi
@@ -166,7 +169,7 @@
      (meow-reverse . meow-open-below)
      (meow-kill . meow-C-d)
      (meow-change . meow-change-char)
-     (meow-pop-selection . meow-pop-grab)
+     ;; (meow-pop-selection . meow-pop-grab)
      (meow-beacon-change . meow-beacon-change-char)
      (meow-cancel-selection . meow-right-expand) ; 仿vi, 取消选择或扩选
      )))

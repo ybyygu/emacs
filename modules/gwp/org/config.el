@@ -299,7 +299,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
    ))
 ;; 0d8e352a ends here
 
-;; [[file:../../../gwp.note::*enter][enter:1]]
+;; [[file:../../../gwp.note::624e5b7f][624e5b7f]]
 ;; 禁用代码着色, 影响速度
 ;; (setq org-src-fontify-natively nil)
 
@@ -308,37 +308,12 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (setq org-src-window-setup 'current-window)
 ;(setq org-src-window-setup 'reorganize-frame)
 ;;(setq org-src-window-setup 'other-frame)
-
-;; 进入代码编辑模式, 改成容易按的
-(map! :map org-mode-map
-      :ni "C-c ;" #'org-edit-special
-      :ni "C-c C-;" #'org-edit-special
-      :localleader ";" #'org-edit-special
-      )
-;; enter:1 ends here
+;; 624e5b7f ends here
 
 ;; [[file:../../../gwp.note::*toml][toml:1]]
 ;; Add convenience lang alias for markdown blocks
 (add-to-list 'org-src-lang-modes '("toml" . conf-toml))
 ;; toml:1 ends here
-
-;; [[file:../../../gwp.note::84623fc4][84623fc4]]
-;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
-(map! :map org-src-mode-map
-      "C-c ;"   #'org-edit-src-exit  ; 保存退出
-      "C-c C-;" #'org-edit-src-exit  ; 保存退出
-      "C-c C-k" #'org-edit-src-abort ; 放弃修改
-      )
-(map! :map org-src-mode-map
-      :localleader
-      ";" #'org-edit-src-exit
-      "k" #'org-edit-src-abort
-      )
-(gwp::local-leader-def
-  :keymaps 'org-src-mode-map
-  "q" #'org-edit-src-exit
-  )
-;; 84623fc4 ends here
 
 ;; [[file:../../../gwp.note::8aa4aca8][8aa4aca8]]
 (defhydra gwp/org-jump-block ()
@@ -551,8 +526,19 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 ;; auto time-stamp:1 ends here
 
 ;; [[file:../../../gwp.note::21ae7ae2][21ae7ae2]]
-(general-define-key :prefix-map 'gwp::org-babel-map)
+;; 默认的不太好按. 不能用C-c C-c, 容易与别的模块冲突.
+(map! :map org-src-mode-map
+      "C-c ;"   #'org-edit-src-exit  ; 保存退出
+      "C-c C-;" #'org-edit-src-exit  ; 保存退出
+      "C-c C-k" #'org-edit-src-abort ; 放弃修改
+      )
 
+(gwp::local-leader-def
+  :keymaps 'org-src-mode-map
+  "q" #'org-edit-src-exit
+  )
+
+(general-define-key :prefix-map 'gwp::org-babel-map)
 ;; 更多的命令定义在org-babel-map
 (map! :map gwp::org-babel-map
       :desc "check src block headers"    "c" #'org-babel-check-src-block
@@ -570,12 +556,17 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       )
 
 (gwp::local-leader-def
- :keymaps 'org-mode-map
- "M-p" '(org-previous-block :which-key "previous block")
- "M-n" '(org-next-block :which-key "next block")
+  :keymaps 'org-mode-map
+  "M-p" '(org-previous-block :which-key "previous block")
+  "M-n" '(org-next-block :which-key "next block")
 
- "b" '(:keymap gwp::org-babel-map :which-key "babel/buffer")
- )
+  ;; 进入代码编辑模式, 改成容易按的
+  ";" '(org-edit-special :which-key "edit source code")
+  "C-c ;" '(org-edit-special :which-key "edit source code")
+  "C-c C-;" '(org-edit-special :which-key "edit source code")
+
+  "b" '(:keymap gwp::org-babel-map :which-key "babel/buffer")
+  )
 ;; 21ae7ae2 ends here
 
 ;; [[file:../../../gwp.note::ebc6075d][ebc6075d]]
@@ -636,144 +627,6 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
             (error "No such attachment: %s" file))
         (user-error "Point is not on a file link")))))
 ;; 27b50206 ends here
-
-;; [[file:../../../gwp.note::*zotero/ui][zotero/ui:1]]
-;; rust-modules
-(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
-(require 'zotero)
-
-(defun gwp/zotero-search-by-tag (name)
-  "Search Zotero entries by tag using ivy."
-  (interactive "sTag: ")
-
-  (let* ((candidates (zotero-search-items-by-tag name)))
-    (ivy-read (format "Zotero entries: ")
-              candidates
-              :action '(2               ; set the default action to open attachments
-                        ("o" gwp--ivy-action-open-link "Open link")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")
-                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("i" gwp--ivy-action-insert-link "Insert link")))))
-
-(defun gwp/zotero-search-by-collection (name)
-  "Search Zotero entries by collection name using ivy."
-  (interactive "sCollection: ")
-
-  (let* ((candidates (zotero-search-items-by-collection name)))
-    (ivy-read (format "Zotero entries: ")
-              candidates
-              :action '(2               ; set the default action to open attachments
-                        ("o" gwp--ivy-action-open-link "Open link")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")
-                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("i" gwp--ivy-action-insert-link "Insert link")))))
-
-(defun gwp--ivy-action-show-related-items (x)
-  "show related items from selection"
-  (let* ((candidates (zotero-get-related-items x)))
-    (ivy-read (format "Related: ")
-              candidates
-              :action '(2               ; set the default action to open attachments
-                        ("o" gwp--ivy-action-open-link "Open link")
-                        ("O" gwp--ivy-action-open-attachments "Open attachments")
-                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
-                        ("i" gwp--ivy-action-insert-link "Insert link")))))
-
-(defun gwp--ivy-action-annotate-attachment (pdf-file)
-  "Annotate the attachment with org-noter."
-  (let ((annotation-file (expand-file-name (car org-noter-default-notes-file-names) (file-name-directory pdf-file))))
-    (progn
-      ;; create an empty annotation file if not exists
-      (unless (file-exists-p annotation-file) (write-region "" nil annotation-file))
-      (org-open-file pdf-file)
-      (org-noter))))
-
-(defun gwp--ivy-action-open-attachments (x)
-  "ivy completion for zotero attachments."
-  (let* ((candidates (zotero-get-selected-item-attachment-paths x)))
-    (ivy-read (format "Open attachment: ")
-              candidates
-              :action '(1               ; set the default action to open link
-                        ("o" org-open-file "Open")
-                        ("n" gwp--ivy-action-annotate-attachment "Annotate")))))
-
-(defun gwp--ivy-action-insert-link (x)
-  (let ((uri (zotero-get-selected-item-link x)))
-    (if uri
-        (progn
-          (message "%s!" x)
-          (insert "[[" uri "][" "zotero-item" "]]"))
-      (error "No link extracted from: %s" x))))
-
-(defun gwp--ivy-action-open-link (x)
-  (let ((uri (zotero-get-selected-item-link x)))
-    (if uri
-        (progn
-          (message "%s!" x)
-          (org-link-open-from-string (format "[[%s]]" uri)))
-      (error "No link extracted from: %s" x))))
-
-(defun gwp/org-open-zotero-attachments-at-point (arg)
-  "Handle zotero attachments in org-mode"
-  (interactive "P")
-  (let ((ct (org-element-context)))
-    (if (eq 'link (org-element-type ct))
-        (let ((link (org-element-property :raw-link ct)))
-          (when link
-            (let ((key (zotero-get-item-key-from-link link)))
-              (if key
-                  (gwp--ivy-action-open-attachments key)
-                (error "Invalid zotero link!"))))))))
-
-(defun gwp/org-open-zotero-related-at-point (arg)
-  "Open related zotero items for zotero link at point"
-  (interactive "P")
-  (let ((ct (org-element-context)))
-    (if (eq 'link (org-element-type ct))
-        (let ((link (org-element-property :raw-link ct)))
-          (when link
-            (let ((key (zotero-get-item-key-from-link link)))
-              (if key
-                  (gwp--ivy-action-show-related-items key)
-                (error "Invalid zotero link!"))))))))
-
-(defun gwp/insert-new-zotero-item (arg)
-  "Create a new zotero item (report)"
-  (interactive "P")
-
-  (let ((uri (zotero-create-new-note)))
-    (if uri
-        (progn
-          (message "%s!" uri)
-          (insert "[[" uri "][" "zotero-note" "]]"))
-      (error "create zotero item failed!"))))
-
-;; https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/
-(require 'transient)
-(transient-define-prefix gwp/zotero-search-transient ()
-  "Search zotero database"
-  [["Search zotero items:"
-    ("t" "search by tag" gwp/zotero-search-by-tag)
-    ("c" "search by collection" gwp/zotero-search-by-collection)
-    ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
-    ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
-    ]]
-  )
-;; key bindings
-(map! :map org-mode-map
-      :localleader
-      "z" #'gwp/zotero-search-transient
-      "O" #'gwp/org-open-zotero-attachments-at-point)
-;; zotero/ui:1 ends here
-
-;; [[file:../../../gwp.note::03af13ba][03af13ba]]
-;; since org 9
-(org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
-
-(defun gwp/org-zotero-open (path)
-  (setq url (format "zotero:%s" path))
-  (browse-url url))
-;; 03af13ba ends here
 
 ;; [[file:../../../gwp.note::*latex preview][latex preview:1]]
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
@@ -846,13 +699,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         ;; 方便单手操作
         :n "d" #'pdf-view-scroll-up-or-next-page
         :n "a" #'pdf-view-scroll-down-or-previous-page
-        ;; org-noter很好用
-        :localleader
-        (:prefix ("n" . "org-noter")
-         "n" #'org-noter
-         "i" #'org-noter-insert-note
-         "I" #'org-noter-insert-precise-note
-         )))
+        ))
 ;; 37fef008 ends here
 
 ;; [[file:../../../gwp.note::*capture][capture:1]]
@@ -883,10 +730,18 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
       "n" #'gwp::org-note::dired-annotate-file-at-point
       )
 
+;; org-noter很好用
 (gwp::local-leader-def
- :keymaps 'org-mode-map
- "n" '(:keymap gwp::org-note-map :which-key "note/noter")
- )
+  :keymaps 'pdf-view-mode-map
+  "n" #'org-noter
+  "i" #'org-noter-insert-note
+  "I" #'org-noter-insert-precise-note
+  )
+
+(gwp::local-leader-def
+  :keymaps 'org-mode-map
+  "n" '(:keymap gwp::org-note-map :which-key "note/noter")
+  )
 ;; ac0d3d18 ends here
 
 ;; [[file:../../../gwp.note::*zotero/export][zotero/export:1]]
@@ -1504,48 +1359,182 @@ If on a:
     (if (org-in-src-block-p)
         (progn
           (org-edit-src-code)
-          (call-interactively 'evilnc-comment-or-uncomment-lines)
+          (call-interactively 'comment-dwim)
           (org-edit-src-exit))
-      (call-interactively 'evilnc-comment-or-uncomment-lines))))
-
-;; 覆盖默认按键
-(map! :map org-mode-map "C-c C-o" #'gwp::org-open-at-point-dwim)
-(map! :map org-mode-map
-      :localleader
-      "o" #'gwp::org-open-at-point-dwim)
+      (call-interactively 'comment-dwim))))
 ;; 2f61258f ends here
 
 ;; [[file:../../../gwp.note::c99c78d1][c99c78d1]]
-;; (map! :map org-mode-map
-;;       [return]   #'gwp::org-dwim-at-point
-;;       "RET"      #'gwp::org-dwim-at-point)
-
 ;; 避免与 org-sidebar 的设置冲突
 (map! :map org-sidebar-tree-map
       [return] nil)
 
+(map! :map org-mode-map
+      "C-c C-o" #'gwp::org-open-at-point-dwim)
+
+(gwp::local-leader-def
+  :keymaps 'org-mode-map
+  "o"      #'gwp::org-open-at-point-dwim
+  "RET"    #'gwp::org-dwim-at-point
+  [return] #'gwp::org-dwim-at-point
+  )
+
+(gwp::dwim-leader-def
+  :keymaps 'org-mode-map
+  "g" 'counsel-org-goto                        ; goto
+  "t" 'org-todo                                ; todo
+  "b" 'gwp/org-babel-tangle-dwim               ; babel
+  "e" 'org-edit-special                        ; edit
+  "a" 'org-attach                              ; attach
+  "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
+  )
+
+(gwp::dwim-leader-def
+  :keymaps 'org-src-mode-map
+  "b" 'gwp/org-babel-tangle-dwim
+  "q" 'org-edit-src-exit
+  )
+;; c99c78d1 ends here
+
+;; [[file:../../../gwp.note::03af13ba][03af13ba]]
+;; since org 9
+(org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)
+
+(defun gwp/org-zotero-open (path)
+  (setq url (format "zotero:%s" path))
+  (browse-url url))
+;; 03af13ba ends here
+
+;; [[file:../../../gwp.note::*ui][ui:1]]
+;; rust-modules
+(add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
+(require 'zotero)
+
+(defun gwp/zotero-search-by-tag (name)
+  "Search Zotero entries by tag using ivy."
+  (interactive "sTag: ")
+
+  (let* ((candidates (zotero-search-items-by-tag name)))
+    (ivy-read (format "Zotero entries: ")
+              candidates
+              :action '(2               ; set the default action to open attachments
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
+                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
+                        ("i" gwp--ivy-action-insert-link "Insert link")))))
+
+(defun gwp/zotero-search-by-collection (name)
+  "Search Zotero entries by collection name using ivy."
+  (interactive "sCollection: ")
+
+  (let* ((candidates (zotero-search-items-by-collection name)))
+    (ivy-read (format "Zotero entries: ")
+              candidates
+              :action '(2               ; set the default action to open attachments
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
+                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
+                        ("i" gwp--ivy-action-insert-link "Insert link")))))
+
+(defun gwp--ivy-action-show-related-items (x)
+  "show related items from selection"
+  (let* ((candidates (zotero-get-related-items x)))
+    (ivy-read (format "Related: ")
+              candidates
+              :action '(2               ; set the default action to open attachments
+                        ("o" gwp--ivy-action-open-link "Open link")
+                        ("O" gwp--ivy-action-open-attachments "Open attachments")
+                        ("r" gwp--ivy-action-show-related-items "Show Related Items")
+                        ("i" gwp--ivy-action-insert-link "Insert link")))))
+
+(defun gwp--ivy-action-annotate-attachment (pdf-file)
+  "Annotate the attachment with org-noter."
+  (let ((annotation-file (expand-file-name (car org-noter-default-notes-file-names) (file-name-directory pdf-file))))
+    (progn
+      ;; create an empty annotation file if not exists
+      (unless (file-exists-p annotation-file) (write-region "" nil annotation-file))
+      (org-open-file pdf-file)
+      (org-noter))))
+
+(defun gwp--ivy-action-open-attachments (x)
+  "ivy completion for zotero attachments."
+  (let* ((candidates (zotero-get-selected-item-attachment-paths x)))
+    (ivy-read (format "Open attachment: ")
+              candidates
+              :action '(1               ; set the default action to open link
+                        ("o" org-open-file "Open")
+                        ("n" gwp--ivy-action-annotate-attachment "Annotate")))))
+
+(defun gwp--ivy-action-insert-link (x)
+  (let ((uri (zotero-get-selected-item-link x)))
+    (if uri
+        (progn
+          (message "%s!" x)
+          (insert "[[" uri "][" "zotero-item" "]]"))
+      (error "No link extracted from: %s" x))))
+
+(defun gwp--ivy-action-open-link (x)
+  (let ((uri (zotero-get-selected-item-link x)))
+    (if uri
+        (progn
+          (message "%s!" x)
+          (org-link-open-from-string (format "[[%s]]" uri)))
+      (error "No link extracted from: %s" x))))
+
+(defun gwp/org-open-zotero-attachments-at-point (arg)
+  "Handle zotero attachments in org-mode"
+  (interactive "P")
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((key (zotero-get-item-key-from-link link)))
+              (if key
+                  (gwp--ivy-action-open-attachments key)
+                (error "Invalid zotero link!"))))))))
+
+(defun gwp/org-open-zotero-related-at-point (arg)
+  "Open related zotero items for zotero link at point"
+  (interactive "P")
+  (let ((ct (org-element-context)))
+    (if (eq 'link (org-element-type ct))
+        (let ((link (org-element-property :raw-link ct)))
+          (when link
+            (let ((key (zotero-get-item-key-from-link link)))
+              (if key
+                  (gwp--ivy-action-show-related-items key)
+                (error "Invalid zotero link!"))))))))
+
+(defun gwp/insert-new-zotero-item (arg)
+  "Create a new zotero item (report)"
+  (interactive "P")
+
+  (let ((uri (zotero-create-new-note)))
+    (if uri
+        (progn
+          (message "%s!" uri)
+          (insert "[[" uri "][" "zotero-note" "]]"))
+      (error "create zotero item failed!"))))
+
+;; https://www.reddit.com/r/emacs/comments/f3o0v8/anyone_have_good_examples_for_transient/
+(require 'transient)
+(transient-define-prefix gwp/zotero-search-transient ()
+  "Search zotero database"
+  [["Search zotero items:"
+    ("t" "search by tag" gwp/zotero-search-by-tag)
+    ("c" "search by collection" gwp/zotero-search-by-collection)
+    ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
+    ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
+    ]]
+  )
+;; ui:1 ends here
+
+;; [[file:../../../gwp.note::a95fbcd5][a95fbcd5]]
 (gwp::local-leader-def
  :keymaps 'org-mode-map
- "RET"    #'gwp::org-dwim-at-point
- [return] #'gwp::org-dwim-at-point
+ "z" '(gwp/zotero-search-transient :which-key "zotero")
  )
-
-(gwp::dwim-leader-def
- :keymaps 'org-mode-map
- "g" 'counsel-org-goto                        ; goto
- "t" 'org-todo                                ; todo
- "b" 'gwp/org-babel-tangle-dwim               ; babel
- "e" 'org-edit-special                        ; edit
- "a" 'org-attach                              ; attach
- "n" 'gwp::org-babel-narrow-to-tangle-heading ; narrow
- )
-
-(gwp::dwim-leader-def
- :keymaps 'org-src-mode-map
- "b" 'gwp/org-babel-tangle-dwim
- "q" 'org-edit-src-exit
- )
-;; c99c78d1 ends here
+;; a95fbcd5 ends here
 
 ;; [[file:../../../gwp.note::e121f679][e121f679]]
 (require 'org-crypt)

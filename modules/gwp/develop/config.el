@@ -184,18 +184,16 @@ The org src will be tangled first before compiling.
 
 ;; [[file:../../../gwp.note::151a16d0][151a16d0]]
 (map! :map rust-mode-map
-      :localleader
-      "f" #'rust-format-buffer
-      "C-f" #'rust-format-buffer
-      "=" #'rust-format-buffer)
+      "C-c C-f" #'rust-format-buffer
+      )
 
-(use-package rust-mode
-  :hook (rust-mode . gwp/override-doom-format-buffer)
-  )
+;; 2022-01-14: 无效
+;; (use-package rust-mode
+;;   :hook (rust-mode . gwp/override-doom-format-buffer)
+;;   )
 
-(defun gwp/override-doom-format-buffer ()
-  ;; (evil-local-set-key 'normal (kbd "SPC =") 'rust-format-buffer)
-  )
+;; (defun gwp/override-doom-format-buffer ()
+;;   (local-set-key (kbd "SPC c f") 'rust-format-buffer))
 
 (gwp::dwim-leader-def
   :keymaps 'rust-mode-map
@@ -389,7 +387,8 @@ https://github.com/typester/emacs/blob/master/lisp/progmodes/which-func.el"
     (goto-char (point-min)))
   (recenter))
 
-;; vim里没有Alt修饰, M-x类绑定可以放心用
-;; (map! :n "M-n" #'gwp::imenu-goto-next)
-;; (map! :n "M-p" #'gwp::imenu-goto-prev)
+(map! :map prog-mode-map
+      "M-n" #'gwp::imenu-goto-next
+      "M-p" #'gwp::imenu-goto-prev
+ )
 ;; f28734ed ends here

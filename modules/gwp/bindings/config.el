@@ -11,6 +11,12 @@
 ;; 38249b42 ends here
 
 ;; [[file:../../../gwp.note::2d76b8e4][2d76b8e4]]
+;; meow keypad 将SPC-c SPC-x 转义为 C-c, C-x 对应的键序列
+(map! :leader
+      :desc "C-c" "c" #'meow-keypad-start
+      :desc "C-x" "x" #'meow-keypad-start
+      )
+
 ;; https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 (require 'init-proxy)
 
@@ -23,7 +29,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (map! :leader
       :desc "Save buffer" "SPC"             #'gwp::mark-and-save-buffer
       :desc "Universal argument"    "u"     #'universal-argument
-      :desc "Pop up scratch buffer" "x"     #'doom/open-scratch-buffer
+      ;; :desc "Pop up scratch buffer" "x"     #'doom/open-scratch-buffer
       :desc "Jump to previous mark" ","     #'gwp::jump-to-previous-mark
       :desc "Switch to previous buffer" "`" #'gwp::switch-to-previous-buffer
       )
@@ -324,33 +330,10 @@ If two universal prefix arguments are used, then prompt for command to use."
        ))
 ;; fc304196 ends here
 
-;; [[file:../../../gwp.note::e78a01dd][e78a01dd]]
-(map! :leader
-      (:prefix-map ("c" . "code/compile")
-       :desc "Align the current region regexp"       "a"   #'align-regexp
-       :desc "Comment or uncomment lines"            "l"   #'comment-dwim
-       :desc "Copy & comment"                        "y"   #'evilnc-copy-and-comment-lines
-       :desc "将TAB转为空格"                         "SPC" #'untabify
-       :desc "indent region"                         "TAB" #'indent-region ; 有用
-       :desc "indent region"                         [tab] #'indent-region ; 有用
-       :desc "Compile"                               "c"   #'compile
-       :desc "统计字数"                              "g"   #'count-words
-       :desc "Recompile"                             "C"   #'recompile
-       :desc "highlight"                             "h"   gwp::symbol-overlay-map
-       :desc "Jump to definition"                    "d"   #'+lookup/definition
-       :desc "Jump to references"                    "D"   #'+lookup/references
-       :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
-       :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
-       :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
-       :desc "Find implementations"                  "i"   #'+lookup/implementations
-       :desc "Jump to documentation"                 "k"   #'+lookup/documentation
-       :desc "Send to repl"                          "s"   #'gwp/tmux-ipython-paste-region ; 和tmux配合
-       :desc "Find type definition"                  "t"   #'+lookup/type-definition
-       :desc "Delete trailing whitespace"            "w"   #'delete-trailing-whitespace
-       :desc "Delete trailing newlines"              "W"   #'doom/delete-trailing-newlines
-       :desc "List errors"                           "x"   #'+default/diagnostics
-       ))
-;; e78a01dd ends here
+;; [[file:../../../gwp.note::e44831d6][e44831d6]]
+(map! "C-c f" #'+format/region-or-buffer)
+(map! "C-c SPC" #'untabify)
+;; e44831d6 ends here
 
 ;; [[file:../../../gwp.note::5e265fdb][5e265fdb]]
 (require 'init-search)

@@ -29,7 +29,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (map! :leader
       :desc "Save buffer" "SPC"             #'gwp::mark-and-save-buffer
       :desc "Universal argument"    "u"     #'universal-argument
-      ;; :desc "Pop up scratch buffer" "x"     #'doom/open-scratch-buffer
+      :desc "Pop up scratch buffer" "X"     #'doom/open-scratch-buffer
       :desc "Jump to previous mark" ","     #'gwp::jump-to-previous-mark
       :desc "Switch to previous buffer" "`" #'gwp::switch-to-previous-buffer
       )
@@ -188,7 +188,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 
 (defun gwp::find-last-killed-file ()
   (interactive)
-  (let ((active-files (cl-loop for buf in (buffer-list)
+  (let ((active-files (cl-loop for buf  in (buffer-list)
                             when (buffer-file-name buf) collect it)))
     (cl-loop for file in recentf-list
           unless (member file active-files) return (find-file file))))

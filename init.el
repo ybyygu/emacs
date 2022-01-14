@@ -204,6 +204,15 @@
 (defconst gwp::goto-leader-key "s-g")
 (defconst gwp::local-leader-key "s-,")
 
+
+;; 不同机器使用不同的设置, 以免同步冲突, 比如 workspace, recent files, 比如
+;; scratch data 等数据
+(setq doom-etc-dir (concat doom-local-dir (system-name) "/etc/"))
+(setq doom-cache-dir (concat doom-local-dir (system-name) "/cache/"))
+
+;; 这个冲突的概率不大
+(setq bookmark-default-file (expand-file-name "bookmarks" doom-local-dir))
+
 ;; (setq doom-etc-dir "~/.doom.d/local/etc/")
 ;; (setq doom-cache-dir "~/.doom.d/local/cache/")
 ;; (setq bookmark-default-file (expand-file-name "bookmarks" doom-etc-dir))

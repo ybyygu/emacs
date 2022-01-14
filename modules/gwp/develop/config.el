@@ -282,6 +282,16 @@ The org src will be tangled first before compiling.
   (+tmux/run "%paste"))
 ;; 44b70ed9 ends here
 
+;; [[file:../../../gwp.note::985a2495][985a2495]]
+(gwp::local-leader-def
+  :keymaps 'emacs-lisp-mode-map
+  "e" #'eval-last-sexp
+  "r" #'eval-region
+  "b" #'eval-buffer
+  "d" #'eval-defun
+  )
+;; 985a2495 ends here
+
 ;; [[file:../../../gwp.note::13061ec7][13061ec7]]
 (setq fortran-continuation-string "&")
 (setq fortran-do-indent 2)

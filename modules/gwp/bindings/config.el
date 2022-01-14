@@ -1,10 +1,13 @@
 ;; [[file:../../../gwp.note::38249b42][38249b42]]
 (gwp::goto-leader-def
-  :keymaps 'prog-mode-map
+  :keymaps '(prog-mode-map meow-normal-state-keymap)
   "g" '(beginning-of-buffer :which-key "goto first line")
   "e" '(end-of-buffer :which-key "goto last line")
   "l" '(end-of-line :which-key "goto the end of line")
-  "h" '(beginning-of-line :which-key "goto the beginning of line"))
+  "h" '(beginning-of-line :which-key "goto the beginning of line")
+  "d" '(+lookup/definition :which-key "Jump to definition")
+  "f" '(+lookup/file :which-key "Locate file")
+  )
 ;; 38249b42 ends here
 
 ;; [[file:../../../gwp.note::2d76b8e4][2d76b8e4]]

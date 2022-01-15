@@ -156,6 +156,8 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Open bookmarks"        "b" #'counsel-bookmark
        :desc "Resume last search"    "l" #'ivy-resume
        :desc "Last change"           "c" #'gwp::hydra-last-change/body
+       :desc "Emacs register"        "m" #'counsel-register
+       :desc "Jump list"             "j" #'+ivy/jump-list
        ))
 ;; 1c637dc8 ends here
 
@@ -165,7 +167,8 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Read-only mode"             "r" #'read-only-mode
        :desc "切换终端(vterm)"            "t" #'vterm-toggle
        :desc "Big mode"                   "b" #'doom-big-font-mode
-       :desc "Debug on error"             "d" #'toggle-debug-on-error
+       :desc "dired sidebar"              "d" #'dired-sidebar-toggle-sidebar
+       :desc "Debug on error"             "D" #'toggle-debug-on-error
        :desc "Frame fullscreen"           "F" #'toggle-frame-fullscreen
        :desc "Indent style"               "I" #'doom/toggle-indent-style
        :desc "Line numbers"               "l" #'gwp::toggle-line-numbers
@@ -331,8 +334,10 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; fc304196 ends here
 
 ;; [[file:../../../gwp.note::e44831d6][e44831d6]]
-(map! "C-c f" #'+format/region-or-buffer)
-(map! "C-c SPC" #'untabify)
+(map! :map prog-mode-map
+      "C-c f" #'+format/region-or-buffer
+      "C-c SPC" #'untabify              ; 将Tab 变为空格
+      )
 ;; e44831d6 ends here
 
 ;; [[file:../../../gwp.note::5e265fdb][5e265fdb]]

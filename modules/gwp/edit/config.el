@@ -227,6 +227,13 @@
 (auto-save-visited-mode +1)
 ;; auto-save:1 ends here
 
+;; [[file:../../../gwp.note::e571c476][e571c476]]
+(use-package simpleclip)
+
+;; 从其它程序复制的内容也放至在kill-ring中, 不会因为emacs的操作而覆盖之前的内容
+(setq save-interprogram-paste-before-kill t)
+;; e571c476 ends here
+
 ;; [[file:../../../gwp.note::b5a74212][b5a74212]]
 (setq kill-ring-max 999)
 
@@ -240,6 +247,7 @@
       (call-interactively #'counsel-yank-pop)
     (call-interactively #'yank)))
 (map! "C-y" #'gwp::yank-dwim)
+(gwp::text-edit-def "C-v" #'gwp::yank-dwim)
 
 ;; 保持和terminal中的行为一致: 删除选定区域或向后一个单词
 (defun gwp::ctrl-w-dwim ()
@@ -278,7 +286,7 @@
 ;; keyfreq:1 ends here
 
 ;; [[file:../../../gwp.note::ab440ea2][ab440ea2]]
-(defun gwp/insert-date (arg)
+(defun gwp::insert-date (arg)
   "Insert date at point. With prefix argument, insert date and time."
   (interactive "P")
   (insert (format-time-string "%Y-%m-%d"))
@@ -286,7 +294,7 @@
     (insert (format-time-string " %H:%M"))))
 
 ;; make it easier to update time-stamp
-(map! "C-c i" #'gwp/insert-date)
+(gwp::text-edit-def "C-c i" #'gwp::insert-date)
 ;; ab440ea2 ends here
 
 ;; [[file:../../../gwp.note::7628d03d][7628d03d]]
@@ -343,6 +351,7 @@
   :config
   (unbind-key "TAB" yas-minor-mode-map)
   (unbind-key "<tab>" yas-minor-mode-map)
+  ;; 不用TAB, 因为要避免 org 中与 tab 键冲突
   (define-key yas-minor-mode-map (kbd "<C-i>") 'yas-expand)
   )
 ;; 7db2aa5a ends here
@@ -364,6 +373,14 @@
   ("q" nil "quit")
   )
 ;; 9786fedc ends here
+
+;; [[file:../../../gwp.note::ba461562][ba461562]]
+(defun gwp::mark-whole-line ()
+  (interactive)
+  (beginning-of-line)
+  (set-mark-command nil)
+  (end-of-line))
+;; ba461562 ends here
 
 ;; [[file:../../../gwp.note::be09bc09][be09bc09]]
 ;; expand selection
@@ -450,13 +467,6 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
       "M-l" #'downcase-dwim
       "M-c" #'capitalize-dwim)
 ;; b9054953 ends here
-
-;; [[file:../../../gwp.note::e571c476][e571c476]]
-(use-package simpleclip)
-
-;; 从其它程序复制的内容也放至在kill-ring中, 不会因为emacs的操作而覆盖之前的内容
-(setq save-interprogram-paste-before-kill t)
-;; e571c476 ends here
 
 ;; [[file:../../../gwp.note::3eff5fa2][3eff5fa2]]
 (defun gwp::duplicate-region (beg end)
@@ -552,10 +562,11 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
     (end-of-line)
     (newline-and-indent)))
 
-;; 默认为set-face之类的东西
-;; (map! "M-o" #'just-one-space)
-(map! "M-o" #'gwp::smart-open-line-above)
-(map! "C-j" #'gwp::smart-open-line)
+;; M-o 默认为set-face之类的东西
+(gwp::text-edit-def
+ "M-o" #'gwp::smart-open-line-above
+ "C-j" #'gwp::smart-open-line
+ )
 ;; 1a0721e0 ends here
 
 ;; [[file:../../../gwp.note::b23f833f][b23f833f]]
@@ -569,13 +580,12 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 
 ;; [[file:../../../gwp.note::f75f80bd][f75f80bd]]
 (setq show-trailing-whitespace t)
-;; 保留时会自动清理, 以下已不必要
-;; (global-set-key (kbd "<f5> SPC") 'delete-trailing-whitespace)
-
-(map! "C-o" #'cycle-spacing)
 
 ;; 删除多余空行, 仅保留一行
 (map! "C-x C-o" #'delete-blank-lines)
-;; (global-set-key (kbd "C-x C-o") 'delete-blank-lines)
-(map! :leader "C-o" #'delete-blank-lines)
+
+(gwp::text-edit-def
+ "C-o" #'cycle-spacing
+ "C-c C-o" #'delete-blank-lines
+ )
 ;; f75f80bd ends here

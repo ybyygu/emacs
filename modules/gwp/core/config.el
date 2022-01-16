@@ -64,16 +64,49 @@
         "w" (general-simulate-key "s-w")
         )
 
+  ;; meow 的优先级很高, 这里定义按键为覆盖 dired 中的设置
   (map! :map meow-motion-state-keymap
         "," (general-simulate-key "s-,")
         "g" (general-simulate-key "s-g")
         "w" (general-simulate-key "s-w")
+        "j" (general-simulate-key "C-n")
+        "k" (general-simulate-key "C-p")
+        "h" (general-simulate-key "C-b")
+        "l" (general-simulate-key "C-f")
+        ;; 将功能固化后不方便其它模块中覆盖
+        ;; "h" #'meow-left
+        ;; "l" #'meow-right
+        ;; "b" #'meow-back-word
+        ;; "B" #'meow-back-symbol
+        ;; "f" #'meow-find
+        ;; "t" #'meow-till
+        ;; "s" #'meow-inner-of-thing
+        ;; "S" #'meow-bounds-of-thing
+        ;; "*" #'meow-mark-symbol
+        ;; ";" #'meow-cancel-selection
+        "y" #'meow-save
+        "v" #'meow-cancel-selection
         )
 
-  (meow-motion-overwrite-define-key
-   '("j" . meow-next)
-   '("k" . meow-prev)
-   )
+  (gwp::goto-leader-def
+    :keymaps '(meow-normal-state-keymap meow-motion-state-keymap)
+    "g" (general-simulate-key "M-<" :which-key "goto first line")
+    "e" (general-simulate-key "M->" :which-key "goto last line")
+    "h" (general-simulate-key "C-a" :which-key "goto the beggining of line")
+    "l" (general-simulate-key "C-e" :which-key "goto the end of line")
+    "G" 'goto-line
+    ;; "g" '(beginning-of-buffer :which-key "goto first line")
+    ;; "e" '(end-of-buffer :which-key "goto last line")
+    ;; "l" '(end-of-line :which-key "goto the end of line")
+    ;; "h" '(beginning-of-line :which-key "goto the beginning of line")
+    ;; "d" '(+lookup/definition :which-key "Jump to definition")
+    ;; "f" '(+lookup/file :which-key "Locate file")
+    )
+
+  ;; (meow-motion-overwrite-define-key
+  ;;  '("j" . meow-next)
+  ;;  '("k" . meow-prev)
+  ;;  )
 
   (map! :leader
         "?" #'meow-cheatsheet
@@ -111,8 +144,8 @@
 ;; 比如 dired, magit 生成的 buffer, 也许单独处理更好?
 (defun meow/setup-motion ()
   (meow-motion-overwrite-define-key
-   '("j" "meow-next")
-   '("k" "meow-prev")
+   '("j"  "meow-next")
+   '("k"  "meow-prev")
    )
   (when (featurep! :editor meow +leader)
     (meow-motion-overwrite-define-key
@@ -200,7 +233,7 @@
   ;; (meow-cursor-type-normal 'hbar)
   :config
   ;; 便于区分选区
-  (setq meow-cursor-type-normal 'hbar)
+  (setq meow-cursor-type-normal '(hbar . 3))
   ;; (setq meow-cursor-type-region-cursor 'bar)
   (meow/setup-normal)
   (cond

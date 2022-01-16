@@ -188,35 +188,28 @@
 ;; (setq display-line-numbers-type 'relative)
 ;; 885c9fa9 ends here
 
-;; [[file:../../../gwp.note::44d5ec48][44d5ec48]]
-(general-define-key :prefix-map 'gwp::window-map)
-
-(map! :map gwp::window-map
-      :desc "split window below"
-      "s" #'split-window-below
-      :desc "split window right"
-      "v" #'split-window-right
-      :desc "delete this window"
-      "d" #'delete-window
-      "q" #'delete-window
-      "h" #'windmove-left
-      "l" #'windmove-right
-      "k" #'windmove-up
-      "j" #'windmove-down
-      "u" #'winner-undo
-      )
-;; 44d5ec48 ends here
-
 ;; [[file:../../../gwp.note::34bcfc6f][34bcfc6f]]
 (use-package ace-window
   :custom
+  ;; 仅当多于两个窗口时才提示选择
+  (aw-scope 'frame)
+  (aw-dispatch-always nil)
+  (aw-dispatch-when-more-than 2)
+  (aw-ignore-current t)
   ;; Set window selection keys to the home row ones.
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-(map! :map gwp::window-map
-      "w" #'ace-window
-      "r" #'ace-swap-window
-      )
+;;;###autoload
+(defun gwp::ace-select-window ()
+  "选取某窗口放入当前窗口位置"
+  (interactive)
+  (call-interactively #'ace-swap-window)
+  (call-interactively #'aw-flip-window)
+  )
+
+(use-package! avy
+  :config
+  (setq avy-all-windows t))
 ;; 34bcfc6f ends here
 
 ;; [[file:../../../gwp.note::a207c706][a207c706]]
@@ -224,6 +217,30 @@
   :config
   (map! :map gwp::window-map "S" #'burly-bookmark-windows))
 ;; a207c706 ends here
+
+;; [[file:../../../gwp.note::14897c7b][14897c7b]]
+(require 'ivy)
+
+(defun gwp::bookmark-jump-workspace (bookmark)
+  "Jump to BOOKMARK in new workspace."
+  (interactive
+   (list (bookmark-completing-read "Jump to bookmark (in another frame)"
+                                   bookmark-current-bookmark)))
+  (+workspace/new-named bookmark)
+  (+workspace/switch-to bookmark)
+  (bookmark-jump bookmark))
+
+(defvar gwp::ivy-bookmark-actions
+  '(("j" bookmark-jump-other-window "other window")
+    ("d" bookmark-delete "delete")
+    ("e" bookmark-rename "edit")
+    ("s" bookmark-set "replace")
+    ("f" bookmark-jump-other-frame "other frame")
+    ("n" gwp::bookmark-jump-workspace "in new workspace"))
+  "Default ivy actions for files.")
+
+(ivy-set-actions 'counsel-bookmark gwp::ivy-bookmark-actions)
+;; 14897c7b ends here
 
 ;; [[file:../../../gwp.note::19e08aef][19e08aef]]
 (defun gwp::display-current-buffer-other-frame ()
@@ -234,18 +251,17 @@
 
 ;; [[file:../../../gwp.note::bf66c13f][bf66c13f]]
 (require 'ivy)
-(ivy-set-actions
- ;; 以下会覆盖默认定义的, 所以需要补回
- 'ivy-switch-buffer
- '(
-   ("f" ivy--find-file-action "find file")
-   ("j" switch-to-buffer-other-window "other window")
-   ("k" ivy--kill-buffer-action "kill")
-   ("r" ivy--rename-buffer-action "rename")
-   ("x" counsel-open-buffer-file-externally "open externally")
-   ("f" switch-to-buffer-other-frame "other frame") ; 默认没有
-   ("t" switch-to-buffer-other-tab "other tab")     ; 默认没有
-   ))
+
+(defvar gwp::ivy-buffer-actions
+  '(("j" switch-to-buffer-other-window "other window")
+    ("x" counsel-open-buffer-file-externally "open externally")
+    ("k" ivy--kill-buffer-action "kill")
+    ("r" ivy--rename-buffer-action "rename")
+    ("t" switch-to-buffer-other-tab "other tab")     ; 默认没有
+    ("f" switch-to-buffer-other-frame "other frame") ; 默认没有
+    )
+  "Default ivy actions for files.")
+(ivy-set-actions 'ivy-switch-buffer gwp::ivy-buffer-actions)
 ;; bf66c13f ends here
 
 ;; [[file:../../../gwp.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
@@ -329,26 +345,31 @@ Call a second time to restore the original window configuration."
       )
 ;; 9a32eb12 ends here
 
-;; [[file:../../../gwp.note::19f082d3][19f082d3]]
-(use-package! avy
-  :config
-  (setq avy-all-windows t))
-
-;; 替代 SPC-w-w
-;; (global-set-key [remap evil-window-next] #'ace-window)
-;; (map! [remap evil-window-next] #'ace-window)
-
-(map! :map gwp::window-map
-      "r" #'ace-swap-window   ; rotate
-      "c" #'ace-delete-window ; close
-      "f" #'tear-off-window   ; 类似于firefox中的标签变窗口 (float, move to new frame)
-      "F" #'follow-mode       ; 同步滚动窗口, 可用于双窗口内容对比等
-      )
-;; 19f082d3 ends here
-
 ;; [[file:../../../gwp.note::*弹出窗口][弹出窗口:1]]
 (map! :i "C-`" #'+popup/toggle)
 ;; 弹出窗口:1 ends here
+
+;; [[file:../../../gwp.note::44d5ec48][44d5ec48]]
+(general-define-key :prefix-map 'gwp::window-map)
+
+(map! :map gwp::window-map
+      "s" #'split-window-below
+      "v" #'split-window-right
+      "h" #'windmove-left
+      "j" #'windmove-down
+      "k" #'windmove-up
+      "l" #'windmove-right
+      "d" #'delete-window
+      "q" #'delete-window
+      "u" #'winner-undo            ; 撤销窗口变动
+      "w" #'ace-window             ; 替代 SPC-w-w
+      "r" #'gwp::ace-select-window ; rotate
+      "R" #'ace-swap-window        ; rotate
+      "c" #'ace-delete-window      ; close other windows
+      "f" #'tear-off-window        ; 类似于firefox中的标签变窗口 (float, move to new frame)
+      "F" #'follow-mode            ; 同步滚动窗口, 可用于双窗口内容对比等
+      )
+;; 44d5ec48 ends here
 
 ;; [[file:../../../gwp.note::a6f83332][a6f83332]]
 ;; 默认不要显示折行

@@ -1,12 +1,13 @@
 ;; [[file:../../../gwp.note::38249b42][38249b42]]
 (gwp::goto-leader-def
-  :keymaps '(prog-mode-map meow-normal-state-keymap)
-  "g" '(beginning-of-buffer :which-key "goto first line")
-  "e" '(end-of-buffer :which-key "goto last line")
-  "l" '(end-of-line :which-key "goto the end of line")
-  "h" '(beginning-of-line :which-key "goto the beginning of line")
+  :keymaps '(prog-mode-map org-mode-map)
+  ;; "g" '(beginning-of-buffer :which-key "goto first line")
+  ;; "e" '(end-of-buffer :which-key "goto last line")
+  ;; "l" '(end-of-line :which-key "goto the end of line")
+  ;; "h" '(beginning-of-line :which-key "goto the beginning of line")
   "d" '(+lookup/definition :which-key "Jump to definition")
   "f" '(+lookup/file :which-key "Locate file")
+  ";" '(goto-last-change :which-key "Go to where the last edit was made")
   )
 ;; 38249b42 ends here
 
@@ -139,7 +140,6 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Search all notes"             "n" #'gwp/search-all-notes ; 全局搜索.note文件
        :desc "Search buffer from clipboard" "y" #'gwp::swiper-from-clipboard
        :desc "Search all open buffers"      "B" #'swiper-all
-       :desc "Jump to search occurrence"    ";" #'gwp/evil-ex-search-avy-jump
        :desc "搜索当前文件夹文件名"         "f" #'find-file-in-current-directory-by-selected ; 搜索文件名
        :desc "Jump to symbol"               "i" #'imenu
        :desc "Locate file"                  "l" #'counsel-locate
@@ -343,11 +343,32 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; [[file:../../../gwp.note::5e265fdb][5e265fdb]]
 (require 'init-search)
 (map! :leader
-      (:prefix-map ("d" . "dodo")
-       :desc "select text"   "s" #'gwp/advanced-selection
-       :desc "resize window" "w" #'gwp/adjust-window-size/body
-       :desc "smart parents" "p" #'gwp/hydra-smartparens/body
-       :desc "recent dirs"   "r" #'gwp::ivy-recent-dirs
+      (:prefix-map ("d" . "dwim")
+       :desc "select text"                           "s"   #'gwp/advanced-selection
+       :desc "resize window"                         "w"   #'gwp/adjust-window-size/body
+       :desc "smart parents"                         "p"   #'gwp/hydra-smartparens/body
+       :desc "recent dirs"                           "r"   #'gwp::ivy-recent-dirs
+       :desc "Align the current region regexp"       "a"   #'align-regexp
+       :desc "Comment or uncomment lines"            "l"   #'comment-dwim
+       :desc "将TAB转为空格"                         "SPC" #'untabify
+       :desc "Indent region"                         "TAB" #'indent-region ; 有用
+       :desc "Indent region"                         [tab] #'indent-region ; 有用
+       :desc "highlight"                             "h"   gwp::symbol-overlay-map
+       :desc "Send to repl"                          "s"   #'gwp/tmux-ipython-paste-region ; 和tmux配合
+       :desc "Compile"                               "c"   #'compile
+       :desc "统计字数"                              "g"   #'count-words
+       :desc "Recompile"                             "C"   #'recompile
+       :desc "Jump to definition"                    "d"   #'+lookup/definition
+       :desc "Jump to references"                    "D"   #'+lookup/references
+       :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
+       :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
+       :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
+       :desc "Find implementations"                  "i"   #'+lookup/implementations
+       :desc "Jump to documentation"                 "k"   #'+lookup/documentation
+       :desc "Find type definition"                  "t"   #'+lookup/type-definition
+       :desc "Delete trailing whitespace"            "w"   #'delete-trailing-whitespace
+       :desc "Delete trailing newlines"              "W"   #'doom/delete-trailing-newlines
+       :desc "List errors"                           "x"   #'+default/diagnostics
        ))
 ;; 5e265fdb ends here
 
@@ -425,13 +446,13 @@ If two universal prefix arguments are used, then prompt for command to use."
 (map! :leader
       (:prefix ("j" . "jump")
        :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
-       :desc "search occurrence"      "j" #'gwp/evil-ex-search-avy-jump
-       :desc "avy line"               "l" #'evil-avy-goto-line
+       :desc "avy line"               "l" #'avy-goto-line
        :desc "emacs mark ring"        "m" #'gwp::hydra-mark-ring-pop/body
        ))
 ;; 6ea0d271 ends here
 
 ;; [[file:../../../gwp.note::d2dc925d][d2dc925d]]
+(require 'expand-region)
 (map! :leader
       (:prefix-map ("v" . "visual")
        :desc "expand region"            "v" #'er/expand-region
@@ -448,8 +469,6 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "From clipboard"                "y"   #'gwp::yank-dwim
        :desc "Current file name"             "f"   #'+default/insert-file-path
        :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
-       :desc "Evil ex path"                  "p"   (cmd! (evil-ex "R!echo "))
-       :desc "From evil register"            "r"   #'evil-ex-registers
        :desc "Unicode"                       "u"   #'insert-char
        ))
 ;; bc190292 ends here

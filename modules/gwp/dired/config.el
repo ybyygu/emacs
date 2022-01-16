@@ -6,6 +6,7 @@
   (dired-omit-mode 1)
   ;; 启用折叠空目录模式
   (dired-collapse-mode 1))
+(add-hook! 'dired-mode-hook #'gwp::dired-hook)
 
 ;;;###autoload
 (defun gwp::dired-quit-all ()
@@ -123,7 +124,8 @@ virtualbox /windows 中)"
   (dired-listing-switches "-alhvG --group-directories-first") ; default: "-al"
 
   :config
-  (add-hook! 'dired-mode-hook #'gwp::dired-hook)
+  ;; 这里不管用?
+  ;; (add-hook! 'dired-mode-hook #'gwp::dired-hook)
   ;; Don't complain about this command being disabled when we use it
   (put 'dired-find-alternate-file 'disabled nil)
   ;; 安全第一
@@ -138,36 +140,32 @@ virtualbox /windows 中)"
     ;; 使用BACKSPACE来上一级目录, 使用Ctrl-shift-n来新建目录(默认为"+")
     (map! :map dired-mode-map
           "q"     #'gwp::dired-quit-window
-          "j"     #'dired-hacks-next-file     ; 下一文件, 忽略非文件行
-          "k"     #'dired-hacks-previous-file ; 上一文件, 忽略非文件行
-          "h"     #'gwp::dired-up-directory
-          "l"     #'dired-view-file
-          "DEL"   #'gwp::dired-up-directory   ; BACKSPACE
+          "C-n"   #'dired-hacks-next-file     ; mapping to j; 下一文件, 忽略非文件行
+          "C-p"   #'dired-hacks-previous-file ; mapping to k; 上一文件, 忽略非文件行
+          "C-b"   #'gwp::dired-up-directory   ; mapping to h;
+          "C-f"   #'dired-view-file           ; mapping to l;
+          "DEL"   #'gwp::dired-up-directory     ; BACKSPACE
           "RET"   #'gwp::dired-find-alternate-file
           "K"     #'dired-kill-line           ; 移除 dired buffer 中某行, 不影响文件, 相当于过滤
+          "M-<"   #'gwp::dired-goto-first
+          "M->"   #'gwp::dired-goto-last
           "C-S-n" #'dired-create-directory
           "C-S-f" #'dired-create-empty-file
           )
 
     (gwp::local-leader-def
-     :keymaps 'dired-mode-map
-     "k" '(gwp::dired-quit-all :which-key "kill all dired buffers")
-     "c" '(dired-collapse-mode :which-key "collapse empty dirs")
-     "h" '(dired-omit-mode :which-key "toggle hidden files")
-     "f" '(gwp::dired-fd :which-key "fd files")
-     "y" '(gwp/dired-copy-file-path :which-key "Copy file path")
-     "l" '(dired-do-symlink :which-key "Make symlink")
-     "o" '(dired-find-file-other-window :which-key "display in other window")
-     "SPC" '(dired-view-file :which-key "preview file")
-     "!" '(dired-do-async-shell-command :which-key "Async shell command")
-     "S" '(gwp::dired-open-current-as-sudo :which-key "sudo open file")
-     )
-
-    (gwp::goto-leader-def
-     :keymaps 'dired-mode-map
-     "g" '(gwp::dired-goto-first :which-key "goto first entry")
-     "e" '(gwp::dired-goto-last :which-key "goto last entry")
-     )))
+      :keymaps 'dired-mode-map
+      "k" '(gwp::dired-quit-all :which-key "kill all dired buffers")
+      "c" '(dired-collapse-mode :which-key "collapse empty dirs")
+      "h" '(dired-omit-mode :which-key "toggle hidden files")
+      "f" '(gwp::dired-fd :which-key "fd files")
+      "y" '(gwp/dired-copy-file-path :which-key "Copy file path")
+      "l" '(dired-do-symlink :which-key "Make symlink")
+      "o" '(dired-find-file-other-window :which-key "display in other window")
+      "SPC" '(dired-view-file :which-key "preview file")
+      "!" '(dired-do-async-shell-command :which-key "Async shell command")
+      "S" '(gwp::dired-open-current-as-sudo :which-key "sudo open file")
+      )))
 ;; 67caa559 ends here
 
 ;; [[file:../../../gwp.note::5af5f8db][5af5f8db]]

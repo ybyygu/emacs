@@ -25,6 +25,9 @@
   (general-create-definer gwp::text-view-def
     :keymaps '(meow-motion-state-keymap meow-normal-state-keymap))
 
+  ;; 高优先级
+  ;; (general-create-definer gwp::local-def :keymaps 'local)
+
   ;; 取消某些容易误按, 不习惯的键
   (general-unbind "C-v" "C-z"))
 

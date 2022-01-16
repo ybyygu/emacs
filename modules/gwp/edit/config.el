@@ -198,11 +198,11 @@
 (defhydra gwp::hydra-mark-ring-pop ()
   "goto last location"
   ("SPC" gwp::jump-to-previous-mark "prev mark")          ; 在org中可自动打开折叠的内容
-  ("n" marker-visit-next "next mark")
-  ("p" marker-visit-prev "prev mark")                     ; NOTE: org折叠的内容不会打开
-  ("P" backward-global-mark "prev mark (global)")         ;
-  ("N" forward-global-mark "next mark (global)")          ;
-  ("o" gwp::org-show-context-at-point "org show context") ; 在org时: 跳转到被折叠的headline中很有用
+  ("j" marker-visit-next "next mark")
+  ("k" marker-visit-prev "prev mark")                     ; NOTE: org折叠的内容不会打开
+  ("C-p" backward-global-mark "prev mark (global)")         ;
+  ("C-n" forward-global-mark "next mark (global)")          ;
+  ("r" gwp::org-show-context-at-point "org show context") ; 在org时: 跳转到被折叠的headline中很有用
   ("q" nil "quit"))
 ;; 00b43976 ends here
 
@@ -335,10 +335,10 @@
 
 ;; [[file:../../../gwp.note::1c79ba79][1c79ba79]]
 (defhydra gwp::hydra-last-change ()
-  ("N" goto-last-change "last change")  ; 用 p 按键容易误操作, 用N 安全些
-  ("n" goto-last-change-reverse "previous change")
+  ("j" goto-last-change "last change")  ; 用 p 按键容易误操作, 用N 安全些
+  ("k" goto-last-change-reverse "previous change")
   ("c" recenter "recenter")
-  ("o" gwp::org-show-context-at-point "org show context")
+  ("r" gwp::org-show-context-at-point "org show context")
   ("q" nil "quit"))
 ;; 1c79ba79 ends here
 

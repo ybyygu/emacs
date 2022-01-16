@@ -7,7 +7,10 @@
   (setq magit-revision-show-gravatars nil)
   ;; 进入 magit-status 后, 将光标定在 unstaged 一栏
   (setq magit-status-initial-section '(2))
-  )
+
+  (map! :map magit-mode-map
+        "C-f" #'magit-log               ; recover "l" command shaded by meow
+        ))
 
 (provide 'init-magit)
 ;; 5587631c ends here

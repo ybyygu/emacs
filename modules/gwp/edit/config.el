@@ -589,3 +589,29 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
  "C-c C-o" #'delete-blank-lines
  )
 ;; f75f80bd ends here
+
+;; [[file:../../../gwp.note::24325443][24325443]]
+(add-hook 'shell-mode-hook  'with-editor-export-editor)
+(add-hook 'eshell-mode-hook 'with-editor-export-editor)
+(add-hook 'term-exec-hook   'with-editor-export-editor)
+(add-hook 'vterm-mode-hook  'with-editor-export-editor)
+
+;; 进入 insert 编辑模式
+(add-hook 'with-editor-mode-hook 'meow-insert-mode)
+;; 24325443 ends here
+
+;; [[file:../../../gwp.note::fdbbe28d][fdbbe28d]]
+;; 中端粘贴时以当前编辑位置为准, 而非鼠标光标所在位置.
+(setq mouse-yank-at-point t)
+
+;;;###autoload
+(defun gwp::move-mouse-position-to-point ()
+  "将鼠标移动到当前编辑位置"
+  (interactive)
+  (let* (
+         (xy (posn-actual-col-row (posn-at-point (point))))
+         (x (+ (car xy) (window-left-column)))
+         (y (+ (cdr xy) (window-top-line)))
+         )
+    (set-mouse-position (selected-frame) x y)))
+;; fdbbe28d ends here

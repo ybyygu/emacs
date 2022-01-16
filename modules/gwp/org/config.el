@@ -106,6 +106,7 @@
   (call-interactively 'crux-smart-open-line)
   (call-interactively 'org-insert-todo-subheading)
   (call-interactively 'org-time-stamp-inactive)
+  (when (meow-normal-mode-p) (call-interactively 'meow-append))
   (insert " "))
 
 (defun gwp::new-item-time-stamp (arg)
@@ -116,7 +117,9 @@
         (call-interactively 'org-insert-item))
     (insert "- "))
   (call-interactively 'org-time-stamp-inactive)
-  (insert " "))
+  (insert " ")
+  (when (meow-normal-mode-p) (call-interactively 'meow-append))
+  )
 ;; 3d7188a4 ends here
 
 ;; [[file:../../../gwp.note::bafd9bd3][bafd9bd3]]

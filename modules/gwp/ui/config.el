@@ -454,6 +454,34 @@ Call a second time to restore the original window configuration."
     (gwp::goldendict word)))
 ;; 725e9ab6 ends here
 
+;; [[file:../../../gwp.note::af9362ab][af9362ab]]
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+;; (setq doom-theme 'doom-acario-light)
+;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-material)
+(setq doom-theme 'doom-nova)
+;; (setq doom-theme 'doom-vibrant)
+;; (load-theme 'material t)
+(custom-set-faces!
+  '(org-todo :foreground "yellow" :weight bold :background "#263238")
+  '(org-done :foreground "yellow" :weight bold :background "#263238")
+  '(org-table :foreground "#e3f2fd")
+  '(hl-line :background "#37474f")
+  '(org-level-1 :foreground "#e3f2fd" :height 1.1 :background nil :weight bold :box nil)
+  '(org-level-2 :foreground "#e3f2fd" :height 1.0 :background nil :weight normal :box nil)
+  '(org-headline-done :foreground "gray" :weight normal)
+  )
+
+;; 当前行
+(custom-set-faces!
+  '(hl-line :background "#37474f")
+  '(solaire-hl-line-face :background "#37474f")
+  '(region :background "#555555")
+  )
+;; af9362ab ends here
+
 ;; [[file:../../../gwp.note::6013493c][6013493c]]
 ;; View images inside Emacs
 (auto-image-file-mode t)

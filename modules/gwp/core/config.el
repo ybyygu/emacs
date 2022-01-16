@@ -233,7 +233,7 @@
   ;; (meow-cursor-type-normal 'hbar)
   :config
   ;; 便于区分选区
-  (setq meow-cursor-type-normal '(hbar . 3))
+  ;; (setq meow-cursor-type-normal '(hbar . 3))
   ;; (setq meow-cursor-type-region-cursor 'bar)
   (meow/setup-normal)
   (cond

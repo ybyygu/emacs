@@ -445,9 +445,14 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; [[file:../../../gwp.note::6ea0d271][6ea0d271]]
 (map! :leader
       (:prefix ("j" . "jump")
-       :desc "org src"                "o" #'gwp/org-babel-tangle-jump-to-org
-       :desc "avy line"               "l" #'avy-goto-line
-       :desc "emacs mark ring"        "m" #'gwp::hydra-mark-ring-pop/body
+       :desc "org src" "o"
+       #'gwp/org-babel-tangle-jump-to-org
+       :desc "remote line" "l"
+       #'avy-goto-line
+       :desc "remote position (char-2)" "f"
+       #'avy-goto-char-2
+       :desc "emacs mark ring" "m"
+       #'gwp::hydra-mark-ring-pop/body
        ))
 ;; 6ea0d271 ends here
 
@@ -460,6 +465,14 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body
        :desc "multi-cursor mode"        "m" #'gwp::hydra-multiedit/body))
 ;; d2dc925d ends here
+
+;; [[file:../../../gwp.note::bc190292][bc190292]]
+(map! :leader
+      (:prefix-map ("e" . "edit")
+       :desc "copy remote line" "l" #'avy-copy-line
+       :desc "copy remote lines" "L" #'avy-copy-region
+       ))
+;; bc190292 ends here
 
 ;; [[file:../../../gwp.note::bc190292][bc190292]]
 (map! :leader

@@ -1399,6 +1399,26 @@ If on a:
   )
 ;; c99c78d1 ends here
 
+;; [[file:../../../gwp.note::*mark element][mark element:1]]
+
+;; mark element:1 ends here
+
+;; [[file:../../../gwp.note::aa6a42b8][aa6a42b8]]
+(general-define-key :prefix-map 'gwp::org-mark-map)
+
+(map! :map gwp::org-mark-map
+      "." #'org-mark-element
+      "m" #'org-mark-ring-push
+      "p" #'org-mark-ring-goto
+      "s" #'org-babel-mark-block
+      )
+
+(gwp::local-leader-def
+ :keymaps 'org-mode-map
+ "m" '(:keymap gwp::org-mark-map :which-key "marking")
+ )
+;; aa6a42b8 ends here
+
 ;; [[file:../../../gwp.note::03af13ba][03af13ba]]
 ;; since org 9
 (org-link-set-parameters "zotero" :follow #'gwp/org-zotero-open :export #'gwp/org-zotero-export)

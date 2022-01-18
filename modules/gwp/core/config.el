@@ -10,8 +10,17 @@
 ;; (setq evil-want-fine-undo t)
 ;; 9f41280c ends here
 
-;; [[file:../../../gwp.note::e08c1132][e08c1132]]
+;; [[file:../../../gwp.note::4e63ecbf][4e63ecbf]]
 ;;; editor/core/config.el -*- lexical-binding: t; -*-
+
+;;;###autoload
+;; https://www.emacswiki.org/emacs/CopyingWholeLines
+(defun gwp::copy-current-line (&optional arg)
+  (interactive "p")
+  (let ((buffer-read-only t)
+        (kill-read-only-ok t))
+    (kill-whole-line arg))
+  )
 
 ;;;###autoload
 (defun gwp::meow-insert-at-the-beginning ()
@@ -32,7 +41,6 @@
 ;;;###autoload
 ;; https://www.gnu.org/software/emacs/manual/html_node/efaq/Matching-parentheses.html
 (defun gwp::match-paren (arg)
-  "Go to the matching paren if on a paren; otherwise insert %."
   (interactive "p")
   (cond ((looking-at "\\s(") (forward-list 1) (backward-char 1))
         ((looking-at "\\s)") (forward-char 1) (backward-list 1))
@@ -43,6 +51,98 @@
   (interactive)
   (meow-insert)
   (kill-line))
+
+;;;###autoload
+(defun gwp::meow-change-whole-line ()
+  (interactive)
+  (call-interactively #'crux-move-beginning-of-line)
+  (call-interactively #'gwp::meow-change-to-the-end))
+;; 4e63ecbf ends here
+
+;; [[file:../../../gwp.note::e08c1132][e08c1132]]
+;; Qwerty, normal state
+(defun meow/setup-normal ()
+  ;; normal commands
+  (meow-normal-define-key
+   '("<escape>" . keyboard-quit)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("0" . meow-expand-0)
+   '("-" . negative-argument)
+   ;; 常规移动操作
+   '("h" . meow-left)
+   '("j" . meow-next)
+   '("k" . meow-prev)
+   '("l" . meow-right)
+   ;; 常规编辑操作
+   '("i" . meow-insert)
+   '("I" . gwp::meow-insert-at-the-beginning)
+   '("a" . meow-append)
+   '("A" . gwp::meow-insert-at-the-end)
+   '("x" . meow-kill)                   ; 同 vi, 剪入 king-ring, 无选区时等效于 C-x 按键
+   '("y" . meow-save)                   ; 同 vi, 复制到 king-ring
+   '("c" . meow-change)                 ; 同 vi, 删除选区内容, 无选区时等效于 C-c 按键
+   '("C" . gwp::meow-change-whole-line) ; 同 vi, 修改整行
+   '("K" . gwp::meow-change-to-the-end) ; 像 C-k, 但进入 insert mode
+   '("p" . meow-yank)
+   '("O" . meow-open-above)
+   '("J" . crux-top-join-line)      ; 同vi, 合并下一行至当前行
+   '("r" . meow-change-char)        ; 删除当前字符或选区(不进入 kill-ring), 同时进入 insert state
+   '("d" . meow-delete)             ; 删除当前字符或选区(不进入 kill-ring)
+   '("D" . meow-kill-whole-line)
+   ;; 选区扩展操作
+   '("." . meow-line)                ; 向下扩选一行, 按 "-." 向上扩选
+   '("e" . meow-next-word)           ; 向前扩选, 以 word 为单位
+   '("E" . meow-next-symbol)         ; 向前扩选, 以 symbol 为单位 (包括连字符等)
+   '("b" . meow-back-word)           ; 反向操作, 等效于 "-e"
+   '("B" . meow-back-symbol)         ; 反向操作, 等效于 "-E"
+   '("o" . meow-reverse)             ; 反转选区方向. 若无选区, 则相当于 vi 中为 o
+   '("u" . gwp::undo-dwim)
+   '("U" . meow-pop-selection)
+   ;; 搜索与跳转
+   '("/" . meow-visit)            ; 快速搜索
+   '("n" . meow-search)           ; 向选区方向搜索, 可按 o 键改变当前选区方向
+   '("V" . meow-line-expand)
+   '("f" . meow-find)             ; 含搜索字符
+   '("t" . meow-till)             ; 不含搜索字符
+   '("m" . point-to-register)
+   '("`" . jump-to-register)
+   '("z" . avy-goto-char-in-line)
+   ;; 常规选择
+   '("%" . gwp::match-paren)
+   '("*" . meow-mark-symbol)
+   '("q" . meow-mark-word)
+   '("s" . meow-inner-of-thing)
+   '("S" . meow-bounds-of-thing)
+   '(";" . meow-cancel-selection)
+   '("v" . meow-cancel-selection) ; 仿 vi
+   '("G" . meow-grab)             ; 相当于 vi 中的 visual mode
+   '("C-v" . meow-grab)
+   ;; 特殊功能
+   '("]" . sp-unwrap-sexp)
+   '("$" . ispell-word)
+   '("Z" . repeat-complex-command)      ; 所有需要 minibuffer 输入的命令
+   )
+
+  ;; 当无选区时执行的功能
+  (setq
+   meow-selection-command-fallback
+   '(
+     (meow-reverse . meow-open-below)
+     (meow-kill . meow-keypad-start)    ; for C-x
+     (meow-change . meow-keypad-start)  ; for C-c
+     (meow-save . gwp::copy-current-line)
+     ;; (meow-pop-selection . meow-pop-grab)
+     (meow-beacon-change . meow-beacon-change-char)
+     (meow-cancel-selection . meow-right-expand) ; 仿vi, 取消选择或扩选
+     )))
 
 ;; Leader Key
 (defun meow/setup-leader ()
@@ -153,83 +253,14 @@
      '("\\ k" "H-k")))
   )
 
-;; Qwerty, normal state
-(defun meow/setup-normal ()
-  ;; normal commands
-  (meow-normal-define-key
-   '("<escape>" . keyboard-quit)
-   '("9" . meow-expand-9)
-   '("8" . meow-expand-8)
-   '("7" . meow-expand-7)
-   '("6" . meow-expand-6)
-   '("5" . meow-expand-5)
-   '("4" . meow-expand-4)
-   '("3" . meow-expand-3)
-   '("2" . meow-expand-2)
-   '("1" . meow-expand-1)
-   '("0" . meow-expand-0)
-   '("-" . negative-argument)
-   '("h" . meow-left)
-   '("j" . meow-next)
-   '("k" . meow-prev)
-   '("l" . meow-right)
-   '("i" . meow-insert)
-   '("I" . gwp::meow-insert-at-the-beginning)
-   '("a" . meow-append)
-   '("A" . gwp::meow-insert-at-the-end)
-   '("c" . meow-change)
-   '("d" . meow-kill)
-   '("x" . meow-line)
-   '("K" . gwp::meow-change-to-the-end) ; 像 C-k, 但进入 insert mode
-   '("D" . meow-kill-whole-line)
-   '("y" . meow-save)
-   '("p" . meow-yank)
-   '("o" . meow-reverse)
-   '("O" . meow-open-above)
-   '("J" . crux-top-join-line)
-   '("u" . gwp::undo-dwim)
-   '("U" . meow-pop-selection)
-   '("/" . meow-visit)
-   '("n" . meow-search)
-   '("v" . meow-cancel-selection)       ; 仿 vi
-   '("V" . meow-line-expand)
-   '("f" . meow-find)                   ; 含搜索字符
-   '("t" . meow-till)                   ; 不含搜索字符
-   '("%" . gwp::match-paren)
-   '("*" . meow-mark-symbol)
-   '("s" . meow-inner-of-thing)
-   '("S" . meow-bounds-of-thing)
-   '("e" . meow-next-word)
-   '("E" . meow-next-symbol)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '(";" . meow-cancel-selection)
-   '("m" . point-to-register)
-   '("`" . jump-to-register)
-   '("G" . meow-grab)
-   ;; '("(" . sp-wrap-round)
-   ;; '("[" . sp-wrap-square)
-   ;; '("{" . sp-wrap-square)
-   '("]" . sp-unwrap-sexp)
-   )
-
-  ;; 当无选区时执行的功能
-  (setq
-   meow-selection-command-fallback
-   '(
-     (meow-reverse . meow-open-below)
-     (meow-kill . meow-C-d)
-     (meow-change . meow-change-char)
-     ;; (meow-pop-selection . meow-pop-grab)
-     (meow-beacon-change . meow-beacon-change-char)
-     (meow-cancel-selection . meow-right-expand) ; 仿vi, 取消选择或扩选
-     )))
-
 (use-package! meow
   :hook (doom-init-modules . meow-global-mode)
   :demand t
   :custom
+  ;; 扩选指示字符显示延时
   (meow-expand-hint-remove-delay 5.0)
+  ;; 默认在 org 中不显示扩选指示字符
+  (meow-expand-exclude-mode-list nil)
   ;; (meow-cursor-type-normal 'hbar)
   :config
   ;; 便于区分选区

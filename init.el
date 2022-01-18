@@ -210,8 +210,8 @@
 (setq doom-etc-dir (concat doom-local-dir (system-name) "/etc/"))
 (setq doom-cache-dir (concat doom-local-dir (system-name) "/cache/"))
 
-;; 这个冲突的概率不大
-(setq bookmark-default-file (expand-file-name "bookmarks" doom-local-dir))
+;; doom 在退出时才保存这个文件, 因此不同机器共享容易起冲突
+;; (setq bookmark-default-file (expand-file-name "bookmarks" doom-local-dir))
 
 ;; (setq doom-etc-dir "~/.doom.d/local/etc/")
 ;; (setq doom-cache-dir "~/.doom.d/local/cache/")

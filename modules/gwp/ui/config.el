@@ -401,6 +401,10 @@ Call a second time to restore the original window configuration."
 ;;;  a highlight-symbol replacement.
 (use-package symbol-overlay
   :config
+  (general-unbind symbol-overlay-map "h") ; 避免与移动类按键冲突
+  (map! :map symbol-overlay-map
+        "?" #'symbol-overlay-map-help)
+
   ;; 用 transient 不如下面的好. 下面的可以用"."命令来重做上次的操作.
   (general-define-key :prefix-map 'gwp::symbol-overlay-map
                       "h" 'symbol-overlay-put
@@ -424,6 +428,7 @@ Call a second time to restore the original window configuration."
   ;; (define-key gwp::symbol-overlay-map (kbd "q") 'symbol-overlay-query-replace)
   ;; (define-key gwp::symbol-overlay-map (kbd "r") 'symbol-overlay-rename)
   )
+
 
 (map! :map help-map
       :desc "highlight symbols"

@@ -156,7 +156,7 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Open bookmarks"        "b" #'counsel-bookmark
        :desc "Resume last search"    "l" #'ivy-resume
        :desc "Last change"           "c" #'gwp::hydra-last-change/body
-       :desc "Emacs register"        "m" #'counsel-register
+       :desc "Emacs mark ring"       "m" #'counsel-mark-ring
        :desc "Jump list"             "j" #'+ivy/jump-list
        ))
 ;; 1c637dc8 ends here

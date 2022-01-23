@@ -349,6 +349,25 @@ Call a second time to restore the original window configuration."
 (map! :i "C-`" #'+popup/toggle)
 ;; 弹出窗口:1 ends here
 
+;; [[file:../../../gwp.note::1429fad5][1429fad5]]
+(setq split-width-threshold 200)        ; default is 160
+;; 1429fad5 ends here
+
+;; [[file:../../../gwp.note::f07dc327][f07dc327]]
+(defhydra gwp/adjust-window-size ()
+  "resize-window"
+  ("h" enlarge-window-horizontally "decrease width")
+  ("l" shrink-window-horizontally "decrease height")
+  ("k" enlarge-window "increase height")
+  ("j" shrink-window "increase width")
+  ("q" nil "quit")
+  )
+
+(map! :map gwp::window-map
+      "a"       #'gwp/adjust-window-size/body ; adjust
+      )
+;; f07dc327 ends here
+
 ;; [[file:../../../gwp.note::44d5ec48][44d5ec48]]
 (general-define-key :prefix-map 'gwp::window-map)
 

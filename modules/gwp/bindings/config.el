@@ -5,8 +5,11 @@
   ;; "e" '(end-of-buffer :which-key "goto last line")
   ;; "l" '(end-of-line :which-key "goto the end of line")
   ;; "h" '(beginning-of-line :which-key "goto the beginning of line")
-  "d" '(+lookup/definition :which-key "Jump to definition")
-  "f" '(+lookup/file :which-key "Locate file")
+  ;; "d" '(+lookup/definition :which-key "Jump to definition")
+  ;; "f" '(+lookup/file :which-key "Locate file")
+  ;; "d" '(xref-find-definitions :which-key "Jump to definition")
+  ;; "d" (general-simulate-key "M-.")
+  "f" '(find-file-at-point :which-key "Locate file") ; emacs 自带的就很好 (ffap)
   ";" '(goto-last-change :which-key "Go to where the last edit was made")
   )
 ;; 38249b42 ends here

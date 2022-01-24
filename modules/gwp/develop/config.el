@@ -331,6 +331,10 @@ The org src will be tangled first before compiling.
 	     ))
 ;; 13061ec7 ends here
 
+;; [[file:../../../gwp.note::491a9d09][491a9d09]]
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+;; 491a9d09 ends here
+
 ;; [[file:../../../gwp.note::d95b49c5][d95b49c5]]
 (use-package block-nav
   :custom

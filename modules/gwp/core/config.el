@@ -194,7 +194,7 @@
     "e" (general-simulate-key "M->" :which-key "goto last line")
     "h" (general-simulate-key "C-a" :which-key "goto the beggining of line")
     "l" (general-simulate-key "C-e" :which-key "goto the end of line")
-    "G" 'goto-line
+    "." 'goto-line
     ;; "g" '(beginning-of-buffer :which-key "goto first line")
     ;; "e" '(end-of-buffer :which-key "goto last line")
     ;; "l" '(end-of-line :which-key "goto the end of line")

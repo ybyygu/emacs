@@ -5,6 +5,7 @@
 (package! racer)
 (package! rust-mode)
 (package! citre)
+(package! dumb-jump)
 (package! find-file-in-project)
 ;; 2021-10-26 上游更新所致 https://github.com/magit/git-modes
 ;; 这两个包安装报错, 临时禁用

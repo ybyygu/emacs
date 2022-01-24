@@ -513,3 +513,62 @@ Call a second time to restore the original window configuration."
 ;; 相当于行间距
 (setq-default line-spacing 4)
 ;; 6013493c ends here
+
+;; [[file:../../../gwp.note::942579e1][942579e1]]
+(defun gwp-mouse-toggle-bm (e)
+  "Toggle bookmarking
+This command should be bound to a mouse key.
+Argument E is a mouse event used by `mouse-set-point'."
+  (interactive "@e")
+  (save-excursion
+    (mouse-set-point e)
+    (bm-toggle)
+    ))
+
+;; adopted from: https://github.com/joodland/bm
+(use-package bm
+  :init
+  ;; restore on load (even before you require bm)
+  (setq bm-restore-repository-on-load t)
+
+  :config
+  ;; Allow cross-buffer 'next'
+  (setq bm-cycle-all-buffers nil)
+
+  ;; save bookmarks
+  (setq-default bm-buffer-persistence t)
+
+  ;; where to store persistant files
+  (setq bm-repository-file "~/.emacs.d/bm-repository")
+
+  ;; Loading the repository from file when on start up.
+  (add-hook 'after-init-hook 'bm-repository-load)
+
+  ;; Saving bookmarks
+  (add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+  ;; Saving the repository to file when on exit.
+  ;; kill-buffer-hook is not called when Emacs is killed, so we
+  ;; must save all bookmarks first.
+  (add-hook 'kill-emacs-hook #'(lambda nil
+                                 (bm-buffer-save-all)
+                                 (bm-repository-save)))
+
+  ;; The `after-save-hook' is not necessary to use to achieve persistence,
+  ;; but it makes the bookmark data in repository more in sync with the file
+  ;; state.
+  (add-hook 'after-save-hook #'bm-buffer-save)
+
+  ;; Restoring bookmarks
+  (add-hook 'find-file-hooks   #'bm-buffer-restore)
+  (add-hook 'after-revert-hook #'bm-buffer-restore)
+
+  :bind (
+         ([left-fringe double-mouse-1] . gwp-mouse-toggle-bm)
+         ([left-margin double-mouse-1] . gwp-mouse-toggle-bm)
+         ([left-fringe mouse-5] . bm-next-mouse)
+         ([left-margin mouse-5] . bm-next-mouse)
+         ([left-fringe mouse-4] . bm-previous-mouse)
+         ([left-margin mouse-4] . bm-previous-mouse)
+         ))
+;; 942579e1 ends here

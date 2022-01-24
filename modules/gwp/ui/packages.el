@@ -4,6 +4,7 @@
 (package! symbol-overlay)
 (package! burly :recipe (:host github :repo "alphapapa/burly.el"))
 (package! rime)
+(package! bm)
 (package! golden-ratio)
 
 ;; pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.

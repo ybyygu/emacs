@@ -366,9 +366,6 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Evaluate buffer/region"                "e"   #'+eval/buffer-or-region
        :desc "Evaluate & replace region"             "E"   #'+eval:replace-region
        :desc "Format buffer/region"                  "f"   #'+format/region-or-buffer
-       :desc "Find implementations"                  "i"   #'+lookup/implementations
-       :desc "Jump to documentation"                 "k"   #'+lookup/documentation
-       :desc "Find type definition"                  "t"   #'+lookup/type-definition
        :desc "Delete trailing whitespace"            "w"   #'delete-trailing-whitespace
        :desc "Delete trailing newlines"              "W"   #'doom/delete-trailing-newlines
        :desc "List errors"                           "x"   #'+default/diagnostics

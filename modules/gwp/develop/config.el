@@ -1,5 +1,14 @@
 ;; [[file:../../../gwp.note::8f612833][8f612833]]
 (require 'init-magit)
+
+(gwp::local-leader-def
+  :keymaps 'magit-mode-map
+  "D" 'magit-file-delete
+  "j" 'magit-dired-jump
+  "r" 'magit-file-rename
+  "t" 'magit-todos-list
+  "f" 'magit-find-file
+  )
 ;; 8f612833 ends here
 
 ;; [[file:../../../gwp.note::d28bc89a][d28bc89a]]
@@ -330,6 +339,28 @@ The org src will be tangled first before compiling.
              ;;         (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 	     ))
 ;; 13061ec7 ends here
+
+;; [[file:../../../gwp.note::87bcf67b][87bcf67b]]
+(defhydra gwp::hl-todo ()
+  "highlight todo"
+  ("o" hl-todo-occur "occur")
+  ("j" hl-todo-next "next")
+  ("k" hl-todo-previous "prev")
+  ("q" nil "quit"))
+
+(map! :leader
+      (:prefix-map ("j" . "jump")
+       :desc "highlight todo" "t" #'gwp::hl-todo/body
+       ))
+
+;; org-mode 中默认不开 hl-todo
+;; (add-hook! (org-mode) :append #'hl-todo-mode)
+
+(gwp::local-leader-def
+  :keymaps 'hl-todo-mode-map
+  "H" '(gwp::hl-todo/body :which-key "highlight todo")
+  )
+;; 87bcf67b ends here
 
 ;; [[file:../../../gwp.note::d95b49c5][d95b49c5]]
 (use-package block-nav

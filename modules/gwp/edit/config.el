@@ -511,8 +511,8 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (map! :leader
       (:prefix-map ("j" . "jump")
        (:prefix-map ("a" . "avy")
-        :desc "Search and jump (pinyin)"        "c" #'evil-avy-goto-char-2
-        :desc "Search and jump"                 "s" #'evil-avy-goto-char-timer
+        :desc "Search and jump (pinyin)"        "c" #'avy-goto-char-2
+        :desc "Search and jump"                 "s" #'avy-goto-char-timer
         :desc "jump to line"                    "l" #'avy-goto-line
         )))
 ;; 6ded2bf1 ends here

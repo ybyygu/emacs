@@ -69,6 +69,14 @@
 (use-package find-file-in-project
   :config
   (setq ffip-use-rust-fd t))
+
+;;;###autoload
+(defun gwp::find-file-from-clipboard ()
+  "打开 clipboard 中复制的文件路径"
+  (interactive)
+  (require 'find-file-in-project)
+  (let ((path (simpleclip-get-contents)))
+    (ffip-find-files path nil)))
 ;; 81cb1ab5 ends here
 
 ;; [[file:../../../gwp.note::*edit][edit:1]]

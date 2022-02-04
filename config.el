@@ -75,3 +75,4 @@
 
 ;; 禁用 better-jumper
 (remove-hook! 'doom-first-input-hook #'better-jumper-mode)
+(remove-hook! 'counsel-grep-post-action-hook #'better-jumper-set-jump)

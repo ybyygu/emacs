@@ -480,6 +480,7 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "goldendict word"               "g"   #'gwp::goldendict-from-clipboard
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'gwp::yank-dwim
+       :desc "Find file from clipboard"      "o"   #'gwp::find-file-from-clipboard
        :desc "Current file name"             "f"   #'+default/insert-file-path
        :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
        :desc "Unicode"                       "u"   #'insert-char

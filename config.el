@@ -72,3 +72,6 @@
 ;;   :config
 ;;   (map! :map evil-window-map
 ;;         "z" #'golden-ratio))
+
+;; 禁用 better-jumper
+(remove-hook! 'doom-first-input-hook #'better-jumper-mode)

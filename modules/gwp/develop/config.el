@@ -5,6 +5,8 @@
   :keymaps 'magit-mode-map
   "D" 'magit-file-delete
   "j" 'magit-dired-jump
+  "o" 'magit-diff-visit-file-other-window
+  "O" 'magit-diff-visit-file-other-frame
   "r" 'magit-file-rename
   "t" 'magit-todos-list
   "f" 'magit-find-file

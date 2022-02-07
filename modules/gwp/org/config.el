@@ -637,6 +637,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 ;; latex preview:1 ends here
 
+;; [[file:../../../gwp.note::7330d8ac][7330d8ac]]
+(setq browse-url-browser-function 'browse-url-firefox)
+;; 7330d8ac ends here
+
 ;; [[file:../../../gwp.note::32a3b56a][32a3b56a]]
 (general-define-key :prefix-map 'gwp::org-link-map)
 

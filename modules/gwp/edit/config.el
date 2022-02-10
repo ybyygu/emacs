@@ -569,6 +569,26 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
  )
 ;; 1a0721e0 ends here
 
+;; [[file:../../../gwp.note::bf455395][bf455395]]
+(use-package swiper
+  :bind
+  (
+   ;; ("C-s"   . swiper-isearch)
+   ;; ("C-r"   . swiper-isearch-backward)
+   ;; ("C-c v p" . ivy-push-view)
+   ;; ("C-c v o" . ivy-pop-view)
+   ;; ("C-c v ." . ivy-switch-view)
+   ("C-x C-b" . +ivy/switch-workspace-buffer)
+   ("C-x B" . +ivy/switch-buffer)
+   :map swiper-map
+   ("M-s" . swiper-isearch-toggle)
+   :map isearch-mode-map
+   ("M-s" . swiper-isearch-toggle)
+   :map ctl-x-4-map
+   ("C-s" . ivy-push-view)
+   ))
+;; bf455395 ends here
+
 ;; [[file:../../../gwp.note::b23f833f][b23f833f]]
 (defun gwp::swiper-from-clipboard (prefix)
   "从clipboard取词来搜索"

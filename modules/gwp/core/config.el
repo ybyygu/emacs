@@ -118,7 +118,7 @@
    ;; 常规选择
    '("%" . gwp::match-paren)
    '("*" . meow-mark-symbol)
-   '("q" . meow-mark-word)
+   ;; '("q" . meow-mark-word)
    '("s" . meow-inner-of-thing)
    '("S" . meow-bounds-of-thing)
    '(";" . meow-cancel-selection)

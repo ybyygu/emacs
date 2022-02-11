@@ -11,6 +11,13 @@
   "t" 'magit-todos-list
   "f" 'magit-find-file
   )
+
+(map! :map magit-mode-map
+      "x" #'magit-discard
+      "L" #'magit-log
+      )
+
+(unbind-key "C-f" magit-mode-map)
 ;; 8f612833 ends here
 
 ;; [[file:../../../gwp.note::d28bc89a][d28bc89a]]

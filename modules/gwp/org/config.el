@@ -10,7 +10,8 @@
 
 ;; [[file:../../../gwp.note::7341aa84][7341aa84]]
 ;; 2022-01-31: 也许和按Tab 乱跳有关?
-(setq org-cycle-emulate-tab nil)
+;; 2022-02-11: 应无关
+;; (setq org-cycle-emulate-tab nil)
 ;; https://orgmode.org/manual/Clean-view.html
 (setq org-startup-indented t)      ;Enable `org-indent-mode' on Org startup
 (with-eval-after-load 'org-indent

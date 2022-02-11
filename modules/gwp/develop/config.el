@@ -3,21 +3,14 @@
 
 (gwp::local-leader-def
   :keymaps 'magit-mode-map
-  "D" 'magit-file-delete
-  "j" 'magit-dired-jump
-  "o" 'magit-diff-visit-file-other-window
-  "O" 'magit-diff-visit-file-other-frame
-  "r" 'magit-file-rename
-  "t" 'magit-todos-list
-  "f" 'magit-find-file
+  "D" #'magit-file-delete
+  "j" #'magit-dired-jump
+  "o" #'magit-diff-visit-file-other-window
+  "O" #'magit-diff-visit-file-other-frame
+  "r" #'magit-file-rename
+  "t" #'magit-todos-list
+  "f" #'magit-find-file
   )
-
-(map! :map magit-mode-map
-      "x" #'magit-discard
-      "L" #'magit-log
-      )
-
-(unbind-key "C-f" magit-mode-map)
 ;; 8f612833 ends here
 
 ;; [[file:../../../gwp.note::d28bc89a][d28bc89a]]

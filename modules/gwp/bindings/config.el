@@ -453,6 +453,8 @@ If two universal prefix arguments are used, then prompt for command to use."
        #'avy-goto-char-2
        :desc "emacs mark ring" "m"
        #'gwp::hydra-mark-ring-pop/body
+       :desc "Jump to file from clipboard" "y"
+       #'gwp::find-file-from-clipboard
        ))
 ;; 6ea0d271 ends here
 

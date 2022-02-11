@@ -357,6 +357,10 @@ The org src will be tangled first before compiling.
 	     ))
 ;; 13061ec7 ends here
 
+;; [[file:../../../gwp.note::491a9d09][491a9d09]]
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+;; 491a9d09 ends here
+
 ;; [[file:../../../gwp.note::87bcf67b][87bcf67b]]
 (defhydra gwp::hl-todo ()
   "highlight todo"

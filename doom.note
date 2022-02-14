@@ -4,6 +4,8 @@
 #+TITLE: 个人文本交互系统(based on doom-emacs)
 #+SETUPFILE: ~/Notes/common.org
 
+[2022-01-14 Fri] 本项目逐步弃用, 改用自攒的 [[id:a58b86ad-a96e-4b4f-b9de-acbaf9e5910f][gwp]]
+
 * 历史设置
 - [[file:~/Install/configs/spacemacs/config.note][spacemacs]]
 - [[file:~/Install/configs/spacemacs/ybyygu.org][emacs24-starter-kit]]
@@ -2009,6 +2011,7 @@ zathura-pdf-mupdf
 (("default" . ((user-emacs-directory . "~/Workspace/Programming/emacs/doom-emacs")
                (env . (("DOOMDIR" . "~/.doom.d")))))
  ("gwp" . ((user-emacs-directory . "~/Install/configs/emacs/gwp")))
+ ("gwp-doom" . ((user-emacs-directory . "~/Install/configs/emacs/gwp-doom/doom-emacs")))
  ("centaur" . ((user-emacs-directory . "~/Install/configs/emacs/centaur/.emacs.d"))))
 #+end_src
 
@@ -5503,7 +5506,7 @@ swiper搜索中, 如果一行内有多个结果, 得按好几次C-n才能到下�
       ;; "C-c ;" #'ivy-avy
       :desc "二次过滤" "C-c r" (general-simulate-key "S-SPC")
       :desc "avy跳转" "C-c ;" (general-simulate-key "C-'")
-      :desc "上一页" "C-c C-p" #'ivy-scroll-down-command
+      :desc "上一页" "C-c C-p"   #'ivy-scroll-down-command
       :desc "下一页" "C-c C-n" #'ivy-scroll-up-command
       )
 #+end_src
@@ -8362,7 +8365,7 @@ Org links to Unix man pages [[http://orgmode.org/manual/Adding-hyperlink-types.h
        ))
 #+end_src
 
-*** p: quit/session
+*** q: quit/session
 #+name: 1f0c2364
 #+begin_src elisp
 (map! :leader

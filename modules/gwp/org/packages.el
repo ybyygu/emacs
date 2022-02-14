@@ -6,6 +6,7 @@
 (package! org-noter)
 (package! org-sidebar)
 (package! el-patch)
+(package! smartparens-org :ignore t)
 
 ;; for http api hacking
 (package! restclient)

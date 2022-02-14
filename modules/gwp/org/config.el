@@ -125,6 +125,16 @@
   )
 ;; 3d7188a4 ends here
 
+;; [[file:../../../gwp.note::ac811d6f][ac811d6f]]
+(after! smartparens
+  (sp-with-modes '(org-mode)
+    (sp-local-pair "/" nil :actions :rem)
+    (sp-local-pair "=" nil :actions :rem)
+    (sp-local-pair "~" nil :actions :rem)
+    (sp-local-pair "*" nil :actions :rem)
+    (sp-local-pair "_" nil :actions :rem)))
+;; ac811d6f ends here
+
 ;; [[file:../../../gwp.note::bafd9bd3][bafd9bd3]]
 (general-define-key :prefix-map 'gwp::org-insert-map)
 
@@ -753,6 +763,11 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   "n" '(:keymap gwp::org-note-map :which-key "note/noter")
   )
 ;; ac0d3d18 ends here
+
+;; [[file:../../../gwp.note::d737c18e][d737c18e]]
+;; (setq org-export-backends '(ascii html icalendar latex odt md))
+(require 'ox-md)
+;; d737c18e ends here
 
 ;; [[file:../../../gwp.note::*zotero/export][zotero/export:1]]
 (with-eval-after-load 'org-compat

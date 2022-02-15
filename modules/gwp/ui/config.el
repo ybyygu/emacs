@@ -163,6 +163,13 @@
         doom-variable-pitch-font (font-spec :family user-font)
         ;; doom-unicode-font (font-spec :family user-font)
         doom-big-font (font-spec :family user-font :size big-font-size))
+  ;; 言字在 doom 中显示很古怪
+  (add-hook! emacs-startup :append
+    (set-fontset-font t 'cjk-misc user-font nil 'prepend)
+    (set-fontset-font t 'han user-font nil 'prepend)
+    ;; (set-fontset-font t ?中 user-font nil 'prepend)
+    ;; (set-fontset-font t ?言 user-font nil 'prepend)
+    )
   )
 
 ;; [[file:../../../gwp.note::885c9fa9][885c9fa9]]

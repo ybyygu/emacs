@@ -180,10 +180,11 @@
   (interactive)
   (if display-line-numbers
       (setq display-line-numbers 'nil)
-    (setq display-line-numbers 'relative)))
+    (setq display-line-numbers t)))
 
 (defun gwp::display-line-numbers ()
-  (setq display-line-numbers 'relative))
+  ;; (setq display-line-numbers 'relative)
+  (setq display-line-numbers t))
 
 ;; NOTE: org-mode在折叠状态下, 相对行号显示的是实际数目, 而非折叠后的, 这对编辑操作没多大帮助了.
 ;; ;; (add-hook 'org-mode-hook #'gwp::display-line-numbers)

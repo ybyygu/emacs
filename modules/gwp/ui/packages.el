@@ -6,6 +6,9 @@
 (package! rime)
 (package! bm)
 (package! golden-ratio)
+(package! embark)
+(package! consult)
+(package! marginalia)
 
 ;; pangu-spacing 自动给中英文字加空格, 这严重影响响应速度.
 (disable-packages! pangu-spacing)

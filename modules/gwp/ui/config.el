@@ -388,6 +388,7 @@ Call a second time to restore the original window configuration."
       "l" #'windmove-right
       "d" #'delete-window
       "q" #'delete-window
+      "=" #'balance-windows
       "u" #'winner-undo            ; 撤销窗口变动
       "w" #'ace-window             ; 替代 SPC-w-w
       "r" #'gwp::ace-select-window ; rotate
@@ -580,3 +581,23 @@ Argument E is a mouse event used by `mouse-set-point'."
          ([left-margin mouse-4] . bm-previous-mouse)
          ))
 ;; 942579e1 ends here
+
+;; [[file:../../../gwp.note::74ebe55a][74ebe55a]]
+(use-package marginalia
+  :config
+  (marginalia-mode))
+
+(use-package embark
+  :bind (
+         ;; 相当于选中文件弹出右键菜单
+         ("C-;" . embark-act)
+         ;; 相当于选中文件双击, 用处不大
+         ;; ("C-." . embark-dwim)
+         ("C-h B" . embark-bindings)
+         )
+  :custom
+  ;; 前置命令序列后按C-h 可选择后续要执行的命令. 相当于 which-key 中的提示的可选
+  ;; 命令可搜索后再选择了
+  (prefix-help-command #'embark-prefix-help-command)
+  )
+;; 74ebe55a ends here

@@ -589,6 +589,10 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
    ))
 ;; bf455395 ends here
 
+;; [[file:../../../gwp.note::*counsel-rg][counsel-rg:1]]
+
+;; counsel-rg:1 ends here
+
 ;; [[file:../../../gwp.note::b23f833f][b23f833f]]
 (defun gwp::swiper-from-clipboard (prefix)
   "从clipboard取词来搜索"
@@ -635,3 +639,19 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
          )
     (set-mouse-position (selected-frame) x y)))
 ;; fdbbe28d ends here
+
+;; [[file:../../../gwp.note::74ebe55a][74ebe55a]]
+(use-package embark
+  :bind (
+         ;; 相当于选中文件弹出右键菜单
+         ("C-;" . embark-act)
+         ;; 相当于选中文件双击
+         ("C-." . embark-dwim)
+         ("C-h B" . embark-bindings)
+         )
+  :config
+  ;; 前置命令序列后按C-h 可选择后续要执行的命令. 相当于 which-key 中的提示的可选
+  ;; 命令可搜索后再选择了
+  (setq prefix-help-command #'embark-prefix-help-command)
+  )
+;; 74ebe55a ends here

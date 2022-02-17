@@ -146,6 +146,7 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "搜索当前文件夹文件名"         "f" #'find-file-in-current-directory-by-selected ; 搜索文件名
        :desc "Jump to symbol"               "i" #'imenu
        :desc "Locate file"                  "l" #'counsel-locate
+       :desc "Search dir"                   "d" #'counsel-rg
        :desc "Jump to bookmark"             "m" #'bookmark-jump
        (:prefix-map ("h" . "highlight")
         :desc "highlight symbol at point"         "." #'highlight-symbol-at-point

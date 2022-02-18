@@ -739,6 +739,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
          "* %u %? [[%:link][%:description]]\n  %:initial\n" :prepend t)))
 ;; capture:1 ends here
 
+;; [[file:../../../gwp.note::cf2d1a6b][cf2d1a6b]]
+(require 'init-note)
+;; cf2d1a6b ends here
+
 ;; [[file:../../../gwp.note::ac0d3d18][ac0d3d18]]
 (general-define-key :prefix-map 'gwp::org-note-map)
 

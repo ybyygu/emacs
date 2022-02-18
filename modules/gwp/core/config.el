@@ -128,7 +128,8 @@
    ;; 特殊功能
    '("]" . sp-unwrap-sexp)
    '("$" . ispell-word)
-   '("Z" . repeat-complex-command)      ; 所有需要 minibuffer 输入的命令
+   '("'" . repeat)                      ; 重复上一个命令
+   '("Z" . repeat-complex-command)      ; 重复上一个需要 minibuffer 输入的命令
    )
 
   ;; 当无选区时执行的功能

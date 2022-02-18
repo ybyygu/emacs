@@ -29,7 +29,7 @@
   ;; (general-create-definer gwp::local-def :keymaps 'local)
 
   ;; 取消某些容易误按, 不习惯的键
-  (general-unbind "C-v" "C-z"))
+  (general-unbind "C-v" "C-z" "C-x C-z"))
 
 ;; Rewriting the doom-localleader-key! macro to add support for meow mode
 (when (featurep! :gwp core +leader)

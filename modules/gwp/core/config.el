@@ -81,13 +81,14 @@
    '("j" . meow-next)
    '("k" . meow-prev)
    '("l" . meow-right)
+   '("^" . meow-back-to-indentation)
    ;; 常规编辑操作
    '("i" . meow-insert)
    '("I" . gwp::meow-insert-at-the-beginning)
    '("a" . meow-append)
    '("A" . gwp::meow-insert-at-the-end)
    '("x" . meow-kill)                   ; 同 vi, 剪入 king-ring, 无选区时等效于 C-x 按键
-   '("y" . meow-save)                   ; 同 vi, 复制到 king-ring
+   '("y" . meow-save)                   ; 同 vi, 复制到 king-ring, 无选区时复制当前行
    '("c" . meow-change)                 ; 同 vi, 删除选区内容, 无选区时等效于 C-c 按键
    '("C" . gwp::meow-change-whole-line) ; 同 vi, 修改整行
    '("K" . gwp::meow-change-to-the-end) ; 像 C-k, 但进入 insert mode
@@ -96,6 +97,7 @@
    '("J" . crux-top-join-line)      ; 同vi, 合并下一行至当前行
    '("r" . meow-change-char)        ; 删除当前字符或选区(不进入 kill-ring), 同时进入 insert state
    '("d" . meow-delete)             ; 删除当前字符或选区(不进入 kill-ring)
+   '("DEL" . meow-backward-delete)
    '("D" . meow-kill-whole-line)
    ;; 选区扩展操作
    '("." . meow-line)                ; 向下扩选一行, 按 "-." 向上扩选
@@ -105,30 +107,35 @@
    '("B" . meow-back-symbol)         ; 反向操作, 等效于 "-E"
    '("o" . meow-reverse)             ; 反转选区方向. 若无选区, 则相当于 vi 中为 o
    '("u" . gwp::undo-dwim)
-   '("U" . meow-pop-selection)
+   '("U" . meow-pop-selection)       ; 撤销选择
    ;; 搜索与跳转
-   '("/" . meow-visit)            ; 快速搜索
+   '("/" . meow-visit)            ; 快速搜索, 按C-M-j 搜索任意字串
    '("n" . meow-search)           ; 向选区方向搜索, 可按 o 键改变当前选区方向
-   '("V" . meow-line-expand)
    '("f" . meow-find)             ; 含搜索字符
    '("t" . meow-till)             ; 不含搜索字符
    '("m" . point-to-register)
    '("`" . jump-to-register)
-   '("z" . avy-goto-char-in-line)
    ;; 常规选择
    '("%" . gwp::match-paren)
    '("*" . meow-mark-symbol)
    ;; '("q" . meow-mark-word)
    '("s" . meow-inner-of-thing)
    '("S" . meow-bounds-of-thing)
+   '("(" . meow-beginning-of-thing)
+   '(")" . meow-end-of-thing)
    '(";" . meow-cancel-selection)
    '("v" . meow-cancel-selection) ; 仿 vi
+   '("V" . meow-block)            ; 逐级扩选, 按U 回退, 可替代 expand-region
    '("G" . meow-grab)             ; 相当于 vi 中的 visual mode
    '("C-v" . meow-grab)
    ;; 特殊功能
    '("]" . sp-unwrap-sexp)
+   ;; '("q" . meow-quit)                   ; 退出窗口或 buffer
    '("$" . ispell-word)
    '("'" . repeat)                      ; 重复上一个命令
+   '("=" . meow-goto-line)
+   ;; '("z" . avy-goto-char-in-line)
+   '("z" . meow-pop-selection)
    '("Z" . repeat-complex-command)      ; 重复上一个需要 minibuffer 输入的命令
    )
 
@@ -223,36 +230,12 @@
         "9" #'meow-digit-argument
         "0" #'meow-digit-argument))
 
-;; Keypad
-(defun meow/setup-keypad ()
-  (map! :map meow-leader-keymap
-        "?" #'meow-cheatsheet
-        "/" #'meow-keypad-describe-key
-        "1" #'meow-digit-argument
-        "2" #'meow-digit-argument
-        "3" #'meow-digit-argument
-        "4" #'meow-digit-argument
-        "5" #'meow-digit-argument
-        "6" #'meow-digit-argument
-        "7" #'meow-digit-argument
-        "8" #'meow-digit-argument
-        "9" #'meow-digit-argument
-        "0" #'meow-digit-argument
-        "x" #'meow-keypad-start
-        "c" #'meow-keypad-start
-        "h" #'help-command))
-
 ;; 比如 dired, magit 生成的 buffer, 也许单独处理更好?
 (defun meow/setup-motion ()
   (meow-motion-overwrite-define-key
    '("j"  "meow-next")
    '("k"  "meow-prev")
-   )
-  (when (featurep! :editor meow +leader)
-    (meow-motion-overwrite-define-key
-     '("\\ j" "H-j")
-     '("\\ k" "H-k")))
-  )
+   ))
 
 (use-package! meow
   :hook (doom-init-modules . meow-global-mode)

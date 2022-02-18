@@ -3,4 +3,5 @@
 (package! dired-collapse)
 (package! dired-sidebar)
 (package! fd-dired)
+;; (package! dirvish)
 ;; 6c6adad5 ends here

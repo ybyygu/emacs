@@ -130,7 +130,8 @@
    '("C-v" . meow-grab)
    ;; 特殊功能
    '("]" . sp-unwrap-sexp)
-   ;; '("q" . meow-quit)                   ; 退出窗口或 buffer
+   '("Q" . meow-start-kmacro)                   ; 宏编辑: record
+   '("R" . meow-beacon-end-and-apply-kmacro)    ; 宏应用: repeat
    '("$" . ispell-word)
    '("'" . repeat)                      ; 重复上一个命令
    '("=" . meow-goto-line)

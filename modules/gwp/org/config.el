@@ -39,15 +39,22 @@
   (setq org-superstar-headline-bullets-list '("☰" "▶" "▷" "»"))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
-;; 显示光标所在处的headline
+;; 显示光标所在处的内容
 (defun gwp::org-show-context-at-point ()
   (interactive)
+  (call-interactively #'org-show-subtree)
   ;; 从下面的命令看来的
   ;; (call-interactively 'org-mark-ring-goto)
   ;; (org-show-context 'mark-goto)
-  (org-show-subtree)
-  (when (or (org-invisible-p) (org-invisible-p2)) (org-show-context 'mark-goto))
-  (call-interactively 'org-reveal))
+  ;; (when (or (org-invisible-p) (org-invisible-p2)) (org-show-context 'mark-goto))
+  (call-interactively #'org-reveal)
+  )
+
+;; 默认的为 org-reveal, 但不太好用
+(map! :map org-mode-map
+      "C-c C-r" #'gwp::org-show-context-at-point
+      )
+
 
 ;; 禁用*bold*等标注的字体效果. 写代码时容易弄花显示. 比如__init__.
 (setq org-fontify-emphasized-text nil)

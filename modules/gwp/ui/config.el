@@ -431,6 +431,8 @@ Call a second time to restore the original window configuration."
   :config
   (general-unbind symbol-overlay-map "h") ; 避免与移动类按键冲突
   (map! :map symbol-overlay-map
+        "j" #'symbol-overlay-switch-forward
+        "k" #'symbol-overlay-switch-backward
         "?" #'symbol-overlay-map-help)
 
   ;; 用 transient 不如下面的好. 下面的可以用"."命令来重做上次的操作.
@@ -438,8 +440,10 @@ Call a second time to restore the original window configuration."
                       "h" 'symbol-overlay-put
                       "r" 'symbol-overlay-rename
                       "t" 'symbol-overlay-toggle-in-scope
-                      "n" 'symbol-overlay-switch-forward ; 当在高亮的字符外时, 可快速返回.
-                      "p" 'symbol-overlay-switch-backward
+                      ;; "n" 'symbol-overlay-switch-forward ; 当在高亮的字符外时, 可快速返回.
+                      ;; "p" 'symbol-overlay-switch-backward
+                      ;; 可方便在 org show context
+                      "b" 'gwp::hydra-symbol-overlay/body
                       "d" 'symbol-overlay-remove-all
                       "R" 'symbol-overlay-query-replace)
   ;; 等价设置; 备忘
@@ -457,6 +461,12 @@ Call a second time to restore the original window configuration."
   ;; (define-key gwp::symbol-overlay-map (kbd "r") 'symbol-overlay-rename)
   )
 
+
+(defhydra gwp::hydra-symbol-overlay ()
+  ("j" symbol-overlay-switch-forward "next symbol")
+  ("k" symbol-overlay-switch-backward "previous symbol")
+  ("r" gwp::org-show-context-at-point "org show context")
+  ("q" nil "quit"))
 
 (map! :map help-map
       :desc "highlight symbols"

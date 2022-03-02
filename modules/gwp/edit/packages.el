@@ -3,6 +3,7 @@
 (package! move-dup)
 (package! simpleclip)
 (package! keyfreq)
+(package! command-log-mode)
 (package! yasnippet)
 (package! expand-region)
 ;; (package! goto-last-change)

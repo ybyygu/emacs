@@ -1612,6 +1612,18 @@ If on a:
                                (org-pdftools-open link))))
 ;; org-file-apps:1 ends here
 
+;; [[file:../../../gwp.note::4ff602a9][4ff602a9]]
+;;;###autoload
+(defun gwp::org-enable-mouse ()
+  (interactive)
+  (require 'org-mouse)
+  )
+
+(map! :map gwp::org-toggle-map
+      "m" #'gwp::org-enable-mouse
+      )
+;; 4ff602a9 ends here
+
 ;; [[file:../../../gwp.note::917381e9][917381e9]]
 ;; 2021-10-20: 可用 gwp::local-leader-def 来代替
 ;; 定义一些特别常用的命令, 仅在org-mode中显示

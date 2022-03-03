@@ -528,6 +528,14 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 ;; 6ded2bf1 ends here
 
 ;; [[file:../../../gwp.note::08a09ddb][08a09ddb]]
+(use-package avy
+  :custom
+  ;; 多设一些, 可减少按键
+  ;; asdfghjkl
+  ;; (avy-keys (append (number-sequence ?a ?z) (number-sequence ?A ?Z) (number-sequence ?0 ?9)))
+  (avy-keys (listify-key-sequence "abcdefghijklmnopqrstuvwxyz"))
+  )
+
 (map! :map isearch-mode-map
       :desc "avy跳转" "C-c ;" #'avy-isearch
       )

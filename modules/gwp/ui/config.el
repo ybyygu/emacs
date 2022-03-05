@@ -223,7 +223,10 @@
 ;; [[file:../../../gwp.note::a207c706][a207c706]]
 (use-package burly
   :config
-  (map! :map gwp::window-map "S" #'burly-bookmark-windows))
+  (map! :map gwp::window-map
+        "S" #'burly-bookmark-windows
+        "C-s" #'burly-bookmark-windows
+        ))
 ;; a207c706 ends here
 
 ;; [[file:../../../gwp.note::14897c7b][14897c7b]]

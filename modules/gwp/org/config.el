@@ -6,6 +6,9 @@
 ;; 禁用字词检查, 需要了再开
 (remove-hook! 'org-mode-hook #'flyspell-mode)
 (remove-hook! 'text-mode-hook #'spell-fu-mode)
+
+(setq auto-mode-alist
+      (cons '("\\.note$" . org-mode) auto-mode-alist))
 ;; b28b06dc ends here
 
 ;; [[file:../../../gwp.note::7341aa84][7341aa84]]

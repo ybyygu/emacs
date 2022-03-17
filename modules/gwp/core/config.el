@@ -251,6 +251,10 @@
   ;; 便于区分选区
   ;; (setq meow-cursor-type-normal '(hbar . 3))
   ;; (setq meow-cursor-type-region-cursor 'bar)
+  ;; https://github.com/meow-edit/meow/discussions/87
+  ;; 选择文字区域时光标位置与 vim 及其它软件一致. 找了好久, 哭
+  (setq meow-use-cursor-position-hack t)
+
   (meow/setup-normal)
   (cond
    ((featurep! :gwp core +leader)

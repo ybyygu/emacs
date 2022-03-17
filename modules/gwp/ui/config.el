@@ -275,7 +275,7 @@
 (ivy-set-actions 'ivy-switch-buffer gwp::ivy-buffer-actions)
 ;; bf66c13f ends here
 
-;; [[file:../../../gwp.note::*修改 frame 标题 方便 gnome-shell 桌面切换][修改 frame 标题 方便 gnome-shell 桌面切换:1]]
+;; [[file:../../../gwp.note::da14a342][da14a342]]
 ;; workspace@buffer-name: ~/foo/bar
 (setq frame-title-format
       '((:eval (+workspace-current-name)) ;
@@ -283,7 +283,7 @@
         (:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))))
         ))
-;; 修改 frame 标题 方便 gnome-shell 桌面切换:1 ends here
+;; da14a342 ends here
 
 ;; [[file:../../../gwp.note::bfacbb8e][bfacbb8e]]
 (use-package! golden-ratio

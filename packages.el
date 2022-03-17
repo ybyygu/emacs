@@ -49,4 +49,5 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! better-jumper :ignore :disable)
+;; (package! better-jumper :ignore :disable)
+;; (package! avy :ignore :disable)

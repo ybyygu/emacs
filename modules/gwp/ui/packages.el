@@ -5,6 +5,7 @@
 (package! burly :recipe (:host github :repo "alphapapa/burly.el"))
 (package! rime)
 (package! bm)
+(package! ivy)
 (package! golden-ratio)
 (package! embark)
 (package! consult)

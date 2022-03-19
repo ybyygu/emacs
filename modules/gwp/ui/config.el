@@ -525,6 +525,8 @@ Call a second time to restore the original window configuration."
   '(hl-line :background "#37474f")
   '(solaire-hl-line-face :background "#37474f")
   '(region :background "#555555")
+  ;; meow-grab 时, 配色更清楚些
+  '(secondary-selection :foreground "green")
   )
 ;; af9362ab ends here
 

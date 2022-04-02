@@ -385,6 +385,7 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Forge dispatch"            "'"   #'forge-dispatch
        :desc "Magit switch branch"       "b"   #'magit-branch-checkout
        :desc "Magit status"              "g"   #'magit-status
+       :desc "Magit TODO/FIXME"          "t"   #'ivy-magit-todos
        :desc "Magit status here"         "G"   #'magit-status-here
        :desc "Magit file delete"         "D"   #'magit-file-delete
        :desc "Magit blame"               "B"   #'magit-blame-addition

@@ -711,13 +711,16 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   (org-noter-default-notes-file-names '("annotation.note")))
 
 (use-package! pdf-tools
+  ;; :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
+  ;; 自动切边
+  :hook (pdf-tools-enabled . pdf-view-auto-slice-minor-mode)
+  :hook (pdf-tools-enabled . hide-mode-line-mode)
   :custom
   ;; 一页页看更方便
   (pdf-view-continuous nil)
   :config
   ;; 容易被doom的pdf module中的设置覆盖, 以下直接在pdf/config.el中修改
   ;; (setq-default pdf-view-display-size 'fit-width)
-
   (map! :map pdf-view-mode-map
         ;; 鼠标操作
         [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
@@ -725,10 +728,13 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         [mouse-9] (cmd! (pdf-view-previous-page-command))
         [mouse-8] (cmd! (pdf-view-next-page-command))
         ;; 方便标注, 按d直接高亮选中文本
-        :v "d" #'pdf-annot-add-highlight-markup-annotation
+        "d" #'pdf-annot-add-highlight-markup-annotation
         ;; 方便单手操作
-        :n "d" #'pdf-view-scroll-up-or-next-page
-        :n "a" #'pdf-view-scroll-down-or-previous-page
+        "n" #'pdf-view-scroll-up-or-next-page
+        "p" #'pdf-view-scroll-down-or-previous-page
+        ;; 默认按键, 设置下为保险
+        "W" #'pdf-view-fit-width-to-window
+        "B" #'pdf-history-backward
         ))
 ;; 37fef008 ends here
 

@@ -479,14 +479,22 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; bc190292 ends here
 
 ;; [[file:../../../gwp.note::bc190292][bc190292]]
+(defun gwp::yank-relative-file-path ()
+  "将 clipboard 的路径以相对路径的形式插入"
+  (interactive)
+  (let ((relative-path (file-relative-name (current-kill 0))))
+    (unless (string= relative-path "")
+      (kill-new relative-path)
+      (call-interactively #'gwp::yank-dwim)
+      )))
+
 (map! :leader
       (:prefix-map ("y" . "yank")
        :desc "goldendict word"               "g"   #'gwp::goldendict-from-clipboard
        :desc "Snippet"                       "s"   #'yas-insert-snippet
        :desc "From clipboard"                "y"   #'gwp::yank-dwim
+       :desc "Yank relative file path"       "f"   #'gwp::yank-relative-file-path
        :desc "Find file from clipboard"      "o"   #'gwp::find-file-from-clipboard
-       :desc "Current file name"             "f"   #'+default/insert-file-path
-       :desc "Current file path"             "F"   (cmd!! #'+default/insert-file-path t)
        :desc "Unicode"                       "u"   #'insert-char
        ))
 ;; bc190292 ends here

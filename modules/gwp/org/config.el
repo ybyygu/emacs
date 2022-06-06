@@ -784,6 +784,18 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   )
 ;; ac0d3d18 ends here
 
+;; [[file:../../../gwp.note::da4e0834][da4e0834]]
+(defun gwp::update-notes-cache ()
+  (interactive)
+  (message (shell-command-to-string "rebuild-note-cache.sh")))
+
+(require 'midnight)
+(midnight-mode t)
+(midnight-delay-set 'midnight-delay "3:30am")
+
+(add-hook! midnight-hook #'gwp::update-notes-cache)
+;; da4e0834 ends here
+
 ;; [[file:../../../gwp.note::d737c18e][d737c18e]]
 ;; (setq org-export-backends '(ascii html icalendar latex odt md))
 (require 'ox-md)

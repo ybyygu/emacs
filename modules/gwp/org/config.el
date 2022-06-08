@@ -659,7 +659,12 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 ;; latex preview:1 ends here
 
 ;; [[file:../../../gwp.note::7330d8ac][7330d8ac]]
-(setq browse-url-browser-function 'browse-url-firefox)
+;; (setq browse-url-browser-function 'browse-url-firefox)
+
+;; If available, use `xdg-open' to open URLs.
+(setq-default
+ browse-url-browser-function (quote browse-url-generic)
+ browse-url-generic-program "xdg-open")
 ;; 7330d8ac ends here
 
 ;; [[file:../../../gwp.note::32a3b56a][32a3b56a]]

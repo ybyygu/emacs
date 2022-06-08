@@ -798,7 +798,7 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (midnight-mode t)
 (midnight-delay-set 'midnight-delay "3:30am")
 
-(add-hook! midnight-hook #'gwp::update-notes-cache)
+(add-hook! midnight #'gwp::update-notes-cache)
 ;; da4e0834 ends here
 
 ;; [[file:../../../gwp.note::d737c18e][d737c18e]]

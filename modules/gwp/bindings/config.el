@@ -428,18 +428,15 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; [[file:../../../gwp.note::1ad72c87][1ad72c87]]
 (map! :leader
       (:prefix-map ("n" . "note/next")
-       :desc "Search notes for symbol"      "*" #'+default/search-notes-for-symbol-at-point
        :desc "Org agenda"                   "a" #'org-agenda
        :desc "Find .note files"             "f" #'gwp/find-file-in-notes
-       :desc "Browse notes"                 "F" #'+default/browse-notes
        :desc "Org store link"               "l" #'org-store-link
        :desc "Tags search"                  "m" #'org-tags-view
        :desc "Org capture"                  "c" #'org-capture
        :desc "org-agenda"                   "n" (cmd! (org-agenda nil "gt"))
        :desc "Goto capture"                 "N" #'org-capture-goto-target
        :desc "Todo list"                    "t" #'org-todo-list
-       :desc "Search notes"                 "s" #'+default/org-notes-search
-       :desc "Search org agenda headlines"  "S" #'+default/org-notes-headlines
+       :desc "Search notes"                 "s" #'gwp/org-notes-search
        :desc "View search"                  "v" #'org-search-view
        ))
 ;; 1ad72c87 ends here

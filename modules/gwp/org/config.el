@@ -705,6 +705,18 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 ;; 4971b464 ends here
 
 ;; [[file:../../../gwp.note::05419467][05419467]]
+;;;###autoload
+(defun gwp/org-notes-search (query)
+  "Perform a text search on `org-directory'."
+  (interactive
+   (list (if (doom-region-active-p)
+             (buffer-substring-no-properties
+              (doom-region-beginning)
+              (doom-region-end))
+           "")))
+  (require 'org)
+  (counsel-rg query org-directory))
+
 (defun gwp/find-file-in-notes ()
   "Find a file under `~/.cache/notes', recursively."
   (interactive) (doom-project-find-file "~/.cache/notes"))

@@ -195,6 +195,7 @@
        org
        develop
        bindings
+       ;; eaf
        )
 
 ;; 方便调试自用代码

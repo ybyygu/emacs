@@ -776,6 +776,10 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 (require 'init-note)
 ;; cf2d1a6b ends here
 
+;; [[file:../../../gwp.note::f48c192c][f48c192c]]
+(require 'init-eaf)
+;; f48c192c ends here
+
 ;; [[file:../../../gwp.note::ac0d3d18][ac0d3d18]]
 (general-define-key :prefix-map 'gwp::org-note-map)
 
@@ -1643,12 +1647,6 @@ If on a:
 ;; [[file:../../../gwp.note::d3403c99][d3403c99]]
 (require 'org-protocol)
 ;; d3403c99 ends here
-
-;; [[file:../../../gwp.note::*org-file-apps][org-file-apps:1]]
-(add-to-list 'org-file-apps
-             '("\\.pdf\\'" . (lambda (file link)
-                               (org-pdftools-open link))))
-;; org-file-apps:1 ends here
 
 ;; [[file:../../../gwp.note::4ff602a9][4ff602a9]]
 ;;;###autoload

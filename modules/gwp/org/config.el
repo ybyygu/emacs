@@ -742,8 +742,8 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
         ;; 鼠标操作
         [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
         [C-mouse-5] (cmd! (pdf-view-shrink 1.10))
-        [mouse-9] (cmd! (pdf-view-previous-page-command))
-        [mouse-8] (cmd! (pdf-view-next-page-command))
+        [mouse-9] (cmd! (pdf-view-scroll-down-or-previous-page))
+        [mouse-8] (cmd! (pdf-view-scroll-up-or-next-page))
         ;; 方便标注, 按d直接高亮选中文本
         "d" #'pdf-annot-add-highlight-markup-annotation
         ;; 方便单手操作

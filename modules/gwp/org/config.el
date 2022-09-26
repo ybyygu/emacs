@@ -803,6 +803,11 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
   :keymaps 'org-mode-map
   "n" '(:keymap gwp::org-note-map :which-key "note/noter")
   )
+
+(gwp::local-leader-def
+  :keymaps 'dired-mode-map
+  "n" #'gwp::org-note::dired-annotate-file-at-point
+  )
 ;; ac0d3d18 ends here
 
 ;; [[file:../../../gwp.note::da4e0834][da4e0834]]
@@ -1499,7 +1504,7 @@ If on a:
   (browse-url url))
 ;; 03af13ba ends here
 
-;; [[file:../../../gwp.note::*ui][ui:1]]
+;; [[file:../../../gwp.note::bc10e1b7][bc10e1b7]]
 ;; rust-modules
 (add-to-list 'load-path "/home/ybyygu/Workspace/Programming/emacs/rust-modules")
 (require 'zotero)
@@ -1550,6 +1555,10 @@ If on a:
       (org-open-file pdf-file)
       (org-noter))))
 
+(defun gwp--ivy-open-file-dir (file)
+  "open parent directory of a file"
+  (dired-jump 0 file))
+
 (defun gwp--ivy-action-open-attachments (x)
   "ivy completion for zotero attachments."
   (let* ((candidates (zotero-get-selected-item-attachment-paths x)))
@@ -1557,6 +1566,7 @@ If on a:
               candidates
               :action '(1               ; set the default action to open link
                         ("o" org-open-file "Open")
+                        ("d" gwp--ivy-open-file-dir "Dired")
                         ("n" gwp--ivy-action-annotate-attachment "Annotate")))))
 
 (defun gwp--ivy-action-insert-link (x)
@@ -1621,7 +1631,7 @@ If on a:
     ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
     ]]
   )
-;; ui:1 ends here
+;; bc10e1b7 ends here
 
 ;; [[file:../../../gwp.note::a95fbcd5][a95fbcd5]]
 (gwp::local-leader-def

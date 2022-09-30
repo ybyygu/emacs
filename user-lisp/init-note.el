@@ -22,6 +22,45 @@
     (user-error "not in dired buffer")))
 ;; 8a535ad4 ends here
 
+;; [[file:../gwp.note::7f3b3bee][7f3b3bee]]
+(defun gwp::org-note::to-read-file-in-READ (document-path read-dir)
+  (let* ((document-name (file-name-nondirectory document-path))
+         (document-in-read (concat read-dir document-name)))
+
+    ;; 将当前文件复制至READ 目录下
+    (message (format "%s => %s" document-path document-in-read))
+    (rename-file document-path document-in-read)
+    ;; 再将该文件反向软链回当前目录
+    (make-symbolic-link (file-truename document-in-read) document-path)))
+
+;;;###autoload
+(defun gwp::org-note::dired-annotate-pdf-in-READ ()
+  "将 dired buffer 中所选定的(pdf)文件放至READ 目录下"
+  (interactive)
+  (if (derived-mode-p 'dired-mode)
+      (let* ((read-dir (read-directory-name "分类目录: " "~/Boox/READ")))
+        (gwp::org-note::to-read-file-in-READ (dired-get-file-for-visit) read-dir)
+        (dired-do-redisplay))
+    (user-error "not in dired buffer")))
+
+;;;###autoload
+(defun gwp::dired::symbol-link-move-back ()
+  "在 dired 中, 将当前软链所指向的文件取回来, 同时删除源文件"
+  (interactive)
+
+  (if (derived-mode-p 'dired-mode)
+      (let* ((this-file (dired-get-file-for-visit))
+             (target-path (file-truename this-file)))
+        (if (file-symlink-p this-file)
+            (when (file-exists-p target-path)
+              (delete-file this-file)
+              (rename-file target-path this-file 1)
+              (dired-do-redisplay)
+              (message "Moved from: %s" target-path))
+          (user-error "not a symlink file")))
+    (user-error "not in dired buffer")))
+;; 7f3b3bee ends here
+
 ;; [[file:../gwp.note::1773f1a3][1773f1a3]]
 (defun gwp::org-note::get-pdf-file ()
   (save-excursion

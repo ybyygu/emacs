@@ -89,6 +89,7 @@ virtualbox /windows 中)"
         (message "symlink to: %s" target-path))
     (user-error "not in dired buffer")))
 
+
 ;;;###autoload
 (defun gwp::dired-fd ()
   "用于递归搜索文件名, 生成 dired 视图"

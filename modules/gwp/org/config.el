@@ -806,7 +806,9 @@ Attribution: URL `http://orgmode.org/manual/System_002dwide-header-arguments.htm
 
 (gwp::local-leader-def
   :keymaps 'dired-mode-map
-  "n" #'gwp::org-note::dired-annotate-file-at-point
+  "n" #'(gwp::org-note::dired-annotate-file-at-point :which-key "PDF 批注")
+  "R" #'(gwp::org-note::dired-annotate-pdf-in-READ :which-key "置入待读(READ)")
+  "T" #'(gwp::dired::symbol-link-move-back :which-key "取回软链源文件")
   )
 ;; ac0d3d18 ends here
 

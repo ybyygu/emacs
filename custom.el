@@ -6,7 +6,8 @@
  '(custom-safe-themes
    '("c2aeb1bd4aa80f1e4f95746bda040aafb78b1808de07d340007ba898efa484f5" default))
  '(safe-local-variable-values
-   '((eval setq default-directory "/home/ybyygu/Library/Codes/leeping-geomTRIC/")
+   '((eval setq default-directory "/home/ybyygu/Library/Codes/CatLearn/")
+     (eval setq default-directory "/home/ybyygu/Library/Codes/leeping-geomTRIC/")
      (eval setq default-directory "/home/ybyygu/Library/Codes/pymatgen/")
      (eval setq default-directory "/home/ybyygu/Library/Codes/gofee/")
      (eval setq default-directory "/home/ybyygu/Library/Codes/FLAME/"))))

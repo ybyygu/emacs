@@ -107,7 +107,10 @@ If two universal prefix arguments are used, then prompt for command to use."
                 (let ((program (read-shell-command "Open current file with: ")))
                   (call-process program nil 0 nil file-path)))
             (spacemacs/open-in-external-app file-path))
-        (message "No file associated to this buffer.")))))
+        ;; for EAF pdf
+        (if (derived-mode-p 'eaf-mode)
+            (eaf-open-external)
+          (message "No file associated to this buffer."))))))
 ;; e13c7903 ends here
 
 ;; [[file:../../../gwp.note::d7dce976][d7dce976]]

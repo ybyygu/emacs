@@ -82,6 +82,10 @@ Repeated invocations toggle between the two most recently open buffers."
   ;; (and (not (file-remote-p file))
   ;;      (not (file-directory-p file)))
   )
+
+;; 定义保存临时文件列表. 默认仅当退出 emacs 才保存, 这会丢掉不少数据.
+(require 'midnight)
+(add-hook! midnight #'recentf-save-list)
 ;; 493c2a26 ends here
 
 ;; [[file:../../../gwp.note::e13c7903][e13c7903]]
@@ -437,6 +441,7 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Tags search"                  "m" #'org-tags-view
        :desc "Org capture"                  "c" #'org-capture
        :desc "org-agenda"                   "n" (cmd! (org-agenda nil "gt"))
+       :desc "org-agenda current buffer"    "b" (cmd! (org-agenda nil "gt" 'buffer))
        :desc "Goto capture"                 "N" #'org-capture-goto-target
        :desc "Todo list"                    "t" #'org-todo-list
        :desc "Search notes"                 "s" #'gwp/org-notes-search

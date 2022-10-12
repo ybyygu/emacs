@@ -468,11 +468,10 @@ If two universal prefix arguments are used, then prompt for command to use."
 ;; [[file:../../../gwp.note::d2dc925d][d2dc925d]]
 (require 'expand-region)
 (map! :leader
-      (:prefix-map ("v" . "visual")
+      (:prefix-map ("v" . "visual/region")
        :desc "expand region"            "v" #'er/expand-region
        :desc "select text"              "s" #'gwp/advanced-selection
-       :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body
-       :desc "multi-cursor mode"        "m" #'gwp::hydra-multiedit/body))
+       :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body))
 ;; d2dc925d ends here
 
 ;; [[file:../../../gwp.note::bc190292][bc190292]]

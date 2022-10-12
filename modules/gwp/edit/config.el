@@ -444,6 +444,17 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
       (point)
       (set-mark b1))))
 
+(defun gwp/mark-org-link ()
+  "Marks an org text link."
+  (interactive)
+  (let ((case-fold-search t)
+        (re "\\[\\["))
+    (unless (looking-at re)
+      (search-backward-regexp re))
+    (set-mark (point))
+    (search-forward "]]")
+    (exchange-point-and-mark)))
+
 ;; https://github.com/magnars/expand-region.el
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "M-4") 'er/expand-region)
@@ -467,6 +478,7 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
   [["特殊选择"
     ("u" "mark url" er/mark-url)
     ("c" "mark org code block" er/mark-org-code-block)
+    ("l" "mark org link" gwp/mark-org-link)
     ("e" "mark email" er/mark-email)
     ]]
   )

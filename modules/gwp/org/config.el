@@ -1093,12 +1093,14 @@ DESC. FORMATs understood are 'odt','latex and 'html."
 
 ;; do not include todo items
 (setq org-agenda-include-all-todo nil)
-;; 43fd72e2 ends here
 
-;; [[file:../../../gwp.note::*基本设置][基本设置:2]]
+;; 忽略已经完成的任务
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-skip-scheduled-if-done t)
-;; 基本设置:2 ends here
+
+;; 退出 agenda buffer 时还原之前的窗口
+(setq org-agenda-restore-windows-after-quit t)
+;; 43fd72e2 ends here
 
 ;; [[file:../../../gwp.note::ded2ea25][ded2ea25]]
 ;; description for "g" prefix

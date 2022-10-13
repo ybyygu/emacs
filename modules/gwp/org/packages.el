@@ -28,7 +28,7 @@
                        (format "(defun org-git-version (&rest _) \"%s-??-%s\")\n"
                                version (cdr (doom-call-process "git" "rev-parse" "--short" "HEAD")))
                        "(provide 'org-version)\n"))))
-  :pin "58eb3e7894d5b0a0b67f9ec26cb885bcbc4d1026")
+  :pin "1c7acb427ffc7094a8a7fd37871dfec6e9d36cc8")
 
 (package! org-superstar)
 (package! org-pdftools)

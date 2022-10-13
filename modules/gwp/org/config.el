@@ -841,12 +841,8 @@ DESC. FORMATs understood are 'odt','latex and 'html."
       (format "\\href{zotero:%s}{%s}" path desc))
      ((eq format 'odt)
       ;; (format "<text:a xlink:type=\"simple\" xlink:href=\"zotero:%s\">%s</text:a>" path desc)
-      (gwp/org-zotero-export-odt path desc)
-      )
-     (t desc)
-     )
-    )
-  )
+      (gwp/org-zotero-export-odt path desc))
+     (t desc))))
 
 ;;;; The magic string of zitem:
 ;; ZOTERO_ITEM CSL_CITATION
@@ -1126,13 +1122,6 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                        (org-agenda-files '("~/Notes/life.note"))
                        (org-agenda-sorting-strategy '(priority-down timestamp-up))
                        (org-agenda-max-entries 5)))
-                ;; (tags "Computer+TODO=\"TODO\""
-                ;;       (
-                ;;        (org-agenda-overriding-header "电脑调优\n------------------")
-                ;;        (org-agenda-sorting-strategy '(priority-down timestamp-up))
-                ;;        (org-agenda-max-entries 5)
-                ;;        )
-                ;;       )
                 )
                ;; options set here apply to the entire block
                (
@@ -1143,44 +1132,28 @@ DESC. FORMATs understood are 'odt','latex and 'html."
                 (org-agenda-compact-blocks t))))
 
 (add-to-list 'org-agenda-custom-commands
-             '("gr" "Reading"
-               (
-                (tags-todo "Reading|Read"
-                           (
-                            (org-agenda-overriding-header "待读列表\n------------------")
-                            (org-agenda-sorting-strategy '(category-keep priority-down))
-                            (org-agenda-remove-tags t)
-                            (org-agenda-compact-blocks t)
-                            )
-                           )
-                (tags "REFILE"
-                      (
-                       (org-agenda-overriding-header "Tasks to Refile\n------------------")
-                       (org-tags-match-list-sublevels nil))))
-               ;; options set here apply to the entire block
-               ((org-agenda-compact-blocks t))))
-
-(add-to-list 'org-agenda-custom-commands
              '("gt" "Tasks"
                (
                 (agenda ""
-                        (
-                         ;; (org-agenda-entry-types '(:deadline :scheduled))
+                        (;; (org-agenda-entry-types '(:deadline :scheduled))
                          (org-agenda-span (quote month)) ;; or (org-agenda-span 90)
                          (org-agenda-include-diary nil)
-                         (org-agenda-overriding-header "Agenda\n------------------")
-                         )
-                        )
-                ;; (tags "ASAP+TODO=\"TODO\""
+                         (org-agenda-overriding-header "Agenda\n------------------")))
                 (tags-todo "ASAP"
-                           (
-                            (org-agenda-entry-types '(:timestamp))
+                           ((org-agenda-entry-types '(:timestamp))
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
                             (org-agenda-overriding-header "\nASAP\n------------------")
                             (org-agenda-sorting-strategy '(priority-down category-keep timestamp-up))
                             (org-agenda-max-entries 20)
                             (org-agenda-prefix-format "%-12c ")
-                            (org-agenda-compact-blocks t))))
+                            (org-agenda-compact-blocks t)))
+                (tags-todo "TODO={READ}"
+                           ((org-agenda-overriding-header "\n待读列表\n------------------")
+                            (org-agenda-sorting-strategy '(category-keep priority-down))
+                            (org-agenda-remove-tags t)
+                            (org-agenda-prefix-format "%-12c ")
+                            (org-agenda-compact-blocks t)))
+                )
                ;; options set here apply to the entire block
                (
                 (org-tags-match-list-sublevels nil)

@@ -84,8 +84,9 @@ Repeated invocations toggle between the two most recently open buffers."
   )
 
 ;; 定义保存临时文件列表. 默认仅当退出 emacs 才保存, 这会丢掉不少数据.
-(require 'midnight)
-(add-hook! midnight #'recentf-save-list)
+;; 2022-10-14 好像会丢记录, 问题再排查
+;; (require 'midnight)
+;; (add-hook! midnight #'recentf-save-list)
 ;; 493c2a26 ends here
 
 ;; [[file:../../../gwp.note::e13c7903][e13c7903]]
@@ -502,3 +503,11 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Unicode"                       "u"   #'insert-char
        ))
 ;; bc190292 ends here
+
+;; [[file:../../../gwp.note::4a627290][4a627290]]
+(map! :leader
+      (:prefix-map ("a" . "app")
+       :desc "Linux App"   "a" #'counsel-linux-app
+       :desc "App Windows" "w" #'counsel-wmctrl
+       ))
+;; 4a627290 ends here

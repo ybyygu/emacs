@@ -468,19 +468,19 @@ Delimiters are paired characters: ()[]<>«»“”‘’「」, including \"\"."
 (require 'transient)
 (transient-define-prefix gwp/advanced-selection ()
   "Advanced selection"
-  [["常规选择"
-    ("p" "select paragraph" er/mark-paragraph)
-    ("c" "select comment" er/mark-comment)
-    ("b" "select none blank" gwp/select-none-blank-text)
-    ("t" "select text in quote" gwp/select-text-in-quote)
-    ("w" "select word" gwp/select-word-dwim)
-    ]]
-  [["特殊选择"
-    ("u" "mark url" er/mark-url)
-    ("c" "mark org code block" er/mark-org-code-block)
-    ("l" "mark org link" gwp/mark-org-link)
-    ("e" "mark email" er/mark-email)
-    ]]
+  ["常规选择"
+   ("p" "select paragraph" er/mark-paragraph)
+   ("c" "select comment" er/mark-comment)
+   ("b" "select none blank" gwp/select-none-blank-text)
+   ("t" "select text in quote" gwp/select-text-in-quote)
+   ("w" "select word" gwp/select-word-dwim)
+   ]
+  ["特殊选择"
+   ("u" "mark url" er/mark-url)
+   ("c" "mark org code block" er/mark-org-code-block)
+   ("l" "mark org link" gwp/mark-org-link)
+   ("e" "mark email" er/mark-email)
+   ]
   )
 ;; 8fac8bf1 ends here
 

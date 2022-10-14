@@ -94,7 +94,7 @@
   (add-to-list 'org-src-lang-modes '("rust" . rust)))
 ;; edit:1 ends here
 
-;; [[file:../../../gwp.note::*cargo/rust-mode][cargo/rust-mode:2]]
+;; [[file:../../../gwp.note::b35c6c80][b35c6c80]]
 (require 'rust-mode)
 (require 'cargo)
 
@@ -165,19 +165,19 @@ The org src will be tangled first before compiling.
 (require 'transient)
 (transient-define-prefix gwp/rust-cargo-transient ()
   "rust development tools"
-  [["compile org src:"
-    :if org-in-src-block-p
-    ("o b" "tangle src only" gwp/org-babel-tangle-dwim)
-    ("o c" "tangle src & cargo check" gwp/rust-cargo-tangle-watch-check)
-    ("o t" "tangle src & cargo test" gwp/rust-cargo-tangle-watch-test)
-    ]]
-  [["compile rust project:"
-    ("c" "cargo check" gwp/rust-cargo-watch-check)
-    ("t" "cargo test" gwp/rust-cargo-watch-test)
-    ("d" "cargo doc" gwp/rust-cargo-doc-open)
-    ("u" "cargo update" gwp/rust-cargo-update)
-    ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
-    ]]
+  ["compile org src:"
+   :if org-in-src-block-p
+   ("o b" "tangle src only" gwp/org-babel-tangle-dwim)
+   ("o c" "tangle src & cargo check" gwp/rust-cargo-tangle-watch-check)
+   ("o t" "tangle src & cargo test" gwp/rust-cargo-tangle-watch-test)
+   ]
+  ["compile rust project:"
+   ("c" "cargo check" gwp/rust-cargo-watch-check)
+   ("t" "cargo test" gwp/rust-cargo-watch-test)
+   ("d" "cargo doc" gwp/rust-cargo-doc-open)
+   ("u" "cargo update" gwp/rust-cargo-update)
+   ("U" "cargo upgrade" gwp/rust-cargo-edit-upgrade)
+   ]
   )
 
 (map! :map org-mode-map
@@ -188,7 +188,7 @@ The org src will be tangled first before compiling.
       :localleader
       "1" #'gwp/rust-cargo-transient
       )
-;; cargo/rust-mode:2 ends here
+;; b35c6c80 ends here
 
 ;; [[file:../../../gwp.note::*racer][racer:1]]
 (use-package cargo
@@ -267,17 +267,17 @@ The org src will be tangled first before compiling.
 
 (transient-define-prefix gwp/rust-edit-transient ()
   "rust development tools"
-  [["Result"
-    ("o" "Wrap in Option" gwp/rust-insert-option)
-    ("u" "Unwrap Option" gwp/rust-unwrap-option)
-    ]]
-  [["Result"
-    ("r" "Wrap in Result" gwp/rust-insert-result)
-    ("k" "Unwrap Result" gwp/rust-unwrap-result)
-    ]]
-  [["Pub"
-    ("p" "toggle pub at point" gwp/rust-toggle-pub)
-    ]]
+  ["Result"
+   ("o" "Wrap in Option" gwp/rust-insert-option)
+   ("u" "Unwrap Option" gwp/rust-unwrap-option)
+   ]
+  ["Result"
+   ("r" "Wrap in Result" gwp/rust-insert-result)
+   ("k" "Unwrap Result" gwp/rust-unwrap-result)
+   ]
+  ["Pub"
+   ("p" "toggle pub at point" gwp/rust-toggle-pub)
+   ]
   )
 
 ;; (defhydra gwp/rust-edit-hydra ()

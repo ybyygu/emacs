@@ -597,6 +597,24 @@ Argument E is a mouse event used by `mouse-set-point'."
          ))
 ;; 942579e1 ends here
 
+;; [[file:../../../gwp.note::ebe60f2d][ebe60f2d]]
+(require 'transient)
+(transient-define-prefix gwp/bookmark-transient ()
+  "visual bookmarks"
+  ["Edit bookmarks:"
+   ("b" "Toggle bookmarks" bm-toggle)
+   ("e" "Setting bookmarks based on a regexp" bm-bookmark-regexp)
+   ("d" "Remove all bookmarks in current buffer" bm-remove-all-current-buffer)
+   ("a" "Annotate bookmarks" bm-bookmark-annotate)
+   ("s" "Save bookmarks" bm-buffer-save)
+   ]
+  ["Navigate bookmarks"
+   ("n" "Next bookmark" bm-next)
+   ("p" "Prev bookmark" bm-previous)
+   ]
+  )
+;; ebe60f2d ends here
+
 ;; [[file:../../../gwp.note::74ebe55a][74ebe55a]]
 (use-package marginalia
   :config

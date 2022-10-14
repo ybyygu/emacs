@@ -1578,12 +1578,12 @@ If on a:
 (require 'transient)
 (transient-define-prefix gwp/zotero-search-transient ()
   "Search zotero database"
-  [["Search zotero items:"
-    ("t" "search by tag" gwp/zotero-search-by-tag)
-    ("c" "search by collection" gwp/zotero-search-by-collection)
-    ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
-    ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
-    ]]
+  ["Search zotero items:"
+   ("t" "search by tag" gwp/zotero-search-by-tag)
+   ("c" "search by collection" gwp/zotero-search-by-collection)
+   ("o" "open attachments at point" gwp/org-open-zotero-attachments-at-point)
+   ("r" "open related items at point" gwp/org-open-zotero-related-at-point)
+   ]
   )
 ;; bc10e1b7 ends here
 

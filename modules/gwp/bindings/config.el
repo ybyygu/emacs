@@ -217,6 +217,7 @@ If two universal prefix arguments are used, then prompt for command to use."
        :desc "Kill buffer"                 "k"   #'kill-current-buffer
        :desc "Kill all buffers"            "K"   #'doom/kill-all-buffers
        :desc "Revert buffer"               "r"   #'revert-buffer
+       :desc "Rename buffer file"          "R"   #'crux-rename-buffer-and-file
        :desc "Previous buffer"             "p"   #'previous-buffer
        :desc "Next buffer"                 "n"   #'next-buffer
        :desc "Save buffer"                 "s"   #'basic-save-buffer
@@ -471,6 +472,7 @@ If two universal prefix arguments are used, then prompt for command to use."
 (map! :leader
       (:prefix-map ("v" . "visual/region")
        :desc "expand region"            "v" #'er/expand-region
+       :desc "visual bookmarks"         "b" #'gwp/bookmark-transient
        :desc "select text"              "s" #'gwp/advanced-selection
        :desc "jump to emacs mark ring"  "j" #'gwp::hydra-mark-ring-pop/body))
 ;; d2dc925d ends here

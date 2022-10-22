@@ -15,12 +15,11 @@
   ;; 在输入且有码上屏的状态下, 可用TAB临时切换英文.
   (map! :map rime-active-mode-map :after ivy [tab] 'rime-inline-ascii)
   ;; NOTE: 以下有时会让emacs crash
-  (setq rime-posframe-properties
-        (list :background-color "#333333"
-              :foreground-color "#dcdccc"
-              :internal-border-width 10))
-  (setq default-input-method "rime"
-        rime-show-candidate 'posframe)
+  ;; (setq rime-posframe-properties
+  ;;       (list :background-color "#333333"
+  ;;             :foreground-color "#dcdccc"
+  ;;             :internal-border-width 10))
+  (setq rime-show-candidate 'posframe)
 
   ;; 自动进入英文录入状态, 相当于直接输入英文
   (setq rime-disable-predicates

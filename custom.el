@@ -26,3 +26,4 @@
  '(region ((t (:background "#555555"))))
  '(secondary-selection ((t (:foreground "green"))))
  '(solaire-hl-line-face ((t (:background "#37474f")))))
+(put 'upcase-region 'disabled nil)

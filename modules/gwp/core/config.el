@@ -241,6 +241,8 @@
   :hook (doom-init-modules . meow-global-mode)
   :demand t
   :custom
+  ;; 修改选中内容后退出 insert 模式时不要再选中该区域
+  (meow-select-on-change nil)
   ;; 扩选指示字符显示延时
   (meow-expand-hint-remove-delay 5.0)
   ;; 默认在 org 中不显示扩选指示字符
